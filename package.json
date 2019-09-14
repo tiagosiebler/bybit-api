@@ -1,0 +1,29 @@
+{
+  "name": "@pxtrn/bybit-api",
+  "version": "1.0.0",
+  "description": "An unofficial node.js lowlevel wrapper for the Bybit Cryptocurrency Derivative exchange API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pixtron/bybit-api.git"
+  },
+  "keywords": [
+    "bybit",
+    "api",
+    "websocket",
+    "rest"
+  ],
+  "author": "Stefan Aebischer <os@pixtron.ch> (https://pixtron.ch)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pixtron/bybit-api/issues"
+  },
+  "homepage": "https://github.com/pixtron/bybit-api#readme",
+  "dependencies": {
+    "request": "^2.88.0",
+    "ws": "^7.1.2"
+  }
+}
