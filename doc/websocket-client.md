@@ -37,6 +37,10 @@ to the server once connection has been lost.
 - `topics` {String|Array} Single topic as string or multiple topics as array of strings.
 Subscribe to one or multiple topics. See [available topics](#available-topics)
 
+### ws.unsubscribe(topics)
+
+- `topics` {String|Array} Single topic as string or multiple topics as array of strings.
+Unsubscribe from one or multiple topics.
 
 ### ws.close()
 
