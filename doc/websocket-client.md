@@ -164,9 +164,11 @@ const PRIVATE_KEY = 'yyy';
 
 const ws = new WebsocketClient({key: API_KEY, secret: PRIVATE_KEY});
 
+ws.subscribe(['position', 'execution', 'trade']);
+ws.subscribe('kline.BTCUSD.1m');
+
 ws.on('open', function() {
-  ws.subscribe(['position', 'execution', 'trade']);
-  ws.subscribe('kline.BTCUSD.1m');
+  console.log('connection open');
 });
 
 ws.on('update', function(message) {
