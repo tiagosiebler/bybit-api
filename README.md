@@ -80,6 +80,6 @@ See websocket client [api docs](./doc/websocket-client.md) for further informati
 If this library helps you to trade better on bybit, feel free to donate a coffee,
 or create a bybit account using my [ref link](https://www.bybit.com/app/register?ref=j8q5l).
 
-BTC `1Fh1158pXXudfM6ZrPJJMR7Y5SgZUz4EdF`
-ETH `0x21aEdeC53ab7593b77C9558942f0c9E78131e8d7`
-LTC `LNdHSVtG6UWsriMYLJR3qLdfVNKwJ6GSLF`
+- BTC `1Fh1158pXXudfM6ZrPJJMR7Y5SgZUz4EdF`
+- ETH `0x21aEdeC53ab7593b77C9558942f0c9E78131e8d7`
+- LTC `LNdHSVtG6UWsriMYLJR3qLdfVNKwJ6GSLF`
