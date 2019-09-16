@@ -64,6 +64,14 @@ If you only use the [public endpoints](#public-endpoints) you can ommit key and 
 #### async getLatestInformation()
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#latest-information-for-symbol)
 
+#### async getServerTime()
+[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#server-time)
+
+#### async getTimeOffset()
+
+Returns the time offset in ms to the server time retrieved by [`async getServerTime`](#async-getservertime).
+If positive the time on the server is ahead of the clients time, if negative the time on the server is behind the clients time.  
+
 
 ## Example
 
