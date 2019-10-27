@@ -24,10 +24,11 @@ to the server once connection has been lost.
   Custom logger must contain the following methods:
   ```js
   const logger = {
-    debug: function(message, data) {}
-    notice: function(message, data) {}
-    info: function(message, data) {}
-    warning: function(message, data) {}
+    silly: function(message, data) {},
+    debug: function(message, data) {},
+    notice: function(message, data) {},
+    info: function(message, data) {},
+    warning: function(message, data) {},
     error: function(message, data) {},
   }
   ```
