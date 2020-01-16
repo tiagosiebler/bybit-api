@@ -74,6 +74,20 @@ ws.on('error', function(err) {
 
 See websocket client [api docs](./doc/websocket-client.md) for further information.
 
+### Customise Logging
+Pass a custom logger which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired:
+
+```js
+const { RestClient, WebsocketClient, DefaultLogger } = require('@pxtrn/bybit-api');
+
+// Disable all logging on the silly level
+DefaultLogger.silly = () => {};
+
+const API_KEY = 'xxx';
+const PRIVATE_KEY = 'yyy';
+
+const ws = new WebsocketClient({key: API_KEY, secret: PRIVATE_KEY}, DefaultLogger);
+```
 
 ## Donations
 
