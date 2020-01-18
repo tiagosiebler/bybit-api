@@ -82,8 +82,8 @@ If you only use the [public endpoints](#public-endpoints) you can ommit key and 
 #### async getPredictedFunding(params)
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#get-predicted-funding-rate-and-funding-fee)
 
-#### async getOrderTradeRecords(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#get-the-trade-records-of-a-order)
+#### async getTradeRecords(params)
+[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#get-users-trade-records)
 
 ### Public enpoints
 
