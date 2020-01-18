@@ -28,6 +28,9 @@ If you only use the [public endpoints](#public-endpoints) you can ommit key and 
 #### async replaceActiveOrder(params)
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#open-apiorderreplacepost)
 
+#### async queryActiveOrder(params)
+[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#query-active-order-real-time)
+
 #### async placeConditionalOrder(params)
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#place-conditional-order)
 
@@ -37,6 +40,12 @@ If you only use the [public endpoints](#public-endpoints) you can ommit key and 
 #### async cancelConditionalOrder(params)
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#cancel-conditional-order-)
 
+#### async cancelAllConditionalOrders(params)
+[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#cancel-all-conditional-orders)
+
+#### async queryConditionalOrder(params)
+[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#query-stop-order-real-time)
+
 #### async getUserLeverage()
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#user-leverage)
 
@@ -44,10 +53,25 @@ If you only use the [public endpoints](#public-endpoints) you can ommit key and 
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-change-user-leverage)
 
 #### async getPosition()
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-my-position)
+[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-my-position-v2)
 
 #### async changePositionMargin(params)
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-change-position-margin)
+
+#### async setTradingStop(params)
+[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-set-trading-stop)
+
+#### async getWalletFundRecords(params)
+[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-get-wallet-fund-records)
+
+#### async getWithdrawRecords(params)
+[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-get-withdraw-records)
+
+#### async setRiskLimit(params)
+[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#set-risk-limit-)
+
+#### async getRiskLimitList()
+[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#get-risk-limit-list-)
 
 #### async getLastFundingRate(params)
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-get-the-last-funding-rate)
@@ -69,8 +93,14 @@ If you only use the [public endpoints](#public-endpoints) you can ommit key and 
 #### async getLatestInformation()
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#latest-information-for-symbol)
 
+#### async getPublicTradingRecords(params)
+[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#get-public-trading-records)
+
 #### async getServerTime()
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#server-time)
+
+#### async getApiAnnouncements()
+[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#open-apiannouncement)
 
 #### async getSymbols()
 Returns symbol information (such as tick size & min notional):
