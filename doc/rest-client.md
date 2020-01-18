@@ -14,13 +14,19 @@ If you only use the [public endpoints](#public-endpoints) you can ommit key and 
 ### Private enpoints
 
 #### async placeActiveOrder(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#place-active-order)
+[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#place-active-order-v2)
 
 #### async getActiveOrder(params)
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#get-active-order)
 
 #### async cancelActiveOrder(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#cancel-active-order)
+[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#open-apiordercancelv2post)
+
+#### async cancelAllActiveOrders(params)
+[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#open-apiordercancelallpost)
+
+#### async replaceActiveOrder(params)
+[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#open-apiorderreplacepost)
 
 #### async placeConditionalOrder(params)
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#place-conditional-order)
@@ -55,7 +61,6 @@ If you only use the [public endpoints](#public-endpoints) you can ommit key and 
 #### async getOrderTradeRecords(params)
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#get-the-trade-records-of-a-order)
 
-
 ### Public enpoints
 
 #### async getOrderBook(params)
@@ -67,10 +72,16 @@ If you only use the [public endpoints](#public-endpoints) you can ommit key and 
 #### async getServerTime()
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#server-time)
 
+#### async getSymbols()
+Returns symbol information (such as tick size & min notional):
+[Meeting price restrictions](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#price-price)
+
+[See bybit documentation](https://bybit-exchange.github.io/bybit-official-api-docs/en/index.html#operation/query_symbol)
+
 #### async getTimeOffset()
 
 Returns the time offset in ms to the server time retrieved by [`async getServerTime`](#async-getservertime).
-If positive the time on the server is ahead of the clients time, if negative the time on the server is behind the clients time.  
+If positive the time on the server is ahead of the clients time, if negative the time on the server is behind the clients time.
 
 
 ## Example
