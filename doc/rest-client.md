@@ -133,6 +133,6 @@ client.changeUserLeverage({leverage: 4, symbol: 'ETHUSD'})
     console.log(result);
   })
   .catch(err => {
-    console.error(error);
+    console.error(err);
   });
 ```
