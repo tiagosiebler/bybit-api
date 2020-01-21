@@ -52,8 +52,12 @@ If you only use the [public endpoints](#public-endpoints) you can ommit key and 
 #### async changeUserLeverage(params)
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-change-user-leverage)
 
-#### async getPosition()
+#### async getPosition(params)
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-my-position-v2)
+
+#### async getPositions()
+*Deprecated v1 method*
+[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#positionlistget)
 
 #### async changePositionMargin(params)
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-change-position-margin)
