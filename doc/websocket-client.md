@@ -50,7 +50,12 @@ Close the connection to the server.
 
 ### Event: 'open'
 
-Emmited when the connection has been opened.
+Emmited when the connection has been opened for the first time.
+
+
+### Event: 'reconnected'
+
+Emmited when the client has been opened after a reconnect.
 
 
 ### Event: 'update'
@@ -78,7 +83,12 @@ Emited when the server responds to an operation sent by the client (usually afte
 
 ### Event: 'close'
 
-Emitted when the connection has been closed.
+Emitted when the connection has been finally closed, after a call to `ws.close()`
+
+
+### Event: 'reconnect'
+
+Emitted when the connection has been closed, but the client will try to reconnect.
 
 
 ### Event: 'error'
