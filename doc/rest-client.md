@@ -71,6 +71,9 @@ If you only use the [public endpoints](#public-endpoints) you can ommit key and 
 #### async getWithdrawRecords(params)
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-get-withdraw-records)
 
+#### async getWalletBalance(params)
+[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#open-apiwalletbalanceget)
+
 #### async setRiskLimit(params)
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#set-risk-limit-)
 
