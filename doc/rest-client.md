@@ -14,106 +14,106 @@ If you only use the [public endpoints](#public-endpoints) you can ommit key and 
 ### Private enpoints
 
 #### async placeActiveOrder(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#place-active-order-v2)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-placev2active)
 
 #### async getActiveOrder(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#get-active-order)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-getactive)
 
 #### async cancelActiveOrder(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#open-apiordercancelv2post)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-cancelv2active)
 
 #### async cancelAllActiveOrders(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#open-apiordercancelallpost)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-cancelallactive)
 
 #### async replaceActiveOrder(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#open-apiorderreplacepost)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-replaceactive)
 
 #### async queryActiveOrder(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#query-active-order-real-time)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-queryactive)
 
 #### async placeConditionalOrder(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#place-conditional-order)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-placecond)
 
 #### async getConditioanlOrder(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#get-conditional-order)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-getcond)
 
 #### async cancelConditionalOrder(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#cancel-conditional-order-)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-cancelcond)
 
 #### async cancelAllConditionalOrders(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#cancel-all-conditional-orders)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-cancelallcond)
 
 #### async queryConditionalOrder(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#query-stop-order-real-time)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-querycond)
 
 #### async getUserLeverage()
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#user-leverage)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-getleverage)
 
 #### async changeUserLeverage(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-change-user-leverage)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-changeleverage)
 
 #### async getPosition(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-my-position-v2)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-mypositionv2)
 
 #### async getPositions()
 *Deprecated v1 method*
 [See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#positionlistget)
 
 #### async changePositionMargin(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-change-position-margin)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-changemargin)
 
 #### async setTradingStop(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-set-trading-stop)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-tradingstop)
 
 #### async getWalletFundRecords(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-get-wallet-fund-records)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-walletrecords)
 
 #### async getWithdrawRecords(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-get-withdraw-records)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-withdrawrecords)
 
 #### async getWalletBalance(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#open-apiwalletbalanceget)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-balance)
 
 #### async setRiskLimit(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#set-risk-limit-)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-setrisklimit)
 
 #### async getRiskLimitList()
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#get-risk-limit-list-)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-getrisklimit)
 
 #### async getLastFundingRate(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-get-the-last-funding-rate)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-fundingrate)
 
 #### async getMyLastFundingFee(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#-get-my-last-funding-fee)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-mylastfundingfee)
 
 #### async getPredictedFunding(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#get-predicted-funding-rate-and-funding-fee)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-predictedfunding)
 
 #### async getTradeRecords(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#get-users-trade-records)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-usertraderecords)
 
 ### Public enpoints
 
 #### async getOrderBook(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#get-orderbook)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-orderbook)
 
 #### async getLatestInformation()
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#latest-information-for-symbol)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-latestsymbolinfo)
 
 #### async getPublicTradingRecords(params)
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#get-public-trading-records)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-publictradingrecords)
 
 #### async getServerTime()
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#server-time)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-servertime)
 
 #### async getApiAnnouncements()
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#open-apiannouncement)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-announcement)
 
 #### async getSymbols()
 Returns symbol information (such as tick size & min notional):
-[Meeting price restrictions](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/rest_api.md#price-price)
+[Meeting price restrictions](https://bybit-exchange.github.io/docs/inverse/#price-price)
 
-[See bybit documentation](https://bybit-exchange.github.io/bybit-official-api-docs/en/index.html#operation/query_symbol)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-querysymbol)
 
 #### async getTimeOffset()
 

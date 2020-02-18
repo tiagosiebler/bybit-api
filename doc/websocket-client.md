@@ -100,9 +100,8 @@ Emitted when an error occurs.
 
 ## Available Topics
 
-Generaly all topics as described in the
- [official bybit api documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/websocket.md)
- are available.
+Generaly all [public](https://bybit-exchange.github.io/docs/inverse/#t-publictopics) and [private](https://bybit-exchange.github.io/docs/inverse/#t-privatetopics)
+ topics are available.
 
 ### Private topics
 
@@ -111,21 +110,28 @@ Generaly all topics as described in the
 All positions of your account.
 Topic: `position`
 
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/websocket.md#positions-of-your-account)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-websocketposition)
 
 #### Execution message
 
 Execution message, whenever an order has been (partially) filled.
 Topic: `execution`
 
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/websocket.md#execution-message)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-websocketexecution)
 
 #### Update for your orders
 
 Updates for your active orders
 Topic: `order`
 
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/websocket.md#update-for-your-orders)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-websocketorder)
+
+#### Update for your conditional orders
+
+Updates for your active conditional orders
+Topic: `stop_order`
+
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-websocketstoporder)
 
 
 ### Public topics
@@ -133,36 +139,43 @@ Topic: `order`
 #### Candlestick chart
 
 Candlestick OHLC "candles" for selected symbol and interval.
-Example topic: `kline.BTCUSD.1m`
+Example topic: `klineV2.BTCUSD.1m`
 
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/websocket.md#kline)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-websocketklinev2)
 
 #### Real-time trading information
 
 All trades as they occur.
 Topic: `trade`
 
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/websocket.md#trade)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-websockettrade)
 
 #### Daily insurance fund update
 
 Topic: `insurance`
 
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/websocket.md#daily-insurance-fund-update)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-websocketinsurance)
 
 #### OrderBook of 25 depth per side
 
 OrderBook for selected symbol
 Example topic: `orderBookL2_25.BTCUSD`
 
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/websocket.md#orderBook25_v2)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-websocketorderbook25)
+
+#### OrderBook of 200 depth per side
+
+OrderBook for selected symbol
+Example topic: `orderBook_200.100ms.BTCUS`
+
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-websocketorderbook200)
 
 #### Latest information for symbol
 
-LAtest information for selected symbol
+Latest information for selected symbol
 Example topic: `instrument_info.100ms.BTCUSD`
 
-[See bybit documentation](https://github.com/bybit-exchange/bybit-official-api-docs/blob/master/en/websocket.md#instrument_info)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-websocketinstrumentinfo)
 
 
 ## Example
