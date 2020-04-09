@@ -4,9 +4,13 @@
 ## Class: RestClient
 
 
-### new RestClient([key][, secret])
+### new RestClient([key][, secret][, livenet][, options])
 - `key` {String} Bybit API Key
 - `secret` {String} Bybit private key
+- `livenet` {Boolean} If false (default), use testnet.
+- `options` {Object} Optional settings for custom behaviour.
+  - `recv_window` {Number} Optional, default 5000. Increase if recv errors are seen.
+  - `sync_interval_ms` {Number} Optional, default 3600000. Interval at which syncTime is performed.
 
 If you only use the [public endpoints](#public-endpoints) you can ommit key and secret.
 
