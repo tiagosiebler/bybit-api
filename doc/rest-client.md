@@ -101,6 +101,9 @@ If you only use the [public endpoints](#public-endpoints) you can ommit key and 
 #### async getOrderBook(params)
 [See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-orderbook)
 
+#### async getKline(params)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-querykline)
+
 #### async getLatestInformation()
 [See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-latestsymbolinfo)
 
