@@ -1,6 +1,6 @@
 {
   "name": "@pxtrn/bybit-api",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "An unofficial node.js lowlevel wrapper for the Bybit Cryptocurrency Derivative exchange API",
   "main": "index.js",
   "scripts": {
