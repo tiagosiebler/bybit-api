@@ -19,7 +19,7 @@
   "author": "Stefan Aebischer <os@pixtron.ch> (https://pixtron.ch)",
   "contributors": [
     "Tiago Siebler (https://github.com/tiagosiebler)"
-  ]
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/tiagosiebler/bybit-api/issues"
