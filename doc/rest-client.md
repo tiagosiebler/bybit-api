@@ -2,8 +2,6 @@
 
 
 ## Class: RestClient
-
-
 ### new RestClient([key][, secret][, livenet][, options])
 - `key` {String} Bybit API Key
 - `secret` {String} Bybit private key
@@ -12,11 +10,9 @@
   - `recv_window` {Number} Optional, default 5000. Increase if recv errors are seen.
   - `sync_interval_ms` {Number} Optional, default 3600000. Interval at which syncTime is performed.
 
-If you only use the [public endpoints](#public-endpoints) you can ommit key and secret.
-
+If you only use the [public endpoints](#public-endpoints) you can omit key and secret.
 
 ### Private enpoints
-
 #### async placeActiveOrder(params)
 [See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-placev2active)
 
@@ -126,12 +122,10 @@ Returns symbol information (such as tick size & min notional):
 
 Returns the time offset in ms to the server time retrieved by [`async getServerTime`](#async-getservertime).
 If positive the time on the server is ahead of the clients time, if negative the time on the server is behind the clients time.
-
-
 ## Example
 
-```js
-const {RestClient} = require('@pxtrn/bybit-api');
+```javascript
+const {RestClient} = require('bybit-api');
 
 const API_KEY = 'xxx';
 const PRIVATE_KEY = 'yyy';
