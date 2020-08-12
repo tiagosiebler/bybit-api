@@ -34,7 +34,7 @@ If you only use the [public endpoints](#public-endpoints) you can omit key and s
 #### async placeConditionalOrder(params)
 [See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-placecond)
 
-#### async getConditioanlOrder(params)
+#### async getConditionalOrder(params)
 [See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-getcond)
 
 #### async cancelConditionalOrder(params)
