@@ -43,6 +43,9 @@ If you only use the [public endpoints](#public-endpoints) you can omit key and s
 #### async cancelAllConditionalOrders(params)
 [See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-cancelallcond)
 
+#### async replaceConditionalOrder(params)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-replacecond)
+
 #### async queryConditionalOrder(params)
 [See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-querycond)
 
