@@ -74,6 +74,9 @@ If you only use the [public endpoints](#public-endpoints) you can omit key and s
 #### async getWithdrawRecords(params)
 [See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-withdrawrecords)
 
+#### async getAssetExchangeRecords(params)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-assetexchangerecords)
+
 #### async getWalletBalance(params)
 [See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-balance)
 
@@ -102,6 +105,15 @@ If you only use the [public endpoints](#public-endpoints) you can omit key and s
 
 #### async getKline(params)
 [See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-querykline)
+
+#### async getOpenInterest(params)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-marketopeninterest)
+
+#### async getLatestBigDeal(params)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-marketbigdeal)
+
+#### async getLongShortRatio(params)
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-marketaccountratio)
 
 #### async getLatestInformation()
 [See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-latestsymbolinfo)
