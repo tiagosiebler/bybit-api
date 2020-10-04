@@ -15,7 +15,6 @@ module.exports = {
     indent: ['warn', 2],
     'linebreak-style': ['error', 'unix'],
     'lines-between-class-members': ['warn', 'always'],
-    quotes: ['error', 'single'],
     semi: ['error', 'always'],
     'new-cap': 'off',
     'no-console': 'off',
