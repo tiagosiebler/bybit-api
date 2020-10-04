@@ -6,4 +6,4 @@ module.exports = {
   RestClient,
   WebsocketClient,
   DefaultLogger
-}
+};
