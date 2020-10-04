@@ -2,29 +2,15 @@ module.exports = {
   env: {
     es6: true,
     node: true,
-    'jest/globals': true
   },
-  extends: ['eslint:recommended', 'plugin:jest/recommended'],
+  extends: ['eslint:recommended'],
   parserOptions: {
     sourceType: 'module',
     ecmaVersion: 9
   },
 
-  plugins: ['jest', 'prettier'],
+  plugins: [],
   rules: {
-    // 'prettier/prettier': [
-    //   'error',
-    //   {
-    //     singleQuote: true,
-    //     printWidth: 140,
-    //     arrowParens: 'avoid'
-    //   }
-    // ],
-    'jest/no-disabled-tests': 'warn',
-    'jest/no-focused-tests': 'error',
-    'jest/no-identical-title': 'error',
-    'jest/prefer-to-have-length': 'warn',
-    'jest/valid-expect': 'error',
     'array-bracket-spacing': ['error', 'never'],
     indent: ['warn', 2],
     'linebreak-style': ['error', 'unix'],
