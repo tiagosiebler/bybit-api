@@ -1,7 +1,7 @@
 {
   "name": "bybit-api",
-  "version": "1.2.0",
-  "description": "A light node.js wrapper for the Bybit Cryptocurrency Derivative exchange API",
+  "version": "1.2.1",
+  "description": "A node.js wrapper for the Bybit Cryptocurrency Derivative exchange APIs",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,7 +14,13 @@
     "bybit",
     "api",
     "websocket",
-    "rest"
+    "rest",
+    "rest api",
+    "inverse",
+    "nodejs",
+    "trading",
+    "cryptocurrency",
+    "bitcoin"
   ],
   "author": "Stefan Aebischer <os@pixtron.ch> (https://pixtron.ch)",
   "contributors": [
