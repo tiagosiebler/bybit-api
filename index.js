@@ -1,9 +1,9 @@
-const RestClient = require('./lib/rest-client.js');
-const WebsocketClient = require('./lib/websocket-client.js');
-const DefaultLogger = require('./lib/logger.js');
+const RestClient = require('./lib/rest-client');
+const WebsocketClient = require('./lib/websocket-client');
+const DefaultLogger = require('./lib/logger');
 
 module.exports = {
   RestClient,
   WebsocketClient,
   DefaultLogger
-}
+};

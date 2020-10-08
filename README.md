@@ -1,16 +1,16 @@
-# bybit-api [![npm version](https://img.shields.io/npm/v/bybit-api.svg)][1] [![npm size](https://img.shields.io/bundlephobia/min/bybit-api.svg)][1] [![npm downloads](https://img.shields.io/npm/dt/orderbooks.svg)][1]
+# bybit-api [![npm version](https://img.shields.io/npm/v/bybit-api.svg)][1] [![npm size](https://img.shields.io/bundlephobia/min/bybit-api.svg)][1] [![npm downloads](https://img.shields.io/npm/dt/bybit-api.svg)][1]
 [![CodeFactor](https://www.codefactor.io/repository/github/tiagosiebler/bybit-api/badge)](https://www.codefactor.io/repository/github/tiagosiebler/bybit-api)
 
 [1]: https://www.npmjs.com/package/bybit-api
 
-An unofficial node.js lowlevel wrapper for the Bybit Cryptocurrency Derivative exchange API. Forked from [@pxtrn/bybit-api](https://github.com/pixtron/bybit-api), due to low activity on fixes & improvements.
+An light node.js wrapper for the Bybit Cryptocurrency Derivative exchange API. Forked & adapted from [@pxtrn/bybit-api](https://github.com/pixtron/bybit-api).
 
 ## Installation
 `npm install --save bybit-api`
 
 ## Usage
 Create API credentials at bybit (obviously you need to be logged in):
-- [Livenet](https://bybit.com/app/user/api-management)
+- [Livenet](https://bybit.com/app/user/api-management?affiliate_id=9410&language=en-US&group_id=0&group_type=1)
 - [Testnet](https://testnet.bybit.com/app/user/api-management)
 
 ## Documentation
