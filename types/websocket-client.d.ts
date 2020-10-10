@@ -1,7 +1,6 @@
 import {
   CancelType,
   CreateType,
-  OrderResponse,
   OrderStatus,
   OrderType,
   Side,
@@ -143,7 +142,7 @@ export class WebsocketClient extends EventEmitter {
   subscribe(topics: string | string[]): void;
   unsubscribe(topics: string | string[]): void;
   close(): void;
-  on(event: EventName, callback: (message: Object) => void);
+  on(event: EventName, callback: (message: Object) => void): this;
 }
 
 interface WebsocketClientOptions {

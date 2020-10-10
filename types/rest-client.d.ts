@@ -8,7 +8,7 @@ export class RestClient {
   replaceActiveOrder(params: ReplaceActiveOrderRequest): Promise<ReplaceActiveOrderResponse>;
   queryActiveOrder(params: QueryActiveOrderRequest): Promise<QueryActiveOrderResponse>;
   getPublicTradingRecords(params: GetPublicTradingRecordsRequest): Promise<GetPublicTradingRecordsResponse>;
-
+  getWalletBalance(params: GetWalletBalanceRequest): Promise<GetWalletBalanceResponse>;
 }
 
 export interface RestClientOptions {
@@ -103,13 +103,13 @@ export interface CancelAllActiveOrdersResponse extends PrivateResponse {
     "created_at" |
     "updated_at"
     > & {
-    price: string // todo: verify this type change from number
+    price: string
     create_type: CreateType;
     cancel_type: CancelType;
     clOrdID: string;
     cross_status: string;
     cross_seq: number;
-  }[];
+  }[] | null;
 }
 
 export interface ReplaceActiveOrderRequest {
@@ -185,6 +185,29 @@ export interface GetPublicTradingRecordsResponse extends PublicResponse {
   }[];
 }
 
+export interface GetWalletBalanceRequest {
+  coin: Currency;
+}
+
+export interface GetWalletBalanceResponse  extends PrivateResponse {
+  result: Record<Currency, WalletBalanceResult>;
+}
+
+export interface WalletBalanceResult {
+  equity: number;
+  available_balance: number;
+  used_margin: number;
+  order_margin: number;
+  position_margin: number;
+  occ_closing_fee: number;
+  occ_funding_fee: number;
+  wallet_balance: number;
+  realised_pnl: number;
+  unrealised_pnl: number;
+  cum_realised_pnl: number;
+  given_cash: number;
+  service_cash: number;
+}
 export type Side =
   "Buy" |
   "Sell";
