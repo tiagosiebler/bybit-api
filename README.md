@@ -52,7 +52,35 @@ const {WebsocketClient} = require('bybit-api');
 const API_KEY = 'xxx';
 const PRIVATE_KEY = 'yyy';
 
-const ws = new WebsocketClient({key: API_KEY, secret: PRIVATE_KEY});
+const wsConfig = {
+  key: API_KEY,
+  secret: PRIVATE_KEY,
+
+  // The following parameters are optional:
+
+  // defaults to false == testnet. set to true for livenet.
+  // livenet: true
+
+  // override which URL to use for websocket connections
+  // wsUrl: 'wss://stream.bytick.com/realtime'
+
+  // how often to check (in ms) that WS connection is still alive
+  // pingInterval: 10000,
+
+  // how long to wait (in ms) before deciding the connection should be terminated & reconnected
+  // pongTimeout: 1000,
+
+  // how long to wait before attempting to reconnect (in ms) after connection is closed
+  // reconnectTimeout: 500,
+
+  // config options sent to RestClient (used for time sync). See RestClient docs.
+  // restOptions: { },
+
+  // config for axios to pass to RestClient. E.g for proxy support
+  // requestOptions: { }
+};
+
+const ws = new WebsocketClient(wsConfig);
 
 ws.subscribe(['position', 'execution', 'trade']);
 ws.subscribe('kline.BTCUSD.1m');
