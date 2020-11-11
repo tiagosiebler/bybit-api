@@ -1,6 +1,6 @@
 {
   "name": "bybit-api",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "A production-ready Node.js connector for the Bybit APIs and WebSockets",
   "main": "index.js",
   "scripts": {
