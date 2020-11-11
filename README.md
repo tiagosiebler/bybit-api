@@ -39,7 +39,7 @@ client.changeUserLeverage({leverage: 4, symbol: 'ETHUSD'})
     console.log(result);
   })
   .catch(err => {
-    console.error(error);
+    console.error(err);
   });
 ```
 
@@ -57,23 +57,23 @@ const ws = new WebsocketClient({key: API_KEY, secret: PRIVATE_KEY});
 ws.subscribe(['position', 'execution', 'trade']);
 ws.subscribe('kline.BTCUSD.1m');
 
-ws.on('open', function() {
+ws.on('open', () => {
   console.log('connection open');
 });
 
-ws.on('update', function(message) {
+ws.on('update', message => {
   console.log('update', message);
 });
 
-ws.on('response', function(response) {
+ws.on('response', response => {
   console.log('response', response);
 });
 
-ws.on('close', function() {
+ws.on('close', () => {
   console.log('connection closed');
 });
 
-ws.on('error', function(err) {
+ws.on('error', err => {
   console.error('ERR', err);
 });
 ```
