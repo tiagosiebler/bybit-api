@@ -7,8 +7,38 @@ export class RestClient {
   cancelAllActiveOrders(params: CancelAllActiveOrdersRequest): Promise<CancelAllActiveOrdersResponse>;
   replaceActiveOrder(params: ReplaceActiveOrderRequest): Promise<ReplaceActiveOrderResponse>;
   queryActiveOrder(params: QueryActiveOrderRequest): Promise<QueryActiveOrderResponse>;
+  placeConditionalOrder(params: any): Promise<any>;
+  getConditionalOrder(params: any): Promise<any>;
+  cancelConditionalOrder(params: any): Promise<any>;
+  cancelAllConditionalOrders(params: any): Promise<any>;
+  replaceConditionalOrder(params: any): Promise<any>;
+  queryConditionalOrder(params: any): Promise<any>;
+  getPosition(params: any): Promise<any>;
+  changeUserLeverage(params: any): Promise<any>;
+  changePositionMargin(params: any): Promise<any>;
+  setTradingStop(params: any): Promise<any>;
+  getWalletFundRecord(params: any): Promise<any>;
+  getWithdrawRecords(params: any): Promise<any>;
+  getAssetExchangeRecords(params: any): Promise<any>;
+  getWalletBalance(params: any): Promise<any>;
+  setRiskLimit(params: any): Promise<any>;
+  getRiskLimitList(params: any): Promise<any>;
+  getLastFundingRate(params: any): Promise<any>;
+  getMyLastFundingRate(params: any): Promise<any>;
+  getPredictedFunding(params: any): Promise<any>;
+  getTradeRecords(params: any): Promise<any>;
+  getOrderBook(params: any): Promise<any>;
+  getKline(params: any): Promise<any>;
+  getOpenInterest(params: any): Promise<any>;
+  getLatestBigDeal(params: any): Promise<any>;
+  getLongShortRatio(params: any): Promise<any>
+  getLatestInformation(params: any): Promise<any>;
   getPublicTradingRecords(params: GetPublicTradingRecordsRequest): Promise<GetPublicTradingRecordsResponse>;
-  getWalletBalance(params: GetWalletBalanceRequest): Promise<GetWalletBalanceResponse>;
+  getPublicLiquidations(params: any): Promise<any>;
+  getServerTime(): Promise<any>;
+  getApiAnnouncements(): Promise<any>;
+  getSymbols(): Promise<any>;
+  getTimeOffset(): Promise<any>;
 }
 
 export interface RestClientOptions {
