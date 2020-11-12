@@ -1,7 +1,7 @@
 {
   "name": "bybit-api",
-  "version": "1.2.1",
-  "description": "A node.js wrapper for the Bybit Cryptocurrency Derivative exchange APIs",
+  "version": "1.2.3",
+  "description": "A production-ready Node.js connector for the Bybit APIs and WebSockets",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -18,13 +18,15 @@
     "rest api",
     "inverse",
     "nodejs",
+    "node",
     "trading",
     "cryptocurrency",
-    "bitcoin"
+    "bitcoin",
+    "best"
   ],
-  "author": "Stefan Aebischer <os@pixtron.ch> (https://pixtron.ch)",
+  "author": "Tiago Siebler (https://github.com/tiagosiebler)",
   "contributors": [
-    "Tiago Siebler (https://github.com/tiagosiebler)"
+    "Stefan Aebischer <os@pixtron.ch> (https://pixtron.ch)"
   ],
   "license": "MIT",
   "bugs": {
@@ -32,7 +34,7 @@
   },
   "homepage": "https://github.com/tiagosiebler/bybit-api#readme",
   "dependencies": {
-    "axios": "^0.20.0",
+    "axios": "^0.21.0",
     "ws": "^7.3.1"
   },
   "devDependencies": {
