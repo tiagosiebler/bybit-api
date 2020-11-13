@@ -3,6 +3,7 @@
   "version": "1.2.3",
   "description": "A production-ready Node.js connector for the Bybit APIs and WebSockets",
   "main": "lib/index.js",
+  "types": "lib/common.types.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -38,6 +39,11 @@
     "ws": "^7.3.1"
   },
   "devDependencies": {
-    "eslint": "^7.10.0"
+    "@types/node": "^14.14.7",
+    "eslint": "^7.10.0",
+    "source-map-loader": "^1.1.2",
+    "ts-loader": "^8.0.11",
+    "typescript": "^4.0.5",
+    "webpack": "^5.4.0"
   }
 }
