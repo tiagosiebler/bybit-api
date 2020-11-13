@@ -1,9 +1,3 @@
-import {RestClient} from "./types/rest-client";
-import {WebsocketClient} from "./types/websocket-client";
-import DefaultLogger = require("./types/logger");
-
-export {
-  RestClient,
-  WebsocketClient,
-  DefaultLogger,
-};
+export * from "./types/rest-client";
+export * from "./types/websocket-client";
+export * from "./types/logger";

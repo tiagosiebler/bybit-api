@@ -1,4 +1,4 @@
-declare namespace Logger {
+export module Logger {
   export function silly(): void;
   export function debug(): void;
   export function notice(): void;
@@ -6,5 +6,3 @@ declare namespace Logger {
   export function warning(): void;
   export function error(): void;
 }
-
-export = Logger;

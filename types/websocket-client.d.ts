@@ -10,15 +10,6 @@ import {
 } from "./rest-client";
 import {EventEmitter} from "events";
 
-interface ILogger {
-  silly(): void;
-  debug(): void;
-  notice(): void;
-  info(): void;
-  warning(): void;
-  error(): void;
-}
-
 export interface Response {
   success?: boolean;
   topic?: string;
