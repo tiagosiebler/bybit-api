@@ -2,7 +2,7 @@
   "name": "bybit-api",
   "version": "1.2.3",
   "description": "A production-ready Node.js connector for the Bybit APIs and WebSockets",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
