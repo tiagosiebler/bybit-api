@@ -1,21 +1,30 @@
-const assert = require('assert');
-const RequestWrapper = require('./util/requestWrapper');
+import assert from 'assert';
+import { AxiosRequestConfig } from 'axios';
+import RequestWrapper from './util/requestWrapper';
+import { GenericAPIResponse, RestClientInverseOptions } from './common';
 
-module.exports = class RestClient {
+export class RestClient {
+  private requestWrapper: RequestWrapper;
   /**
    * @public Creates an instance of the inverse REST API client.
    *
    * @param {string} key - your API key
    * @param {string} secret - your API secret
    * @param {boolean} [livenet=false]
-   * @param {*} [options={}] options to configure REST API connectivity
-   * @param {*} [requestOptions={}] HTTP networking options for axios
+   * @param {RestClientInverseOptions} [restInverseOptions={}] options to configure REST API connectivity
+   * @param {AxiosRequestConfig} [requestOptions={}] HTTP networking options for axios
    */
-  constructor(key, secret, livenet=false, options={}, requestOptions={}) {
-    this.request = new RequestWrapper(...arguments);
+  constructor(
+    key?: string | undefined,
+    secret?: string | undefined,
+    livenet?: boolean,
+    restInverseOptions:RestClientInverseOptions = {},
+    requestOptions: AxiosRequestConfig = {}
+  ) {
+    this.requestWrapper = new RequestWrapper(key, secret, livenet, restInverseOptions, requestOptions);
   }
 
-  async placeActiveOrder(params) {
+  placeActiveOrder(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.side, 'Parameter side is required');
     assert(params.symbol, 'Parameter symbol is required');
@@ -25,56 +34,56 @@ module.exports = class RestClient {
 
     if (params.order_type === 'Limit') assert(params.price, 'Parameter price is required for limit orders');
 
-    return await this.request.post('v2/private/order/create', params);
+    return this.requestWrapper.post('v2/private/order/create', params);
   }
 
-  async getActiveOrder(params) {
-    return await this.request.get('open-api/order/list', params);
+  getActiveOrder(params: any): GenericAPIResponse {
+    return this.requestWrapper.get('open-api/order/list', params);
   }
 
-  async cancelActiveOrder(params) {
+  cancelActiveOrder(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.symbol, 'Parameter symbol is required');
     assert(params.order_id || params.order_link_id, 'Parameter order_id OR order_link_id is required');
 
-    return await this.request.post('v2/private/order/cancel', params);
+    return this.requestWrapper.post('v2/private/order/cancel', params);
   }
 
-  async cancelAllActiveOrders(params) {
+  cancelAllActiveOrders(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.symbol, 'Parameter symbol is required');
 
-    return await this.request.post('v2/private/order/cancelAll', params);
+    return this.requestWrapper.post('v2/private/order/cancelAll', params);
   }
 
-  async replaceActiveOrder(params) {
+  replaceActiveOrder(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.order_id || params.order_link_id, 'Parameter order_id OR order_link_id is required');
     assert(params.symbol, 'Parameter symbol is required');
 
-    return await this.request.post('v2/private/order/replace', params);
+    return this.requestWrapper.post('v2/private/order/replace', params);
   }
 
   /**
    * @deprecated use replaceActiveOrder()
    */
-  async replaceActiveOrderOld(params) {
+  replaceActiveOrderOld(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.order_id || params.order_link_id, 'Parameter order_id OR order_link_id is required');
     assert(params.symbol, 'Parameter symbol is required');
 
-    return await this.request.post('open-api/order/replace', params);
+    return this.requestWrapper.post('open-api/order/replace', params);
   }
 
-  async queryActiveOrder(params) {
+  queryActiveOrder(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.order_id || params.order_link_id, 'Parameter order_id OR order_link_id is required');
     assert(params.symbol, 'Parameter symbol is required');
 
-    return await this.request.get('v2/private/order', params);
+    return this.requestWrapper.get('v2/private/order', params);
   }
 
-  async placeConditionalOrder(params) {
+  placeConditionalOrder(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.side, 'Parameter side is required');
     assert(params.symbol, 'Parameter symbol is required');
@@ -86,13 +95,13 @@ module.exports = class RestClient {
 
     if (params.order_type === 'Limit') assert(params.price, 'Parameter price is required for limit orders');
 
-    return await this.request.post('v2/private/stop-order/create', params);
+    return this.requestWrapper.post('v2/private/stop-order/create', params);
   }
 
   /**
    * @deprecated use placeConditionalOrder
    */
-  async placeConditionalOrderOld(params) {
+  placeConditionalOrderOld(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.side, 'Parameter side is required');
     assert(params.symbol, 'Parameter symbol is required');
@@ -104,241 +113,241 @@ module.exports = class RestClient {
 
     if (params.order_type === 'Limit') assert(params.price, 'Parameter price is required for limit orders');
 
-    return await this.request.post('open-api/stop-order/create', params);
+    return this.requestWrapper.post('open-api/stop-order/create', params);
   }
 
-  async getConditionalOrder(params) {
+  getConditionalOrder(params: any): GenericAPIResponse {
     assert(params.symbol, 'Parameter symbol is required');
-    return await this.request.get('v2/private/stop-order/list', params);
+    return this.requestWrapper.get('v2/private/stop-order/list', params);
   }
 
   /**
    * @deprecated use placeConditionalOrder
    */
-  async getConditionalOrderOld(params) {
-    return await this.request.get('open-api/stop-order/list', params);
+  getConditionalOrderOld(params: any): GenericAPIResponse {
+    return this.requestWrapper.get('open-api/stop-order/list', params);
   }
 
-  async cancelConditionalOrder(params) {
+  cancelConditionalOrder(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.stop_order_id || params.order_link_id, 'Parameter stop_order_id OR order_link_id is required');
 
-    return await this.request.post('v2/private/stop-order/cancel', params);
+    return this.requestWrapper.post('v2/private/stop-order/cancel', params);
   }
 
   /**
    * @deprecated use cancelConditionalOrder
    */
-  async cancelConditionalOrderOld(params) {
+  cancelConditionalOrderOld(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.stop_order_id, 'Parameter stop_order_id is required');
 
-    return await this.request.post('open-api/stop-order/cancel', params);
+    return this.requestWrapper.post('open-api/stop-order/cancel', params);
   }
 
-  async cancelAllConditionalOrders(params) {
+  cancelAllConditionalOrders(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.symbol, 'Parameter symbol is required');
 
-    return await this.request.post('v2/private/stop-order/cancelAll', params);
+    return this.requestWrapper.post('v2/private/stop-order/cancelAll', params);
   }
 
-  async replaceConditionalOrder(params) {
+  replaceConditionalOrder(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.stop_order_id || params.order_link_id, 'Parameter stop_order_id OR order_link_id is required');
     assert(params.symbol, 'Parameter symbol is required');
 
-    return await this.request.post('v2/private/stop-order/replace', params);
+    return this.requestWrapper.post('v2/private/stop-order/replace', params);
   }
 
   /**
    * @deprecated use replaceConditionalOrder
    */
-  async replaceConditionalOrderOld(params) {
+  replaceConditionalOrderOld(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.stop_order_id, 'Parameter stop_order_id is required');
     assert(params.symbol, 'Parameter symbol is required');
 
-    return await this.request.post('open-api/stop-order/replace', params);
+    return this.requestWrapper.post('open-api/stop-order/replace', params);
   }
 
-  async queryConditionalOrder(params) {
+  queryConditionalOrder(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.stop_order_id || params.order_link_id, 'Parameter order_id OR order_link_id is required');
     assert(params.symbol, 'Parameter symbol is required');
 
-    return await this.request.get('v2/private/stop-order', params);
+    return this.requestWrapper.get('v2/private/stop-order', params);
   }
 
   /**
    * @deprecated use getPosition() instead
    */
-  async getUserLeverage() {
-    return await this.request.get('user/leverage');
+  getUserLeverage(): GenericAPIResponse {
+    return this.requestWrapper.get('user/leverage');
   }
 
-  async getPosition(params) {
-    return await this.request.get('v2/private/position/list', params);
+  getPosition(params?: any): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/position/list', params);
   }
 
-  async changeUserLeverage(params) {
+  changeUserLeverage(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.leverage, 'Parameter leverage is required');
     assert(params.symbol, 'Parameter symbol is required');
 
-    return await this.request.post('user/leverage/save', params);
+    return this.requestWrapper.post('user/leverage/save', params);
   }
 
   /**
    * @deprecated use getPosition() instead
    */
-  async getPositions() {
-    return await this.request.get('position/list');
+  getPositions(): GenericAPIResponse {
+    return this.requestWrapper.get('position/list');
   }
 
-  async changePositionMargin(params) {
+  changePositionMargin(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.margin, 'Parameter margin is required');
     assert(params.symbol, 'Parameter symbol is required');
 
-    return await this.request.post('position/change-position-margin', params);
+    return this.requestWrapper.post('position/change-position-margin', params);
   }
 
-  async setTradingStop(params) {
+  setTradingStop(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.symbol, 'Parameter symbol is required');
 
-    return await this.request.post('open-api/position/trading-stop', params);
+    return this.requestWrapper.post('open-api/position/trading-stop', params);
   }
 
-  async getWalletFundRecords(params) {
-    return await this.request.get('open-api/wallet/fund/records', params);
+  getWalletFundRecords(params: any): GenericAPIResponse {
+    return this.requestWrapper.get('open-api/wallet/fund/records', params);
   }
 
-  async getWithdrawRecords(params) {
-    return await this.request.get('open-api/wallet/withdraw/list', params);
+  getWithdrawRecords(params: any): GenericAPIResponse {
+    return this.requestWrapper.get('open-api/wallet/withdraw/list', params);
   }
 
-  async getAssetExchangeRecords(params) {
-    return await this.request.get('v2/private/exchange-order/list', params);
+  getAssetExchangeRecords(params: any): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/exchange-order/list', params);
   }
 
-  async getWalletBalance(params) {
+  getWalletBalance(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.coin, 'Parameter coin is required');
-    return await this.request.get('v2/private/wallet/balance', params);
+    return this.requestWrapper.get('v2/private/wallet/balance', params);
   }
 
-  async setRiskLimit(params) {
+  setRiskLimit(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.symbol, 'Parameter symbol is required');
     assert(params.risk_id, 'Parameter risk_id is required');
 
-    return await this.request.post('open-api/wallet/risk-limit', params);
+    return this.requestWrapper.post('open-api/wallet/risk-limit', params);
   }
 
-  async getRiskLimitList() {
-    return await this.request.get('open-api/wallet/risk-limit/list');
+  getRiskLimitList(): GenericAPIResponse {
+    return this.requestWrapper.get('open-api/wallet/risk-limit/list');
   }
 
-  async getLastFundingRate(params) {
+  getLastFundingRate(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.symbol, 'Parameter symbol is required');
 
-    return await this.request.get('open-api/funding/prev-funding-rate', params);
+    return this.requestWrapper.get('open-api/funding/prev-funding-rate', params);
   }
 
-  async getMyLastFundingFee(params) {
+  getMyLastFundingFee(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.symbol, 'Parameter symbol is required');
 
-    return await this.request.get('open-api/funding/prev-funding', params);
+    return this.requestWrapper.get('open-api/funding/prev-funding', params);
   }
 
-  async getPredictedFunding(params) {
+  getPredictedFunding(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.symbol, 'Parameter symbol is required');
 
-    return await this.request.get('open-api/funding/predicted-funding', params);
+    return this.requestWrapper.get('open-api/funding/predicted-funding', params);
   }
 
-  async getTradeRecords(params) {
+  getTradeRecords(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.order_id || params.symbol, 'Parameter order_id OR symbol is required');
 
-    return await this.request.get('v2/private/execution/list', params);
+    return this.requestWrapper.get('v2/private/execution/list', params);
   }
 
-  async getOrderBook(params) {
+  getOrderBook(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.symbol, 'Parameter symbol is required');
 
-    return await this.request.get('v2/public/orderBook/L2', params);
+    return this.requestWrapper.get('v2/public/orderBook/L2', params);
   }
 
-  async getKline(params) {
+  getKline(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.symbol, 'Parameter symbol is required');
     assert(params.interval, 'Parameter interval is required');
     assert(params.from, 'Parameter from is required');
 
-    return await this.request.get('v2/public/kline/list', params);
+    return this.requestWrapper.get('v2/public/kline/list', params);
   }
 
-  async getOpenInterest(params) {
+  getOpenInterest(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.symbol, 'Parameter symbol is required');
     assert(params.period, 'Parameter period is required');
 
-    return await this.request.get('v2/public/open-interest', params);
+    return this.requestWrapper.get('v2/public/open-interest', params);
   }
 
-  async getLatestBigDeal(params) {
+  getLatestBigDeal(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.symbol, 'Parameter symbol is required');
 
-    return await this.request.get('v2/public/big-deal', params);
+    return this.requestWrapper.get('v2/public/big-deal', params);
   }
 
-  async getLongShortRatio(params) {
+  getLongShortRatio(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.symbol, 'Parameter symbol is required');
     assert(params.period, 'Parameter period is required');
 
-    return await this.request.get('v2/public/account-ratio', params);
+    return this.requestWrapper.get('v2/public/account-ratio', params);
   }
 
-  async getLatestInformation() {
-    return await this.request.get('v2/public/tickers');
+  getLatestInformation(): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/tickers');
   }
 
-  async getPublicTradingRecords(params) {
+  getPublicTradingRecords(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.symbol, 'Parameter symbol is required');
 
-    return await this.request.get('v2/public/trading-records', params);
+    return this.requestWrapper.get('v2/public/trading-records', params);
   }
 
-  async getPublicLiquidations(params) {
+  getPublicLiquidations(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.symbol, 'Parameter symbol is required');
 
-    return await this.request.get('v2/public/liq-records', params);
+    return this.requestWrapper.get('v2/public/liq-records', params);
   }
 
-  async getServerTime() {
-    return await this.request.get('v2/public/time');
+  getServerTime(): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/time');
   }
 
-  async getApiAnnouncements() {
-    return await this.request.get('v2/public/announcement');
+  getApiAnnouncements(): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/announcement');
   }
 
-  async getSymbols() {
-    return await this.request.get('v2/public/symbols');
+  getSymbols(): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/symbols');
   }
 
-  async getTimeOffset() {
-    return await this.request.getTimeOffset();
+  getTimeOffset(): GenericAPIResponse {
+    return this.requestWrapper.getTimeOffset();
   }
 };
