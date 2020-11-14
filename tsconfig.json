@@ -5,6 +5,7 @@
     "allowJs": true,
     "target": "es6",
     "moduleResolution": "node",
+    "module": "none",
     "outDir": "lib",
     "removeComments": false,
     "noEmitOnError": true,
@@ -13,7 +14,7 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "esModuleInterop": true,
-    "lib": ["ES2017","DOM"],
+    "lib": ["es2017","dom"],
     "baseUrl": ".",
     "paths": {
       "@src/*": ["src/*"]
