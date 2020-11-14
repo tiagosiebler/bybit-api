@@ -24,6 +24,12 @@ Most methods accept JS objects. These can be populated using parameters specifie
 - [Bybit API Inverse Documentation](https://bybit-exchange.github.io/docs/inverse/#t-introduction).
 - [Bybit API Linear Documentation (not supported yet)](https://bybit-exchange.github.io/docs/linear/#t-introduction)
 
+## Structure
+This project uses typescript. Resources are stored in 3 key structures:
+- [src](./src) - the whole connector written in typescript
+- [lib](./lib) - the javascript version of the project (compiled from typescript). This should not be edited directly, as it will be overwritten with each release.
+- [dist](./dist) - the packed bundle of the project for use in browser environments.
+
 ### Inverse Contracts
 #### Rest client
 ```javascript

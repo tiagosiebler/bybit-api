@@ -4,7 +4,7 @@
     "allowJs": true,
     "target": "es6",
     "moduleResolution": "node",
-    "outDir": "dist",
+    "outDir": "lib",
     "removeComments": false,
     "noEmitOnError": true,
     "noImplicitAny": false,
@@ -18,7 +18,7 @@
       "@src/*": ["src/*"]
     }
   },
-  "include": ["lib/**/*"],
+  "include": ["src/**/*"],
   "exclude": [
     "node_modules",
     "**/node_modules/*",
