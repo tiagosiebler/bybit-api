@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { AxiosRequestConfig } from 'axios';
+import { GenericAPIResponse, RestClientInverseOptions } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
-import { GenericAPIResponse, RestClientInverseOptions } from './common';
 
 export class RestClient {
   private requestWrapper: RequestWrapper;

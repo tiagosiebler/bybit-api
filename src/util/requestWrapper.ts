@@ -1,8 +1,6 @@
-import assert from 'assert';
 import axios, { AxiosRequestConfig, Method } from 'axios';
 
-import { signMessage, serializeParams } from './requestUtils';
-import { GenericAPIResponse, RestClientInverseOptions } from '../common';
+import { signMessage, serializeParams, RestClientInverseOptions, GenericAPIResponse } from './requestUtils';
 
 const baseUrls = {
   livenet: 'https://api.bybit.com',

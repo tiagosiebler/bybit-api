@@ -1,4 +1,4 @@
-type LogParams = null | any;
+export type LogParams = null | any;
 
 export const DefaultLogger = {
   silly: (...params: LogParams): void => {

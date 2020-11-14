@@ -1,6 +1,7 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
+    "declaration": true,
     "allowJs": true,
     "target": "es6",
     "moduleResolution": "node",

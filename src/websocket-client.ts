@@ -26,7 +26,7 @@ export interface WebsocketClientOptions {
   restOptions?: any;
   requestOptions?: any;
   wsUrl?: string;
-}
+};
 
 type Logger = typeof DefaultLogger;
 
