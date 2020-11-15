@@ -1,6 +1,7 @@
 import { createHmac } from 'crypto';
 
 export interface RestClientInverseOptions {
+  // override the max size of the request window (in ms)
   recv_window?: number;
 
   // how often to sync time drift with bybit servers

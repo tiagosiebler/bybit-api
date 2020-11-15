@@ -37,8 +37,33 @@ const {RestClient} = require('bybit-api');
 
 const API_KEY = 'xxx';
 const PRIVATE_KEY = 'yyy';
+const useLivenet = false;
 
-const client = new RestClient(API_KEY, PRIVATE_KEY);
+const restInverseOptions = {
+  // how much time to allow for valid request
+  recv_window?: number;
+
+  // how often to sync time drift with bybit servers
+  sync_interval_ms?: number | string;
+
+  // if true, we'll throw errors if any params are undefined
+  strict_param_validation?: boolean;
+
+  // Optionally override API protocol + domain
+  // e.g 'https://api.bytick.com'
+  baseUrl?: string;
+};
+
+const client = new RestClient(
+  API_KEY,
+  PRIVATE_KEY,
+
+  // optional, uses testnet by default. Set to 'true' to use livenet.
+  useLivenet,
+
+  // restInverseOptions,
+  // requestLibraryOptions
+)
 
 client.changeUserLeverage({leverage: 4, symbol: 'ETHUSD'})
   .then(result => {
@@ -49,7 +74,7 @@ client.changeUserLeverage({leverage: 4, symbol: 'ETHUSD'})
   });
 ```
 
-See inverse [rest-client.js](./master/lib/rest-client.js) for further information.
+See inverse [rest-client.js](./lib/rest-client.js) for further information.
 
 #### Websocket client
 ```javascript
@@ -111,7 +136,7 @@ ws.on('error', err => {
   console.error('ERR', err);
 });
 ```
-See inverse [websocket-client.js](./master/lib/websocket-client.js) & [ws api docs](./doc/websocket-client.md) for further information.
+See inverse [websocket-client.js](./lib/websocket-client.js) & [ws api docs](./doc/websocket-client.md) for further information.
 
 ### Customise Logging
 Pass a custom logger which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired:
