@@ -5,6 +5,7 @@ import RequestWrapper from './util/requestWrapper';
 
 export class RestClient {
   private requestWrapper: RequestWrapper;
+
   /**
    * @public Creates an instance of the inverse REST API client.
    *
