@@ -46,8 +46,7 @@ export default class RequestUtil {
       // custom request options based on axios specs - see: https://github.com/axios/axios#request-config
       ...requestOptions,
       headers: {
-        'referer': 'bybitapinode',
-        'X-Requested-With': 'bybitapinode',
+        'referer': 'bybitapinode'
       },
     };
 
