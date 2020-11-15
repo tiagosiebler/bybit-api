@@ -3,6 +3,8 @@ import { EventEmitter } from 'events';
 import { DefaultLogger } from './logger';
 import { RestClient } from './rest-client';
 import { signMessage, serializeParams } from './util/requestUtils';
+// import WebSocket from 'ws';
+import WebSocket from 'isomorphic-ws';
 
 const wsUrls = {
   livenet: 'wss://stream.bybit.com/realtime',
@@ -103,15 +105,20 @@ export class WebsocketClient extends EventEmitter {
 
       const ws = new WebSocket(url);
 
-      ws.onopen!(this._wsOpenHandler.bind(this));
-      ws.onmessage!(this._wsMessageHandler.bind(this));
-      ws.onerror!(this._wsOnErrorHandler.bind(this));
-      ws.onclose!(this._wsCloseHandler.bind(this));
+      // ws.onopen!(this._wsOpenHandler.bind(this));
+      // ws.onmessage!(this._wsMessageHandler.bind(this));
+      // ws.onerror!(this._wsOnErrorHandler.bind(this));
+      // ws.onclose!(this._wsCloseHandler.bind(this));
+
+      ws.onopen = this._wsOpenHandler.bind(this);
+      ws.onmessage = this._wsMessageHandler.bind(this);
+      ws.onerror = this._wsOnErrorHandler.bind(this);
+      ws.onclose = this._wsCloseHandler.bind(this);
 
       this.ws = ws;
 
     } catch (err) {
-      this.logger.error('Connection failed', err);
+      this.logger.error('Connection failed: ', err);
       this._reconnect(this.options.reconnectTimeout);
     }
   }
@@ -192,7 +199,7 @@ export class WebsocketClient extends EventEmitter {
   }
 
   _wsMessageHandler(message) {
-    const msg = JSON.parse(message);
+    const msg = JSON.parse(message && message.data || message);
 
     if ('success' in msg) {
       this._handleResponse(msg);

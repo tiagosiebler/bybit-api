@@ -3,7 +3,6 @@ const path = require('path');
 const webpackConfig = {};
 
 function generateConfig(name) {
-  var uglify = name.indexOf('min') > -1;
   var config = {
     entry: './lib/index.js',
     output: {
@@ -58,12 +57,6 @@ function generateConfig(name) {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     })
   ];
-
-  // if (uglify) {
-  //   config.optimization = {
-  //     minimizer: [new UglifyJsPlugin()],
-  //   };
-  // }
 
   return config;
 };

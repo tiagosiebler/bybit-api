@@ -4,7 +4,11 @@
   "description": "A production-ready Node.js connector for the Bybit APIs and WebSockets",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "files": ["lib/*","index.js"],
+  "files": [
+    "lib/*",
+    "index.js",
+    "dist/*"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf lib dist",
@@ -23,7 +27,8 @@
   ],
   "dependencies": {
     "axios": "^0.21.0",
-    "ws": "^7.3.1"
+    "isomorphic-ws": "^4.0.1",
+    "ws": "^7.4.0"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -52,8 +57,8 @@
     "best"
   ],
   "funding": {
-    "type" : "individual",
-    "url" : "https://github.com/sponsors/tiagosiebler"
+    "type": "individual",
+    "url": "https://github.com/sponsors/tiagosiebler"
   },
   "license": "MIT",
   "bugs": {

@@ -1,4 +1,4 @@
-export declare type LogParams = null | any;
+export declare type LogParams = undefined | any;
 export declare const DefaultLogger: {
     silly: (...params: LogParams) => void;
     debug: (...params: LogParams) => void;
