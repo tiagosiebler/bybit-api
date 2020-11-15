@@ -43,7 +43,7 @@ client.changeUserLeverage({leverage: 4, symbol: 'ETHUSD'})
   });
 ```
 
-See inverse [rest-client.js](./master/lib/rest-client.js) for further information.
+See inverse [rest-client.js](./lib/rest-client.js) for further information.
 
 #### Websocket client
 ```javascript
@@ -105,7 +105,7 @@ ws.on('error', err => {
   console.error('ERR', err);
 });
 ```
-See inverse [websocket-client.js](./master/lib/websocket-client.js) & [ws api docs](./doc/websocket-client.md) for further information.
+See inverse [websocket-client.js](./lib/websocket-client.js) & [ws api docs](./doc/websocket-client.md) for further information.
 
 ### Customise Logging
 Pass a custom logger which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired:
