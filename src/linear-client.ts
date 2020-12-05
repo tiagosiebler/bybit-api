@@ -52,6 +52,16 @@ class _LinearClient {
   }
 
   /**
+   * @public Get the last funding rate.
+   */
+  getLastFundingRate(params: any): GenericAPIResponse {
+    assert(params, 'No params passed');
+    assert(params.symbol, 'Parameter symbol is required');
+
+    return this.requestWrapper.get('public/linear/funding/prev-funding-rate', params);
+  }
+
+  /**
    * @public Fetch candle data for a symbol's mark price.
    */
   getMarkPriceKline(params: any): GenericAPIResponse {
