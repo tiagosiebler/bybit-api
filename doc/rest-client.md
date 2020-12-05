@@ -95,6 +95,11 @@ If you only use the [public endpoints](#public-endpoints) you can omit key and s
 #### async getPredictedFunding(params)
 [See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-predictedfunding)
 
+#### async getLcpInfo(params)
+Get user's LCP (data refreshes once an hour). Only supports inverse perpetual at present.  See [Understanding bybit's Liquidity System](https://bybit-exchange.github.io/docs/inverse/#t-liquidity) to learn more.
+
+[See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-lcp)
+
 #### async getTradeRecords(params)
 [See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-usertraderecords)
 

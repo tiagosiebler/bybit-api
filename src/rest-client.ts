@@ -255,6 +255,13 @@ class _RestClient {
     return this.requestWrapper.get('open-api/funding/predicted-funding', params);
   }
 
+  getLcpInfo(params: any): GenericAPIResponse {
+    assert(params, 'No params passed');
+    assert(params.symbol, 'Parameter symbol is required');
+
+    return this.requestWrapper.get('v2/private/account/lcp', params);
+  }
+
   getTradeRecords(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.order_id || params.symbol, 'Parameter order_id OR symbol is required');
