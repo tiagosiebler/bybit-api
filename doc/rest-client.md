@@ -12,7 +12,7 @@
 
 If you only use the [public endpoints](#public-endpoints) you can omit key and secret.
 
-### Private enpoints
+### Private endpoints
 #### async placeActiveOrder(params)
 [See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-placev2active)
 
@@ -98,7 +98,7 @@ If you only use the [public endpoints](#public-endpoints) you can omit key and s
 #### async getTradeRecords(params)
 [See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-usertraderecords)
 
-### Public enpoints
+### Public endpoints
 
 #### async getOrderBook(params)
 [See bybit documentation](https://bybit-exchange.github.io/docs/inverse/#t-orderbook)
