@@ -85,7 +85,7 @@ If you only use the [public endpoints](#public-endpoints) you can omit key and s
 #### async getMyLastFundingFee(params)
 [See bybit documentation](https://bybit-exchange.github.io/docs/linear/#t-mylastfundingfee)
 
-#### async getAPIKeyInfo(params)
+#### async getApiKeyInfo(params)
 [See bybit documentation](https://bybit-exchange.github.io/docs/linear/#t-key)
 
 #### async getWalletBalance(params)
