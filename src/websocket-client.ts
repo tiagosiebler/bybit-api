@@ -37,7 +37,7 @@ export class WebsocketClient extends EventEmitter {
   private readyState: number;
   private pingInterval?: number | undefined;
   private pongTimeout?: number | undefined;
-  private client: RestClient;
+  private client: any; // XXX This used to be RestClient instead of any, but I need to learn more about mixins in TypeScript.
   private _subscriptions: Set<unknown>;
   private ws: WebSocket;
   private options: WebsocketClientOptions;

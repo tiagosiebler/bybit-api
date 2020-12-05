@@ -2,8 +2,9 @@ import assert from 'assert';
 import { AxiosRequestConfig } from 'axios';
 import { GenericAPIResponse, RestClientInverseOptions } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
+import { SharedEndpoints } from './shared-endpoints';
 
-export class RestClient {
+class _RestClient {
   private requestWrapper: RequestWrapper;
 
   /**
@@ -221,24 +222,6 @@ export class RestClient {
     return this.requestWrapper.post('open-api/position/trading-stop', params);
   }
 
-  getWalletFundRecords(params: any): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/wallet/fund/records', params);
-  }
-
-  getWithdrawRecords(params: any): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/wallet/withdraw/list', params);
-  }
-
-  getAssetExchangeRecords(params: any): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/exchange-order/list', params);
-  }
-
-  getWalletBalance(params: any): GenericAPIResponse {
-    assert(params, 'No params passed');
-    assert(params.coin, 'Parameter coin is required');
-    return this.requestWrapper.get('v2/private/wallet/balance', params);
-  }
-
   setRiskLimit(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.symbol, 'Parameter symbol is required');
@@ -279,13 +262,6 @@ export class RestClient {
     return this.requestWrapper.get('v2/private/execution/list', params);
   }
 
-  getOrderBook(params: any): GenericAPIResponse {
-    assert(params, 'No params passed');
-    assert(params.symbol, 'Parameter symbol is required');
-
-    return this.requestWrapper.get('v2/public/orderBook/L2', params);
-  }
-
   getKline(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.symbol, 'Parameter symbol is required');
@@ -295,33 +271,6 @@ export class RestClient {
     return this.requestWrapper.get('v2/public/kline/list', params);
   }
 
-  getOpenInterest(params: any): GenericAPIResponse {
-    assert(params, 'No params passed');
-    assert(params.symbol, 'Parameter symbol is required');
-    assert(params.period, 'Parameter period is required');
-
-    return this.requestWrapper.get('v2/public/open-interest', params);
-  }
-
-  getLatestBigDeal(params: any): GenericAPIResponse {
-    assert(params, 'No params passed');
-    assert(params.symbol, 'Parameter symbol is required');
-
-    return this.requestWrapper.get('v2/public/big-deal', params);
-  }
-
-  getLongShortRatio(params: any): GenericAPIResponse {
-    assert(params, 'No params passed');
-    assert(params.symbol, 'Parameter symbol is required');
-    assert(params.period, 'Parameter period is required');
-
-    return this.requestWrapper.get('v2/public/account-ratio', params);
-  }
-
-  getLatestInformation(): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/tickers');
-  }
-
   getPublicTradingRecords(params: any): GenericAPIResponse {
     assert(params, 'No params passed');
     assert(params.symbol, 'Parameter symbol is required');
@@ -329,26 +278,9 @@ export class RestClient {
     return this.requestWrapper.get('v2/public/trading-records', params);
   }
 
-  getPublicLiquidations(params: any): GenericAPIResponse {
-    assert(params, 'No params passed');
-    assert(params.symbol, 'Parameter symbol is required');
-
-    return this.requestWrapper.get('v2/public/liq-records', params);
-  }
-
-  getServerTime(): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/time');
-  }
-
-  getApiAnnouncements(): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/announcement');
-  }
-
-  getSymbols(): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/symbols');
-  }
-
   getTimeOffset(): GenericAPIResponse {
     return this.requestWrapper.getTimeOffset();
   }
 };
+
+export const RestClient = SharedEndpoints(_RestClient);
