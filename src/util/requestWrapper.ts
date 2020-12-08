@@ -1,17 +1,30 @@
-const assert = require('assert');
-const axios = require('axios');
+import axios, { AxiosRequestConfig, Method } from 'axios';
 
-const { signMessage, serializeParams } = require('./requestUtils');
+import { signMessage, serializeParams, RestClientInverseOptions, GenericAPIResponse } from './requestUtils';
 
 const baseUrls = {
   livenet: 'https://api.bybit.com',
   testnet: 'https://api-testnet.bybit.com'
 };
 
-module.exports = class RequestUtil {
-  constructor(key, secret, livenet=false, options={}, requestOptions={}) {
-    this._timeOffset = null;
-    this._syncTimePromise = null;
+export default class RequestUtil {
+  private timeOffset: number | null;
+  private syncTimePromise: null | Promise<any>;
+  private options: RestClientInverseOptions;
+  private baseUrl: string;
+  private globalRequestOptions: AxiosRequestConfig;
+  private key: string | undefined;
+  private secret: string | undefined;
+
+  constructor(
+    key: string | undefined,
+    secret: string | undefined,
+    livenet: boolean = false,
+    options: RestClientInverseOptions = {},
+    requestOptions: AxiosRequestConfig = {}
+  ) {
+    this.timeOffset = null;
+    this.syncTimePromise = null;
 
     this.options = {
       recv_window: 5000,
@@ -33,40 +46,32 @@ module.exports = class RequestUtil {
       // custom request options based on axios specs - see: https://github.com/axios/axios#request-config
       ...requestOptions,
       headers: {
-        'referer': 'bybitapinode'
+        'referer': 'bybitapinode',
+        'x-referer': 'bybitapinode'
       },
     };
 
-    if (key) {
-      assert(secret, 'Secret is required for private enpoints');
+    if (key && !secret) {
+      throw new Error('API Key & Secret are both required for private enpoints')
     }
 
     this._syncTime();
-    setInterval(this._syncTime.bind(this), parseInt(this.options.sync_interval_ms));
+    setInterval(this._syncTime.bind(this), +this.options.sync_interval_ms!);
 
     this.key = key;
     this.secret = secret;
   }
 
-  async get(endpoint, params) {
-    const result = await this._call('GET', endpoint, params);
-    return result;
+  // TODO: type check that endpoint never starts with forward slash??
+  get(endpoint: string, params?: any): GenericAPIResponse {
+    return this._call('GET', endpoint, params);
   }
 
-  async post(endpoint, params) {
-    const result = await this._call('POST', endpoint, params);
-    return result;
+  post(endpoint: string, params?: any): GenericAPIResponse {
+    return this._call('POST', endpoint, params);
   }
 
-  async getTimeOffset() {
-    const start = Date.now();
-    const result = await this.get('v2/public/time');
-    const end = Date.now();
-
-    return Math.ceil((result.time_now * 1000) - end + ((end - start) / 2));
-  }
-
-  async _call(method, endpoint, params) {
+  async _call(method: Method, endpoint: string, params?: any): GenericAPIResponse {
     const publicEndpoint = endpoint.startsWith('v2/public');
 
     if (!publicEndpoint) {
@@ -74,7 +79,7 @@ module.exports = class RequestUtil {
         throw new Error('Private endpoints require api and private keys set');
       }
 
-      if (this._timeOffset === null) {
+      if (this.timeOffset === null) {
         await this._syncTime();
       }
 
@@ -132,11 +137,11 @@ module.exports = class RequestUtil {
       });
   }
 
-  _signRequest(data) {
+  _signRequest(data: any): object {
     const params = {
       ...data,
       api_key: this.key,
-      timestamp: Date.now() + this._timeOffset
+      timestamp: Date.now() + (this.timeOffset || 0)
     };
 
     // Optional, set to 5000 by default. Increase if timestamp/recv_window errors are seen.
@@ -152,16 +157,30 @@ module.exports = class RequestUtil {
     return params;
   }
 
-  _syncTime() {
-    if (this._syncTimePromise !== null) {
-      return this._syncTimePromise;
+  /**
+   * @deprecated move this somewhere else, because v2/public/time shouldn't be hardcoded here
+   *
+   * @returns {Promise<number>}
+   * @memberof RequestUtil
+   */
+  async getTimeOffset(): Promise<number> {
+    const start = Date.now();
+    const result = await this.get('v2/public/time');
+    const end = Date.now();
+
+    return Math.ceil((result.time_now * 1000) - end + ((end - start) / 2));
+  }
+
+  _syncTime(): GenericAPIResponse {
+    if (this.syncTimePromise !== null) {
+      return this.syncTimePromise;
     }
 
-    this._syncTimePromise = this.getTimeOffset().then(offset => {
-      this._timeOffset = offset;
-      this._syncTimePromise = null;
+    this.syncTimePromise = this.getTimeOffset().then(offset => {
+      this.timeOffset = offset;
+      this.syncTimePromise = null;
     });
 
-    return this._syncTimePromise;
+    return this.syncTimePromise;
   }
 };
