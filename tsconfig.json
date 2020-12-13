@@ -1,0 +1,31 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "allowJs": true,
+    "target": "es6",
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "outDir": "lib",
+    "removeComments": false,
+    "noEmitOnError": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "lib": ["es2017","dom"],
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["src/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules",
+    "**/node_modules/*",
+    "coverage",
+    "doc"
+  ]
+}
