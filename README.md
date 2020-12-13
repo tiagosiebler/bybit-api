@@ -10,11 +10,6 @@ A production-ready Node.js connector for the Bybit APIs and WebSockets.
 ## Installation
 `npm install --save bybit-api`
 
-## Usage
-Create API credentials at Bybit
-- [Livenet](https://bybit.com/app/user/api-management?affiliate_id=9410&language=en-US&group_id=0&group_type=1)
-- [Testnet](https://testnet.bybit.com/app/user/api-management)
-
 ## Issues & Discussion
 - Issues? Check the [issues tab](https://github.com/tiagosiebler/bybit-api/issues).
 - Discuss & collaborate with other node devs? Join our [Node.js Algo Traders](https://t.me/nodetraders) engineering community on telegram.
@@ -29,6 +24,19 @@ This project uses typescript. Resources are stored in 3 key structures:
 - [src](./src) - the whole connector written in typescript
 - [lib](./lib) - the javascript version of the project (compiled from typescript). This should not be edited directly, as it will be overwritten with each release.
 - [dist](./dist) - the packed bundle of the project for use in browser environments.
+
+## Usage
+Create API credentials at Bybit
+- [Livenet](https://bybit.com/app/user/api-management?affiliate_id=9410&language=en-US&group_id=0&group_type=1)
+- [Testnet](https://testnet.bybit.com/app/user/api-management)
+
+### Browser Usage
+Build a bundle using webpack:
+- `npm install`
+- `npm build`
+- `npm pack`
+
+The bundle can be found in `lib/`. Altough usage should be largely consistent, smaller differences will exist. Docs TBC.
 
 ### Inverse Contracts
 #### Rest client
