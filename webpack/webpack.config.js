@@ -64,6 +64,6 @@ function generateConfig(name) {
   ];
 
   return config;
-};
+}
 
 module.exports = generateConfig('bybitapi');
