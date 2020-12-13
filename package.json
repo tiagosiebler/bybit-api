@@ -1,6 +1,6 @@
 {
   "name": "bybit-api",
-  "version": "1.3.0-beta.1",
+  "version": "1.3.0-beta.2",
   "description": "A production-ready Node.js connector for the Bybit APIs and WebSockets",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -16,11 +16,8 @@
     "build": "tsc",
     "pack": "webpack --config webpack/webpack.config.js",
     "prepush": "npm run build",
-    "prepublish": "npm run build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/tiagosiebler/bybit-api"
+    "prepublish": "npm run build",
+    "betapublish": "npm publish --tag beta"
   },
   "author": "Tiago Siebler (https://github.com/tiagosiebler)",
   "contributors": [
@@ -63,6 +60,10 @@
     "url": "https://github.com/sponsors/tiagosiebler"
   },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tiagosiebler/bybit-api"
+  },
   "bugs": {
     "url": "https://github.com/tiagosiebler/bybit-api/issues"
   },

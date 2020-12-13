@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 
-import { DefaultLogger } from './logger';
 import { RestClient } from './rest-client';
+import { DefaultLogger } from './logger';
 import { signMessage, serializeParams } from './util/requestUtils';
 // import WebSocket from 'ws';
 import WebSocket from 'isomorphic-ws';
