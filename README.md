@@ -5,7 +5,7 @@
 
 [1]: https://www.npmjs.com/package/bybit-api
 
-A production-ready Node.js connector for the Bybit APIs and WebSockets.
+A production-ready Node.js connector for the Bybit APIs and WebSockets, with TypeScript & browser support.
 
 ## Installation
 `npm install --save bybit-api`
@@ -36,12 +36,12 @@ Build a bundle using webpack:
 - `npm build`
 - `npm pack`
 
-The bundle can be found in `lib/`. Altough usage should be largely consistent, smaller differences will exist. Docs TBC.
+The bundle can be found in `dist/`. Altough usage should be largely consistent, smaller differences will exist. Documentation is still TODO.
 
 ### Inverse Contracts
 #### Rest client
 ```javascript
-const {RestClient} = require('bybit-api');
+const { RestClient } = require('bybit-api');
 
 const API_KEY = 'xxx';
 const PRIVATE_KEY = 'yyy';
@@ -88,11 +88,11 @@ client.changeUserLeverage({leverage: 4, symbol: 'ETHUSD'})
   });
 ```
 
-See inverse [rest-client.js](./lib/rest-client.js) for further information.
+See inverse [rest-client.ts](./src/rest-client.ts) for further information.
 
 #### Websocket client
 ```javascript
-const {WebsocketClient} = require('bybit-api');
+const { WebsocketClient } = require('bybit-api');
 
 const API_KEY = 'xxx';
 const PRIVATE_KEY = 'yyy';
@@ -150,7 +150,7 @@ ws.on('error', err => {
   console.error('ERR', err);
 });
 ```
-See inverse [websocket-client.js](./lib/websocket-client.js) & [ws api docs](./doc/websocket-client.md) for further information.
+See inverse [websocket-client.ts](./src/websocket-client.ts) for further information.
 
 ### Customise Logging
 Pass a custom logger which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired:

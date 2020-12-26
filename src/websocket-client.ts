@@ -105,11 +105,6 @@ export class WebsocketClient extends EventEmitter {
 
       const ws = new WebSocket(url);
 
-      // ws.onopen!(this._wsOpenHandler.bind(this));
-      // ws.onmessage!(this._wsMessageHandler.bind(this));
-      // ws.onerror!(this._wsOnErrorHandler.bind(this));
-      // ws.onclose!(this._wsCloseHandler.bind(this));
-
       ws.onopen = this._wsOpenHandler.bind(this);
       ws.onmessage = this._wsMessageHandler.bind(this);
       ws.onerror = this._wsOnErrorHandler.bind(this);

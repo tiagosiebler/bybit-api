@@ -1,21 +1,21 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "declaration": true,
     "allowJs": true,
     "target": "es6",
-    "moduleResolution": "node",
     "module": "commonjs",
-    "outDir": "lib",
+    "moduleResolution": "node",
+    "declaration": true,
+    "sourceMap": true,
     "removeComments": false,
     "noEmitOnError": true,
     "noImplicitAny": false,
     "strictNullChecks": true,
     "skipLibCheck": true,
-    "sourceMap": true,
     "esModuleInterop": true,
     "lib": ["es2017","dom"],
     "baseUrl": ".",
+    "outDir": "lib",
     "paths": {
       "@src/*": ["src/*"]
     }
