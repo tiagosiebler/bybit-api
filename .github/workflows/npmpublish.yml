@@ -40,7 +40,7 @@ jobs:
           node-version: 12
           registry-url: https://registry.npmjs.org/
 
-      #- run: npm ci
+      - run: npm ci
       - run: npm run build
       - run: npm publish
         if: steps.version-updated.outputs.has-updated
