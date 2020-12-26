@@ -41,7 +41,9 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - run: npm ci
+        if: steps.version-updated.outputs.has-updated
       - run: npm run build
+        if: steps.version-updated.outputs.has-updated
       - run: npm publish
         if: steps.version-updated.outputs.has-updated
         env:
