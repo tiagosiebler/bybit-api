@@ -5,15 +5,10 @@
 
 [1]: https://www.npmjs.com/package/bybit-api
 
-A production-ready Node.js connector for the Bybit APIs and WebSockets.
+A production-ready Node.js connector for the Bybit APIs and WebSockets, with TypeScript & browser support.
 
 ## Installation
 `npm install --save bybit-api`
-
-## Usage
-Create API credentials at Bybit
-- [Livenet](https://bybit.com/app/user/api-management?affiliate_id=9410&language=en-US&group_id=0&group_type=1)
-- [Testnet](https://testnet.bybit.com/app/user/api-management)
 
 ## Issues & Discussion
 - Issues? Check the [issues tab](https://github.com/tiagosiebler/bybit-api/issues).
@@ -24,15 +19,65 @@ Most methods accept JS objects. These can be populated using parameters specifie
 - [Bybit API Inverse Documentation](https://bybit-exchange.github.io/docs/inverse/#t-introduction).
 - [Bybit API Linear Documentation (not supported yet)](https://bybit-exchange.github.io/docs/linear/#t-introduction)
 
+## Structure
+This project uses typescript. Resources are stored in 3 key structures:
+- [src](./src) - the whole connector written in typescript
+- [lib](./lib) - the javascript version of the project (compiled from typescript). This should not be edited directly, as it will be overwritten with each release.
+- [dist](./dist) - the packed bundle of the project for use in browser environments.
+
+## Usage
+Create API credentials at Bybit
+- [Livenet](https://bybit.com/app/user/api-management?affiliate_id=9410&language=en-US&group_id=0&group_type=1)
+- [Testnet](https://testnet.bybit.com/app/user/api-management)
+
+### Browser Usage
+Build a bundle using webpack:
+- `npm install`
+- `npm build`
+- `npm pack`
+
+The bundle can be found in `dist/`. Altough usage should be largely consistent, smaller differences will exist. Documentation is still TODO.
+
 ### Inverse Contracts
 #### Rest client
 ```javascript
-const {RestClient} = require('bybit-api');
+const { RestClient } = require('bybit-api');
 
 const API_KEY = 'xxx';
 const PRIVATE_KEY = 'yyy';
+const useLivenet = false;
 
-const client = new RestClient(API_KEY, PRIVATE_KEY);
+const restInverseOptions = {
+  // override the max size of the request window (in ms)
+  recv_window?: number;
+
+  // how often to sync time drift with bybit servers
+  sync_interval_ms?: number | string;
+
+  // Default: false. Disable above sync mechanism if true.
+  disable_time_sync?: boolean;
+
+  // Default: false. If true, we'll throw errors if any params are undefined
+  strict_param_validation?: boolean;
+
+  // Optionally override API protocol + domain
+  // e.g 'https://api.bytick.com'
+  baseUrl?: string;
+
+  // Default: true. whether to try and post-process request exceptions.
+  parse_exceptions?: boolean;
+};
+
+const client = new RestClient(
+  API_KEY,
+  PRIVATE_KEY,
+
+  // optional, uses testnet by default. Set to 'true' to use livenet.
+  useLivenet,
+
+  // restInverseOptions,
+  // requestLibraryOptions
+);
 
 client.changeUserLeverage({leverage: 4, symbol: 'ETHUSD'})
   .then(result => {
@@ -43,11 +88,11 @@ client.changeUserLeverage({leverage: 4, symbol: 'ETHUSD'})
   });
 ```
 
-See inverse [rest-client.js](./lib/rest-client.js) for further information.
+See inverse [rest-client.ts](./src/rest-client.ts) for further information.
 
 #### Websocket client
 ```javascript
-const {WebsocketClient} = require('bybit-api');
+const { WebsocketClient } = require('bybit-api');
 
 const API_KEY = 'xxx';
 const PRIVATE_KEY = 'yyy';
@@ -105,7 +150,7 @@ ws.on('error', err => {
   console.error('ERR', err);
 });
 ```
-See inverse [websocket-client.js](./lib/websocket-client.js) & [ws api docs](./doc/websocket-client.md) for further information.
+See inverse [websocket-client.ts](./src/websocket-client.ts) for further information.
 
 ### Customise Logging
 Pass a custom logger which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired:
