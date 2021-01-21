@@ -25,10 +25,10 @@ export class LinearClient extends SharedEndpoints {
       ) {
         super()
         this.requestWrapper = new RequestWrapper(
-            key, 
-            secret, 
-            getBaseRESTInverseUrl(livenet), 
-            restInverseOptions, 
+            key,
+            secret,
+            getBaseRESTInverseUrl(livenet),
+            restInverseOptions,
             requestOptions
         );
         return this;
