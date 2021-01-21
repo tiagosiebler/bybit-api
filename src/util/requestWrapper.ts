@@ -101,7 +101,7 @@ export default class RequestUtil {
       }
 
       throw response;
-    }).catch(this.parseException);
+    }).catch(e => this.parseException(e));
   }
 
   /**
