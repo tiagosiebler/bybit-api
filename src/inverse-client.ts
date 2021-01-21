@@ -1,9 +1,10 @@
 import { AxiosRequestConfig } from 'axios';
 import { GenericAPIResponse, getBaseRESTInverseUrl, RestClientInverseOptions } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
+import { SharedEndpoints } from './shared-endpoints';
 
-export class RestClient {
-  private requestWrapper: RequestWrapper;
+export class InverseClient extends SharedEndpoints {
+  protected requestWrapper: RequestWrapper;
 
   /**
    * @public Creates an instance of the inverse REST API client.
@@ -21,6 +22,7 @@ export class RestClient {
     restInverseOptions: RestClientInverseOptions = {},
     httpOptions: AxiosRequestConfig = {}
   ) {
+    super()
     this.requestWrapper = new RequestWrapper(
       key,
       secret,
@@ -464,62 +466,6 @@ export class RestClient {
     return this.requestWrapper.get('v2/private/account/lcp', params);
   }
 
-  /**
-   *
-   * Wallet Data Endpoints
-   *
-   */
-
-  getWalletBalance(params?: {
-    coin?: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/wallet/balance', params);
-  }
-
-  getWalletFundRecords(params?: {
-    start_date?: string;
-    end_date?: string;
-    currency?: string;
-    coin?: string;
-    wallet_fund_type?: string;
-    page?: number;
-    limit?: number;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/wallet/fund/records', params);
-  }
-
-  getWithdrawRecords(params: {
-    start_date?: string;
-    end_date?: string;
-    coin?: string;
-    status?: string;
-    page?: number;
-    limit?: number;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/wallet/withdraw/list', params);
-  }
-
-  getAssetExchangeRecords(params?: {
-    limit?: number;
-    from?: number;
-    direction?: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/exchange-order/list', params);
-  }
-
-  /**
-   *
-   * API Data Endpoints
-   *
-   */
-
-  getServerTime(): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/time');
-  }
-
-  getApiAnnouncements(): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/announcement');
-  }
 
   async getTimeOffset(): Promise<number> {
     const start = Date.now();
