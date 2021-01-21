@@ -1,6 +1,5 @@
 import { EventEmitter } from 'events';
-
-import { RestClient } from './rest-client';
+import { InverseClient } from './inverse-client';
 import { DefaultLogger } from './logger';
 import { signMessage, serializeParams } from './util/requestUtils';
 // import WebSocket from 'ws';
@@ -37,7 +36,7 @@ export class WebsocketClient extends EventEmitter {
   private readyState: number;
   private pingInterval?: number | undefined;
   private pongTimeout?: number | undefined;
-  private client: RestClient;
+  private client: InverseClient;
   private _subscriptions: Set<unknown>;
   private ws: WebSocket;
   private options: WebsocketClientOptions;
@@ -59,7 +58,7 @@ export class WebsocketClient extends EventEmitter {
       ...options
     };
 
-    this.client = new RestClient(undefined, undefined, this.options.livenet, this.options.restOptions, this.options.requestOptions);
+    this.client = new InverseClient(undefined, undefined, this.options.livenet, this.options.restOptions, this.options.requestOptions);
     this._subscriptions = new Set();
 
     this._connect();
@@ -161,7 +160,8 @@ export class WebsocketClient extends EventEmitter {
     this.logger.silly('Sending ping', { category: 'bybit-ws' });
     this.ws.send(JSON.stringify({op: 'ping'}));
 
-    this.pongTimeout = setTimeout(() => {
+    
+    this.pongTimeout = <any>setTimeout(() => {
       this.logger.info('Pong timeout', { category: 'bybit-ws' });
       this._teardown();
       // this.ws.terminate();
@@ -190,7 +190,7 @@ export class WebsocketClient extends EventEmitter {
     this.readyState = READY_STATE_CONNECTED;
 
     this._subscribe([...this._subscriptions]);
-    this.pingInterval = setInterval(this._ping.bind(this), this.options.pingInterval);
+    this.pingInterval = <any>setInterval(this._ping.bind(this), this.options.pingInterval);
   }
 
   _wsMessageHandler(message) {
