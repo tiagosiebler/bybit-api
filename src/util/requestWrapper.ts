@@ -10,6 +10,7 @@ export default class RequestUtil {
   private globalRequestOptions: AxiosRequestConfig;
   private key: string | undefined;
   private secret: string | undefined;
+  //all private
 
   constructor(
     key: string | undefined,
@@ -68,9 +69,15 @@ export default class RequestUtil {
    * @private Make a HTTP request to a specific endpoint. Private endpoints are automatically signed.
    */
   async _call(method: Method, endpoint: string, params?: any): GenericAPIResponse {
-    const publicEndpoint = endpoint.startsWith('v2/public');
+    let publicEndpoint = false;
+    if(endpoint.startsWith('v2/public')){
+      publicEndpoint = true;
+    }
+    else if(endpoint.startsWith('public/linear/')){
+      publicEndpoint = true;
+    }
 
-    if (!publicEndpoint) {
+    if (publicEndpoint == false) {
       if (!this.key || !this.secret) {
         throw new Error('Private endpoints require api and private keys set');
       }
@@ -101,7 +108,7 @@ export default class RequestUtil {
       }
 
       throw response;
-    }).catch(e => this.parseException(e));
+    }).catch(this.parseException);
   }
 
   /**
