@@ -47,8 +47,6 @@ export class InverseClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/kline/list', params);
   }
-rn this.requestWrapper.get('v2/public/tickers', params);
-  }
 
   /**
    * @deprecated use getTrades() instead
