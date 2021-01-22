@@ -78,6 +78,12 @@ export default class SharedEndpoints {
         return this.requestWrapper.get('v2/public/account-ratio', params);
     }
     
+    //------------Market Data Endpoints------------>
+    
+    getApiKeyInfo(): GenericAPIResponse {
+        return this.requestWrapper.get('v2/private/account/api-key');
+    }
+    
     //------------Wallet Data Endpoints------------>
     
     getWalletBalance(params: {
