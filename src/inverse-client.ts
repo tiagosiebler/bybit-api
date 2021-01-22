@@ -367,10 +367,6 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.get('v2/private/funding/predicted-funding', params);
   }
 
-  getApiKeyInfo(): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/account/api-key');
-  }
-
   getLcpInfo(params: {
     symbol: string;
   }): GenericAPIResponse {
