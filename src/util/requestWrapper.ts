@@ -69,7 +69,7 @@ export default class RequestUtil {
    * @private Make a HTTP request to a specific endpoint. Private endpoints are automatically signed.
    */
   async _call(method: Method, endpoint: string, params?: any): GenericAPIResponse {
-    const isPublicEndpoint = (endpoint: string): boolean {
+    const isPublicEndpoint = (endpoint: string): boolean => {
       if (endpoint.startsWith('v2/public')) {
         return true;
       }
