@@ -4,8 +4,29 @@ import RequestWrapper from './util/requestWrapper';
 
 export default class SharedEndpoints {
     protected requestWrapper: RequestWrapper; // XXX Is there a way to say that Base has to provide this?
-
     
+    //------------Market Data Endpoints------------>
+    
+    getOrderBook(params: {
+        symbol: string;
+    }): GenericAPIResponse {
+        return this.requestWrapper.get('v2/public/orderBook/L2', params);
+    }
+    
+    /**
+    * @deprecated use getTickers() instead
+    */
+    getLatestInformation(params?: {
+        symbol?: string;
+    }): GenericAPIResponse {
+        return this.getTickers(params);
+    }
+
+    getTickers(params?: {
+        symbol?: string;
+    }): GenericAPIResponse {
+        return this.requestWrapper.get('v2/public/tickers', params);
+    }
     
     //------------Wallet Data Endpoints------------>
     
