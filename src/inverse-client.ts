@@ -152,21 +152,6 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.get('v2/private/order/list', params);
   }
 
-  /**
-   * @deprecated use getActiveOrderList() instead
-   */
-  getActiveOrder(params: {
-    order_id?: string;
-    order_link_id?: string;
-    symbol?: string;
-    order?: string;
-    page?: number;
-    limit?: number;
-    order_status?: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/order/list', params);
-  }
-
   cancelActiveOrder(params: {
     symbol: string;
     order_id?: string;
@@ -195,16 +180,6 @@ export class InverseClient extends SharedEndpoints {
     //   throw new Error('Parameter order_id OR order_link_id is required');
     // }
     return this.requestWrapper.post('v2/private/order/replace', params);
-  }
-
-  /**
-   * @deprecated use replaceActiveOrder()
-   */
-  replaceActiveOrderOld(params: any): GenericAPIResponse {
-    // if (!params.order_id && !params.order_link_id) {
-    //   throw new Error('Parameter order_id OR order_link_id is required');
-    // }
-    return this.requestWrapper.post('open-api/order/replace', params);
   }
 
   queryActiveOrder(params: {
@@ -237,16 +212,6 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.post('v2/private/stop-order/create', params);
   }
 
-  /**
-   * @deprecated use placeConditionalOrder
-   */
-  placeConditionalOrderOld(params: any): GenericAPIResponse {
-    // if (params.order_type === 'Limit' && !params.price) {
-    //   throw new Error('Parameter price is required for limit orders');
-    // }
-    return this.requestWrapper.post('open-api/stop-order/create', params);
-  }
-
   getConditionalOrder(params: {
     symbol: string;
     stop_order_status?: string;
@@ -255,13 +220,6 @@ export class InverseClient extends SharedEndpoints {
     cursor?: string;
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/stop-order/list', params);
-  }
-
-  /**
-   * @deprecated use placeConditionalOrder
-   */
-  getConditionalOrderOld(params: any): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/stop-order/list', params);
   }
 
   cancelConditionalOrder(params: {
@@ -273,16 +231,6 @@ export class InverseClient extends SharedEndpoints {
     //   throw new Error('Parameter stop_order_id OR order_link_id is required');
     // }
     return this.requestWrapper.post('v2/private/stop-order/cancel', params);
-  }
-
-  /**
-   * @deprecated use cancelConditionalOrder
-   */
-  cancelConditionalOrderOld(params: any): GenericAPIResponse {
-    // if (!params.stop_order_id && !params.order_link_id) {
-    //   throw new Error('Parameter stop_order_id OR order_link_id is required');
-    // }
-    return this.requestWrapper.post('open-api/stop-order/cancel', params);
   }
 
   cancelAllConditionalOrders(params: {
@@ -303,13 +251,6 @@ export class InverseClient extends SharedEndpoints {
     //   throw new Error('Parameter stop_order_id OR order_link_id is required');
     // }
     return this.requestWrapper.post('v2/private/stop-order/replace', params);
-  }
-
-  /**
-   * @deprecated use replaceConditionalOrder
-   */
-  replaceConditionalOrderOld(params: any): GenericAPIResponse {
-    return this.requestWrapper.post('open-api/stop-order/replace', params);
   }
 
   queryConditionalOrder(params: {
@@ -358,7 +299,7 @@ export class InverseClient extends SharedEndpoints {
     sl_trigger_by?: string;
     new_trailing_active?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('open-api/position/trading-stop', params);
+    return this.requestWrapper.post('v2/private/position/trading-stop', params);
   }
 
   setUserLeverage(params: {
@@ -411,23 +352,23 @@ export class InverseClient extends SharedEndpoints {
   getLastFundingRate(params: {
     symbol: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/funding/prev-funding-rate', params);
+    return this.requestWrapper.get('v2/private/funding/prev-funding-rate', params);
   }
 
   getMyLastFundingFee(params: {
     symbol: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/funding/prev-funding', params);
+    return this.requestWrapper.get('v2/private/funding/prev-funding', params);
   }
 
   getPredictedFunding(params: {
     symbol: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/funding/predicted-funding', params);
+    return this.requestWrapper.get('v2/private/funding/predicted-funding', params);
   }
 
   getApiKeyInfo(): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/api-key');
+    return this.requestWrapper.get('v2/private/account/api-key');
   }
 
   getLcpInfo(params: {
