@@ -3,7 +3,7 @@ import { GenericAPIResponse, getBaseRESTInverseUrl, RestClientInverseOptions } f
 import RequestWrapper from './util/requestWrapper';
 import { SharedEndpoints } from './shared-endpoints';
 
-export class InverseClient extends SharedEndpoints {
+export default class InverseClient extends SharedEndpoints {
   protected requestWrapper: RequestWrapper;
 
   /**
