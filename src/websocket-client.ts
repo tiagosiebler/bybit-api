@@ -45,7 +45,6 @@ export class WebsocketClient extends EventEmitter {
     super();
 
     this.logger = logger || DefaultLogger;
-
     this.readyState = READY_STATE_INITIAL;
     this.pingInterval = undefined;
     this.pongTimeout = undefined;
@@ -60,7 +59,6 @@ export class WebsocketClient extends EventEmitter {
 
     this.client = new InverseClient(undefined, undefined, this.options.livenet, this.options.restOptions, this.options.requestOptions);
     this._subscriptions = new Set();
-
     this._connect();
   }
 
@@ -101,7 +99,6 @@ export class WebsocketClient extends EventEmitter {
 
       const authParams = await this._authenticate();
       const url = this._getWsUrl() + authParams;
-
       const ws = new WebSocket(url);
 
       ws.onopen = this._wsOpenHandler.bind(this);
@@ -110,7 +107,7 @@ export class WebsocketClient extends EventEmitter {
       ws.onclose = this._wsCloseHandler.bind(this);
 
       this.ws = ws;
-
+      
     } catch (err) {
       this.logger.error('Connection failed: ', err);
       this._reconnect(this.options.reconnectTimeout);
