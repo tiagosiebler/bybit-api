@@ -39,12 +39,6 @@ export class InverseClient extends SharedEndpoints {
    *
    */
 
-  getOrderBook(params: {
-    symbol: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/orderBook/L2', params);
-  }
-
   getKline(params: {
     symbol: string;
     interval: string;
@@ -53,20 +47,7 @@ export class InverseClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/kline/list', params);
   }
-
-  /**
-   * @deprecated use getTickers() instead
-   */
-  getLatestInformation(params?: {
-    symbol?: string;
-  }): GenericAPIResponse {
-    return this.getTickers(params);
-  }
-
-  getTickers(params?: {
-    symbol?: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/tickers', params);
+rn this.requestWrapper.get('v2/public/tickers', params);
   }
 
   /**
