@@ -1,9 +1,9 @@
 import { AxiosRequestConfig } from 'axios';
 import { GenericAPIResponse, getBaseRESTInverseUrl, RestClientInverseOptions } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
-import { SharedEndpoints } from './shared-endpoints';
+import SharedEndpoints from './shared-endpoints';
 
-export class LinearClient extends SharedEndpoints {
+export default class LinearClient extends SharedEndpoints {
     protected requestWrapper: RequestWrapper;
 
     /**
