@@ -69,15 +69,17 @@ export default class RequestUtil {
    * @private Make a HTTP request to a specific endpoint. Private endpoints are automatically signed.
    */
   async _call(method: Method, endpoint: string, params?: any): GenericAPIResponse {
-    let publicEndpoint = false;
-    if(endpoint.startsWith('v2/public')){
-      publicEndpoint = true;
-    }
-    else if(endpoint.startsWith('public/linear/')){
-      publicEndpoint = true;
+    const isPublicEndpoint = (endpoint: string): boolean {
+      if (endpoint.startsWith('v2/public')) {
+        return true;
+      }
+      if (endpoint.startsWith('public/linear')) {
+        return true;
+      }
+      return false;
     }
 
-    if (publicEndpoint == false) {
+    if (isPublicEndpoint(endpoint) === false) {
       if (!this.key || !this.secret) {
         throw new Error('Private endpoints require api and private keys set');
       }
