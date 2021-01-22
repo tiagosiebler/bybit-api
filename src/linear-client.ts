@@ -325,13 +325,25 @@ export class LinearClient extends SharedEndpoints {
     }
     
     //Risk Limit
+    
+    getRiskLimitList(params: {
+        symbol: string;
+    }): GenericAPIResponse {
+        return this.requestWrapper.get('public/linear/risk-limit');
+    }
+    
     //Funding
-    //API Key Info
     
-    //------------Wallet Data Endpoints------------>
+    getPredictedFundingFee(params: {
+        symbol: string;
+    }): GenericAPIResponse {
+        return this.requestWrapper.get('private/linear/funding/predicted-funding');
+    }
     
-    //-------------API Data Endpoints-------------->
-    
-    
+    getLastFundingFee(params: {
+        symbol: string;
+    }): GenericAPIResponse {
+        return this.requestWrapper.get('private/linear/funding/prev-funding');
+    }
     
 }
