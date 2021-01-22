@@ -307,8 +307,8 @@ export class LinearClient extends SharedEndpoints {
         start_time?: number;
         end_time?: number;
         exec_type?: string;
-        page?: integer;
-        limit?: intiger;
+        page?: number;
+        limit?: number;
     }): GenericAPIResponse {
         return this.requestWrapper.get('private/linear/trade/execution/list', params);
     }
