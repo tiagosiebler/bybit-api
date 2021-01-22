@@ -116,9 +116,6 @@ export class LinearClient extends SharedEndpoints {
         close_on_trigger?: boolean;
         order_link_id?: string;
     }): GenericAPIResponse {
-        // if (orderRequest.order_type === 'Limit' && !orderRequest.price) {
-        //   throw new Error('Price required for limit orders');
-        // }
         return this.requestWrapper.post('private/linear/order/create', orderRequest);
      }
     
@@ -140,9 +137,6 @@ export class LinearClient extends SharedEndpoints {
         order_id?: string;
         order_link_id?: string;
     }): GenericAPIResponse {
-        // if (!params.order_id && !params.order_link_id) {
-        //   throw new Error('Parameter order_id OR order_link_id is required');
-        // }
         return this.requestWrapper.post('private/linear/order/cancel', params);
     }
     
@@ -163,9 +157,6 @@ export class LinearClient extends SharedEndpoints {
         tp_trigger_by?: string;
         sl_trigger_by?: string;
     }): GenericAPIResponse {
-        // if (!params.order_id && !params.order_link_id) {
-        //   throw new Error('Parameter order_id OR order_link_id is required');
-        // }
         return this.requestWrapper.post('private/linear/order/replace', params);
     }
     
@@ -174,13 +165,81 @@ export class LinearClient extends SharedEndpoints {
         order_link_id?: string;
         symbol: string;
     }): GenericAPIResponse {
-        // if (!params.order_id && !params.order_link_id) {
-        //   throw new Error('Parameter order_id OR order_link_id is required');
-        // }
-        return this.requestWrapper.get('/private/linear/order/search', params);
+        return this.requestWrapper.get('private/linear/order/search', params);
     }
     
     //Conditional Orders
+    
+    placeConditionalOrder(params: {
+        side: string;
+        symbol: string;
+        order_type: string;
+        qty: number;
+        price?: number;
+        base_price: number;
+        stop_px: number;
+        time_in_force: string;
+        trigger_by?: string;
+        close_on_trigger?: boolean;
+        order_link_id?: string;
+        reduce_only: boolean;
+        take_profit?: number;
+        stop_loss?: number;
+        tp_trigger_by?: string;
+        sl_trigger_by?: string;
+    }): GenericAPIResponse {
+        return this.requestWrapper.post('private/linear/stop-order/create', params);
+    }
+    
+    getConditionalOrder(params: {
+        stop_order_id?: string;
+        order_link_id?: string;
+        symbol: string;
+        stop_order_status?: string;
+        order?: string;
+        page?: number;
+        limit?: number;
+    }): GenericAPIResponse {
+        return this.requestWrapper.get('private/linear/stop-order/list', params);
+    }
+    
+    cancelConditionalOrder(params: {
+        symbol: string;
+        stop_order_id?: string;
+        order_link_id?: string;
+    }): GenericAPIResponse {
+        return this.requestWrapper.post('private/linear/stop-order/cancel', params);
+    }
+    
+    cancelAllConditionalOrders(params: {
+        symbol: string;
+    }): GenericAPIResponse {
+        return this.requestWrapper.post('private/linear/stop-order/cancel-all', params);
+    }
+    
+    replaceConditionalOrder(params: {
+        stop_order_id?: string;
+        order_link_id?: string;
+        symbol: string;
+        p_r_qty?: number;
+        p_r_price?: number;
+        p_r_trigger_price?: number;
+        take_profit?: number;
+        stop_loss?: number;
+        tp_trigger_by?: string;
+        sl_trigger_by?: string;
+    }): GenericAPIResponse {
+        return this.requestWrapper.post('private/linear/stop-order/replace', params);
+    }
+    
+    queryConditionalOrder(params: {
+        symbol: string;
+        stop_order_id?: string;
+        order_link_id?: string;
+    }): GenericAPIResponse {
+    return this.requestWrapper.get('private/linear/stop-order/search', params);
+    }
+    
     //Position
     //Risk Limit
     //Funding
