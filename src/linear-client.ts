@@ -97,7 +97,7 @@ export class LinearClient extends SharedEndpoints {
     }
     
     
-    //-----------Account Data Endpoints------------>   
+    //-----------Account Data Endpoints------------>
     
     //Active Orders
     
