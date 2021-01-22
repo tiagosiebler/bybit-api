@@ -55,6 +55,29 @@ export default class SharedEndpoints {
         return this.requestWrapper.get('v2/public/liq-records', params);
     }
     
+    getOpenInterest(params: {
+        symbol: string;
+        period: string;
+        limit?: number;
+    }): GenericAPIResponse {
+        return this.requestWrapper.get('v2/public/open-interest', params);
+    }
+
+    getLatestBigDeal(params: {
+        symbol: string;
+        limit?: number;
+    }): GenericAPIResponse {
+        return this.requestWrapper.get('v2/public/big-deal', params);
+    }
+
+    getLongShortRatio(params: {
+        symbol: string;
+        period: string;
+        limit?: number;
+    }): GenericAPIResponse {
+        return this.requestWrapper.get('v2/public/account-ratio', params);
+    }
+    
     //------------Wallet Data Endpoints------------>
     
     getWalletBalance(params: {
