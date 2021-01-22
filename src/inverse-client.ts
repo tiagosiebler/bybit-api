@@ -75,6 +75,24 @@ export class InverseClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/mark-price-kline', params);
   }
+  
+  getIndexPriceKline(params: {
+    symbol: string;
+    interval: string;
+    from: number;
+    limit?: number;
+  }): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/index-price-kline', params);
+  }
+  
+   getPremiumIndexKline(params: {
+    symbol: string;
+    interval: string;
+    from: number;
+    limit?: number;
+  }): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/premium-index-kline', params);
+  }
 
   getOpenInterest(params: {
     symbol: string;
