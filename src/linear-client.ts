@@ -241,6 +241,89 @@ export class LinearClient extends SharedEndpoints {
     }
     
     //Position
+    
+    getPosition(params?: {
+        symbol?: string;
+    }): GenericAPIResponse {
+        return this.requestWrapper.get('private/linear/position/list', params);
+    }
+    
+    setAutoAddMargin(params?: {
+        symbol: string;
+        side: string;
+        auto_add_margin: boolean;
+    }): GenericAPIResponse {
+        return this.requestWrapper.post('private/linear/position/set-auto-add-margin', params);
+    }
+    
+    setMarginSwitch(params?: {
+        symbol: string;
+        is_isolated: boolean;
+        buy_leverage: number;
+        sell_leverage: number;
+    }): GenericAPIResponse {
+        return this.requestWrapper.post('private/linear/position/switch-isolated', params);
+    }
+    
+    setSwitchMode(params?: {
+        symbol: string;
+        tp_sl_mode: string;
+    }): GenericAPIResponse {
+        return this.requestWrapper.post('private/linear/tpsl/switch-mode', params);
+    }
+    
+    setAddReduceMargin(params?: {
+        symbol: string;
+        side: string;
+        margin: number;
+    }): GenericAPIResponse {
+        return this.requestWrapper.post('private/linear/position/add-margin', params);
+    }
+    
+    setUserLeverage(params: {
+        symbol: string;
+        buy_leverage: number;
+        sell_leverage: number;
+    }): GenericAPIResponse {
+        return this.requestWrapper.post('private/linear/position/set-leverage', params);
+    }
+    
+    setTradingStop(params: {
+        symbol: string;
+        side: string;
+        take_profit?: number;
+        stop_loss?: number;
+        trailing_stop?: number;
+        tp_trigger_by?: string;
+        sl_trigger_by?: string;
+        sl_size?: number;
+        tp_size?: number;
+    }): GenericAPIResponse {
+        return this.requestWrapper.post('private/linear/position/trading-stop', params);
+    }
+    
+    getTradeRecords(params: {
+        symbol: string;
+        start_time?: number;
+        end_time?: number;
+        exec_type?: string;
+        page?: integer;
+        limit?: intiger;
+    }): GenericAPIResponse {
+        return this.requestWrapper.get('private/linear/trade/execution/list', params);
+    }
+    
+    getClosedPnl(params: {
+        symbol: string;
+        start_time?: number;
+        end_time?: number;
+        exec_type?: string;
+        page?: number;
+        limit?: number;
+    }): GenericAPIResponse {
+        return this.requestWrapper.get('private/linear/tpsl/switch-mode', params);
+    }
+    
     //Risk Limit
     //Funding
     //API Key Info
