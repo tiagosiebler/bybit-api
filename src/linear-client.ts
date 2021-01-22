@@ -33,15 +33,76 @@ export class LinearClient extends SharedEndpoints {
         );
         return this;
       }
-
+    //------------Market Data Endpoints------------>
+    
+    getKline(params: {
+        symbol: string;
+        interval: string;
+        from: number;
+        limit?: number;
+    }): GenericAPIResponse {
+        return this.requestWrapper.get('/public/linear/kline', params);
+    }
+   
     /**
-   * @public Get the last funding rate.
-   */
+    * @deprecated use getTrades() instead
+    */
+    getPublicTradingRecords(params: {
+        symbol: string;
+        from?: number;
+        limit?: number;
+    }): GenericAPIResponse {
+        return this.getTrades(params);
+    }
 
+    getTrades(params: {
+        symbol: string;
+        from?: number;
+        limit?: number;
+    }): GenericAPIResponse {
+        return this.requestWrapper.get('/public/linear/recent-trading-records', params);
+    }
+    
     getLastFundingRate(params: {
       symbol: string;
     }): GenericAPIResponse {
       return this.requestWrapper.get('public/linear/funding/prev-funding-rate', params);
     }
-
+    
+    getMarkPriceKline(params: {
+        symbol: string;
+        interval: string;
+        from: number;
+        limit?: number;
+    }): GenericAPIResponse {
+        return this.requestWrapper.get('/public/linear/mark-price-kline', params);
+    }
+    
+    getIndexPriceKline(params: {
+        symbol: string;
+        interval: string;
+        from: number;
+        limit?: number;
+    }): GenericAPIResponse {
+        return this.requestWrapper.get('/public/linear/index-price-kline', params);
+    }
+    
+    getPremiumIndexKline(params: {
+        symbol: string;
+        interval: string;
+        from: number;
+        limit?: number;
+    }): GenericAPIResponse {
+        return this.requestWrapper.get('/public/linear/premium-index-kline', params);
+    }
+    
+    
+    //-----------Account Data Endpoints------------>
+    
+    //------------Wallet Data Endpoints------------>
+    
+    //-------------API Data Endpoints-------------->
+    
+    
+    
 }
