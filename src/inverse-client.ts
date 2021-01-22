@@ -338,9 +338,7 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.get('v2/private/trade/closed-pnl/list', params);
   }
 
-  getRiskLimitList(params: {
-        symbol: string;
-    }): GenericAPIResponse {
+  getRiskLimitList(): GenericAPIResponse {
     return this.requestWrapper.get('open-api/wallet/risk-limit/list');
   }
 
