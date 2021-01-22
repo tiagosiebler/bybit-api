@@ -2,7 +2,7 @@
 import { GenericAPIResponse } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
 
-export class SharedEndpoints {
+export default class SharedEndpoints {
     protected requestWrapper: RequestWrapper; // XXX Is there a way to say that Base has to provide this?
 
     
