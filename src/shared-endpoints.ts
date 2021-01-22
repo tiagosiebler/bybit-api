@@ -28,6 +28,33 @@ export default class SharedEndpoints {
         return this.requestWrapper.get('v2/public/tickers', params);
     }
     
+    getSymbols(): GenericAPIResponse {
+        return this.requestWrapper.get('v2/public/symbols');
+    }
+    
+    /**
+    * @deprecated use getLiquidations() instead
+    */
+    getPublicLiquidations(params: {
+        symbol: string;
+        from?: number;
+        limit?: number;
+        start_time?: number;
+        end_time?: number;
+    }): GenericAPIResponse {
+        return this.getLiquidations(params);
+    }
+
+    getLiquidations(params: {
+        symbol: string;
+        from?: number;
+        limit?: number;
+        start_time?: number;
+        end_time?: number;
+    }): GenericAPIResponse {
+        return this.requestWrapper.get('v2/public/liq-records', params);
+    }
+    
     //------------Wallet Data Endpoints------------>
     
     getWalletBalance(params: {
