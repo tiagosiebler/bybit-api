@@ -57,10 +57,10 @@ export class LinearClient extends SharedEndpoints {
 
     getTrades(params: {
         symbol: string;
-        from?: number;
+        //from?: number;
         limit?: number;
     }): GenericAPIResponse {
-        return this.requestWrapper.get('/public/linear/recent-trading-records', params);
+        return this.requestWrapper.get('public/linear/recent-trading-records', params);
     }
     
     getLastFundingRate(params: {
@@ -75,7 +75,7 @@ export class LinearClient extends SharedEndpoints {
         from: number;
         limit?: number;
     }): GenericAPIResponse {
-        return this.requestWrapper.get('/public/linear/mark-price-kline', params);
+        return this.requestWrapper.get('public/linear/mark-price-kline', params);
     }
     
     getIndexPriceKline(params: {
@@ -84,7 +84,7 @@ export class LinearClient extends SharedEndpoints {
         from: number;
         limit?: number;
     }): GenericAPIResponse {
-        return this.requestWrapper.get('/public/linear/index-price-kline', params);
+        return this.requestWrapper.get('public/linear/index-price-kline', params);
     }
     
     getPremiumIndexKline(params: {
@@ -93,11 +93,98 @@ export class LinearClient extends SharedEndpoints {
         from: number;
         limit?: number;
     }): GenericAPIResponse {
-        return this.requestWrapper.get('/public/linear/premium-index-kline', params);
+        return this.requestWrapper.get('public/linear/premium-index-kline', params);
     }
     
     
-    //-----------Account Data Endpoints------------>
+    //-----------Account Data Endpoints------------>   
+    
+    //Active Orders
+    
+    placeActiveOrder(orderRequest: {
+        side: string;
+        symbol: string;
+        order_type: string;
+        qty: number;
+        price?: number;
+        time_in_force: string;
+        take_profit?: number;
+        stop_loss?: number;
+        tp_trigger_by?: string;
+        sl_trigger_by?: string;
+        reduce_only?: boolean;
+        close_on_trigger?: boolean;
+        order_link_id?: string;
+    }): GenericAPIResponse {
+        // if (orderRequest.order_type === 'Limit' && !orderRequest.price) {
+        //   throw new Error('Price required for limit orders');
+        // }
+        return this.requestWrapper.post('private/linear/order/create', orderRequest);
+     }
+    
+     getActiveOrderList(params: {
+        order_id?: string;
+        order_link_id?: string;
+        symbol: string;
+        order?: string;
+        page?: number;
+        limit?: number;
+        order_status?: string;
+        
+    }): GenericAPIResponse {
+        return this.requestWrapper.get('private/linear/order/list', params);
+    }
+    
+    cancelActiveOrder(params: {
+        symbol: string;
+        order_id?: string;
+        order_link_id?: string;
+    }): GenericAPIResponse {
+        // if (!params.order_id && !params.order_link_id) {
+        //   throw new Error('Parameter order_id OR order_link_id is required');
+        // }
+        return this.requestWrapper.post('private/linear/order/cancel', params);
+    }
+    
+    cancelAllActiveOrders(params: {
+        symbol: string;
+    }): GenericAPIResponse {
+        return this.requestWrapper.post('private/linear/order/cancel-all', params);
+    }
+    
+    replaceActiveOrder(params: {
+        order_id?: string;
+        order_link_id?: string;
+        symbol: string;
+        p_r_qty?: number;
+        p_r_price?: number;
+        take_profit?: number;
+        stop_loss?: number;
+        tp_trigger_by?: string;
+        sl_trigger_by?: string;
+    }): GenericAPIResponse {
+        // if (!params.order_id && !params.order_link_id) {
+        //   throw new Error('Parameter order_id OR order_link_id is required');
+        // }
+        return this.requestWrapper.post('private/linear/order/replace', params);
+    }
+    
+    queryActiveOrder(params: {
+        order_id?: string;
+        order_link_id?: string;
+        symbol: string;
+    }): GenericAPIResponse {
+        // if (!params.order_id && !params.order_link_id) {
+        //   throw new Error('Parameter order_id OR order_link_id is required');
+        // }
+        return this.requestWrapper.get('/private/linear/order/search', params);
+    }
+    
+    //Conditional Orders
+    //Position
+    //Risk Limit
+    //Funding
+    //API Key Info
     
     //------------Wallet Data Endpoints------------>
     
