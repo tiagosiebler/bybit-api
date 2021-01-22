@@ -33,11 +33,7 @@ export class InverseClient extends SharedEndpoints {
     return this;
   }
 
-  /**
-   *
-   * Market Data Endpoints
-   *
-   */
+  //------------Market Data Endpoints------------>
 
   getKline(params: {
     symbol: string;
@@ -117,11 +113,7 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.get('v2/public/account-ratio', params);
   }
 
-  /**
-   *
-   * Account Data Endpoints
-   *
-   */
+  //-----------Account Data Endpoints------------>
 
   placeActiveOrder(orderRequest: {
     side: string;
@@ -136,9 +128,6 @@ export class InverseClient extends SharedEndpoints {
     close_on_trigger?: boolean;
     order_link_id?: string;
   }): GenericAPIResponse {
-    // if (orderRequest.order_type === 'Limit' && !orderRequest.price) {
-    //   throw new Error('Price required for limit orders');
-    // }
     return this.requestWrapper.post('v2/private/order/create', orderRequest);
   }
 
@@ -157,9 +146,6 @@ export class InverseClient extends SharedEndpoints {
     order_id?: string;
     order_link_id?: string;
   }): GenericAPIResponse {
-    // if (!params.order_id && !params.order_link_id) {
-    //   throw new Error('Parameter order_id OR order_link_id is required');
-    // }
     return this.requestWrapper.post('v2/private/order/cancel', params);
   }
 
@@ -176,9 +162,6 @@ export class InverseClient extends SharedEndpoints {
     p_r_qty?: string;
     p_r_price?: string;
   }): GenericAPIResponse {
-    // if (!params.order_id && !params.order_link_id) {
-    //   throw new Error('Parameter order_id OR order_link_id is required');
-    // }
     return this.requestWrapper.post('v2/private/order/replace', params);
   }
 
@@ -187,9 +170,6 @@ export class InverseClient extends SharedEndpoints {
     order_link_id?: string;
     symbol: string;
   }): GenericAPIResponse {
-    // if (!params.order_id && !params.order_link_id) {
-    //   throw new Error('Parameter order_id OR order_link_id is required');
-    // }
     return this.requestWrapper.get('v2/private/order', params);
   }
 
@@ -206,9 +186,6 @@ export class InverseClient extends SharedEndpoints {
     close_on_trigger?: boolean;
     order_link_id?: string;
   }): GenericAPIResponse {
-    // if (params.order_type === 'Limit' && !params.price) {
-    //   throw new Error('Parameter price is required for limit orders');
-    // }
     return this.requestWrapper.post('v2/private/stop-order/create', params);
   }
 
@@ -227,9 +204,6 @@ export class InverseClient extends SharedEndpoints {
     stop_order_id?: string;
     order_link_id?: string;
   }): GenericAPIResponse {
-    // if (!params.stop_order_id && !params.order_link_id) {
-    //   throw new Error('Parameter stop_order_id OR order_link_id is required');
-    // }
     return this.requestWrapper.post('v2/private/stop-order/cancel', params);
   }
 
@@ -247,9 +221,6 @@ export class InverseClient extends SharedEndpoints {
     p_r_price?: string;
     p_r_trigger_price?: string;
   }): GenericAPIResponse {
-    // if (!params.stop_order_id && !params.order_link_id) {
-    //   throw new Error('Parameter stop_order_id OR order_link_id is required');
-    // }
     return this.requestWrapper.post('v2/private/stop-order/replace', params);
   }
 
@@ -258,9 +229,6 @@ export class InverseClient extends SharedEndpoints {
     stop_order_id?: string;
     order_link_id?: string;
   }): GenericAPIResponse {
-    // if (!params.stop_order_id && !params.order_link_id) {
-    //   throw new Error('Parameter stop_order_id OR order_link_id is required');
-    // }
     return this.requestWrapper.get('v2/private/stop-order', params);
   }
 
@@ -372,7 +340,6 @@ export class InverseClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/account/lcp', params);
   }
-
 
   async getTimeOffset(): Promise<number> {
     const start = Date.now();
