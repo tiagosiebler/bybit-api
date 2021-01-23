@@ -87,7 +87,7 @@ export default class SharedEndpoints {
     //------------Wallet Data Endpoints------------>
     
     getWalletBalance(params: {
-        coin: string;
+        coin?: string;
     }): GenericAPIResponse {
         return this.requestWrapper.get('v2/private/wallet/balance',params)
     }
