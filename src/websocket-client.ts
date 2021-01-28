@@ -1,13 +1,19 @@
 import { EventEmitter } from 'events';
 import { InverseClient } from './inverse-client';
+import { LinearClient } from './linear-client';
 import { DefaultLogger } from './logger';
 import { signMessage, serializeParams } from './util/requestUtils';
 // import WebSocket from 'ws';
 import WebSocket from 'isomorphic-ws';
 
-const wsUrls = {
+const iwsUrls = {
   livenet: 'wss://stream.bybit.com/realtime',
   testnet: 'wss://stream-testnet.bybit.com/realtime'
+};
+
+const lwsUrls = {
+  livenet: 'wss://stream.bybit.com/realtime_public',
+  testnet: 'wss://stream-testnet.bybit.com/realtime_public'
 };
 
 const READY_STATE_INITIAL = 0;
@@ -20,7 +26,7 @@ export interface WebsocketClientOptions {
   key?: string;
   secret?: string;
   livenet?: boolean;
-
+  linear?: boolean;
   pongTimeout?: number;
   pingInterval?: number;
   reconnectTimeout?: number;
@@ -31,12 +37,14 @@ export interface WebsocketClientOptions {
 
 type Logger = typeof DefaultLogger;
 
+
+
 export class WebsocketClient extends EventEmitter {
   private logger: Logger;
   private readyState: number;
   private pingInterval?: number | undefined;
   private pongTimeout?: number | undefined;
-  private client: InverseClient;
+  private client: InverseClient | LinearClient;
   private _subscriptions: Set<unknown>;
   private ws: WebSocket;
   private options: WebsocketClientOptions;
@@ -51,16 +59,24 @@ export class WebsocketClient extends EventEmitter {
 
     this.options = {
       livenet: false,
+      linear: false,
       pongTimeout: 1000,
       pingInterval: 10000,
       reconnectTimeout: 500,
       ...options
     };
 
-    this.client = new InverseClient(undefined, undefined, this.options.livenet, this.options.restOptions, this.options.requestOptions);
+
+    if (this.options.linear) {
+      this.client = new InverseClient(undefined, undefined, this.options.livenet, this.options.restOptions, this.options.requestOptions);
+    }else{
+      this.client = new LinearClient(undefined, undefined, this.options.livenet, this.options.restOptions, this.options.requestOptions);
+    }
+    
     this._subscriptions = new Set();
     this._connect();
   }
+
 
   subscribe(topics) {
     if (!Array.isArray(topics)) topics = [topics];
@@ -90,7 +106,10 @@ export class WebsocketClient extends EventEmitter {
     if (this.options.wsUrl) {
       return this.options.wsUrl;
     }
-    return wsUrls[this.options.livenet ? 'livenet' : 'testnet'];
+    if (this.options.linear){
+        return lwsUrls[this.options.livenet ? 'livenet' : 'testnet'];
+    }
+    return iwsUrls[this.options.livenet ? 'livenet' : 'testnet'];
   }
 
   async _connect() {
