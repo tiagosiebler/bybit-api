@@ -340,12 +340,4 @@ export class InverseClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/account/lcp', params);
   }
-
-  async getTimeOffset(): Promise<number> {
-    const start = Date.now();
-    return this.getServerTime().then(result => {
-      const end = Date.now();
-      return Math.ceil((result.time_now * 1000) - end + ((end - start) / 2));
-    });
-  }
 };
