@@ -57,3 +57,13 @@ export function getBaseRESTInverseUrl(useLivenet?: boolean, restInverseOptions?:
   }
   return baseUrlsInverse.testnet;
 }
+      
+export function isPublicEndpoint = (endpoint: string): boolean => {
+  if (endpoint.startsWith('v2/public')) {
+    return true;
+  }
+  if (endpoint.startsWith('public/linear')) {
+    return true;
+  }
+  return false;
+}
