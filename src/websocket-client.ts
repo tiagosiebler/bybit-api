@@ -67,16 +67,15 @@ export class WebsocketClient extends EventEmitter {
     };
 
 
-    if (!this.options.linear) {
-      this.client = new InverseClient(undefined, undefined, this.options.livenet, this.options.restOptions, this.options.requestOptions);
-    }else{
+    if (this.options.linear === true) {
       this.client = new LinearClient(undefined, undefined, this.options.livenet, this.options.restOptions, this.options.requestOptions);
+    }else{
+      this.client = new InverseClient(undefined, undefined, this.options.livenet, this.options.restOptions, this.options.requestOptions);
     }
     
     this._subscriptions = new Set();
     this._connect();
   }
-
 
   subscribe(topics) {
     if (!Array.isArray(topics)) topics = [topics];
@@ -196,7 +195,7 @@ export class WebsocketClient extends EventEmitter {
 
   _wsOpenHandler() {
     if (this.readyState === READY_STATE_CONNECTING) {
-      this.logger.info('Websocket connected', { category: 'bybit-ws', livenet: this.options.livenet });
+      this.logger.info('Websocket connected', { category: 'bybit-ws', livenet: this.options.livenet, linear: this.options.linear });
       this.emit('open');
     } else if (this.readyState === READY_STATE_RECONNECTING) {
       this.logger.info('Websocket reconnected', { category: 'bybit-ws', livenet: this.options.livenet });
