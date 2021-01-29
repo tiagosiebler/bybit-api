@@ -112,29 +112,6 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.get('v2/public/premium-index-kline', params);
   }
 
-  getOpenInterest(params: {
-    symbol: string;
-    period: string;
-    limit?: number;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/open-interest', params);
-  }
-
-  getLatestBigDeal(params: {
-    symbol: string;
-    limit?: number;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/big-deal', params);
-  }
-
-  getLongShortRatio(params: {
-    symbol: string;
-    period: string;
-    limit?: number;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/account-ratio', params);
-  }
-
   //-----------Account Data Endpoints------------>
 
   placeActiveOrder(orderRequest: {
