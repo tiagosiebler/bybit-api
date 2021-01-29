@@ -274,7 +274,7 @@ export class InverseClient extends SharedEndpoints {
     symbol: string;
     leverage: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('user/leverage/save', params);
+    return this.requestWrapper.post('v2/private/position/leverage/save', params);
   }
 
   /**
@@ -320,7 +320,7 @@ export class InverseClient extends SharedEndpoints {
   getLastFundingRate(params: {
     symbol: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/funding/prev-funding-rate', params);
+    return this.requestWrapper.get('v2/public/funding/prev-funding-rate', params);
   }
 
   getMyLastFundingFee(params: {
