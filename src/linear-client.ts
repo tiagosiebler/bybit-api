@@ -97,7 +97,7 @@ export class LinearClient extends SharedEndpoints {
 		return this.requestWrapper.get('public/linear/premium-index-kline', params);
 	}
 	
-	//-----------Account Data Endpoints------------>
+	//------------Account Data Endpoints------------>
 	
 	//Active Orders
 	
