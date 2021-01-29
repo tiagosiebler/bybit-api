@@ -43,7 +43,16 @@ export class InverseClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/kline/list', params);
   }
-
+  
+  /**
+   * @deprecated use getTickers() instead
+   */
+  getLatestInformation(params?: {
+    symbol?: string;
+   }): GenericAPIResponse {
+    return this.getTickers(params);
+   }
+  
   /**
    * @deprecated use getTrades() instead
    */
