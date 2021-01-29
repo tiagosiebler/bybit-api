@@ -101,7 +101,7 @@ export default class SharedEndpoints {
         return this.requestWrapper.get('v2/private/wallet/withdraw/list', params);
       }
     
-    //-------------API Data Endpoints-------------->
+    //-------------API Data Endpoints------------->
 
     getServerTime(): GenericAPIResponse {
         return this.requestWrapper.get('v2/public/time');
