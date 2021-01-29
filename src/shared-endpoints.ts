@@ -12,15 +12,6 @@ export default class SharedEndpoints {
     }): GenericAPIResponse {
         return this.requestWrapper.get('v2/public/orderBook/L2', params);
     }
-    
-    /**
-    * @deprecated use getTickers() instead
-    */
-    getLatestInformation(params?: {
-        symbol?: string;
-    }): GenericAPIResponse {
-        return this.getTickers(params);
-    }
 
     getTickers(params?: {
         symbol?: string;
