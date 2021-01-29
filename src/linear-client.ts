@@ -33,6 +33,7 @@ export class LinearClient extends SharedEndpoints {
         );
         return this;
       }
+    
     //------------Market Data Endpoints------------>
     
     getKline(params: {
@@ -95,7 +96,6 @@ export class LinearClient extends SharedEndpoints {
     }): GenericAPIResponse {
         return this.requestWrapper.get('public/linear/premium-index-kline', params);
     }
-    
     
     //-----------Account Data Endpoints------------>
     
