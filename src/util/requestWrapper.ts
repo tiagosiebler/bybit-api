@@ -10,7 +10,6 @@ export default class RequestUtil {
   private globalRequestOptions: AxiosRequestConfig;
   private key: string | undefined;
   private secret: string | undefined;
-  //all private
 
   constructor(
     key: string | undefined,
