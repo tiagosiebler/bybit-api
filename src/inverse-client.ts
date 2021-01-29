@@ -81,7 +81,7 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.get('v2/public/index-price-kline', params);
   }
   
-   getPremiumIndexKline(params: {
+  getPremiumIndexKline(params: {
     symbol: string;
     interval: string;
     from: number;
