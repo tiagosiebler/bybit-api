@@ -58,7 +58,7 @@ export function getBaseRESTInverseUrl(useLivenet?: boolean, restInverseOptions?:
   return baseUrlsInverse.testnet;
 }
       
-export function isPublicEndpoint = (endpoint: string): boolean => {
+export function isPublicEndpoint (endpoint: string): boolean {
   if (endpoint.startsWith('v2/public')) {
     return true;
   }
