@@ -67,7 +67,7 @@ export class WebsocketClient extends EventEmitter {
     };
 
 
-    if (this.options.linear) {
+    if (!this.options.linear) {
       this.client = new InverseClient(undefined, undefined, this.options.livenet, this.options.restOptions, this.options.requestOptions);
     }else{
       this.client = new LinearClient(undefined, undefined, this.options.livenet, this.options.restOptions, this.options.requestOptions);
