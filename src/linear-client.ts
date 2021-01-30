@@ -22,7 +22,7 @@ export class LinearClient extends SharedEndpoints {
 		livenet?: boolean,
 		restInverseOptions:RestClientInverseOptions = {}, // TODO: Rename this type to be more general.
 		requestOptions: AxiosRequestConfig = {}
-	  ) {
+	) {
 		super()
 		this.requestWrapper = new RequestWrapper(
 			key,
@@ -32,10 +32,10 @@ export class LinearClient extends SharedEndpoints {
 			requestOptions
 		);
 		return this;
-	  }
-	
+	}
+
 	//------------Market Data Endpoints------------>
-	
+
 	getKline(params: {
 		symbol: string;
 		interval: string;
@@ -44,7 +44,7 @@ export class LinearClient extends SharedEndpoints {
 	}): GenericAPIResponse {
 		return this.requestWrapper.get('/public/linear/kline', params);
 	}
-   
+
 	/**
 	* @deprecated use getTrades() instead
 	*/
@@ -63,13 +63,13 @@ export class LinearClient extends SharedEndpoints {
 	}): GenericAPIResponse {
 		return this.requestWrapper.get('public/linear/recent-trading-records', params);
 	}
-	
+
 	getLastFundingRate(params: {
 	  symbol: string;
 	}): GenericAPIResponse {
 	  return this.requestWrapper.get('public/linear/funding/prev-funding-rate', params);
 	}
-	
+
 	getMarkPriceKline(params: {
 		symbol: string;
 		interval: string;
@@ -78,7 +78,7 @@ export class LinearClient extends SharedEndpoints {
 	}): GenericAPIResponse {
 		return this.requestWrapper.get('public/linear/mark-price-kline', params);
 	}
-	
+
 	getIndexPriceKline(params: {
 		symbol: string;
 		interval: string;
@@ -87,7 +87,7 @@ export class LinearClient extends SharedEndpoints {
 	}): GenericAPIResponse {
 		return this.requestWrapper.get('public/linear/index-price-kline', params);
 	}
-	
+
 	getPremiumIndexKline(params: {
 		symbol: string;
 		interval: string;
@@ -96,12 +96,12 @@ export class LinearClient extends SharedEndpoints {
 	}): GenericAPIResponse {
 		return this.requestWrapper.get('public/linear/premium-index-kline', params);
 	}
-	
+
 	//------------Account Data Endpoints------------>
-	
+
 	//Active Orders
-	
-	placeActiveOrder(orderRequest: {
+
+	placeActiveOrder(params: {
 		side: string;
 		symbol: string;
 		order_type: string;
@@ -116,9 +116,9 @@ export class LinearClient extends SharedEndpoints {
 		close_on_trigger?: boolean;
 		order_link_id?: string;
 	}): GenericAPIResponse {
-		return this.requestWrapper.post('private/linear/order/create', orderRequest);
+		return this.requestWrapper.post('private/linear/order/create', params);
 	 }
-	
+
 	 getActiveOrderList(params: {
 		order_id?: string;
 		order_link_id?: string;
@@ -127,11 +127,11 @@ export class LinearClient extends SharedEndpoints {
 		page?: number;
 		limit?: number;
 		order_status?: string;
-		
+
 	}): GenericAPIResponse {
 		return this.requestWrapper.get('private/linear/order/list', params);
 	}
-	
+
 	cancelActiveOrder(params: {
 		symbol: string;
 		order_id?: string;
@@ -139,13 +139,13 @@ export class LinearClient extends SharedEndpoints {
 	}): GenericAPIResponse {
 		return this.requestWrapper.post('private/linear/order/cancel', params);
 	}
-	
+
 	cancelAllActiveOrders(params: {
 		symbol: string;
 	}): GenericAPIResponse {
 		return this.requestWrapper.post('private/linear/order/cancel-all', params);
 	}
-	
+
 	replaceActiveOrder(params: {
 		order_id?: string;
 		order_link_id?: string;
@@ -159,7 +159,7 @@ export class LinearClient extends SharedEndpoints {
 	}): GenericAPIResponse {
 		return this.requestWrapper.post('private/linear/order/replace', params);
 	}
-	
+
 	queryActiveOrder(params: {
 		order_id?: string;
 		order_link_id?: string;
@@ -167,9 +167,9 @@ export class LinearClient extends SharedEndpoints {
 	}): GenericAPIResponse {
 		return this.requestWrapper.get('private/linear/order/search', params);
 	}
-	
+
 	//Conditional Orders
-	
+
 	placeConditionalOrder(params: {
 		side: string;
 		symbol: string;
@@ -190,7 +190,7 @@ export class LinearClient extends SharedEndpoints {
 	}): GenericAPIResponse {
 		return this.requestWrapper.post('private/linear/stop-order/create', params);
 	}
-	
+
 	getConditionalOrder(params: {
 		stop_order_id?: string;
 		order_link_id?: string;
@@ -202,7 +202,7 @@ export class LinearClient extends SharedEndpoints {
 	}): GenericAPIResponse {
 		return this.requestWrapper.get('private/linear/stop-order/list', params);
 	}
-	
+
 	cancelConditionalOrder(params: {
 		symbol: string;
 		stop_order_id?: string;
@@ -210,13 +210,13 @@ export class LinearClient extends SharedEndpoints {
 	}): GenericAPIResponse {
 		return this.requestWrapper.post('private/linear/stop-order/cancel', params);
 	}
-	
+
 	cancelAllConditionalOrders(params: {
 		symbol: string;
 	}): GenericAPIResponse {
 		return this.requestWrapper.post('private/linear/stop-order/cancel-all', params);
 	}
-		
+
 	replaceConditionalOrder(params: {
 		stop_order_id?: string;
 		order_link_id?: string;
@@ -231,23 +231,23 @@ export class LinearClient extends SharedEndpoints {
 	}): GenericAPIResponse {
 		return this.requestWrapper.post('private/linear/stop-order/replace', params);
 	}
-	
+
 	queryConditionalOrder(params: {
 		symbol: string;
 		stop_order_id?: string;
 		order_link_id?: string;
 	}): GenericAPIResponse {
-	return this.requestWrapper.get('private/linear/stop-order/search', params);
+		return this.requestWrapper.get('private/linear/stop-order/search', params);
 	}
-	
+
 	//Position
-	
+
 	getPosition(params?: {
 		symbol?: string;
 	}): GenericAPIResponse {
 		return this.requestWrapper.get('private/linear/position/list', params);
 	}
-	
+
 	setAutoAddMargin(params?: {
 		symbol: string;
 		side: string;
@@ -255,7 +255,7 @@ export class LinearClient extends SharedEndpoints {
 	}): GenericAPIResponse {
 		return this.requestWrapper.post('private/linear/position/set-auto-add-margin', params);
 	}
-	
+
 	setMarginSwitch(params?: {
 		symbol: string;
 		is_isolated: boolean;
@@ -264,14 +264,14 @@ export class LinearClient extends SharedEndpoints {
 	}): GenericAPIResponse {
 		return this.requestWrapper.post('private/linear/position/switch-isolated', params);
 	}
-	
+
 	setSwitchMode(params?: {
 		symbol: string;
 		tp_sl_mode: string;
 	}): GenericAPIResponse {
 		return this.requestWrapper.post('private/linear/tpsl/switch-mode', params);
 	}
-	
+
 	setAddReduceMargin(params?: {
 		symbol: string;
 		side: string;
@@ -279,7 +279,7 @@ export class LinearClient extends SharedEndpoints {
 	}): GenericAPIResponse {
 		return this.requestWrapper.post('private/linear/position/add-margin', params);
 	}
-	
+
 	setUserLeverage(params: {
 		symbol: string;
 		buy_leverage: number;
@@ -287,7 +287,7 @@ export class LinearClient extends SharedEndpoints {
 	}): GenericAPIResponse {
 		return this.requestWrapper.post('private/linear/position/set-leverage', params);
 	}
-	
+
 	setTradingStop(params: {
 		symbol: string;
 		side: string;
@@ -301,7 +301,7 @@ export class LinearClient extends SharedEndpoints {
 	}): GenericAPIResponse {
 		return this.requestWrapper.post('private/linear/position/trading-stop', params);
 	}
-	
+
 	getTradeRecords(params: {
 		symbol: string;
 		start_time?: number;
@@ -312,7 +312,7 @@ export class LinearClient extends SharedEndpoints {
 	}): GenericAPIResponse {
 		return this.requestWrapper.get('private/linear/trade/execution/list', params);
 	}
-	
+
 	getClosedPnl(params: {
 		symbol: string;
 		start_time?: number;
@@ -323,27 +323,27 @@ export class LinearClient extends SharedEndpoints {
 	}): GenericAPIResponse {
 		return this.requestWrapper.get('private/linear/tpsl/switch-mode', params);
 	}
-	
+
 	//Risk Limit
-	
+
 	getRiskLimitList(params: {
 		symbol: string;
 	}): GenericAPIResponse {
 		return this.requestWrapper.get('public/linear/risk-limit');
 	}
-	
+
 	//Funding
-	
+
 	getPredictedFundingFee(params: {
 		symbol: string;
 	}): GenericAPIResponse {
 		return this.requestWrapper.get('private/linear/funding/predicted-funding');
 	}
-	
+
 	getLastFundingFee(params: {
 		symbol: string;
 	}): GenericAPIResponse {
 		return this.requestWrapper.get('private/linear/funding/prev-funding');
 	}
-	
+
 }
