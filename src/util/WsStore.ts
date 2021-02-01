@@ -1,12 +1,5 @@
+import { WsConnectionState } from '../websocket-client';
 import { DefaultLogger, Logger } from '../logger';
-
-export enum WsConnectionState {
-  READY_STATE_INITIAL,
-  READY_STATE_CONNECTING,
-  READY_STATE_CONNECTED,
-  READY_STATE_CLOSING,
-  READY_STATE_RECONNECTING
-};
 
 export default class WsStore {
   private connections: {
@@ -23,26 +16,28 @@ export default class WsStore {
     this.logger = logger || DefaultLogger;
   }
 
-  getConnection(key: string) {
+  getWs(key: string): WebSocket | undefined {
     return this.connections[key];
   }
 
-  setConnection(key: string, wsConnection: WebSocket) {
-    const existingConnection = this.getConnection(key);
-    if (existingConnection) {
-      this.logger.info('WsStore setConnection() overwriting existing connection: ', existingConnection);
+  setWs(key: string, wsConnection: WebSocket): WebSocket {
+    const existingConnection = this.getWs(key);
+    if (existingConnection && existingConnection.readyState === existingConnection.OPEN) {
+      this.logger.warning('WsStore setConnection() overwriting existing open connection: ', existingConnection);
     }
     this.connections[key] = wsConnection;
+    return wsConnection;
   }
 
-  clearConnection(key: string) {
-    const existingConnection = this.getConnection(key);
+  clearWs(key: string) {
+    const existingConnection = this.getWs(key);
     if (existingConnection) {
+      existingConnection.close();
       delete this.connections[key];
     }
   }
 
-  getConnectionState(key: string) {
+  getConnectionState(key: string): WsConnectionState {
     return this.connectionState[key];
   }
 
@@ -50,14 +45,7 @@ export default class WsStore {
     this.connectionState[key] = state;
   }
 
-  isConnectionState(key: string, state: WsConnectionState) {
-    const a = this.getConnectionState(key) === state;
-    const b = this.getConnectionState(key) == state;
-    if (a != b) {
-      console.error('connection state doesnt match: ', { state, storedState: this.getConnectionState(key) });
-    } else {
-      console.log('isConnectionState matches');
-    }
+  isConnectionState(key: string, state: WsConnectionState): boolean {
     return this.getConnectionState(key) === state;
   }
 }
