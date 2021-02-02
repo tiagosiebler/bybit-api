@@ -77,12 +77,12 @@ export class LinearClient extends SharedEndpoints {
 	getMarkPriceKline(params: {
 		symbol: string;
 		interval: string;
-		from: number;
+        from: number;
 		limit?: number;
 	}): GenericAPIResponse {
 		return this.requestWrapper.get('public/linear/mark-price-kline', params);
 	}
-
+	
 	getIndexPriceKline(params: {
 		symbol: string;
 		interval: string;
