@@ -33,7 +33,11 @@ export class InverseClient extends SharedEndpoints {
     return this;
   }
 
-  //------------Market Data Endpoints------------>
+  /**
+   *
+   * Market Data Endpoints
+   *
+   */
 
   getKline(params: {
     symbol: string;
@@ -112,7 +116,13 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.get('v2/public/premium-index-kline', params);
   }
 
-  //-----------Account Data Endpoints------------>
+  /**
+   *
+   * Account Data Endpoints
+   *
+   */
+  
+  //Active Orders
 
   placeActiveOrder(orderRequest: {
     side: string;
@@ -171,6 +181,8 @@ export class InverseClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/order', params);
   }
+  
+  //Conditional Orders
 
   placeConditionalOrder(params: {
     side: string;
@@ -230,6 +242,8 @@ export class InverseClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/stop-order', params);
   }
+  
+  //Position
 
   /**
    * @deprecated use getPosition() instead
@@ -305,6 +319,8 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.get('v2/private/trade/closed-pnl/list', params);
   }
 
+  //Risk Limit
+  
   getRiskLimitList(): GenericAPIResponse {
     return this.requestWrapper.get('open-api/wallet/risk-limit/list');
   }
@@ -315,6 +331,8 @@ export class InverseClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.post('open-api/wallet/risk-limit', params);
   }
+  
+  //Funding
 
   getLastFundingRate(params: {
     symbol: string;
@@ -333,6 +351,8 @@ export class InverseClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/funding/predicted-funding', params);
   }
+  
+  //misc
 
   getLcpInfo(params: {
     symbol: string;
