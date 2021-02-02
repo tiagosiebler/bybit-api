@@ -34,7 +34,11 @@ export class LinearClient extends SharedEndpoints {
 		return this;
 	}
 
-	//------------Market Data Endpoints------------>
+  /**
+   *
+   * Market Data Endpoints
+   *
+   */
 
 	getKline(params: {
 		symbol: string;
@@ -97,8 +101,12 @@ export class LinearClient extends SharedEndpoints {
 		return this.requestWrapper.get('public/linear/premium-index-kline', params);
 	}
 
-	//------------Account Data Endpoints------------>
-
+  /**
+   *
+   * Account Data Endpoints
+   *
+   */
+  
 	//Active Orders
 
 	placeActiveOrder(params: {
