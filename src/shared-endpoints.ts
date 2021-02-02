@@ -5,7 +5,11 @@ export default class SharedEndpoints {
   // TODO: Is there a way to say that Base has to provide this?
   protected requestWrapper: RequestWrapper;
 
-  //------------Market Data Endpoints------------>
+  /**
+   *
+   * Market Data Endpoints
+   *
+   */
 
   getOrderBook(params: {
     symbol: string;
@@ -56,13 +60,21 @@ export default class SharedEndpoints {
     return this.requestWrapper.get('v2/public/account-ratio', params);
   }
 
-  //------------Account Data Endpoints------------>
+  /**
+   *
+   * Account Data Endpoints
+   *
+   */
 
   getApiKeyInfo(): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/account/api-key');
   }
 
-  //------------Wallet Data Endpoints------------>
+  /**
+   *
+   * Wallet Data Endpoints
+   *
+   */
 
   getWalletBalance(params: {
     coin?: string;
@@ -101,7 +113,11 @@ export default class SharedEndpoints {
     return this.requestWrapper.get('v2/private/wallet/withdraw/list', params);
   }
 
-  //-------------API Data Endpoints------------->
+   /**
+   *
+   * API Data Endpoints
+   *
+   */
 
   getServerTime(): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/time');
