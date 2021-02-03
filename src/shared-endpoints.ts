@@ -113,7 +113,7 @@ export default class SharedEndpoints {
     return this.requestWrapper.get('v2/private/wallet/withdraw/list', params);
   }
 
-   /**
+  /**
    *
    * API Data Endpoints
    *
@@ -127,7 +127,7 @@ export default class SharedEndpoints {
     return this.requestWrapper.get('v2/public/announcement');
   }
 
-  async getTimeOffset(): Promise < number > {
+  async getTimeOffset(): Promise<number> {
     const start = Date.now();
     return this.getServerTime().then(result => {
       const end = Date.now();
