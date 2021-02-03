@@ -106,8 +106,10 @@ export class LinearClient extends SharedEndpoints {
    * Account Data Endpoints
    *
    */
-  
-  //Active Orders
+
+	/**
+   * Active orders
+   */
 
   placeActiveOrder(params: {
     side: string;
@@ -176,7 +178,9 @@ export class LinearClient extends SharedEndpoints {
     return this.requestWrapper.get('private/linear/order/search', params);
   }
 
-  //Conditional Orders
+	/**
+   * Conditional orders
+   */
 
   placeConditionalOrder(params: {
     side: string;
@@ -248,7 +252,9 @@ export class LinearClient extends SharedEndpoints {
     return this.requestWrapper.get('private/linear/stop-order/search', params);
   }
 
-  //Position
+  /**
+   * Position
+   */
 
   getPosition(params?: {
     symbol?: string;
@@ -332,7 +338,9 @@ export class LinearClient extends SharedEndpoints {
     return this.requestWrapper.get('private/linear/tpsl/switch-mode', params);
   }
 
-  //Risk Limit
+	/**
+   * Risk Limit
+   */
 
   getRiskLimitList(params: {
     symbol: string;
@@ -340,7 +348,9 @@ export class LinearClient extends SharedEndpoints {
     return this.requestWrapper.get('public/linear/risk-limit');
   }
 
-  //Funding
+	/**
+   * Funding
+   */
 
   getPredictedFundingFee(params: {
     symbol: string;
