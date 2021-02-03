@@ -122,7 +122,9 @@ export class InverseClient extends SharedEndpoints {
    *
    */
   
-  //Active Orders
+	/**
+   * Active orders
+   */
 
   placeActiveOrder(orderRequest: {
     side: string;
@@ -182,7 +184,9 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.get('v2/private/order', params);
   }
   
-  //Conditional Orders
+	/**
+   * Conditional orders
+   */
 
   placeConditionalOrder(params: {
     side: string;
@@ -243,7 +247,9 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.get('v2/private/stop-order', params);
   }
   
-  //Position
+	/**
+   * Position
+   */
 
   /**
    * @deprecated use getPosition() instead
@@ -319,7 +325,9 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.get('v2/private/trade/closed-pnl/list', params);
   }
 
-  //Risk Limit
+	/**
+   * Risk Limit
+   */
   
   getRiskLimitList(): GenericAPIResponse {
     return this.requestWrapper.get('open-api/wallet/risk-limit/list');
@@ -332,7 +340,9 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.post('open-api/wallet/risk-limit', params);
   }
   
-  //Funding
+	/**
+   * Funding
+   */
 
   getLastFundingRate(params: {
     symbol: string;
@@ -352,7 +362,9 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.get('v2/private/funding/predicted-funding', params);
   }
   
-  //misc
+	/**
+   * LCP Info
+   */
 
   getLcpInfo(params: {
     symbol: string;
