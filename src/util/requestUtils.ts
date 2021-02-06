@@ -57,7 +57,7 @@ export function getBaseRESTInverseUrl(useLivenet?: boolean, restInverseOptions?:
   }
   return baseUrlsInverse.testnet;
 }
-      
+
 export function isPublicEndpoint (endpoint: string): boolean {
   if (endpoint.startsWith('v2/public')) {
     return true;
@@ -66,4 +66,13 @@ export function isPublicEndpoint (endpoint: string): boolean {
     return true;
   }
   return false;
+}
+
+export function isWsPong(response: any) {
+  return (
+    response.request &&
+    response.request.op === 'ping' &&
+    response.ret_msg === 'pong' &&
+    response.success === true
+  );
 }
