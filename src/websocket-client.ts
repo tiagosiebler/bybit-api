@@ -63,7 +63,7 @@ export interface WebsocketClientOptions extends WSClientConfigurableOptions {
   reconnectTimeout: number;
 };
 
-const defaultWsKey = 'inverse';
+export const defaultWsKey = 'inverse';
 
 const getLinearWsKeyForTopic = (topic: string) => {
   switch (topic) {
@@ -138,10 +138,6 @@ export class WebsocketClient extends EventEmitter {
     }
   }
 
-  private getWsKeyForTopic(topic: string) {
-    return this.isInverse() ? defaultWsKey : getLinearWsKeyForTopic(topic);
-  }
-
   /**
    * Remove topic/topics from WS subscription list
    */
@@ -163,19 +159,9 @@ export class WebsocketClient extends EventEmitter {
   public close(wsKey: string = defaultWsKey) {
     this.logger.info('Closing connection', loggerCategory);
     this.setWsState(wsKey, READY_STATE_CLOSING);
-    this.clearTimers();
+    this.clearTimers(wsKey);
 
     this.getWs(wsKey)?.close();
-  }
-
-  private getWsUrl(): string {
-    if (this.options.wsUrl) {
-      return this.options.wsUrl;
-    }
-    if (this.options.linear){
-        return linearEndpoints[this.options.livenet ? 'livenet' : 'testnet'];
-    }
-    return inverseEndpoints[this.options.livenet ? 'livenet' : 'testnet'];
   }
 
   private async connect(wsKey: string = defaultWsKey): Promise<WebSocket | void> {
@@ -185,14 +171,14 @@ export class WebsocketClient extends EventEmitter {
         return this.wsStore.getWs(wsKey);
       }
 
-      if (this.wsStore.isConnectionState(defaultWsKey, READY_STATE_CONNECTING)) {
+      if (this.wsStore.isConnectionState(wsKey, READY_STATE_CONNECTING)) {
         this.logger.error('Refused to connect to ws, connection attempt already active', { ...loggerCategory, wsKey })
         return;
       }
 
       if (
-        !this.wsStore.getConnectionState(defaultWsKey) ||
-        this.wsStore.isConnectionState(defaultWsKey, READY_STATE_INITIAL)
+        !this.wsStore.getConnectionState(wsKey) ||
+        this.wsStore.isConnectionState(wsKey, READY_STATE_INITIAL)
       ) {
         this.setWsState(wsKey, READY_STATE_CONNECTING);
       }
@@ -203,8 +189,8 @@ export class WebsocketClient extends EventEmitter {
 
       return this.wsStore.setWs(wsKey, ws);
     } catch (err) {
-      this.parseWsError('Connection failed', err);
-      this.reconnectWithDelay(this.options.reconnectTimeout!);
+      this.parseWsError('Connection failed', err, wsKey);
+      this.reconnectWithDelay(wsKey, this.options.reconnectTimeout!);
     }
   }
 
@@ -253,10 +239,10 @@ export class WebsocketClient extends EventEmitter {
     return '';
   }
 
-  private reconnectWithDelay(connectionDelayMs: number) {
-    this.clearTimers();
-    if (this.wsStore.getConnectionState(defaultWsKey) !== READY_STATE_CONNECTING) {
-      this.setWsState(defaultWsKey, READY_STATE_RECONNECTING);
+  private reconnectWithDelay(wsKey: string = defaultWsKey, connectionDelayMs: number) {
+    this.clearTimers(wsKey);
+    if (this.wsStore.getConnectionState(wsKey) !== READY_STATE_CONNECTING) {
+      this.setWsState(wsKey, READY_STATE_RECONNECTING);
     }
 
     setTimeout(() => {
@@ -277,7 +263,7 @@ export class WebsocketClient extends EventEmitter {
     }, this.options.pongTimeout);
   }
 
-  private clearTimers(wsKey: string = defaultWsKey) {
+  private clearTimers(wsKey: string) {
     this.clearPingTimer(wsKey);
     this.clearPongTimer(wsKey);
   }
@@ -350,7 +336,7 @@ export class WebsocketClient extends EventEmitter {
       this.emit('reconnected');
     }
 
-    this.setWsState(defaultWsKey, READY_STATE_CONNECTED);
+    this.setWsState(wsKey, READY_STATE_CONNECTED);
 
     this.wsStore.getKeys().forEach(wsKey =>
       this.requestSubscribeTopics(wsKey, [...this.wsStore.getTopics(wsKey)])
@@ -409,5 +395,19 @@ export class WebsocketClient extends EventEmitter {
 
   private setWsState(wsKey: string, state: WsConnectionState) {
     this.wsStore.setConnectionState(wsKey, state);
+  }
+
+  private getWsUrl(): string {
+    if (this.options.wsUrl) {
+      return this.options.wsUrl;
+    }
+    if (this.options.linear){
+        return linearEndpoints[this.options.livenet ? 'livenet' : 'testnet'];
+    }
+    return inverseEndpoints[this.options.livenet ? 'livenet' : 'testnet'];
+  }
+
+  private getWsKeyForTopic(topic: string) {
+    return this.isInverse() ? defaultWsKey : getLinearWsKeyForTopic(topic);
   }
 };
