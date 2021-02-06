@@ -76,9 +76,6 @@ const getLinearWsKeyForTopic = (topic: string) => {
 }
 
 export class WebsocketClient extends EventEmitter {
-  private activePingTimer?: NodeJS.Timeout | undefined;
-  private activePongTimer?: NodeJS.Timeout | undefined;
-
   private logger: Logger;
   private client: InverseClient | LinearClient;
   private options: WebsocketClientOptions;
@@ -90,8 +87,6 @@ export class WebsocketClient extends EventEmitter {
 
     this.logger = logger || DefaultLogger;
     this.wsStore = new WsStore(this.logger);
-    this.activePingTimer = undefined;
-    this.activePongTimer = undefined;
 
     this.options = {
       livenet: false,
@@ -252,12 +247,12 @@ export class WebsocketClient extends EventEmitter {
   }
 
   private ping(wsKey: string = defaultWsKey) {
-    this.clearPongTimer();
+    this.clearPongTimer(wsKey);
 
     this.logger.silly('Sending ping', loggerCategory);
     this.tryWsSend(wsKey, JSON.stringify({ op: 'ping' }));
 
-    this.activePongTimer = setTimeout(() => {
+    this.wsStore.get(wsKey, true)!.activePongTimer = setTimeout(() => {
       this.logger.info('Pong timeout - closing socket to reconnect', loggerCategory);
       this.getWs(wsKey)?.close();
     }, this.options.pongTimeout);
@@ -269,18 +264,20 @@ export class WebsocketClient extends EventEmitter {
   }
 
   // Send a ping at intervals
-  private clearPingTimer(wsKey: string = defaultWsKey) {
-    if (this.activePingTimer) {
-      clearInterval(this.activePingTimer);
-      this.activePingTimer = undefined;
+  private clearPingTimer(wsKey: string) {
+    const wsState = this.wsStore.get(wsKey);
+    if (wsState?.activePingTimer) {
+      clearInterval(wsState.activePingTimer);
+      wsState.activePingTimer = undefined;
     }
   }
 
   // Expect a pong within a time limit
-  private clearPongTimer(wsKey: string = defaultWsKey) {
-    if (this.activePongTimer) {
-      clearTimeout(this.activePongTimer);
-      this.activePongTimer = undefined;
+  private clearPongTimer(wsKey: string) {
+    const wsState = this.wsStore.get(wsKey);
+    if (wsState?.activePongTimer) {
+      clearInterval(wsState.activePongTimer);
+      wsState.activePongTimer = undefined;
     }
   }
 
@@ -342,14 +339,17 @@ export class WebsocketClient extends EventEmitter {
       this.requestSubscribeTopics(wsKey, [...this.wsStore.getTopics(wsKey)])
     );
 
-    this.activePingTimer = setInterval(this.ping.bind(this), this.options.pingInterval);
+    this.wsStore.get(wsKey, true)!.activePingTimer = setInterval(
+      this.ping.bind(this),
+      this.options.pingInterval
+    );
   }
 
-  private onWsMessage(event, wsKey?: string) {
+  private onWsMessage(event, wsKey: string) {
     const msg = JSON.parse(event && event.data || event);
 
     if ('success' in msg) {
-      this.onWsMessageResponse(msg);
+      this.onWsMessageResponse(msg, wsKey);
     } else if (msg.topic) {
       this.onWsMessageUpdate(msg);
     } else {
@@ -368,7 +368,7 @@ export class WebsocketClient extends EventEmitter {
     this.logger.info('Websocket connection closed', loggerCategory);
 
     if (this.wsStore.getConnectionState(wsKey) !== READY_STATE_CLOSING) {
-      this.reconnectWithDelay(this.options.reconnectTimeout!);
+      this.reconnectWithDelay(wsKey, this.options.reconnectTimeout!);
       this.emit('reconnect');
     } else {
       this.setWsState(wsKey, READY_STATE_INITIAL);
@@ -376,10 +376,10 @@ export class WebsocketClient extends EventEmitter {
     }
   }
 
-  private onWsMessageResponse(response: any) {
+  private onWsMessageResponse(response: any, wsKey: string) {
     if (isWsPong(response)) {
       this.logger.silly('Received pong', loggerCategory);
-      this.clearPongTimer();
+      this.clearPongTimer(wsKey);
     } else {
       this.emit('response', response);
     }
@@ -402,7 +402,7 @@ export class WebsocketClient extends EventEmitter {
       return this.options.wsUrl;
     }
     if (this.options.linear){
-        return linearEndpoints[this.options.livenet ? 'livenet' : 'testnet'];
+      return linearEndpoints[this.options.livenet ? 'livenet' : 'testnet'];
     }
     return inverseEndpoints[this.options.livenet ? 'livenet' : 'testnet'];
   }
