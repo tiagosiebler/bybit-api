@@ -1,12 +1,18 @@
 import { WsConnectionState } from '../websocket-client';
 import { DefaultLogger, Logger } from '../logger';
 
+
+type WsTopicList = Set<string>;
+type KeyedWsTopicLists = {
+  [key: string]: WsTopicList;
+};
+
 interface WsStoredState {
   ws?: WebSocket;
   connectionState?: WsConnectionState;
   activePingTimer?: NodeJS.Timeout | undefined;
   activePongTimer?: NodeJS.Timeout | undefined;
-  subscribedTopics: Set<string>;
+  subscribedTopics: WsTopicList;
 };
 
 export default class WsStore {
@@ -30,6 +36,10 @@ export default class WsStore {
     }
 
     return undefined;
+  }
+
+  getKeys(): string[] {
+    return Object.keys(this.wsState);
   }
 
   create(key: string): WsStoredState | undefined {
@@ -91,8 +101,16 @@ export default class WsStore {
 
   /* subscribed topics */
 
-  getTopics(key: string): Set<string> {
+  getTopics(key: string): WsTopicList {
     return this.get(key, true)!.subscribedTopics;
+  }
+
+  getTopicsByKey(): KeyedWsTopicLists {
+    const result = {};
+    for (const refKey in this.wsState) {
+      result[refKey] = this.getTopics(refKey);
+    }
+    return result;
   }
 
   addTopic(key: string, topic: string) {
