@@ -1,51 +1,105 @@
 import { WsConnectionState } from '../websocket-client';
 import { DefaultLogger, Logger } from '../logger';
 
+interface WsStoredState {
+  ws?: WebSocket;
+  connectionState?: WsConnectionState;
+  activePingTimer?: NodeJS.Timeout | undefined;
+  activePongTimer?: NodeJS.Timeout | undefined;
+  subscribedTopics: Set<string>;
+};
+
 export default class WsStore {
-  private connections: {
-    [key: string]: WebSocket
-  };
-  private connectionState: {
-    [key: string]: WsConnectionState
+  private wsState: {
+    [key: string]: WsStoredState;
   }
   private logger: Logger;
 
   constructor(logger: Logger) {
-    this.connections = {}
-    this.connectionState = {};
     this.logger = logger || DefaultLogger;
+    this.wsState = {};
+  }
+
+  get(key: string, createIfMissing?: boolean): WsStoredState | undefined {
+    if (this.wsState[key]) {
+      return this.wsState[key];
+    }
+
+    if (createIfMissing) {
+      return this.create(key);
+    }
+
+    return undefined;
+  }
+
+  create(key: string): WsStoredState | undefined {
+    if (this.hasExistingActiveConnection(key)) {
+      this.logger.warning('WsStore setConnection() overwriting existing open connection: ', this.getWs(key));
+    }
+    this.wsState[key] = {
+      subscribedTopics: new Set(),
+      connectionState: WsConnectionState.READY_STATE_INITIAL
+    };
+    return this.get(key);
+  }
+
+  delete(key: string) {
+    if (this.hasExistingActiveConnection(key)) {
+      const ws = this.getWs(key);
+      this.logger.warning('WsStore deleting state for connection still open: ', ws);
+      ws?.close();
+    }
+    delete this.wsState[key];
+  }
+
+  /* connection websocket */
+
+  hasExistingActiveConnection(key) {
+    return this.get(key) && this.isWsOpen(key);
   }
 
   getWs(key: string): WebSocket | undefined {
-    return this.connections[key];
+    return this.get(key)?.ws;
   }
 
   setWs(key: string, wsConnection: WebSocket): WebSocket {
-    const existingConnection = this.getWs(key);
-    if (existingConnection && existingConnection.readyState === existingConnection.OPEN) {
-      this.logger.warning('WsStore setConnection() overwriting existing open connection: ', existingConnection);
+    if (this.isWsOpen(key)) {
+      this.logger.warning('WsStore setConnection() overwriting existing open connection: ', this.getWs(key));
     }
-    this.connections[key] = wsConnection;
+    this.get(key, true)!.ws = wsConnection;
     return wsConnection;
   }
 
-  clearWs(key: string) {
+  /* connection state */
+
+  isWsOpen(key: string): boolean {
     const existingConnection = this.getWs(key);
-    if (existingConnection) {
-      existingConnection.close();
-      delete this.connections[key];
-    }
+    return !!existingConnection && existingConnection.readyState === existingConnection.OPEN;
   }
 
   getConnectionState(key: string): WsConnectionState {
-    return this.connectionState[key];
+    return this.get(key, true)!.connectionState!;
   }
 
   setConnectionState(key: string, state: WsConnectionState) {
-    this.connectionState[key] = state;
+    this.get(key, true)!.connectionState = state;
   }
 
   isConnectionState(key: string, state: WsConnectionState): boolean {
     return this.getConnectionState(key) === state;
+  }
+
+  /* subscribed topics */
+
+  getTopics(key: string): Set<string> {
+    return this.get(key, true)!.subscribedTopics;
+  }
+
+  addTopic(key: string, topic: string) {
+    return this.getTopics(key).add(topic);
+  }
+
+  deleteTopic(key: string, topic: string) {
+    return this.getTopics(key).delete(topic);
   }
 }
