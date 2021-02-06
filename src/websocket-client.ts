@@ -276,7 +276,7 @@ export class WebsocketClient extends EventEmitter {
   private clearPongTimer(wsKey: string) {
     const wsState = this.wsStore.get(wsKey);
     if (wsState?.activePongTimer) {
-      clearInterval(wsState.activePongTimer);
+      clearTimeout(wsState.activePongTimer);
       wsState.activePongTimer = undefined;
     }
   }
