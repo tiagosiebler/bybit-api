@@ -1,6 +1,7 @@
 import { WsConnectionState } from '../websocket-client';
 import { DefaultLogger, Logger } from '../logger';
 
+import WebSocket from 'isomorphic-ws';
 
 type WsTopicList = Set<string>;
 type KeyedWsTopicLists = {
