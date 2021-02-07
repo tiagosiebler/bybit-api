@@ -49,7 +49,6 @@ export interface WSClientConfigurableOptions {
   pongTimeout?: number;
   pingInterval?: number;
   reconnectTimeout?: number;
-  autoConnectWs?: boolean;
   restOptions?: any;
   requestOptions?: any;
   wsUrl?: string;
@@ -97,7 +96,7 @@ export class WebsocketClient extends EventEmitter {
       ...options
     };
 
-    if (this.options.linear === true) {
+    if (this.isLinear()) {
       this.restClient = new LinearClient(undefined, undefined, this.isLivenet(), this.options.restOptions, this.options.requestOptions);
     } else {
       this.restClient = new InverseClient(undefined, undefined, this.isLivenet(), this.options.restOptions, this.options.requestOptions);
@@ -108,8 +107,12 @@ export class WebsocketClient extends EventEmitter {
     return this.options.livenet === true;
   }
 
+  public isLinear(): boolean {
+    return this.options.linear === true;
+  }
+
   public isInverse(): boolean {
-    return !this.options.linear;
+    return !this.isLinear();
   }
 
   /**
@@ -150,15 +153,15 @@ export class WebsocketClient extends EventEmitter {
       topic
     ));
 
-    // unsubscribe not necessary if not yet connected
-    if (this.wsStore.isConnectionState(wsKeyInverse, READY_STATE_CONNECTED)) {
-      this.wsStore.getKeys().forEach(wsKey =>
+    this.wsStore.getKeys().forEach(wsKey => {
+      // unsubscribe request only necessary if active connection exists
+      if (this.wsStore.isConnectionState(wsKey, READY_STATE_CONNECTED)) {
         this.requestUnsubscribeTopics(wsKey, [...this.wsStore.getTopics(wsKey)])
-      );
-    }
+      }
+    });
   }
 
-  public close(wsKey: string = wsKeyInverse) {
+  public close(wsKey: string) {
     this.logger.info('Closing connection', { ...loggerCategory, wsKey });
     this.setWsState(wsKey, READY_STATE_CLOSING);
     this.clearTimers(wsKey);
@@ -169,17 +172,17 @@ export class WebsocketClient extends EventEmitter {
   /**
    * Request connection of all dependent websockets, instead of waiting for automatic connection by library
    */
-  public connectAll(): Promise<WebSocket>[] | undefined {
+  public connectAll(): Promise<WebSocket | undefined>[] | undefined {
     if (this.isInverse()) {
       return [this.connect(wsKeyInverse)];
     }
 
-    if (this.options.linear === true) {
+    if (this.isLinear()) {
       return [this.connect(wsKeyLinearPublic), this.connect(wsKeyLinearPrivate)];
     }
   }
 
-  private async connect(wsKey: string = wsKeyInverse): Promise<WebSocket | undefined> {
+  private async connect(wsKey: string): Promise<WebSocket | undefined> {
     try {
       if (this.wsStore.isWsOpen(wsKey)) {
         this.logger.error('Refused to connect to ws with existing active connection', { ...loggerCategory, wsKey })
@@ -197,9 +200,8 @@ export class WebsocketClient extends EventEmitter {
       ) {
         this.setWsState(wsKey, READY_STATE_CONNECTING);
       }
-      // this.setWsState(wsKey, READY_STATE_CONNECTING);
 
-      const authParams = await this.getAuthParams();
+      const authParams = await this.getAuthParams(wsKey);
       const url = this.getWsUrl(wsKey) + authParams;
       const ws = this.connectToWsUrl(url, wsKey);
 
@@ -230,11 +232,11 @@ export class WebsocketClient extends EventEmitter {
   /**
    * Return params required to make authorized request
    */
-  private async getAuthParams(): Promise<string> {
+  private async getAuthParams(wsKey: string): Promise<string> {
     const { key, secret } = this.options;
 
-    if (key && secret) {
-      this.logger.debug('Getting auth\'d request params', loggerCategory);
+    if (key && secret && wsKey !== wsKeyLinearPublic) {
+      this.logger.debug('Getting auth\'d request params', { ...loggerCategory, wsKey });
 
       const timeOffset = await this.restClient.getTimeOffset();
 
@@ -247,9 +249,9 @@ export class WebsocketClient extends EventEmitter {
       return '?' + serializeParams(params);
 
     } else if (!key || !secret) {
-      this.logger.warning('Connot authenticate websocket, either api or private keys missing.', loggerCategory);
+      this.logger.warning('Connot authenticate websocket, either api or private keys missing.', { ...loggerCategory, wsKey });
     } else {
-      this.logger.debug('Starting public only websocket client.', loggerCategory);
+      this.logger.debug('Starting public only websocket client.', { ...loggerCategory, wsKey });
     }
 
     return '';
@@ -352,11 +354,11 @@ export class WebsocketClient extends EventEmitter {
 
   private onWsOpen(event, wsKey: string) {
     if (this.wsStore.isConnectionState(wsKey, READY_STATE_CONNECTING)) {
-      this.logger.info('Websocket connected', { ...loggerCategory, wsKey, livenet: this.options.livenet, linear: this.options.linear });
-      this.emit('open');
+      this.logger.info('Websocket connected', { ...loggerCategory, wsKey, livenet: this.isLivenet(), linear: this.isLinear() });
+      this.emit('open', { wsKey, event });
     } else if (this.wsStore.isConnectionState(wsKey, READY_STATE_RECONNECTING)) {
       this.logger.info('Websocket reconnected', { ...loggerCategory, wsKey });
-      this.emit('reconnected');
+      this.emit('reconnected', { wsKey, event });
     }
 
     this.setWsState(wsKey, READY_STATE_CONNECTED);
@@ -381,14 +383,14 @@ export class WebsocketClient extends EventEmitter {
     }
   }
 
-  private onWsError(err, wsKey: string = wsKeyInverse) {
+  private onWsError(err, wsKey: string) {
     this.parseWsError('Websocket error', err, wsKey);
     if (this.wsStore.isConnectionState(wsKey, READY_STATE_CONNECTED)) {
       this.emit('error', err);
     }
   }
 
-  private onWsClose(event, wsKey: string = wsKeyInverse) {
+  private onWsClose(event, wsKey: string) {
     this.logger.info('Websocket connection closed', { ...loggerCategory, wsKey});
 
     if (this.wsStore.getConnectionState(wsKey) !== READY_STATE_CLOSING) {
@@ -427,7 +429,7 @@ export class WebsocketClient extends EventEmitter {
     }
 
     const networkKey = this.options.livenet ? 'livenet' : 'testnet';
-    if (this.options.linear || wsKey.startsWith('linear')){
+    if (this.isLinear() || wsKey.startsWith('linear')){
       if (wsKey === wsKeyLinearPublic) {
         return linearEndpoints.public[networkKey];
       }
