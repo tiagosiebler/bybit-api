@@ -101,19 +101,21 @@ const wsConfig = {
   key: API_KEY,
   secret: PRIVATE_KEY,
 
-  // The following parameters are optional:
+  /*
+    The following parameters are optional:
+  */
 
-  // defaults to false == testnet. set to true for livenet.
+  // defaults to false == testnet. Set to true for livenet.
   // livenet: true
 
-  // override which URL to use for websocket connections
-  // wsUrl: 'wss://stream.bytick.com/realtime'
-
-  // how often to check (in ms) that WS connection is still alive
-  // pingInterval: 10000,
+  // defaults to fase == inverse. Set to true for linear (USDT) trading.
+  // linear: true
 
   // how long to wait (in ms) before deciding the connection should be terminated & reconnected
   // pongTimeout: 1000,
+
+  // how often to check (in ms) that WS connection is still alive
+  // pingInterval: 10000,
 
   // how long to wait before attempting to reconnect (in ms) after connection is closed
   // reconnectTimeout: 500,
@@ -123,45 +125,60 @@ const wsConfig = {
 
   // config for axios to pass to RestClient. E.g for proxy support
   // requestOptions: { }
+
+  // override which URL to use for websocket connections
+  // wsUrl: 'wss://stream.bytick.com/realtime'
 };
 
 const ws = new WebsocketClient(wsConfig);
 
+// subscribe to multiple topics at once
 ws.subscribe(['position', 'execution', 'trade']);
+
+// and/or subscribe to individual topics on demand
 ws.subscribe('kline.BTCUSD.1m');
 
-ws.on('open', () => {
-  console.log('connection open');
+// Listen to events coming from websockets. This is the primary data source
+ws.on('update', data => {
+  console.log('update', data);
 });
 
-ws.on('update', message => {
-  console.log('update', message);
+// Optional: Listen to websocket connection open event (automatic after subscribing to one or more topics)
+ws.on('open', ({ wsKey, event }) => {
+  console.log('connection open for websocket with ID: ' + wsKey);
 });
 
+// Optional: Listen to responses to websocket queries (e.g. the response after subscribing to a topic)
 ws.on('response', response => {
   console.log('response', response);
 });
 
+// Optional: Listen to connection close event. Unexpected connection closes are automatically reconnected.
 ws.on('close', () => {
   console.log('connection closed');
 });
 
+// Optional: Listen to raw error events.
+// Note: responses to invalid topics are currently only sent in the "response" event.
 ws.on('error', err => {
   console.error('ERR', err);
 });
 ```
-See inverse [websocket-client.ts](./src/websocket-client.ts) for further information.
+See [websocket-client.ts](./src/websocket-client.ts) for further information.
 
 ### Customise Logging
 Pass a custom logger which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired:
 
 ```js
-const { RestClient, WebsocketClient, DefaultLogger } = require('bybit-api');
+const { WebsocketClient, DefaultLogger } = require('bybit-api');
 
 // Disable all logging on the silly level
 DefaultLogger.silly = () => {};
 
-const ws = new WebsocketClient({key: 'xxx', secret: 'yyy'}, DefaultLogger);
+const ws = new WebsocketClient(
+  { key: 'xxx', secret: 'yyy' },
+  DefaultLogger
+);
 ```
 
 ## Contributions & Thanks
