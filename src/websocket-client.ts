@@ -169,9 +169,9 @@ export class WebsocketClient extends EventEmitter {
   /**
    * Request connection of all dependent websockets, instead of waiting for automatic connection by library
    */
-  public connectAll(): Promise<WebSocket> | Promise<WebSocket>[] | undefined {
+  public connectAll(): Promise<WebSocket>[] | undefined {
     if (this.isInverse()) {
-      return this.connect(wsKeyInverse);
+      return [this.connect(wsKeyInverse)];
     }
 
     if (this.options.linear === true) {
