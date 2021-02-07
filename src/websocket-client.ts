@@ -129,7 +129,6 @@ export class WebsocketClient extends EventEmitter {
     this.wsStore.getKeys().forEach(wsKey => {
       // if connected, send subscription request
       if (this.wsStore.isConnectionState(wsKey, READY_STATE_CONNECTED)) {
-        console.log(`${wsKey} is supposedly connected - sending request for topics`);
         return this.requestSubscribeTopics(wsKey, [...this.wsStore.getTopics(wsKey)]);
       }
 
@@ -332,7 +331,7 @@ export class WebsocketClient extends EventEmitter {
     try {
       this.logger.silly(`Sending upstream ws message: `, { ...loggerCategory, wsMessage, wsKey });
       if (!wsKey) {
-        console.error('ws with key: ', wsKey, ' not found');
+        throw new Error('Cannot send message due to no known websocket for this wsKey');
       }
       this.getWs(wsKey)?.send(wsMessage);
     } catch (e) {
