@@ -1,7 +1,5 @@
 export type LogParams = null | any;
 
-export type Logger = typeof DefaultLogger;
-
 export const DefaultLogger = {
   silly: (...params: LogParams): void => {
     console.log(params);

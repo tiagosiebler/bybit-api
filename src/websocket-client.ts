@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import { InverseClient } from './inverse-client';
 import { LinearClient } from './linear-client';
-import { DefaultLogger, Logger } from './logger';
+import { DefaultLogger } from './logger';
 import { signMessage, serializeParams, isWsPong } from './util/requestUtils';
 
 import WebSocket from 'isomorphic-ws';
@@ -76,12 +76,12 @@ const getLinearWsKeyForTopic = (topic: string) => {
 }
 
 export class WebsocketClient extends EventEmitter {
-  private logger: Logger;
+  private logger: typeof DefaultLogger;
   private restClient: InverseClient | LinearClient;
   private options: WebsocketClientOptions;
   private wsStore: WsStore;
 
-  constructor(options: WSClientConfigurableOptions, logger?: Logger) {
+  constructor(options: WSClientConfigurableOptions, logger?: typeof DefaultLogger) {
     super();
 
     this.logger = logger || DefaultLogger;

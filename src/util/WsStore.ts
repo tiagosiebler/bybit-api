@@ -1,5 +1,5 @@
 import { WsConnectionState } from '../websocket-client';
-import { DefaultLogger, Logger } from '../logger';
+import { DefaultLogger } from '../logger';
 
 import WebSocket from 'isomorphic-ws';
 
@@ -20,9 +20,9 @@ export default class WsStore {
   private wsState: {
     [key: string]: WsStoredState;
   }
-  private logger: Logger;
+  private logger: typeof DefaultLogger;
 
-  constructor(logger: Logger) {
+  constructor(logger: typeof DefaultLogger) {
     this.logger = logger || DefaultLogger;
     this.wsState = {};
   }
