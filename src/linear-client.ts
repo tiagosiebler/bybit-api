@@ -320,9 +320,9 @@ export class LinearClient extends SharedEndpoints {
     return this.requestWrapper.get('private/linear/tpsl/switch-mode', params);
   }
 
-	/**
-   * Risk Limit
-   */
+  /**
+  * Risk Limit
+  */
 
   getRiskLimitList(params: {
     symbol: string;
