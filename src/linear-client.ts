@@ -338,9 +338,9 @@ export class LinearClient extends SharedEndpoints {
     return this.requestWrapper.get('private/linear/position/set-risk', params);
   }
 
-	/**
-   * Funding
-   */
+  /**
+  * Funding
+  */
 
   getPredictedFundingFee(params: {
     symbol: string;
