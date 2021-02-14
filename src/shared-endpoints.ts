@@ -110,14 +110,6 @@ export default class SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/wallet/withdraw/list', params);
   }
-  
-  getAssetExchangeRecords(params?: {
-    limit?: number;
-    from?: number;
-    direction?: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/exchange-order/list', params);
-  }
 
   getAssetExchangeRecords(params?: {
     limit?: number;
