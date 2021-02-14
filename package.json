@@ -11,8 +11,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf lib dist",
-    "prebuild": "npm run clean",
+    "buildclean": "npm run clean && npm run build",
     "build": "tsc",
+    "build:watch": "npm run clean && tsc --watch",
     "pack": "webpack --config webpack/webpack.config.js",
     "prepublish": "npm run build",
     "betapublish": "npm publish --tag beta"

@@ -82,14 +82,6 @@ export default class SharedEndpoints {
     return this.requestWrapper.get('v2/private/wallet/balance', params)
   }
 
-  getAssetExchangeRecords(params?: {
-    limit?: number;
-    from?: number;
-    direction?: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/exchange-order/list', params);
-  }
-
   getWalletFundRecords(params?: {
     start_date?: string;
     end_date?: string;
@@ -111,6 +103,14 @@ export default class SharedEndpoints {
     limit?: number;
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/wallet/withdraw/list', params);
+  }
+
+  getAssetExchangeRecords(params?: {
+    limit?: number;
+    from?: number;
+    direction?: string;
+  }): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/exchange-order/list', params);
   }
 
   /**
