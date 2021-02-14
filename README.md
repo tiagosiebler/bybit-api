@@ -39,13 +39,10 @@ Build a bundle using webpack:
 The bundle can be found in `dist/`. Altough usage should be largely consistent, smaller differences will exist. Documentation is still TODO.
 
 ### Inverse Contracts
-#### Rest client
-```javascript
-const { RestClient } = require('bybit-api');
+Since inverse and linear (USDT) contracts don't use the exact same APIs, the REST abstractions are split into two modules. To use the inverse REST APIs, import the `InverseClient`:
 
-const API_KEY = 'xxx';
-const PRIVATE_KEY = 'yyy';
-const useLivenet = false;
+```javascript
+const { InverseClient } = require('bybit-api');
 
 const restInverseOptions = {
   // override the max size of the request window (in ms)
@@ -68,7 +65,11 @@ const restInverseOptions = {
   parse_exceptions?: boolean;
 };
 
-const client = new RestClient(
+const API_KEY = 'xxx';
+const PRIVATE_KEY = 'yyy';
+const useLivenet = false;
+
+const client = new InverseClient(
   API_KEY,
   PRIVATE_KEY,
 
@@ -88,9 +89,67 @@ client.changeUserLeverage({leverage: 4, symbol: 'ETHUSD'})
   });
 ```
 
-See inverse [rest-client.ts](./src/rest-client.ts) for further information.
+See inverse [inverse-client.ts](./src/inverse-client.ts) for further information.
 
-#### Websocket client
+### Linear Contracts
+To use the Linear (USDT) REST APIs, import the `LinearClient`:
+
+```javascript
+const { LinearClient } = require('bybit-api');
+
+const restInverseOptions = {
+  // override the max size of the request window (in ms)
+  recv_window?: number;
+
+  // how often to sync time drift with bybit servers
+  sync_interval_ms?: number | string;
+
+  // Default: false. Disable above sync mechanism if true.
+  disable_time_sync?: boolean;
+
+  // Default: false. If true, we'll throw errors if any params are undefined
+  strict_param_validation?: boolean;
+
+  // Optionally override API protocol + domain
+  // e.g 'https://api.bytick.com'
+  baseUrl?: string;
+
+  // Default: true. whether to try and post-process request exceptions.
+  parse_exceptions?: boolean;
+};
+
+const API_KEY = 'xxx';
+const PRIVATE_KEY = 'yyy';
+const useLivenet = false;
+
+const client = new LinearClient(
+  API_KEY,
+  PRIVATE_KEY,
+
+  // optional, uses testnet by default. Set to 'true' to use livenet.
+  useLivenet,
+
+  // restInverseOptions,
+  // requestLibraryOptions
+);
+
+client.changeUserLeverage({leverage: 4, symbol: 'ETHUSD'})
+  .then(result => {
+    console.log(result);
+  })
+  .catch(err => {
+    console.error(err);
+  });
+```
+
+### WebSockets
+
+Inverse & linear WebSockets can be used via a shared `WebsocketClient`.
+
+Note: to use the linear websockets, pass "linear: true" in the constructor options when instancing the `WebsocketClient`.
+
+To connect to both linear and inverse websockets, make two instances of the WebsocketClient:
+
 ```javascript
 const { WebsocketClient } = require('bybit-api');
 
@@ -123,7 +182,7 @@ const wsConfig = {
   // config options sent to RestClient (used for time sync). See RestClient docs.
   // restOptions: { },
 
-  // config for axios to pass to RestClient. E.g for proxy support
+  // config for axios used for HTTP requests. E.g for proxy support
   // requestOptions: { }
 
   // override which URL to use for websocket connections
