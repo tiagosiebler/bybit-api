@@ -17,7 +17,7 @@ A production-ready Node.js connector for the Bybit APIs and WebSockets, with Typ
 ## Documentation
 Most methods accept JS objects. These can be populated using parameters specified by Bybit's API documentation.
 - [Bybit API Inverse Documentation](https://bybit-exchange.github.io/docs/inverse/#t-introduction).
-- [Bybit API Linear Documentation (not supported yet)](https://bybit-exchange.github.io/docs/linear/#t-introduction)
+- [Bybit API Linear Documentation](https://bybit-exchange.github.io/docs/linear/#t-introduction)
 
 ## Structure
 This project uses typescript. Resources are stored in 3 key structures:
