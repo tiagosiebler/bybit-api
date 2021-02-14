@@ -1,11 +1,11 @@
 import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 
-import { signMessage, serializeParams, RestClientInverseOptions, GenericAPIResponse, isPublicEndpoint } from './requestUtils';
+import { signMessage, serializeParams, RestClientOptions, GenericAPIResponse, isPublicEndpoint } from './requestUtils';
 
 export default class RequestUtil {
   private timeOffset: number | null;
   private syncTimePromise: null | Promise<any>;
-  private options: RestClientInverseOptions;
+  private options: RestClientOptions;
   private baseUrl: string;
   private globalRequestOptions: AxiosRequestConfig;
   private key: string | undefined;
@@ -15,7 +15,7 @@ export default class RequestUtil {
     key: string | undefined,
     secret: string | undefined,
     baseUrl: string,
-    options: RestClientInverseOptions = {},
+    options: RestClientOptions = {},
     requestOptions: AxiosRequestConfig = {}
   ) {
     this.timeOffset = null;
