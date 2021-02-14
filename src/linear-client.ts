@@ -160,9 +160,9 @@ export class LinearClient extends SharedEndpoints {
     return this.requestWrapper.get('private/linear/order/search', params);
   }
 
-	/**
-   * Conditional orders
-   */
+  /**
+  * Conditional orders
+  */
 
   placeConditionalOrder(params: {
     side: string;
