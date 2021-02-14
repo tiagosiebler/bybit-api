@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
-import { GenericAPIResponse, getBaseRESTInverseUrl, RestClientInverseOptions } from './util/requestUtils';
+import { GenericAPIResponse, getRestBaseUrl, RestClientOptions } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
 import SharedEndpoints from './shared-endpoints';
 
@@ -11,23 +11,22 @@ export class LinearClient extends SharedEndpoints {
    *
    * @param {string} key - your API key
    * @param {string} secret - your API secret
-   * @param {boolean} [livenet=false]
-   * @param {RestClientInverseOptions} [restInverseOptions={}] options to configure REST API connectivity
+   * @param {boolean} [useLivenet=false]
+   * @param {RestClientOptions} [restInverseOptions={}] options to configure REST API connectivity
    * @param {AxiosRequestConfig} [requestOptions={}] HTTP networking options for axios
    */
-
   constructor(
     key?: string | undefined,
     secret?: string | undefined,
-    livenet?: boolean,
-    restInverseOptions:RestClientInverseOptions = {}, // TODO: Rename this type to be more general.
+    useLivenet?: boolean,
+    restInverseOptions: RestClientOptions = {},
     requestOptions: AxiosRequestConfig = {}
   ) {
     super()
     this.requestWrapper = new RequestWrapper(
       key,
       secret,
-      getBaseRESTInverseUrl(livenet),
+      getRestBaseUrl(useLivenet),
       restInverseOptions,
       requestOptions
     );
@@ -46,23 +45,11 @@ export class LinearClient extends SharedEndpoints {
     from: number;
     limit?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('/public/linear/kline', params);
-  }
-
-  /**
-  * @deprecated use getTrades() instead
-  */
-  getPublicTradingRecords(params: {
-    symbol: string;
-    from?: number;
-    limit?: number;
-  }): GenericAPIResponse {
-    return this.getTrades(params);
+    return this.requestWrapper.get('public/linear/kline', params);
   }
 
   getTrades(params: {
     symbol: string;
-    //from?: number;
     limit?: number;
   }): GenericAPIResponse {
     return this.requestWrapper.get('public/linear/recent-trading-records', params);
@@ -82,7 +69,7 @@ export class LinearClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.get('public/linear/mark-price-kline', params);
   }
-  
+
   getIndexPriceKline(params: {
     symbol: string;
     interval: string;
@@ -105,10 +92,6 @@ export class LinearClient extends SharedEndpoints {
    *
    * Account Data Endpoints
    *
-   */
-
-	/**
-   * Active orders
    */
 
   placeActiveOrder(params: {
@@ -137,7 +120,6 @@ export class LinearClient extends SharedEndpoints {
     page?: number;
     limit?: number;
     order_status?: string;
-
   }): GenericAPIResponse {
     return this.requestWrapper.get('private/linear/order/list', params);
   }
@@ -345,7 +327,15 @@ export class LinearClient extends SharedEndpoints {
   getRiskLimitList(params: {
     symbol: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('public/linear/risk-limit');
+    return this.requestWrapper.get('public/linear/risk-limit', params);
+  }
+
+  setRiskLimit(params: {
+    symbol: string;
+    side: string;
+    risk_id: string;
+  }): GenericAPIResponse {
+    return this.requestWrapper.get('private/linear/position/set-risk', params);
   }
 
 	/**
@@ -355,13 +345,12 @@ export class LinearClient extends SharedEndpoints {
   getPredictedFundingFee(params: {
     symbol: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/funding/predicted-funding');
+    return this.requestWrapper.get('private/linear/funding/predicted-funding', params);
   }
 
   getLastFundingFee(params: {
     symbol: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/funding/prev-funding');
+    return this.requestWrapper.get('private/linear/funding/prev-funding', params);
   }
-
 }

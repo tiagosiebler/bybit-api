@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
-import { GenericAPIResponse, getBaseRESTInverseUrl, RestClientInverseOptions } from './util/requestUtils';
+import { GenericAPIResponse, getRestBaseUrl, RestClientOptions } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
 import SharedEndpoints from './shared-endpoints';
 
@@ -12,23 +12,23 @@ export class InverseClient extends SharedEndpoints {
    * @param {string} key - your API key
    * @param {string} secret - your API secret
    * @param {boolean} [useLivenet=false]
-   * @param {RestClientInverseOptions} [restInverseOptions={}] options to configure REST API connectivity
+   * @param {RestClientOptions} [restInverseOptions={}] options to configure REST API connectivity
    * @param {AxiosRequestConfig} [requestOptions={}] HTTP networking options for axios
    */
   constructor(
     key?: string | undefined,
     secret?: string | undefined,
     useLivenet?: boolean,
-    restInverseOptions: RestClientInverseOptions = {},
-    httpOptions: AxiosRequestConfig = {}
+    restInverseOptions: RestClientOptions = {},
+    requestOptions: AxiosRequestConfig = {}
   ) {
     super()
     this.requestWrapper = new RequestWrapper(
       key,
       secret,
-      getBaseRESTInverseUrl(useLivenet),
+      getRestBaseUrl(useLivenet),
       restInverseOptions,
-      httpOptions
+      requestOptions
     );
     return this;
   }
@@ -47,7 +47,7 @@ export class InverseClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/kline/list', params);
   }
-  
+
   /**
    * @deprecated use getTickers() instead
    */
@@ -56,7 +56,7 @@ export class InverseClient extends SharedEndpoints {
    }): GenericAPIResponse {
     return this.getTickers(params);
    }
-  
+
   /**
    * @deprecated use getTrades() instead
    */
@@ -75,7 +75,7 @@ export class InverseClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/trading-records', params);
   }
-  
+
   /**
    * @deprecated use getLiquidations() instead
    */
@@ -97,7 +97,7 @@ export class InverseClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/mark-price-kline', params);
   }
-  
+
   getIndexPriceKline(params: {
     symbol: string;
     interval: string;
@@ -106,7 +106,7 @@ export class InverseClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/index-price-kline', params);
   }
-  
+
   getPremiumIndexKline(params: {
     symbol: string;
     interval: string;
@@ -121,7 +121,7 @@ export class InverseClient extends SharedEndpoints {
    * Account Data Endpoints
    *
    */
-  
+
 	/**
    * Active orders
    */
@@ -183,7 +183,7 @@ export class InverseClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/order', params);
   }
-  
+
 	/**
    * Conditional orders
    */
@@ -246,7 +246,7 @@ export class InverseClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/stop-order', params);
   }
-  
+
 	/**
    * Position
    */
@@ -328,7 +328,7 @@ export class InverseClient extends SharedEndpoints {
 	/**
    * Risk Limit
    */
-  
+
   getRiskLimitList(): GenericAPIResponse {
     return this.requestWrapper.get('open-api/wallet/risk-limit/list');
   }
@@ -339,7 +339,7 @@ export class InverseClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.post('open-api/wallet/risk-limit', params);
   }
-  
+
 	/**
    * Funding
    */
@@ -361,7 +361,7 @@ export class InverseClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/funding/predicted-funding', params);
   }
-  
+
 	/**
    * LCP Info
    */

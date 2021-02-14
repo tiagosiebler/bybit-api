@@ -75,6 +75,16 @@ const getLinearWsKeyForTopic = (topic: string) => {
   return wsKeyLinearPublic;
 }
 
+export declare interface WebsocketClient {
+  on(event: 'open', listener: ({ wsKey: string, event: any }) => void): this;
+  on(event: 'reconnected', listener: ({ wsKey: string, event: any }) => void): this;
+  on(event: 'reconnect', listener: () => void): this;
+  on(event: 'close', listener: () => void): this;
+  on(event: 'response', listener: (response: any) => void): this;
+  on(event: 'update', listener: (response: any) => void): this;
+  on(event: 'error', listener: (response: any) => void): this;
+}
+
 export class WebsocketClient extends EventEmitter {
   private logger: typeof DefaultLogger;
   private restClient: InverseClient | LinearClient;

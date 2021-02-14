@@ -37,6 +37,12 @@ export default class SharedEndpoints {
     return this.requestWrapper.get('v2/public/liq-records', params);
   }
 
+  /**
+   *
+   * Market Data : Advanced
+   *
+   */
+
   getOpenInterest(params: {
     symbol: string;
     period: string;
@@ -105,6 +111,14 @@ export default class SharedEndpoints {
     return this.requestWrapper.get('v2/private/wallet/withdraw/list', params);
   }
   
+  getAssetExchangeRecords(params?: {
+    limit?: number;
+    from?: number;
+    direction?: string;
+  }): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/exchange-order/list', params);
+  }
+
   getAssetExchangeRecords(params?: {
     limit?: number;
     from?: number;
