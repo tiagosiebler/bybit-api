@@ -37,6 +37,12 @@ export default class SharedEndpoints {
     return this.requestWrapper.get('v2/public/liq-records', params);
   }
 
+  /**
+   *
+   * Market Data : Advanced
+   *
+   */
+
   getOpenInterest(params: {
     symbol: string;
     period: string;

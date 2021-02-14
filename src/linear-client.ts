@@ -48,20 +48,8 @@ export class LinearClient extends SharedEndpoints {
     return this.requestWrapper.get('public/linear/kline', params);
   }
 
-  /**
-  * @deprecated use getTrades() instead
-  */
-  getPublicTradingRecords(params: {
-    symbol: string;
-    from?: number;
-    limit?: number;
-  }): GenericAPIResponse {
-    return this.getTrades(params);
-  }
-
   getTrades(params: {
     symbol: string;
-    //from?: number;
     limit?: number;
   }): GenericAPIResponse {
     return this.requestWrapper.get('public/linear/recent-trading-records', params);
@@ -106,10 +94,6 @@ export class LinearClient extends SharedEndpoints {
    *
    */
 
-	/**
-   * Active orders
-   */
-
   placeActiveOrder(params: {
     side: string;
     symbol: string;
@@ -136,7 +120,6 @@ export class LinearClient extends SharedEndpoints {
     page?: number;
     limit?: number;
     order_status?: string;
-
   }): GenericAPIResponse {
     return this.requestWrapper.get('private/linear/order/list', params);
   }
@@ -344,7 +327,15 @@ export class LinearClient extends SharedEndpoints {
   getRiskLimitList(params: {
     symbol: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('public/linear/risk-limit');
+    return this.requestWrapper.get('public/linear/risk-limit', params);
+  }
+
+  setRiskLimit(params: {
+    symbol: string;
+    side: string;
+    risk_id: string;
+  }): GenericAPIResponse {
+    return this.requestWrapper.get('private/linear/position/set-risk', params);
   }
 
 	/**
@@ -354,13 +345,12 @@ export class LinearClient extends SharedEndpoints {
   getPredictedFundingFee(params: {
     symbol: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/funding/predicted-funding');
+    return this.requestWrapper.get('private/linear/funding/predicted-funding', params);
   }
 
   getLastFundingFee(params: {
     symbol: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/funding/prev-funding');
+    return this.requestWrapper.get('private/linear/funding/prev-funding', params);
   }
-
 }
