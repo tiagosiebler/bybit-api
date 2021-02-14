@@ -12,7 +12,7 @@ A production-ready Node.js connector for the Bybit APIs and WebSockets, with Typ
 
 ## Issues & Discussion
 - Issues? Check the [issues tab](https://github.com/tiagosiebler/bybit-api/issues).
-- RestClient not defined? With our recent addition of LinearClient, we renamed RestClient to InverseClient. Change all references to RestClient.
+- RestClient not defined? With the recent addition of LinearClient, we renamed RestClient to InverseClient. Change all old references.
 - Discuss & collaborate with other node devs? Join our [Node.js Algo Traders](https://t.me/nodetraders) engineering community on telegram.
 
 ## Documentation
