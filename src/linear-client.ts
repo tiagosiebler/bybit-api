@@ -110,7 +110,7 @@ export class LinearClient extends SharedEndpoints {
     order_link_id?: string;
   }): GenericAPIResponse {
     return this.requestWrapper.post('private/linear/order/create', params);
-   }
+  }
 
    getActiveOrderList(params: {
     order_id?: string;
