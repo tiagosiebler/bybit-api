@@ -134,7 +134,7 @@ const client = new LinearClient(
   // requestLibraryOptions
 );
 
-client.changeUserLeverage({leverage: 4, symbol: 'ETHUSD'})
+client.changeUserLeverage({leverage: 4, symbol: 'ETHUSDT'})
   .then(result => {
     console.log(result);
   })
