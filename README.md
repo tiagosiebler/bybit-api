@@ -13,11 +13,12 @@ A production-ready Node.js connector for the Bybit APIs and WebSockets, with Typ
 ## Issues & Discussion
 - Issues? Check the [issues tab](https://github.com/tiagosiebler/bybit-api/issues).
 - Discuss & collaborate with other node devs? Join our [Node.js Algo Traders](https://t.me/nodetraders) engineering community on telegram.
+- `'bybit-api' has no exported member 'RestClient'`: use `InverseClient` instead of `RestClient`
 
 ## Documentation
 Most methods accept JS objects. These can be populated using parameters specified by Bybit's API documentation.
 - [Bybit API Inverse Documentation](https://bybit-exchange.github.io/docs/inverse/#t-introduction).
-- [Bybit API Linear Documentation (not supported yet)](https://bybit-exchange.github.io/docs/linear/#t-introduction)
+- [Bybit API Linear Documentation](https://bybit-exchange.github.io/docs/linear/#t-introduction)
 
 ## Structure
 This project uses typescript. Resources are stored in 3 key structures:
@@ -39,13 +40,10 @@ Build a bundle using webpack:
 The bundle can be found in `dist/`. Altough usage should be largely consistent, smaller differences will exist. Documentation is still TODO.
 
 ### Inverse Contracts
-#### Rest client
-```javascript
-const { RestClient } = require('bybit-api');
+Since inverse and linear (USDT) contracts don't use the exact same APIs, the REST abstractions are split into two modules. To use the inverse REST APIs, import the `InverseClient`:
 
-const API_KEY = 'xxx';
-const PRIVATE_KEY = 'yyy';
-const useLivenet = false;
+```javascript
+const { InverseClient } = require('bybit-api');
 
 const restInverseOptions = {
   // override the max size of the request window (in ms)
@@ -68,7 +66,11 @@ const restInverseOptions = {
   parse_exceptions?: boolean;
 };
 
-const client = new RestClient(
+const API_KEY = 'xxx';
+const PRIVATE_KEY = 'yyy';
+const useLivenet = false;
+
+const client = new InverseClient(
   API_KEY,
   PRIVATE_KEY,
 
@@ -88,9 +90,67 @@ client.changeUserLeverage({leverage: 4, symbol: 'ETHUSD'})
   });
 ```
 
-See inverse [rest-client.ts](./src/rest-client.ts) for further information.
+See inverse [inverse-client.ts](./src/inverse-client.ts) for further information.
 
-#### Websocket client
+### Linear Contracts
+To use the Linear (USDT) REST APIs, import the `LinearClient`:
+
+```javascript
+const { LinearClient } = require('bybit-api');
+
+const restInverseOptions = {
+  // override the max size of the request window (in ms)
+  recv_window?: number;
+
+  // how often to sync time drift with bybit servers
+  sync_interval_ms?: number | string;
+
+  // Default: false. Disable above sync mechanism if true.
+  disable_time_sync?: boolean;
+
+  // Default: false. If true, we'll throw errors if any params are undefined
+  strict_param_validation?: boolean;
+
+  // Optionally override API protocol + domain
+  // e.g 'https://api.bytick.com'
+  baseUrl?: string;
+
+  // Default: true. whether to try and post-process request exceptions.
+  parse_exceptions?: boolean;
+};
+
+const API_KEY = 'xxx';
+const PRIVATE_KEY = 'yyy';
+const useLivenet = false;
+
+const client = new LinearClient(
+  API_KEY,
+  PRIVATE_KEY,
+
+  // optional, uses testnet by default. Set to 'true' to use livenet.
+  useLivenet,
+
+  // restInverseOptions,
+  // requestLibraryOptions
+);
+
+client.changeUserLeverage({leverage: 4, symbol: 'ETHUSDT'})
+  .then(result => {
+    console.log(result);
+  })
+  .catch(err => {
+    console.error(err);
+  });
+```
+
+### WebSockets
+
+Inverse & linear WebSockets can be used via a shared `WebsocketClient`.
+
+Note: to use the linear websockets, pass "linear: true" in the constructor options when instancing the `WebsocketClient`.
+
+To connect to both linear and inverse websockets, make two instances of the WebsocketClient:
+
 ```javascript
 const { WebsocketClient } = require('bybit-api');
 
@@ -101,19 +161,21 @@ const wsConfig = {
   key: API_KEY,
   secret: PRIVATE_KEY,
 
-  // The following parameters are optional:
+  /*
+    The following parameters are optional:
+  */
 
-  // defaults to false == testnet. set to true for livenet.
+  // defaults to false == testnet. Set to true for livenet.
   // livenet: true
 
-  // override which URL to use for websocket connections
-  // wsUrl: 'wss://stream.bytick.com/realtime'
-
-  // how often to check (in ms) that WS connection is still alive
-  // pingInterval: 10000,
+  // defaults to fase == inverse. Set to true for linear (USDT) trading.
+  // linear: true
 
   // how long to wait (in ms) before deciding the connection should be terminated & reconnected
   // pongTimeout: 1000,
+
+  // how often to check (in ms) that WS connection is still alive
+  // pingInterval: 10000,
 
   // how long to wait before attempting to reconnect (in ms) after connection is closed
   // reconnectTimeout: 500,
@@ -121,47 +183,62 @@ const wsConfig = {
   // config options sent to RestClient (used for time sync). See RestClient docs.
   // restOptions: { },
 
-  // config for axios to pass to RestClient. E.g for proxy support
+  // config for axios used for HTTP requests. E.g for proxy support
   // requestOptions: { }
+
+  // override which URL to use for websocket connections
+  // wsUrl: 'wss://stream.bytick.com/realtime'
 };
 
 const ws = new WebsocketClient(wsConfig);
 
+// subscribe to multiple topics at once
 ws.subscribe(['position', 'execution', 'trade']);
+
+// and/or subscribe to individual topics on demand
 ws.subscribe('kline.BTCUSD.1m');
 
-ws.on('open', () => {
-  console.log('connection open');
+// Listen to events coming from websockets. This is the primary data source
+ws.on('update', data => {
+  console.log('update', data);
 });
 
-ws.on('update', message => {
-  console.log('update', message);
+// Optional: Listen to websocket connection open event (automatic after subscribing to one or more topics)
+ws.on('open', ({ wsKey, event }) => {
+  console.log('connection open for websocket with ID: ' + wsKey);
 });
 
+// Optional: Listen to responses to websocket queries (e.g. the response after subscribing to a topic)
 ws.on('response', response => {
   console.log('response', response);
 });
 
+// Optional: Listen to connection close event. Unexpected connection closes are automatically reconnected.
 ws.on('close', () => {
   console.log('connection closed');
 });
 
+// Optional: Listen to raw error events.
+// Note: responses to invalid topics are currently only sent in the "response" event.
 ws.on('error', err => {
   console.error('ERR', err);
 });
 ```
-See inverse [websocket-client.ts](./src/websocket-client.ts) for further information.
+See [websocket-client.ts](./src/websocket-client.ts) for further information.
 
 ### Customise Logging
 Pass a custom logger which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired:
 
 ```js
-const { RestClient, WebsocketClient, DefaultLogger } = require('bybit-api');
+const { WebsocketClient, DefaultLogger } = require('bybit-api');
 
 // Disable all logging on the silly level
 DefaultLogger.silly = () => {};
 
-const ws = new WebsocketClient({key: 'xxx', secret: 'yyy'}, DefaultLogger);
+const ws = new WebsocketClient(
+  { key: 'xxx', secret: 'yyy' },
+  DefaultLogger
+);
 ```
 
 ## Contributions & Thanks

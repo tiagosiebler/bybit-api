@@ -1,6 +1,6 @@
 import { createHmac } from 'crypto';
 
-export interface RestClientInverseOptions {
+export interface RestClientOptions {
   // override the max size of the request window (in ms)
   recv_window?: number;
 
@@ -42,7 +42,7 @@ export function serializeParams(params: object = {}, strict_validation = false):
     .join('&');
 };
 
-export function getBaseRESTInverseUrl(useLivenet?: boolean, restInverseOptions?: RestClientInverseOptions) {
+export function getRestBaseUrl(useLivenet?: boolean, restInverseOptions?: RestClientOptions) {
   const baseUrlsInverse = {
     livenet: 'https://api.bybit.com',
     testnet: 'https://api-testnet.bybit.com'
@@ -56,4 +56,23 @@ export function getBaseRESTInverseUrl(useLivenet?: boolean, restInverseOptions?:
     return baseUrlsInverse.livenet;
   }
   return baseUrlsInverse.testnet;
+}
+
+export function isPublicEndpoint (endpoint: string): boolean {
+  if (endpoint.startsWith('v2/public')) {
+    return true;
+  }
+  if (endpoint.startsWith('public/linear')) {
+    return true;
+  }
+  return false;
+}
+
+export function isWsPong(response: any) {
+  return (
+    response.request &&
+    response.request.op === 'ping' &&
+    response.ret_msg === 'pong' &&
+    response.success === true
+  );
 }

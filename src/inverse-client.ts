@@ -1,9 +1,10 @@
 import { AxiosRequestConfig } from 'axios';
-import { GenericAPIResponse, getBaseRESTInverseUrl, RestClientInverseOptions } from './util/requestUtils';
+import { GenericAPIResponse, getRestBaseUrl, RestClientOptions } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
+import SharedEndpoints from './shared-endpoints';
 
-export class RestClient {
-  private requestWrapper: RequestWrapper;
+export class InverseClient extends SharedEndpoints {
+  protected requestWrapper: RequestWrapper;
 
   /**
    * @public Creates an instance of the inverse REST API client.
@@ -11,22 +12,23 @@ export class RestClient {
    * @param {string} key - your API key
    * @param {string} secret - your API secret
    * @param {boolean} [useLivenet=false]
-   * @param {RestClientInverseOptions} [restInverseOptions={}] options to configure REST API connectivity
+   * @param {RestClientOptions} [restInverseOptions={}] options to configure REST API connectivity
    * @param {AxiosRequestConfig} [requestOptions={}] HTTP networking options for axios
    */
   constructor(
     key?: string | undefined,
     secret?: string | undefined,
     useLivenet?: boolean,
-    restInverseOptions: RestClientInverseOptions = {},
-    httpOptions: AxiosRequestConfig = {}
+    restInverseOptions: RestClientOptions = {},
+    requestOptions: AxiosRequestConfig = {}
   ) {
+    super()
     this.requestWrapper = new RequestWrapper(
       key,
       secret,
-      getBaseRESTInverseUrl(useLivenet),
+      getRestBaseUrl(useLivenet),
       restInverseOptions,
-      httpOptions
+      requestOptions
     );
     return this;
   }
@@ -36,12 +38,6 @@ export class RestClient {
    * Market Data Endpoints
    *
    */
-
-  getOrderBook(params: {
-    symbol: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/orderBook/L2', params);
-  }
 
   getKline(params: {
     symbol: string;
@@ -57,15 +53,9 @@ export class RestClient {
    */
   getLatestInformation(params?: {
     symbol?: string;
-  }): GenericAPIResponse {
+   }): GenericAPIResponse {
     return this.getTickers(params);
-  }
-
-  getTickers(params?: {
-    symbol?: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/tickers', params);
-  }
+   }
 
   /**
    * @deprecated use getTrades() instead
@@ -86,10 +76,6 @@ export class RestClient {
     return this.requestWrapper.get('v2/public/trading-records', params);
   }
 
-  getSymbols(): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/symbols');
-  }
-
   /**
    * @deprecated use getLiquidations() instead
    */
@@ -103,16 +89,6 @@ export class RestClient {
     return this.getLiquidations(params);
   }
 
-  getLiquidations(params: {
-    symbol: string;
-    from?: number;
-    limit?: number;
-    start_time?: number;
-    end_time?: number;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/liq-records', params);
-  }
-
   getMarkPriceKline(params: {
     symbol: string;
     interval: string;
@@ -122,33 +98,32 @@ export class RestClient {
     return this.requestWrapper.get('v2/public/mark-price-kline', params);
   }
 
-  getOpenInterest(params: {
+  getIndexPriceKline(params: {
     symbol: string;
-    period: string;
+    interval: string;
+    from: number;
     limit?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/open-interest', params);
+    return this.requestWrapper.get('v2/public/index-price-kline', params);
   }
 
-  getLatestBigDeal(params: {
+  getPremiumIndexKline(params: {
     symbol: string;
+    interval: string;
+    from: number;
     limit?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/big-deal', params);
-  }
-
-  getLongShortRatio(params: {
-    symbol: string;
-    period: string;
-    limit?: number;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/account-ratio', params);
+    return this.requestWrapper.get('v2/public/premium-index-kline', params);
   }
 
   /**
    *
    * Account Data Endpoints
    *
+   */
+
+	/**
+   * Active orders
    */
 
   placeActiveOrder(orderRequest: {
@@ -164,9 +139,6 @@ export class RestClient {
     close_on_trigger?: boolean;
     order_link_id?: string;
   }): GenericAPIResponse {
-    // if (orderRequest.order_type === 'Limit' && !orderRequest.price) {
-    //   throw new Error('Price required for limit orders');
-    // }
     return this.requestWrapper.post('v2/private/order/create', orderRequest);
   }
 
@@ -180,29 +152,11 @@ export class RestClient {
     return this.requestWrapper.get('v2/private/order/list', params);
   }
 
-  /**
-   * @deprecated use getActiveOrderList() instead
-   */
-  getActiveOrder(params: {
-    order_id?: string;
-    order_link_id?: string;
-    symbol?: string;
-    order?: string;
-    page?: number;
-    limit?: number;
-    order_status?: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/order/list', params);
-  }
-
   cancelActiveOrder(params: {
     symbol: string;
     order_id?: string;
     order_link_id?: string;
   }): GenericAPIResponse {
-    // if (!params.order_id && !params.order_link_id) {
-    //   throw new Error('Parameter order_id OR order_link_id is required');
-    // }
     return this.requestWrapper.post('v2/private/order/cancel', params);
   }
 
@@ -219,20 +173,7 @@ export class RestClient {
     p_r_qty?: string;
     p_r_price?: string;
   }): GenericAPIResponse {
-    // if (!params.order_id && !params.order_link_id) {
-    //   throw new Error('Parameter order_id OR order_link_id is required');
-    // }
     return this.requestWrapper.post('v2/private/order/replace', params);
-  }
-
-  /**
-   * @deprecated use replaceActiveOrder()
-   */
-  replaceActiveOrderOld(params: any): GenericAPIResponse {
-    // if (!params.order_id && !params.order_link_id) {
-    //   throw new Error('Parameter order_id OR order_link_id is required');
-    // }
-    return this.requestWrapper.post('open-api/order/replace', params);
   }
 
   queryActiveOrder(params: {
@@ -240,11 +181,12 @@ export class RestClient {
     order_link_id?: string;
     symbol: string;
   }): GenericAPIResponse {
-    // if (!params.order_id && !params.order_link_id) {
-    //   throw new Error('Parameter order_id OR order_link_id is required');
-    // }
     return this.requestWrapper.get('v2/private/order', params);
   }
+
+	/**
+   * Conditional orders
+   */
 
   placeConditionalOrder(params: {
     side: string;
@@ -259,20 +201,7 @@ export class RestClient {
     close_on_trigger?: boolean;
     order_link_id?: string;
   }): GenericAPIResponse {
-    // if (params.order_type === 'Limit' && !params.price) {
-    //   throw new Error('Parameter price is required for limit orders');
-    // }
     return this.requestWrapper.post('v2/private/stop-order/create', params);
-  }
-
-  /**
-   * @deprecated use placeConditionalOrder
-   */
-  placeConditionalOrderOld(params: any): GenericAPIResponse {
-    // if (params.order_type === 'Limit' && !params.price) {
-    //   throw new Error('Parameter price is required for limit orders');
-    // }
-    return this.requestWrapper.post('open-api/stop-order/create', params);
   }
 
   getConditionalOrder(params: {
@@ -285,32 +214,12 @@ export class RestClient {
     return this.requestWrapper.get('v2/private/stop-order/list', params);
   }
 
-  /**
-   * @deprecated use placeConditionalOrder
-   */
-  getConditionalOrderOld(params: any): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/stop-order/list', params);
-  }
-
   cancelConditionalOrder(params: {
     symbol: string;
     stop_order_id?: string;
     order_link_id?: string;
   }): GenericAPIResponse {
-    // if (!params.stop_order_id && !params.order_link_id) {
-    //   throw new Error('Parameter stop_order_id OR order_link_id is required');
-    // }
     return this.requestWrapper.post('v2/private/stop-order/cancel', params);
-  }
-
-  /**
-   * @deprecated use cancelConditionalOrder
-   */
-  cancelConditionalOrderOld(params: any): GenericAPIResponse {
-    // if (!params.stop_order_id && !params.order_link_id) {
-    //   throw new Error('Parameter stop_order_id OR order_link_id is required');
-    // }
-    return this.requestWrapper.post('open-api/stop-order/cancel', params);
   }
 
   cancelAllConditionalOrders(params: {
@@ -327,17 +236,7 @@ export class RestClient {
     p_r_price?: string;
     p_r_trigger_price?: string;
   }): GenericAPIResponse {
-    // if (!params.stop_order_id && !params.order_link_id) {
-    //   throw new Error('Parameter stop_order_id OR order_link_id is required');
-    // }
     return this.requestWrapper.post('v2/private/stop-order/replace', params);
-  }
-
-  /**
-   * @deprecated use replaceConditionalOrder
-   */
-  replaceConditionalOrderOld(params: any): GenericAPIResponse {
-    return this.requestWrapper.post('open-api/stop-order/replace', params);
   }
 
   queryConditionalOrder(params: {
@@ -345,11 +244,12 @@ export class RestClient {
     stop_order_id?: string;
     order_link_id?: string;
   }): GenericAPIResponse {
-    // if (!params.stop_order_id && !params.order_link_id) {
-    //   throw new Error('Parameter stop_order_id OR order_link_id is required');
-    // }
     return this.requestWrapper.get('v2/private/stop-order', params);
   }
+
+	/**
+   * Position
+   */
 
   /**
    * @deprecated use getPosition() instead
@@ -386,14 +286,14 @@ export class RestClient {
     sl_trigger_by?: string;
     new_trailing_active?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('open-api/position/trading-stop', params);
+    return this.requestWrapper.post('v2/private/position/trading-stop', params);
   }
 
   setUserLeverage(params: {
     symbol: string;
     leverage: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('user/leverage/save', params);
+    return this.requestWrapper.post('v2/private/position/leverage/save', params);
   }
 
   /**
@@ -425,6 +325,10 @@ export class RestClient {
     return this.requestWrapper.get('v2/private/trade/closed-pnl/list', params);
   }
 
+	/**
+   * Risk Limit
+   */
+
   getRiskLimitList(): GenericAPIResponse {
     return this.requestWrapper.get('open-api/wallet/risk-limit/list');
   }
@@ -436,96 +340,35 @@ export class RestClient {
     return this.requestWrapper.post('open-api/wallet/risk-limit', params);
   }
 
+	/**
+   * Funding
+   */
+
   getLastFundingRate(params: {
     symbol: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/funding/prev-funding-rate', params);
+    return this.requestWrapper.get('v2/public/funding/prev-funding-rate', params);
   }
 
   getMyLastFundingFee(params: {
     symbol: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/funding/prev-funding', params);
+    return this.requestWrapper.get('v2/private/funding/prev-funding', params);
   }
 
   getPredictedFunding(params: {
     symbol: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/funding/predicted-funding', params);
+    return this.requestWrapper.get('v2/private/funding/predicted-funding', params);
   }
 
-  getApiKeyInfo(): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/api-key');
-  }
+	/**
+   * LCP Info
+   */
 
   getLcpInfo(params: {
     symbol: string;
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/account/lcp', params);
-  }
-
-  /**
-   *
-   * Wallet Data Endpoints
-   *
-   */
-
-  getWalletBalance(params?: {
-    coin?: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/wallet/balance', params);
-  }
-
-  getWalletFundRecords(params?: {
-    start_date?: string;
-    end_date?: string;
-    currency?: string;
-    coin?: string;
-    wallet_fund_type?: string;
-    page?: number;
-    limit?: number;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/wallet/fund/records', params);
-  }
-
-  getWithdrawRecords(params: {
-    start_date?: string;
-    end_date?: string;
-    coin?: string;
-    status?: string;
-    page?: number;
-    limit?: number;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/wallet/withdraw/list', params);
-  }
-
-  getAssetExchangeRecords(params?: {
-    limit?: number;
-    from?: number;
-    direction?: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/exchange-order/list', params);
-  }
-
-  /**
-   *
-   * API Data Endpoints
-   *
-   */
-
-  getServerTime(): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/time');
-  }
-
-  getApiAnnouncements(): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/announcement');
-  }
-
-  async getTimeOffset(): Promise<number> {
-    const start = Date.now();
-    return this.getServerTime().then(result => {
-      const end = Date.now();
-      return Math.ceil((result.time_now * 1000) - end + ((end - start) / 2));
-    });
   }
 };

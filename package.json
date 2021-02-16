@@ -11,10 +11,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf lib dist",
-    "prebuild": "npm run clean",
     "build": "tsc",
+    "build:clean": "npm run clean && npm run build",
+    "build:watch": "npm run clean && tsc --watch",
     "pack": "webpack --config webpack/webpack.config.js",
-    "prepublish": "npm run build",
+    "prepublish": "npm run build:clean",
     "betapublish": "npm publish --tag beta"
   },
   "author": "Tiago Siebler (https://github.com/tiagosiebler)",

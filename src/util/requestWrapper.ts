@@ -1,11 +1,11 @@
 import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 
-import { signMessage, serializeParams, RestClientInverseOptions, GenericAPIResponse } from './requestUtils';
+import { signMessage, serializeParams, RestClientOptions, GenericAPIResponse, isPublicEndpoint } from './requestUtils';
 
 export default class RequestUtil {
   private timeOffset: number | null;
   private syncTimePromise: null | Promise<any>;
-  private options: RestClientInverseOptions;
+  private options: RestClientOptions;
   private baseUrl: string;
   private globalRequestOptions: AxiosRequestConfig;
   private key: string | undefined;
@@ -15,7 +15,7 @@ export default class RequestUtil {
     key: string | undefined,
     secret: string | undefined,
     baseUrl: string,
-    options: RestClientInverseOptions = {},
+    options: RestClientOptions = {},
     requestOptions: AxiosRequestConfig = {}
   ) {
     this.timeOffset = null;
@@ -68,9 +68,7 @@ export default class RequestUtil {
    * @private Make a HTTP request to a specific endpoint. Private endpoints are automatically signed.
    */
   async _call(method: Method, endpoint: string, params?: any): GenericAPIResponse {
-    const publicEndpoint = endpoint.startsWith('v2/public');
-
-    if (!publicEndpoint) {
+    if (!isPublicEndpoint(endpoint)) {
       if (!this.key || !this.secret) {
         throw new Error('Private endpoints require api and private keys set');
       }
