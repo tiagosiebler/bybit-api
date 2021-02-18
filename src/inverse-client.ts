@@ -26,7 +26,7 @@ export class InverseClient extends SharedEndpoints {
     this.requestWrapper = new RequestWrapper(
       key,
       secret,
-      getRestBaseUrl(useLivenet),
+      getRestBaseUrl(useLivenet, restInverseOptions),
       restInverseOptions,
       requestOptions
     );
