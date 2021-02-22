@@ -45,7 +45,7 @@ Since inverse and linear (USDT) contracts don't use the exact same APIs, the RES
 ```javascript
 const { InverseClient } = require('bybit-api');
 
-const restInverseOptions = {
+const restClientOptions = {
   // override the max size of the request window (in ms)
   recv_window?: number;
 
@@ -77,16 +77,24 @@ const client = new InverseClient(
   // optional, uses testnet by default. Set to 'true' to use livenet.
   useLivenet,
 
-  // restInverseOptions,
+  // restClientOptions,
   // requestLibraryOptions
 );
 
-client.changeUserLeverage({leverage: 4, symbol: 'ETHUSD'})
+client.getApiKeyInfo()
   .then(result => {
-    console.log(result);
+    console.log("apiKey result: ", result);
   })
   .catch(err => {
-    console.error(err);
+    console.error("apiKey error: ", err);
+  });
+
+client.getOrderBook({ symbol: 'BTCUSD' })
+  .then(result => {
+    console.log("getOrderBook inverse result: ", result);
+  })
+  .catch(err => {
+    console.error("getOrderBook inverse error: ", err);
   });
 ```
 
@@ -98,7 +106,7 @@ To use the Linear (USDT) REST APIs, import the `LinearClient`:
 ```javascript
 const { LinearClient } = require('bybit-api');
 
-const restInverseOptions = {
+const restClientOptions = {
   // override the max size of the request window (in ms)
   recv_window?: number;
 
@@ -130,16 +138,24 @@ const client = new LinearClient(
   // optional, uses testnet by default. Set to 'true' to use livenet.
   useLivenet,
 
-  // restInverseOptions,
+  // restClientOptions,
   // requestLibraryOptions
 );
 
-client.changeUserLeverage({leverage: 4, symbol: 'ETHUSDT'})
+client.getApiKeyInfo()
   .then(result => {
     console.log(result);
   })
   .catch(err => {
     console.error(err);
+  });
+
+client.getOrderBook({ symbol: 'BTCUSDT' })
+  .then(result => {
+    console.log("getOrderBook linear result: ", result);
+  })
+  .catch(err => {
+    console.error("getOrderBook linear error: ", err);
   });
 ```
 
