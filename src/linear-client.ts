@@ -12,22 +12,22 @@ export class LinearClient extends SharedEndpoints {
    * @param {string} key - your API key
    * @param {string} secret - your API secret
    * @param {boolean} [useLivenet=false]
-   * @param {RestClientOptions} [restInverseOptions={}] options to configure REST API connectivity
+   * @param {RestClientOptions} [restClientOptions={}] options to configure REST API connectivity
    * @param {AxiosRequestConfig} [requestOptions={}] HTTP networking options for axios
    */
   constructor(
     key?: string | undefined,
     secret?: string | undefined,
     useLivenet?: boolean,
-    restInverseOptions: RestClientOptions = {},
+    restClientOptions: RestClientOptions = {},
     requestOptions: AxiosRequestConfig = {}
   ) {
     super()
     this.requestWrapper = new RequestWrapper(
       key,
       secret,
-      getRestBaseUrl(useLivenet, restInverseOptions),
-      restInverseOptions,
+      getRestBaseUrl(useLivenet, restClientOptions),
+      restClientOptions,
       requestOptions
     );
     return this;
