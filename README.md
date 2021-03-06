@@ -13,7 +13,6 @@ Node.js connector for the Bybit APIs and WebSockets, with TypeScript & browser s
 ## Issues & Discussion
 - Issues? Check the [issues tab](https://github.com/tiagosiebler/bybit-api/issues).
 - Discuss & collaborate with other node devs? Join our [Node.js Algo Traders](https://t.me/nodetraders) engineering community on telegram.
-- `'bybit-api' has no exported member 'RestClient'`: use `InverseClient` instead of `RestClient`
 
 ## Documentation
 Most methods accept JS objects. These can be populated using parameters specified by Bybit's API documentation.
