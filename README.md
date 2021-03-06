@@ -38,7 +38,7 @@ There are three REST API modules as there are some differences in each contract 
 2. `InverseFuturesClient` for inverse futures
 3. `LinearClient` for linear perpetual
 
-## Inverse Contracts
+## REST Inverse
 <details><summary>To use the inverse REST APIs, import the `InverseClient` Click here to expand and see full sample:</summary>
 
 ```javascript
@@ -101,7 +101,7 @@ client.getOrderBook({ symbol: 'BTCUSD' })
 
 See [inverse-client.ts](./src/inverse-client.ts) for further information.
 
-## Inverse Futures Contracts
+## REST Inverse Futures
 <details><summary>To use the inverse futures REST APIs, import the `InverseFuturesClient`. Click here to expand and see full sample:</summary>
 
 ```javascript
@@ -145,7 +145,7 @@ See [inverse-futures-client.ts](./src/inverse-futures-client.ts) for further inf
 
 **Note**: as of 6th March 2021 this is currently only for testnet. See the [Bybit API documentation](https://bybit-exchange.github.io/docs/inverse_futures/#t-introduction) for official updates.
 
-## Linear Contracts
+## REST Linear
 <details><summary>To use the Linear (USDT) REST APIs, import the `LinearClient`. Click here to expand and see full sample:</summary>
 
 ```javascript
