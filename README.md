@@ -5,7 +5,7 @@
 
 [1]: https://www.npmjs.com/package/bybit-api
 
-A production-ready Node.js connector for the Bybit APIs and WebSockets, with TypeScript & browser support.
+Node.js connector for the Bybit APIs and WebSockets, with TypeScript & browser support.
 
 ## Installation
 `npm install --save bybit-api`
