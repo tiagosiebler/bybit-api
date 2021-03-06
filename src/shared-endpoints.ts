@@ -17,6 +17,9 @@ export default class SharedEndpoints {
     return this.requestWrapper.get('v2/public/orderBook/L2', params);
   }
 
+  /**
+   * Get latest information for symbol
+   */
   getTickers(params?: {
     symbol?: string;
   }): GenericAPIResponse {
@@ -27,6 +30,9 @@ export default class SharedEndpoints {
     return this.requestWrapper.get('v2/public/symbols');
   }
 
+  /**
+   * Get liquidated orders
+   */
   getLiquidations(params: {
     symbol: string;
     from?: number;

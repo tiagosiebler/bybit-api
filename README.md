@@ -5,7 +5,7 @@
 
 [1]: https://www.npmjs.com/package/bybit-api
 
-A production-ready Node.js connector for the Bybit APIs and WebSockets, with TypeScript & browser support.
+Node.js connector for the Bybit APIs and WebSockets, with TypeScript & browser support.
 
 ## Installation
 `npm install --save bybit-api`
@@ -13,11 +13,11 @@ A production-ready Node.js connector for the Bybit APIs and WebSockets, with Typ
 ## Issues & Discussion
 - Issues? Check the [issues tab](https://github.com/tiagosiebler/bybit-api/issues).
 - Discuss & collaborate with other node devs? Join our [Node.js Algo Traders](https://t.me/nodetraders) engineering community on telegram.
-- `'bybit-api' has no exported member 'RestClient'`: use `InverseClient` instead of `RestClient`
 
 ## Documentation
 Most methods accept JS objects. These can be populated using parameters specified by Bybit's API documentation.
 - [Bybit API Inverse Documentation](https://bybit-exchange.github.io/docs/inverse/#t-introduction).
+- [Bybit API Inverse Futures Documentation](https://bybit-exchange.github.io/docs/inverse_futures/#t-introduction).
 - [Bybit API Linear Documentation](https://bybit-exchange.github.io/docs/linear/#t-introduction)
 
 ## Structure
@@ -26,21 +26,22 @@ This project uses typescript. Resources are stored in 3 key structures:
 - [lib](./lib) - the javascript version of the project (compiled from typescript). This should not be edited directly, as it will be overwritten with each release.
 - [dist](./dist) - the packed bundle of the project for use in browser environments.
 
-## Usage
+---
+
+# Usage
 Create API credentials at Bybit
 - [Livenet](https://bybit.com/app/user/api-management?affiliate_id=9410&language=en-US&group_id=0&group_type=1)
 - [Testnet](https://testnet.bybit.com/app/user/api-management)
 
-### Browser Usage
-Build a bundle using webpack:
-- `npm install`
-- `npm build`
-- `npm pack`
+## REST API Clients
 
-The bundle can be found in `dist/`. Altough usage should be largely consistent, smaller differences will exist. Documentation is still TODO.
+There are three REST API modules as there are some differences in each contract type.
+1. `InverseClient` for inverse perpetual
+2. `InverseFuturesClient` for inverse futures
+3. `LinearClient` for linear perpetual
 
-### Inverse Contracts
-Since inverse and linear (USDT) contracts don't use the exact same APIs, the REST abstractions are split into two modules. To use the inverse REST APIs, import the `InverseClient`:
+### REST Inverse
+<details><summary>To use the inverse REST APIs, import the `InverseClient`. Click here to expand and see full sample:</summary>
 
 ```javascript
 const { InverseClient } = require('bybit-api');
@@ -98,34 +99,59 @@ client.getOrderBook({ symbol: 'BTCUSD' })
   });
 ```
 
-See inverse [inverse-client.ts](./src/inverse-client.ts) for further information.
+</details>
 
-### Linear Contracts
-To use the Linear (USDT) REST APIs, import the `LinearClient`:
+See [inverse-client.ts](./src/inverse-client.ts) for further information.
+
+### REST Inverse Futures
+<details><summary>To use the inverse futures REST APIs, import the `InverseFuturesClient`. Click here to expand and see full sample:</summary>
+
+```javascript
+const { InverseFuturesClient } = require('bybit-api');
+
+const API_KEY = 'xxx';
+const PRIVATE_KEY = 'yyy';
+const useLivenet = false;
+
+const client = new InverseFuturesClient(
+  API_KEY,
+  PRIVATE_KEY,
+
+  // optional, uses testnet by default. Set to 'true' to use livenet.
+  useLivenet,
+
+  // restClientOptions,
+  // requestLibraryOptions
+);
+
+client.getApiKeyInfo()
+  .then(result => {
+    console.log("apiKey result: ", result);
+  })
+  .catch(err => {
+    console.error("apiKey error: ", err);
+  });
+
+client.getOrderBook({ symbol: 'BTCUSDH21' })
+  .then(result => {
+    console.log("getOrderBook inverse futures result: ", result);
+  })
+  .catch(err => {
+    console.error("getOrderBook inverse futures error: ", err);
+  });
+```
+
+</details>
+
+See [inverse-futures-client.ts](./src/inverse-futures-client.ts) for further information.
+
+**Note**: as of 6th March 2021 this is currently only for testnet. See the [Bybit API documentation](https://bybit-exchange.github.io/docs/inverse_futures/#t-introduction) for official updates.
+
+### REST Linear
+<details><summary>To use the Linear (USDT) REST APIs, import the `LinearClient`. Click here to expand and see full sample:</summary>
 
 ```javascript
 const { LinearClient } = require('bybit-api');
-
-const restClientOptions = {
-  // override the max size of the request window (in ms)
-  recv_window?: number;
-
-  // how often to sync time drift with bybit servers
-  sync_interval_ms?: number | string;
-
-  // Default: false. Disable above sync mechanism if true.
-  disable_time_sync?: boolean;
-
-  // Default: false. If true, we'll throw errors if any params are undefined
-  strict_param_validation?: boolean;
-
-  // Optionally override API protocol + domain
-  // e.g 'https://api.bytick.com'
-  baseUrl?: string;
-
-  // Default: true. whether to try and post-process request exceptions.
-  parse_exceptions?: boolean;
-};
 
 const API_KEY = 'xxx';
 const PRIVATE_KEY = 'yyy';
@@ -159,13 +185,10 @@ client.getOrderBook({ symbol: 'BTCUSDT' })
   });
 ```
 
-### WebSockets
+</details>
 
-Inverse & linear WebSockets can be used via a shared `WebsocketClient`.
-
-Note: to use the linear websockets, pass "linear: true" in the constructor options when instancing the `WebsocketClient`.
-
-To connect to both linear and inverse websockets, make two instances of the WebsocketClient:
+## WebSockets
+<details><summary>Inverse & linear WebSockets can be used via a shared `WebsocketClient`. Click here to expand and see full sample:</summary>
 
 ```javascript
 const { WebsocketClient } = require('bybit-api');
@@ -240,12 +263,21 @@ ws.on('error', err => {
   console.error('ERR', err);
 });
 ```
+
+</details>
+
 See [websocket-client.ts](./src/websocket-client.ts) for further information.
 
-### Customise Logging
-Pass a custom logger which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired:
+Note: for linear websockets, pass `linear: true` in the constructor options when instancing the `WebsocketClient`. To connect to both linear and inverse websockets, make two instances of the WebsocketClient.
 
-```js
+---
+
+## Customise Logging
+Pass a custom logger which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired.
+
+<details><summary>Click here to expand and see full sample:</summary>
+
+```javascript
 const { WebsocketClient, DefaultLogger } = require('bybit-api');
 
 // Disable all logging on the silly level
@@ -256,6 +288,20 @@ const ws = new WebsocketClient(
   DefaultLogger
 );
 ```
+
+</details>
+
+## Browser Usage
+Build a bundle using webpack:
+- `npm install`
+- `npm build`
+- `npm pack`
+
+The bundle can be found in `dist/`. Altough usage should be largely consistent, smaller differences will exist. Documentation is still TODO.
+
+However, note that browser usage will lead to CORS errors due Bybit. See [issue #79](#79) for more information & alternative suggestions.
+
+---
 
 ## Contributions & Thanks
 ### Donations

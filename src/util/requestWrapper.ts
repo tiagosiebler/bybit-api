@@ -55,7 +55,6 @@ export default class RequestUtil {
     this.secret = secret;
   }
 
-  // TODO: type check that endpoint never starts with forward slash??
   get(endpoint: string, params?: any): GenericAPIResponse {
     return this._call('GET', endpoint, params);
   }
