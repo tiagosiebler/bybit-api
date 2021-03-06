@@ -118,7 +118,7 @@ See [inverse-client.ts](./src/inverse-client.ts) for further information.
 To use the inverse futures REST APIs, import the `InverseFuturesClient`:
 
 <details><summary>Click here to expand and see full sample:</summary>
-<p>
+
 ```javascript
 const { InverseFuturesClient } = require('bybit-api');
 
@@ -153,7 +153,8 @@ client.getOrderBook({ symbol: 'BTCUSDH21' })
     console.error("getOrderBook inverse futures error: ", err);
   });
 ```
-</p></details>
+
+</details>
 
 See [inverse-futures-client.ts](./src/inverse-futures-client.ts) for further information.
 
@@ -161,7 +162,7 @@ See [inverse-futures-client.ts](./src/inverse-futures-client.ts) for further inf
 To use the Linear (USDT) REST APIs, import the `LinearClient`:
 
 <details><summary>Click here to expand and see full sample:</summary>
-<p>
+
 ```javascript
 const { LinearClient } = require('bybit-api');
 
@@ -196,7 +197,8 @@ client.getOrderBook({ symbol: 'BTCUSDT' })
     console.error("getOrderBook linear error: ", err);
   });
 ```
-</p></details>
+
+</details>
 
 ### WebSockets
 
@@ -207,7 +209,7 @@ Note: to use the linear websockets, pass "linear: true" in the constructor optio
 To connect to both linear and inverse websockets, make two instances of the WebsocketClient:
 
 <details><summary>Click here to expand and see full sample:</summary>
-<p>
+
 ```javascript
 const { WebsocketClient } = require('bybit-api');
 
@@ -281,7 +283,8 @@ ws.on('error', err => {
   console.error('ERR', err);
 });
 ```
-</p></details>
+
+</details>
 
 See [websocket-client.ts](./src/websocket-client.ts) for further information.
 
@@ -289,8 +292,8 @@ See [websocket-client.ts](./src/websocket-client.ts) for further information.
 Pass a custom logger which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired:
 
 <details><summary>Click here to expand and see full sample:</summary>
-<p>
-```js
+
+```javascript
 const { WebsocketClient, DefaultLogger } = require('bybit-api');
 
 // Disable all logging on the silly level
@@ -301,7 +304,8 @@ const ws = new WebsocketClient(
   DefaultLogger
 );
 ```
-</p></details>
+
+</details>
 
 ## Contributions & Thanks
 ### Donations
