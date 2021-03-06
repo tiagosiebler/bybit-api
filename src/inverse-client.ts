@@ -18,7 +18,7 @@ export class InverseClient extends SharedEndpoints {
   constructor(
     key?: string | undefined,
     secret?: string | undefined,
-    useLivenet?: boolean,
+    useLivenet: boolean = false,
     restClientOptions: RestClientOptions = {},
     requestOptions: AxiosRequestConfig = {}
   ) {

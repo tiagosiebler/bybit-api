@@ -42,13 +42,13 @@ export function serializeParams(params: object = {}, strict_validation = false):
     .join('&');
 };
 
-export function getRestBaseUrl(useLivenet?: boolean, restInverseOptions?: RestClientOptions) {
+export function getRestBaseUrl(useLivenet: boolean, restInverseOptions: RestClientOptions) {
   const baseUrlsInverse = {
     livenet: 'https://api.bybit.com',
     testnet: 'https://api-testnet.bybit.com'
   };
 
-  if (restInverseOptions?.baseUrl) {
+  if (restInverseOptions.baseUrl) {
     return restInverseOptions.baseUrl;
   }
 
