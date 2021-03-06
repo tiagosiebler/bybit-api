@@ -282,6 +282,7 @@ export class InverseClient extends SharedEndpoints {
     symbol: string;
     take_profit?: number;
     stop_loss?: number;
+    trailing_stop?: number;
     tp_trigger_by?: string;
     sl_trigger_by?: string;
     new_trailing_active?: number;
