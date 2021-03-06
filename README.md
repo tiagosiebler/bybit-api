@@ -41,7 +41,7 @@ There are three REST API modules as there are some differences in each contract 
 3. `LinearClient` for linear perpetual
 
 ### REST Inverse
-<details><summary>To use the inverse REST APIs, import the `InverseClient` Click here to expand and see full sample:</summary>
+<details><summary>To use the inverse REST APIs, import the `InverseClient`. Click here to expand and see full sample:</summary>
 
 ```javascript
 const { InverseClient } = require('bybit-api');
