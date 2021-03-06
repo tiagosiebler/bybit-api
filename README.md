@@ -51,6 +51,7 @@ There are three REST API modules as there are some differences in each contract 
 To use the inverse REST APIs, import the `InverseClient`:
 
 <details><summary>Click here to expand and see full sample:</summary>
+
 ```javascript
 const { InverseClient } = require('bybit-api');
 
@@ -106,6 +107,7 @@ client.getOrderBook({ symbol: 'BTCUSD' })
     console.error("getOrderBook inverse error: ", err);
   });
 ```
+
 </details>
 
 See [inverse-client.ts](./src/inverse-client.ts) for further information.
