@@ -31,14 +31,6 @@ Create API credentials at Bybit
 - [Livenet](https://bybit.com/app/user/api-management?affiliate_id=9410&language=en-US&group_id=0&group_type=1)
 - [Testnet](https://testnet.bybit.com/app/user/api-management)
 
-### Browser Usage
-Build a bundle using webpack:
-- `npm install`
-- `npm build`
-- `npm pack`
-
-The bundle can be found in `dist/`. Altough usage should be largely consistent, smaller differences will exist. Documentation is still TODO.
-
 ### REST API Clients
 
 There are three REST API modules as there are some differences in each contract type.
@@ -272,8 +264,9 @@ ws.on('error', err => {
 
 </details>
 
-Note: for linear websockets, pass "linear: true" in the constructor options when instancing the `WebsocketClient`. To connect to both linear and inverse websockets, make two instances of the WebsocketClient.
 See [websocket-client.ts](./src/websocket-client.ts) for further information.
+
+Note: for linear websockets, pass `linear: true` in the constructor options when instancing the `WebsocketClient`. To connect to both linear and inverse websockets, make two instances of the WebsocketClient.
 
 ### Customise Logging
 <details><summary>Pass a custom logger which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired. Click here to expand and see full sample:</summary>
@@ -291,6 +284,16 @@ const ws = new WebsocketClient(
 ```
 
 </details>
+
+### Browser Usage
+Build a bundle using webpack:
+- `npm install`
+- `npm build`
+- `npm pack`
+
+The bundle can be found in `dist/`. Altough usage should be largely consistent, smaller differences will exist. Documentation is still TODO.
+
+However, note that browser usage will lead to CORS errors due Bybit. See [issue #79](#79) for more information & alternative suggestions.
 
 ## Contributions & Thanks
 ### Donations
