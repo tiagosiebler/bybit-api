@@ -110,8 +110,6 @@ client.getOrderBook({ symbol: 'BTCUSD' })
 See [inverse-client.ts](./src/inverse-client.ts) for further information.
 
 ## Inverse Futures Contracts
-**Note**: as of 6th March 2021 this is currently only for testnet. See the [Bybit API documentation](https://bybit-exchange.github.io/docs/inverse_futures/#t-introduction) for official updates.
-
 <details><summary>To use the inverse futures REST APIs, import the `InverseFuturesClient`. Click here to expand and see full sample:</summary>
 
 ```javascript
@@ -152,6 +150,8 @@ client.getOrderBook({ symbol: 'BTCUSDH21' })
 </details>
 
 See [inverse-futures-client.ts](./src/inverse-futures-client.ts) for further information.
+
+**Note**: as of 6th March 2021 this is currently only for testnet. See the [Bybit API documentation](https://bybit-exchange.github.io/docs/inverse_futures/#t-introduction) for official updates.
 
 ## Linear Contracts
 <details><summary>To use the Linear (USDT) REST APIs, import the `LinearClient`. Click here to expand and see full sample:</summary>
@@ -194,12 +194,7 @@ client.getOrderBook({ symbol: 'BTCUSDT' })
 </details>
 
 ## WebSockets
-
-Inverse & linear WebSockets can be used via a shared `WebsocketClient`.
-
-Note: for linear websockets, pass "linear: true" in the constructor options when instancing the `WebsocketClient`.
-
-<details><summary>To connect to both linear and inverse websockets, make two instances of the WebsocketClient. Click here to expand and see full sample:</summary>
+<details><summary>Inverse & linear WebSockets can be used via a shared `WebsocketClient`. Click here to expand and see full sample:</summary>
 
 ```javascript
 const { WebsocketClient } = require('bybit-api');
@@ -277,12 +272,11 @@ ws.on('error', err => {
 
 </details>
 
+Note: for linear websockets, pass "linear: true" in the constructor options when instancing the `WebsocketClient`. To connect to both linear and inverse websockets, make two instances of the WebsocketClient.
 See [websocket-client.ts](./src/websocket-client.ts) for further information.
 
 ### Customise Logging
-Pass a custom logger which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired:
-
-<details><summary>Click here to expand and see full sample:</summary>
+<details><summary>Pass a custom logger which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired. Click here to expand and see full sample:</summary>
 
 ```javascript
 const { WebsocketClient, DefaultLogger } = require('bybit-api');
