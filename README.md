@@ -153,7 +153,7 @@ client.getOrderBook({ symbol: 'BTCUSDH21' })
 
 See [inverse-futures-client.ts](./src/inverse-futures-client.ts) for further information.
 
-### Linear Contracts
+## Linear Contracts
 <details><summary>To use the Linear (USDT) REST APIs, import the `LinearClient`. Click here to expand and see full sample:</summary>
 
 ```javascript
@@ -193,7 +193,7 @@ client.getOrderBook({ symbol: 'BTCUSDT' })
 
 </details>
 
-### WebSockets
+## WebSockets
 
 Inverse & linear WebSockets can be used via a shared `WebsocketClient`.
 
