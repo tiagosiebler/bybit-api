@@ -7,7 +7,7 @@ export class InverseFuturesClient extends SharedEndpoints {
   protected requestWrapper: RequestWrapper;
 
   /**
-   * @public Creates an instance of the inverse REST API client.
+   * @public Creates an instance of the inverse futures REST API client.
    *
    * @param {string} key - your API key
    * @param {string} secret - your API secret
