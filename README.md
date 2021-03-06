@@ -17,6 +17,7 @@ Node.js connector for the Bybit APIs and WebSockets, with TypeScript & browser s
 ## Documentation
 Most methods accept JS objects. These can be populated using parameters specified by Bybit's API documentation.
 - [Bybit API Inverse Documentation](https://bybit-exchange.github.io/docs/inverse/#t-introduction).
+- [Bybit API Inverse Futures Documentation](https://bybit-exchange.github.io/docs/inverse_futures/#t-introduction).
 - [Bybit API Linear Documentation](https://bybit-exchange.github.io/docs/linear/#t-introduction)
 
 ## Structure
