@@ -269,7 +269,9 @@ See [websocket-client.ts](./src/websocket-client.ts) for further information.
 Note: for linear websockets, pass `linear: true` in the constructor options when instancing the `WebsocketClient`. To connect to both linear and inverse websockets, make two instances of the WebsocketClient.
 
 ### Customise Logging
-<details><summary>Pass a custom logger which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired. Click here to expand and see full sample:</summary>
+Pass a custom logger which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired.
+
+<details><summary>Click here to expand and see full sample:</summary>
 
 ```javascript
 const { WebsocketClient, DefaultLogger } = require('bybit-api');
