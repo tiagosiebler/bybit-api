@@ -26,12 +26,14 @@ This project uses typescript. Resources are stored in 3 key structures:
 - [lib](./lib) - the javascript version of the project (compiled from typescript). This should not be edited directly, as it will be overwritten with each release.
 - [dist](./dist) - the packed bundle of the project for use in browser environments.
 
-## Usage
+---
+
+# Usage
 Create API credentials at Bybit
 - [Livenet](https://bybit.com/app/user/api-management?affiliate_id=9410&language=en-US&group_id=0&group_type=1)
 - [Testnet](https://testnet.bybit.com/app/user/api-management)
 
-### REST API Clients
+## REST API Clients
 
 There are three REST API modules as there are some differences in each contract type.
 1. `InverseClient` for inverse perpetual
@@ -268,7 +270,7 @@ See [websocket-client.ts](./src/websocket-client.ts) for further information.
 
 Note: for linear websockets, pass `linear: true` in the constructor options when instancing the `WebsocketClient`. To connect to both linear and inverse websockets, make two instances of the WebsocketClient.
 
-### Customise Logging
+## Customise Logging
 Pass a custom logger which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired.
 
 <details><summary>Click here to expand and see full sample:</summary>
@@ -287,7 +289,7 @@ const ws = new WebsocketClient(
 
 </details>
 
-### Browser Usage
+## Browser Usage
 Build a bundle using webpack:
 - `npm install`
 - `npm build`
