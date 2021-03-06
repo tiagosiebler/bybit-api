@@ -46,11 +46,8 @@ There are three REST API modules as there are some differences in each contract 
 2. `InverseFuturesClient` for inverse futures
 3. `LinearClient` for linear perpetual
 
-#### Inverse Contracts
-
-To use the inverse REST APIs, import the `InverseClient`:
-
-<details><summary>Click here to expand and see full sample:</summary>
+## Inverse Contracts
+<details><summary>To use the inverse REST APIs, import the `InverseClient` Click here to expand and see full sample:</summary>
 
 ```javascript
 const { InverseClient } = require('bybit-api');
@@ -112,12 +109,10 @@ client.getOrderBook({ symbol: 'BTCUSD' })
 
 See [inverse-client.ts](./src/inverse-client.ts) for further information.
 
-#### Inverse Futures Contracts
+## Inverse Futures Contracts
 **Note**: as of 6th March 2021 this is currently only for testnet. See the [Bybit API documentation](https://bybit-exchange.github.io/docs/inverse_futures/#t-introduction) for official updates.
 
-To use the inverse futures REST APIs, import the `InverseFuturesClient`:
-
-<details><summary>Click here to expand and see full sample:</summary>
+<details><summary>To use the inverse futures REST APIs, import the `InverseFuturesClient`. Click here to expand and see full sample:</summary>
 
 ```javascript
 const { InverseFuturesClient } = require('bybit-api');
@@ -159,9 +154,7 @@ client.getOrderBook({ symbol: 'BTCUSDH21' })
 See [inverse-futures-client.ts](./src/inverse-futures-client.ts) for further information.
 
 ### Linear Contracts
-To use the Linear (USDT) REST APIs, import the `LinearClient`:
-
-<details><summary>Click here to expand and see full sample:</summary>
+<details><summary>To use the Linear (USDT) REST APIs, import the `LinearClient`. Click here to expand and see full sample:</summary>
 
 ```javascript
 const { LinearClient } = require('bybit-api');
@@ -204,11 +197,9 @@ client.getOrderBook({ symbol: 'BTCUSDT' })
 
 Inverse & linear WebSockets can be used via a shared `WebsocketClient`.
 
-Note: to use the linear websockets, pass "linear: true" in the constructor options when instancing the `WebsocketClient`.
+Note: for linear websockets, pass "linear: true" in the constructor options when instancing the `WebsocketClient`.
 
-To connect to both linear and inverse websockets, make two instances of the WebsocketClient:
-
-<details><summary>Click here to expand and see full sample:</summary>
+<details><summary>To connect to both linear and inverse websockets, make two instances of the WebsocketClient. Click here to expand and see full sample:</summary>
 
 ```javascript
 const { WebsocketClient } = require('bybit-api');
