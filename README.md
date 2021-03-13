@@ -145,8 +145,6 @@ client.getOrderBook({ symbol: 'BTCUSDH21' })
 
 See [inverse-futures-client.ts](./src/inverse-futures-client.ts) for further information.
 
-**Note**: as of 6th March 2021 this is currently only for testnet. See the [Bybit API documentation](https://bybit-exchange.github.io/docs/inverse_futures/#t-introduction) for official updates.
-
 ### REST Linear
 <details><summary>To use the Linear (USDT) REST APIs, import the `LinearClient`. Click here to expand and see full sample:</summary>
 
