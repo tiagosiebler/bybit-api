@@ -18,10 +18,9 @@ function generateConfig(name) {
     resolve: {
       // Add '.ts' and '.tsx' as resolvable extensions.
       extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"],
-      fallback: {
-        "crypto": require.resolve("crypto-browserify"),
-        "buffer": require.resolve("buffer/"),
-        "stream": require.resolve("stream-browserify")
+      alias: {
+        [path.resolve(__dirname, "../lib/util/node-support.js")]:
+          path.resolve(__dirname, "../lib/util/browser-support.js"),
       }
     },
 
