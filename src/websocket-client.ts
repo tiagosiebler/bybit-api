@@ -2,7 +2,8 @@ import { EventEmitter } from 'events';
 import { InverseClient } from './inverse-client';
 import { LinearClient } from './linear-client';
 import { DefaultLogger } from './logger';
-import { signMessage, serializeParams, isWsPong } from './util/requestUtils';
+import { signMessage } from './util/node-support';
+import { serializeParams, isWsPong } from './util/requestUtils';
 
 import WebSocket from 'isomorphic-ws';
 import WsStore from './util/WsStore';
@@ -250,7 +251,7 @@ export class WebsocketClient extends EventEmitter {
         expires: (Date.now() + timeOffset + 5000)
       };
 
-      params.signature = signMessage('GET/realtime' + params.expires, secret);
+      params.signature = await signMessage('GET/realtime' + params.expires, secret);
       return '?' + serializeParams(params);
 
     } else if (!key || !secret) {

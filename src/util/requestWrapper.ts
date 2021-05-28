@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 
-import { signMessage, serializeParams, RestClientOptions, GenericAPIResponse, isPublicEndpoint } from './requestUtils';
+import { signMessage } from './node-support';
+import { serializeParams, RestClientOptions, GenericAPIResponse, isPublicEndpoint } from './requestUtils';
 
 export default class RequestUtil {
   private timeOffset: number | null;
@@ -76,7 +77,7 @@ export default class RequestUtil {
         await this.syncTime();
       }
 
-      params = this.signRequest(params);
+      params = await this.signRequest(params);
     }
 
     const options = {
@@ -134,7 +135,7 @@ export default class RequestUtil {
   /**
    * @private sign request and set recv window
    */
-  signRequest(data: any): any {
+  async signRequest(data: any): Promise<any> {
     const params = {
       ...data,
       api_key: this.key,
@@ -148,7 +149,7 @@ export default class RequestUtil {
 
     if (this.key && this.secret) {
       const serializedParams = serializeParams(params, this.options.strict_param_validation);
-      params.sign = signMessage(serializedParams, this.secret);
+      params.sign = await signMessage(serializedParams, this.secret);
     }
 
     return params;

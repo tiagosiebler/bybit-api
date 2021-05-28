@@ -1,5 +1,3 @@
-import { createHmac } from 'crypto';
-
 export interface RestClientOptions {
   // override the max size of the request window (in ms)
   recv_window?: number;
@@ -22,12 +20,6 @@ export interface RestClientOptions {
 }
 
 export type GenericAPIResponse = Promise<any>;
-
-export function signMessage(message: string, secret: string): string {
-  return createHmac('sha256', secret)
-    .update(message)
-    .digest('hex');
-};
 
 export function serializeParams(params: object = {}, strict_validation = false): string {
   return Object.keys(params)
