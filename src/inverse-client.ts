@@ -326,6 +326,29 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.get('v2/private/trade/closed-pnl/list', params);
   }
 
+  setPositionMode(params: {
+    symbol: string;
+    mode: 0 | 3;
+  }): GenericAPIResponse {
+    return this.requestWrapper.post('v2/private/position/switch-mode', params);
+  }
+
+  setSlTpPositionMode(params: {
+    symbol: string;
+    tp_sl_mode: 'Full' | 'Partial';
+  }): GenericAPIResponse {
+    return this.requestWrapper.post('v2/private/tpsl/switch-mode', params);
+  }
+
+  setMarginType(params: {
+    symbol: string;
+    is_isolated: boolean;
+    buy_leverage: number;
+    sell_leverage: number;
+  }): GenericAPIResponse {
+    return this.requestWrapper.post('v2/private/position/switch-isolated', params);
+  }
+
 	/**
    * Risk Limit
    */
