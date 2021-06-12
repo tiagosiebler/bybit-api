@@ -205,7 +205,7 @@ const wsConfig = {
   // defaults to false == testnet. Set to true for livenet.
   // livenet: true
 
-  // defaults to fase == inverse. Set to true for linear (USDT) trading.
+  // defaults to false == inverse. Set to true for linear (USDT) trading.
   // linear: true
 
   // how long to wait (in ms) before deciding the connection should be terminated & reconnected
