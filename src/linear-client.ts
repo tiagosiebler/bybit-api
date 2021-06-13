@@ -317,7 +317,7 @@ export class LinearClient extends SharedEndpoints {
     page?: number;
     limit?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/tpsl/switch-mode', params);
+    return this.requestWrapper.get('private/linear/trade/closed-pnl/list', params);
   }
 
   /**
