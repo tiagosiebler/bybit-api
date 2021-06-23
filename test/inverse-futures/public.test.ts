@@ -3,7 +3,7 @@ import { notAuthenticatedError, successResponseList, successResponseObject } fro
 
 describe('Public Inverse Futures REST API Endpoints', () => {
   const useLivenet = true;
-  const api = new InverseFuturesClient(undefined, undefined, useLivenet);
+  const api = new InverseFuturesClient(undefined, undefined, useLivenet, { disable_time_sync: true });
 
   const symbol = 'BTCUSD';
   const interval = '15';
