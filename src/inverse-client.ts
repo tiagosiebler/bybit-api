@@ -22,7 +22,8 @@ export class InverseClient extends SharedEndpoints {
     restClientOptions: RestClientOptions = {},
     requestOptions: AxiosRequestConfig = {}
   ) {
-    super()
+    super();
+
     this.requestWrapper = new RequestWrapper(
       key,
       secret,
@@ -53,9 +54,9 @@ export class InverseClient extends SharedEndpoints {
    */
   getLatestInformation(params?: {
     symbol?: string;
-   }): GenericAPIResponse {
+  }): GenericAPIResponse {
     return this.getTickers(params);
-   }
+  }
 
   /**
    * @deprecated use getTrades() instead

@@ -22,7 +22,8 @@ export class InverseFuturesClient extends SharedEndpoints {
     restClientOptions: RestClientOptions = {},
     requestOptions: AxiosRequestConfig = {}
   ) {
-    super()
+    super();
+
     this.requestWrapper = new RequestWrapper(
       key,
       secret,
