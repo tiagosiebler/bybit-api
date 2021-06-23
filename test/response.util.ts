@@ -20,3 +20,7 @@ export function successResponseObject() {
     "time_now": expect.any(String),
   };
 };
+
+export function notAuthenticatedError() {
+  return new Error('Private endpoints require api and private keys set');
+};

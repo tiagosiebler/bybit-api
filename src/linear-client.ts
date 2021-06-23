@@ -7,7 +7,7 @@ export class LinearClient extends SharedEndpoints {
   protected requestWrapper: RequestWrapper;
 
   /**
-   * @public Creates an instance of the inverse REST API client.
+   * @public Creates an instance of the linear REST API client.
    *
    * @param {string} key - your API key
    * @param {string} secret - your API secret
@@ -22,7 +22,8 @@ export class LinearClient extends SharedEndpoints {
     restClientOptions: RestClientOptions = {},
     requestOptions: AxiosRequestConfig = {}
   ) {
-    super()
+    super();
+
     this.requestWrapper = new RequestWrapper(
       key,
       secret,

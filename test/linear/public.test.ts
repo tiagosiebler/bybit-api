@@ -1,16 +1,16 @@
-import { InverseClient } from "../../src/inverse-client";
+import { LinearClient } from "../../src/linear-client";
 import { notAuthenticatedError, successResponseList, successResponseObject } from "../response.util";
 
-describe('Public Inverse REST API Endpoints', () => {
+describe('Public Linear REST API Endpoints', () => {
   const useLivenet = true;
-  const api = new InverseClient(undefined, undefined, useLivenet);
+  const api = new LinearClient(undefined, undefined, useLivenet);
 
-  const symbol = 'BTCUSD';
+  const symbol = 'BTCUSDT';
   const interval = '15';
   const timestampOneHourAgo = (new Date().getTime() / 1000) - (1000 * 60 * 60);
   const from = Number(timestampOneHourAgo.toFixed(0));
 
-  describe('Inverse only endpoints', () => {
+  describe('Linear only endpoints', () => {
     it('should throw for unauthenticated private calls', async () => {
       expect(() => api.getPosition()).rejects.toMatchObject(notAuthenticatedError());
     });
