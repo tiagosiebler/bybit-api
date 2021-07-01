@@ -3,10 +3,8 @@ import { DefaultLogger } from '../logger';
 
 import WebSocket from 'isomorphic-ws';
 
-type WsTopicList = Set<string>;
-type KeyedWsTopicLists = {
-  [key: string]: WsTopicList;
-};
+type WsTopic = string;
+type WsTopicList = Set<WsTopic>;
 
 interface WsStoredState {
   ws?: WebSocket;
@@ -16,10 +14,9 @@ interface WsStoredState {
   subscribedTopics: WsTopicList;
 };
 
+
 export default class WsStore {
-  private wsState: {
-    [key: string]: WsStoredState;
-  }
+  private wsState: Record<string, WsStoredState>
   private logger: typeof DefaultLogger;
 
   constructor(logger: typeof DefaultLogger) {
@@ -35,8 +32,6 @@ export default class WsStore {
     if (createIfMissing) {
       return this.create(key);
     }
-
-    return undefined;
   }
 
   getKeys(): string[] {
@@ -65,7 +60,7 @@ export default class WsStore {
 
   /* connection websocket */
 
-  hasExistingActiveConnection(key) {
+  hasExistingActiveConnection(key: string) {
     return this.get(key) && this.isWsOpen(key);
   }
 
@@ -106,19 +101,19 @@ export default class WsStore {
     return this.get(key, true)!.subscribedTopics;
   }
 
-  getTopicsByKey(): KeyedWsTopicLists {
-    const result = {};
+  getTopicsByKey(): Record<string, WsTopicList> {
+  const result = {};
     for (const refKey in this.wsState) {
       result[refKey] = this.getTopics(refKey);
     }
     return result;
   }
 
-  addTopic(key: string, topic: string) {
+  addTopic(key: string, topic: WsTopic) {
     return this.getTopics(key).add(topic);
   }
 
-  deleteTopic(key: string, topic: string) {
+  deleteTopic(key: string, topic: WsTopic) {
     return this.getTopics(key).delete(topic);
   }
 }
