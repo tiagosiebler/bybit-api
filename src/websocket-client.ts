@@ -27,6 +27,19 @@ const linearEndpoints = {
   }
 };
 
+const spotEndpoints = {
+  private: {
+    livenet: 'wss://stream.bybit.com/spot/ws',
+    testnet: 'wss://stream-testnet.bybit.com/spot/ws',
+  },
+  public: {
+    livenet: 'wss://stream.bybit.com/spot/quote/ws/v1',
+    livenet2: 'wss://stream.bybit.com/spot/quote/ws/v2',
+    testnet: 'wss://stream-testnet.bybit.com/spot/quote/ws/v1',
+    testnet2: 'wss://stream-testnet.bybit.com/spot/quote/ws/v2',
+  }
+}
+
 const loggerCategory = { category: 'bybit-ws' };
 
 const READY_STATE_INITIAL = 0;
@@ -47,7 +60,11 @@ export interface WSClientConfigurableOptions {
   key?: string;
   secret?: string;
   livenet?: boolean;
+
+  // defaults to inverse. Only set one at a time (this interface will change in future)
   linear?: boolean;
+  spot?: boolean;
+
   pongTimeout?: number;
   pingInterval?: number;
   reconnectTimeout?: number;
@@ -59,6 +76,7 @@ export interface WSClientConfigurableOptions {
 export interface WebsocketClientOptions extends WSClientConfigurableOptions {
   livenet: boolean;
   linear: boolean;
+  spot: boolean;
   pongTimeout: number;
   pingInterval: number;
   reconnectTimeout: number;
@@ -68,9 +86,11 @@ export interface WebsocketClientOptions extends WSClientConfigurableOptions {
 export const wsKeyInverse = 'inverse';
 export const wsKeyLinearPrivate = 'linearPrivate';
 export const wsKeyLinearPublic = 'linearPublic';
+export const wsKeySpotPrivate = 'spotPrivate';
+export const wsKeySpotPublic = 'spotPublic';
 
 // This is used to differentiate between each of the available websocket streams (as bybit has multiple websockets)
-export type WsKey = 'inverse' | 'linearPrivate' | 'linearPublic';
+export type WsKey = 'inverse' | 'linearPrivate' | 'linearPublic' | 'spotPrivate' | 'spotPublic';
 
 const getLinearWsKeyForTopic = (topic: string): WsKey => {
   const privateLinearTopics = ['position', 'execution', 'order', 'stop_order', 'wallet'];
@@ -79,6 +99,14 @@ const getLinearWsKeyForTopic = (topic: string): WsKey => {
   }
 
   return wsKeyLinearPublic;
+}
+const getSpotWsKeyForTopic = (topic: string): WsKey => {
+  const privateLinearTopics = ['position', 'execution', 'order', 'stop_order'];
+  if (privateLinearTopics.includes(topic)) {
+    return wsKeySpotPrivate;
+  }
+
+  return wsKeySpotPublic;
 }
 
 export declare interface WebsocketClient {
@@ -102,6 +130,7 @@ export class WebsocketClient extends EventEmitter {
     this.options = {
       livenet: false,
       linear: false,
+      spot: false,
       pongTimeout: 1000,
       pingInterval: 10000,
       reconnectTimeout: 500,
@@ -109,6 +138,9 @@ export class WebsocketClient extends EventEmitter {
     };
 
     if (this.isLinear()) {
+      this.restClient = new LinearClient(undefined, undefined, this.isLivenet(), this.options.restOptions, this.options.requestOptions);
+    } else if (this.isSpot()) {
+      // TODO: spot client
       this.restClient = new LinearClient(undefined, undefined, this.isLivenet(), this.options.restOptions, this.options.requestOptions);
     } else {
       this.restClient = new InverseClient(undefined, undefined, this.isLivenet(), this.options.restOptions, this.options.requestOptions);
@@ -123,8 +155,12 @@ export class WebsocketClient extends EventEmitter {
     return this.options.linear === true;
   }
 
+  public isSpot(): boolean {
+    return this.options.spot === true;
+  }
+
   public isInverse(): boolean {
-    return !this.isLinear();
+    return !this.isLinear() && !this.isSpot();
   }
 
   /**
@@ -191,6 +227,10 @@ export class WebsocketClient extends EventEmitter {
     if (this.isLinear()) {
       return [this.connect(wsKeyLinearPublic), this.connect(wsKeyLinearPrivate)];
     }
+
+    if (this.isSpot()) {
+      return [this.connect(wsKeySpotPublic), this.connect(wsKeySpotPrivate)];
+    }
   }
 
   private async connect(wsKey: WsKey): Promise<WebSocket | undefined> {
@@ -246,7 +286,7 @@ export class WebsocketClient extends EventEmitter {
   private async getAuthParams(wsKey: WsKey): Promise<string> {
     const { key, secret } = this.options;
 
-    if (key && secret && wsKey !== wsKeyLinearPublic) {
+    if (key && secret && wsKey !== wsKeyLinearPublic && wsKey !== wsKeySpotPublic) {
       this.logger.debug('Getting auth\'d request params', { ...loggerCategory, wsKey });
 
       const timeOffset = await this.restClient.getTimeOffset();
@@ -365,7 +405,7 @@ export class WebsocketClient extends EventEmitter {
 
   private onWsOpen(event, wsKey: WsKey) {
     if (this.wsStore.isConnectionState(wsKey, READY_STATE_CONNECTING)) {
-      this.logger.info('Websocket connected', { ...loggerCategory, wsKey, livenet: this.isLivenet(), linear: this.isLinear() });
+      this.logger.info('Websocket connected', { ...loggerCategory, wsKey, livenet: this.isLivenet(), linear: this.isLinear(), spot: this.isSpot() });
       this.emit('open', { wsKey, event });
     } else if (this.wsStore.isConnectionState(wsKey, READY_STATE_RECONNECTING)) {
       this.logger.info('Websocket reconnected', { ...loggerCategory, wsKey });
@@ -439,7 +479,8 @@ export class WebsocketClient extends EventEmitter {
       return this.options.wsUrl;
     }
 
-    const networkKey = this.options.livenet ? 'livenet' : 'testnet';
+    const networkKey = this.isLivenet() ? 'livenet' : 'testnet';
+    // TODO: reptitive
     if (this.isLinear() || wsKey.startsWith('linear')){
       if (wsKey === wsKeyLinearPublic) {
         return linearEndpoints.public[networkKey];
@@ -452,10 +493,31 @@ export class WebsocketClient extends EventEmitter {
       this.logger.error('Unhandled linear wsKey: ', { ...loggerCategory, wsKey });
       return linearEndpoints[networkKey];
     }
+
+    if (this.isSpot() || wsKey.startsWith('spot')){
+      if (wsKey === wsKeySpotPublic) {
+        return spotEndpoints.public[networkKey];
+      }
+
+      if (wsKey === wsKeySpotPrivate) {
+        return spotEndpoints.private[networkKey];
+      }
+
+      this.logger.error('Unhandled spot wsKey: ', { ...loggerCategory, wsKey });
+      return spotEndpoints[networkKey];
+    }
+
+    // fallback to inverse
     return inverseEndpoints[networkKey];
   }
 
   private getWsKeyForTopic(topic: string) {
-    return this.isInverse() ? wsKeyInverse : getLinearWsKeyForTopic(topic);
+    if (this.isInverse()) {
+      return wsKeyInverse;
+    }
+    if (this.isLinear()) {
+      return getLinearWsKeyForTopic(topic)
+    }
+    return getSpotWsKeyForTopic(topic);
   }
 };
