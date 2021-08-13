@@ -17,12 +17,12 @@ const inverseEndpoints = {
 const linearEndpoints = {
   private: {
     livenet: 'wss://stream.bybit.com/realtime_private',
-    livenet2: 'wss://stream.bytick.com/realtime_public',
+    livenet2: 'wss://stream.bytick.com/realtime_private',
     testnet: 'wss://stream-testnet.bybit.com/realtime_private'
   },
   public: {
     livenet: 'wss://stream.bybit.com/realtime_public',
-    livenet2: 'wss://stream.bytick.com/realtime_private',
+    livenet2: 'wss://stream.bytick.com/realtime_public',
     testnet: 'wss://stream-testnet.bybit.com/realtime_public'
   }
 };

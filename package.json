@@ -1,6 +1,6 @@
 {
   "name": "bybit-api",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "Node.js connector for Bybit's REST APIs and WebSockets, with TypeScript & integration tests.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
