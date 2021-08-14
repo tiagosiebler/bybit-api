@@ -101,7 +101,8 @@ const getLinearWsKeyForTopic = (topic: string): WsKey => {
   return wsKeyLinearPublic;
 }
 const getSpotWsKeyForTopic = (topic: string): WsKey => {
-  const privateLinearTopics = ['position', 'execution', 'order', 'stop_order'];
+  const privateLinearTopics = ['position', 'execution', 'order', 'stop_order', 'outboundAccountInfo', 'executionReport', 'ticketInfo'];
+
   if (privateLinearTopics.includes(topic)) {
     return wsKeySpotPrivate;
   }
@@ -230,6 +231,20 @@ export class WebsocketClient extends EventEmitter {
 
     if (this.isSpot()) {
       return [this.connect(wsKeySpotPublic), this.connect(wsKeySpotPrivate)];
+    }
+  }
+
+  public connectPrivate(): Promise<WebSocket | undefined> | undefined {
+    if (this.isInverse()) {
+      return this.connect(wsKeyInverse);
+    }
+
+    if (this.isLinear()) {
+      return this.connect(wsKeyLinearPrivate);
+    }
+
+    if (this.isSpot()) {
+      return this.connect(wsKeySpotPrivate);
     }
   }
 
