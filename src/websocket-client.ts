@@ -4,6 +4,7 @@ import WebSocket from 'isomorphic-ws';
 import { InverseClient } from './inverse-client';
 import { LinearClient } from './linear-client';
 import { DefaultLogger } from './logger';
+import { KlineInterval } from './types/shared';
 import { signMessage } from './util/node-support';
 import { serializeParams, isWsPong } from './util/requestUtils';
 
@@ -541,14 +542,17 @@ export class WebsocketClient extends EventEmitter {
   }
 
   private onWsMessage(event, wsKey: WsKey) {
-    const msg = JSON.parse(event && event.data || event);
-
-    if ('success' in msg || msg?.pong) {
-      this.onWsMessageResponse(msg, wsKey);
-    } else if (msg.topic) {
-      this.onWsMessageUpdate(msg);
-    } else {
-      this.logger.warning('Got unhandled ws message', { ...loggerCategory, message: msg, event, wsKey});
+    try {
+      const msg = JSON.parse(event && event.data || event);
+      if ('success' in msg || msg?.pong) {
+        this.onWsMessageResponse(msg, wsKey);
+      } else if (msg.topic) {
+        this.onWsMessageUpdate(msg);
+      } else {
+        this.logger.warning('Got unhandled ws message', { ...loggerCategory, message: msg, event, wsKey});
+      }
+    } catch (e) {
+      this.logger.error('Failed to parse ws event message', { ...loggerCategory, error: e, event, wsKey})
     }
   }
 
@@ -639,24 +643,97 @@ export class WebsocketClient extends EventEmitter {
     return getSpotWsKeyForTopic(topic);
   }
 
+  private wrongMarketError(market: APIMarket) {
+    return new Error(`This WS client was instanced for the ${this.options.market} market. Make another WebsocketClient instance with "market: '${market}' to listen to spot topics`);
+  }
+
   // TODO: persistance for subbed topics. Look at ftx-api implementation.
   public subscribePublicSpotTrades(symbol: string, binary?: boolean) {
     if (!this.isSpot()) {
-      throw new Error(`This WS client was instanced for the ${this.options.market} market. Make another WebsocketClient instance with "market: 'spot' to listen to spot topics`);
+      throw this.wrongMarketError('spot');
     }
 
-    const subscribeMessage = {
+    return this.tryWsSend(wsKeySpotPublic, JSON.stringify({
       topic: 'trade',
       event: 'sub',
       symbol,
-      params: {},
-    };
-    if (binary) {
-      subscribeMessage.params = {
+      params: {
         binary: !!binary,
-      };
+      }
+    }));
+  }
+
+  public subscribePublicSpotTradingPair(symbol: string, binary?: boolean) {
+    if (!this.isSpot()) {
+      throw this.wrongMarketError('spot');
     }
 
-    this.tryWsSend(wsKeySpotPublic, JSON.stringify(subscribeMessage));
+    return this.tryWsSend(wsKeySpotPublic, JSON.stringify({
+      symbol,
+      topic: 'realtimes',
+      event: 'sub',
+      params: {
+        binary: !!binary,
+      },
+    }));
   }
+
+  public subscribePublicSpotV1Kline(symbol: string, candleSize: KlineInterval, binary?: boolean) {
+    if (!this.isSpot()) {
+      throw this.wrongMarketError('spot');
+    }
+
+    return this.tryWsSend(wsKeySpotPublic, JSON.stringify({
+      symbol,
+      topic: 'kline_' + candleSize,
+      event: 'sub',
+      params: {
+        binary: !!binary,
+      },
+    }));
+  }
+
+  //ws.send('{"symbol":"BTCUSDT","topic":"depth","event":"sub","params":{"binary":false}}');
+  //ws.send('{"symbol":"BTCUSDT","topic":"mergedDepth","event":"sub","params":{"binary":false,"dumpScale":1}}');
+  //ws.send('{"symbol":"BTCUSDT","topic":"diffDepth","event":"sub","params":{"binary":false}}');
+  public subscribePublicSpotOrderbook(symbol: string, depth: 'full' | 'merge' | 'delta', dumpScale?: number, binary?: boolean) {
+    if (!this.isSpot()) {
+      throw this.wrongMarketError('spot');
+    }
+
+    let topic: string;
+    switch (depth) {
+      case 'full': {
+        topic = 'depth';
+        break;
+      };
+      case 'merge': {
+        topic = 'mergedDepth';
+        if (!dumpScale) {
+          throw new Error(`Dumpscale must be provided for merged orderbooks`);
+        }
+        break;
+      }
+      case 'delta': {
+        topic = 'diffDepth';
+        break;
+      }
+    }
+
+    const msg: any = {
+      symbol,
+      topic,
+      event: 'sub',
+      params: {
+        binary: !!binary,
+      },
+    };
+    if (dumpScale) {
+      msg.params.dumpScale = dumpScale;
+    }
+    return this.tryWsSend(wsKeySpotPublic, JSON.stringify(msg));
+  }
+
+
+
 };
