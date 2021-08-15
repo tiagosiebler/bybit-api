@@ -734,6 +734,4 @@ export class WebsocketClient extends EventEmitter {
     return this.tryWsSend(wsKeySpotPublic, JSON.stringify(msg));
   }
 
-
-
 };

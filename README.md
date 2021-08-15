@@ -26,6 +26,7 @@ This project uses typescript. Resources are stored in 3 key structures:
 - [src](./src) - the whole connector written in typescript
 - [lib](./lib) - the javascript version of the project (compiled from typescript). This should not be edited directly, as it will be overwritten with each release.
 - [dist](./dist) - the packed bundle of the project for use in browser environments.
+- [examples](./examples) - some implementation examples & demonstrations. Contributions are welcome!
 
 ---
 
@@ -181,6 +182,48 @@ client.getOrderBook({ symbol: 'BTCUSDT' })
   });
 ```
 
+See [linear-client.ts](./src/linear-client.ts) for further information.
+
+### REST Spot
+To use the Spot REST APIs, import the `SpotClient`:
+
+```javascript
+const { SpotClient } = require('bybit-api');
+
+const API_KEY = 'xxx';
+const PRIVATE_KEY = 'yyy';
+const useLivenet = false;
+
+const client = new javascript(
+  API_KEY,
+  PRIVATE_KEY,
+
+  // optional, uses testnet by default. Set to 'true' to use livenet.
+  useLivenet,
+
+  // restClientOptions,
+  // requestLibraryOptions
+);
+
+client.getSymbols()
+  .then(result => {
+    console.log(result);
+  })
+  .catch(err => {
+    console.error(err);
+  });
+
+client.getBalances()
+  .then(result => {
+    console.log("getBalances result: ", result);
+  })
+  .catch(err => {
+    console.error("getBalances error: ", err);
+  });
+```
+
+See [spot-client.ts](./src/spot-client.ts) for further information.
+
 ## WebSockets
 Inverse, linear & spot WebSockets can be used via a shared `WebsocketClient`. However, make sure to make one instance of WebsocketClient per market type (spot vs inverse vs linear vs linearfutures):
 
@@ -203,11 +246,10 @@ const wsConfig = {
 
   // NOTE: to listen to multiple markets (spot vs inverse vs linear vs linearfutures) at once, make one WebsocketClient instance per market
 
-  // defaults to false == inverse. Set to true for linear (USDT) trading.
-  // linear: true
-
-  // defaults to false == inverse. Set to true for spot trading. These booleans will be changed into a single setting in future.
-  // spot: true
+  // defaults to inverse:
+  // market: 'inverse'
+  // market: 'linear'
+  // market: 'spot'
 
   // how long to wait (in ms) before deciding the connection should be terminated & reconnected
   // pongTimeout: 1000,
