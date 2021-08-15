@@ -61,6 +61,9 @@ export function isPublicEndpoint (endpoint: string): boolean {
 }
 
 export function isWsPong(response: any) {
+  if (response.pong) {
+    return true;
+  }
   return (
     response.request &&
     response.request.op === 'ping' &&

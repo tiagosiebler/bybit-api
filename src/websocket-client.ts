@@ -4,6 +4,7 @@ import WebSocket from 'isomorphic-ws';
 import { InverseClient } from './inverse-client';
 import { LinearClient } from './linear-client';
 import { DefaultLogger } from './logger';
+import { KlineInterval } from './types/shared';
 import { signMessage } from './util/node-support';
 import { serializeParams, isWsPong } from './util/requestUtils';
 
@@ -17,15 +18,28 @@ const inverseEndpoints = {
 const linearEndpoints = {
   private: {
     livenet: 'wss://stream.bybit.com/realtime_private',
-    livenet2: 'wss://stream.bytick.com/realtime_public',
+    livenet2: 'wss://stream.bytick.com/realtime_private',
     testnet: 'wss://stream-testnet.bybit.com/realtime_private'
   },
   public: {
     livenet: 'wss://stream.bybit.com/realtime_public',
-    livenet2: 'wss://stream.bytick.com/realtime_private',
+    livenet2: 'wss://stream.bytick.com/realtime_public',
     testnet: 'wss://stream-testnet.bybit.com/realtime_public'
   }
 };
+
+const spotEndpoints = {
+  private: {
+    livenet: 'wss://stream.bybit.com/spot/ws',
+    testnet: 'wss://stream-testnet.bybit.com/spot/ws',
+  },
+  public: {
+    livenet: 'wss://stream.bybit.com/spot/quote/ws/v1',
+    livenet2: 'wss://stream.bybit.com/spot/quote/ws/v2',
+    testnet: 'wss://stream-testnet.bybit.com/spot/quote/ws/v1',
+    testnet2: 'wss://stream-testnet.bybit.com/spot/quote/ws/v2',
+  }
+}
 
 const loggerCategory = { category: 'bybit-ws' };
 
@@ -43,11 +57,78 @@ export enum WsConnectionState {
   READY_STATE_RECONNECTING
 };
 
+export type APIMarket = 'inverse' | 'linear' | 'spot';
+
+// Same as inverse futures
+export type WsPublicInverseTopic = 'orderBookL2_25'
+  | 'orderBookL2_200'
+  | 'trade'
+  | 'insurance'
+  | 'instrument_info'
+  | 'klineV2';
+
+export type WsPublicUSDTPerpTopic = 'orderBookL2_25'
+  | 'orderBookL2_200'
+  | 'trade'
+  | 'insurance'
+  | 'instrument_info'
+  | 'kline';
+
+export type WsPublicSpotV1Topic = 'trade'
+  | 'realtimes'
+  | 'kline'
+  | 'depth'
+  | 'mergedDepth'
+  | 'diffDepth';
+
+export type WsPublicSpotV2Topic = 'depth'
+  | 'kline'
+  | 'trade'
+  | 'bookTicker'
+  | 'realtimes';
+
+export type WsPublicTopics = WsPublicInverseTopic
+  | WsPublicUSDTPerpTopic
+  | WsPublicSpotV1Topic
+  | WsPublicSpotV2Topic
+  | string;
+
+// Same as inverse futures
+export type WsPrivateInverseTopic = 'position'
+  | 'execution'
+  | 'order'
+  | 'stop_order';
+
+export type WsPrivateUSDTPerpTopic = 'position'
+  | 'execution'
+  | 'order'
+  | 'stop_order'
+  | 'wallet';
+
+export type WsPrivateSpotTopic = 'outboundAccountInfo'
+  | 'executionReport'
+  | 'ticketInfo';
+
+export type WsPrivateTopic = WsPrivateInverseTopic
+  | WsPrivateUSDTPerpTopic
+  | WsPrivateSpotTopic
+  | string;
+
+export type WsTopic = WsPublicTopics | WsPrivateTopic;
+
 export interface WSClientConfigurableOptions {
   key?: string;
   secret?: string;
   livenet?: boolean;
+
+  // defaults to inverse.
+  /**
+   * @deprecated Use the property { market: 'linear' } instead
+   */
   linear?: boolean;
+
+  market?: APIMarket;
+
   pongTimeout?: number;
   pingInterval?: number;
   reconnectTimeout?: number;
@@ -58,7 +139,11 @@ export interface WSClientConfigurableOptions {
 
 export interface WebsocketClientOptions extends WSClientConfigurableOptions {
   livenet: boolean;
-  linear: boolean;
+  /**
+   * @deprecated Use the property { market: 'linear' } instead
+   */
+  linear?: boolean;
+  market?: APIMarket;
   pongTimeout: number;
   pingInterval: number;
   reconnectTimeout: number;
@@ -68,9 +153,11 @@ export interface WebsocketClientOptions extends WSClientConfigurableOptions {
 export const wsKeyInverse = 'inverse';
 export const wsKeyLinearPrivate = 'linearPrivate';
 export const wsKeyLinearPublic = 'linearPublic';
+export const wsKeySpotPrivate = 'spotPrivate';
+export const wsKeySpotPublic = 'spotPublic';
 
 // This is used to differentiate between each of the available websocket streams (as bybit has multiple websockets)
-export type WsKey = 'inverse' | 'linearPrivate' | 'linearPublic';
+export type WsKey = 'inverse' | 'linearPrivate' | 'linearPublic' | 'spotPrivate' | 'spotPublic';
 
 const getLinearWsKeyForTopic = (topic: string): WsKey => {
   const privateLinearTopics = ['position', 'execution', 'order', 'stop_order', 'wallet'];
@@ -80,11 +167,27 @@ const getLinearWsKeyForTopic = (topic: string): WsKey => {
 
   return wsKeyLinearPublic;
 }
+const getSpotWsKeyForTopic = (topic: string): WsKey => {
+  const privateLinearTopics = ['position', 'execution', 'order', 'stop_order', 'outboundAccountInfo', 'executionReport', 'ticketInfo'];
+
+  if (privateLinearTopics.includes(topic)) {
+    return wsKeySpotPrivate;
+  }
+
+  return wsKeySpotPublic;
+}
 
 export declare interface WebsocketClient {
   on(event: 'open' | 'reconnected', listener: ({ wsKey: WsKey, event: any }) => void): this;
   on(event: 'response' | 'update' | 'error', listener: (response: any) => void): this;
-  on(event: 'reconnect' | 'close', listener: () => void): this;
+  on(event: 'reconnect' | 'close', listener: ({ wsKey: WsKey }) => void): this;
+}
+
+function resolveMarket(options: WSClientConfigurableOptions): APIMarket {
+  if (options.linear) {
+    return 'linear';
+  }
+  return 'inverse';
 }
 
 export class WebsocketClient extends EventEmitter {
@@ -101,15 +204,22 @@ export class WebsocketClient extends EventEmitter {
 
     this.options = {
       livenet: false,
-      linear: false,
       pongTimeout: 1000,
       pingInterval: 10000,
       reconnectTimeout: 500,
       ...options
     };
 
+    if (!this.options.market) {
+      this.options.market = resolveMarket(this.options);
+    }
+
     if (this.isLinear()) {
       this.restClient = new LinearClient(undefined, undefined, this.isLivenet(), this.options.restOptions, this.options.requestOptions);
+    } else if (this.isSpot()) {
+      // TODO: spot client
+      this.restClient = new LinearClient(undefined, undefined, this.isLivenet(), this.options.restOptions, this.options.requestOptions);
+      this.connectPublic();
     } else {
       this.restClient = new InverseClient(undefined, undefined, this.isLivenet(), this.options.restOptions, this.options.requestOptions);
     }
@@ -120,17 +230,21 @@ export class WebsocketClient extends EventEmitter {
   }
 
   public isLinear(): boolean {
-    return this.options.linear === true;
+    return this.options.market === 'linear';
+  }
+
+  public isSpot(): boolean {
+    return this.options.market === 'spot';
   }
 
   public isInverse(): boolean {
-    return !this.isLinear();
+    return !this.isLinear() && !this.isSpot();
   }
 
   /**
    * Add topic/topics to WS subscription list
    */
-  public subscribe(wsTopics: string[] | string) {
+  public subscribe(wsTopics: WsTopic[] | WsTopic) {
     const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
     topics.forEach(topic => this.wsStore.addTopic(
       this.getWsKeyForTopic(topic),
@@ -157,7 +271,7 @@ export class WebsocketClient extends EventEmitter {
   /**
    * Remove topic/topics from WS subscription list
    */
-  public unsubscribe(wsTopics: string[] | string) {
+  public unsubscribe(wsTopics: WsTopic[] | WsTopic) {
     const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
     topics.forEach(topic => this.wsStore.deleteTopic(
       this.getWsKeyForTopic(topic),
@@ -190,6 +304,38 @@ export class WebsocketClient extends EventEmitter {
 
     if (this.isLinear()) {
       return [this.connect(wsKeyLinearPublic), this.connect(wsKeyLinearPrivate)];
+    }
+
+    if (this.isSpot()) {
+      return [this.connect(wsKeySpotPublic), this.connect(wsKeySpotPrivate)];
+    }
+  }
+
+  public connectPublic(): Promise<WebSocket | undefined> | undefined {
+    if (this.isInverse()) {
+      return this.connect(wsKeyInverse);
+    }
+
+    if (this.isLinear()) {
+      return this.connect(wsKeyLinearPublic);
+    }
+
+    if (this.isSpot()) {
+      return this.connect(wsKeySpotPublic);
+    }
+  }
+
+  public connectPrivate(): Promise<WebSocket | undefined> | undefined {
+    if (this.isInverse()) {
+      return this.connect(wsKeyInverse);
+    }
+
+    if (this.isLinear()) {
+      return this.connect(wsKeyLinearPrivate);
+    }
+
+    if (this.isSpot()) {
+      return this.connect(wsKeySpotPrivate);
     }
   }
 
@@ -246,7 +392,7 @@ export class WebsocketClient extends EventEmitter {
   private async getAuthParams(wsKey: WsKey): Promise<string> {
     const { key, secret } = this.options;
 
-    if (key && secret && wsKey !== wsKeyLinearPublic) {
+    if (key && secret && wsKey !== wsKeyLinearPublic && wsKey !== wsKeySpotPublic) {
       this.logger.debug('Getting auth\'d request params', { ...loggerCategory, wsKey });
 
       const timeOffset = await this.restClient.getTimeOffset();
@@ -319,6 +465,9 @@ export class WebsocketClient extends EventEmitter {
    * Send WS message to subscribe to topics.
    */
   private requestSubscribeTopics(wsKey: WsKey, topics: string[]) {
+    if (!topics.length) {
+      return;
+    }
     const wsMessage = JSON.stringify({
       op: 'subscribe',
       args: topics
@@ -331,6 +480,9 @@ export class WebsocketClient extends EventEmitter {
    * Send WS message to unsubscribe from topics.
    */
   private requestUnsubscribeTopics(wsKey: WsKey, topics: string[]) {
+    if (!topics.length) {
+      return;
+    }
     const wsMessage = JSON.stringify({
       op: 'unsubscribe',
       args: topics
@@ -345,7 +497,11 @@ export class WebsocketClient extends EventEmitter {
       if (!wsKey) {
         throw new Error('Cannot send message due to no known websocket for this wsKey');
       }
-      this.getWs(wsKey)?.send(wsMessage);
+      const ws = this.getWs(wsKey);
+      if (!ws) {
+        throw new Error(`${wsKey} socket not connected yet, call "connect(${wsKey}) first then try again when the "open" event arrives`);
+      }
+      ws.send(wsMessage);
     } catch (e) {
       this.logger.error(`Failed to send WS message`, { ...loggerCategory, wsMessage, wsKey, exception: e });
     }
@@ -365,7 +521,7 @@ export class WebsocketClient extends EventEmitter {
 
   private onWsOpen(event, wsKey: WsKey) {
     if (this.wsStore.isConnectionState(wsKey, READY_STATE_CONNECTING)) {
-      this.logger.info('Websocket connected', { ...loggerCategory, wsKey, livenet: this.isLivenet(), linear: this.isLinear() });
+      this.logger.info('Websocket connected', { ...loggerCategory, wsKey, livenet: this.isLivenet(), linear: this.isLinear(), spot: this.isSpot() });
       this.emit('open', { wsKey, event });
     } else if (this.wsStore.isConnectionState(wsKey, READY_STATE_RECONNECTING)) {
       this.logger.info('Websocket reconnected', { ...loggerCategory, wsKey });
@@ -374,7 +530,10 @@ export class WebsocketClient extends EventEmitter {
 
     this.setWsState(wsKey, READY_STATE_CONNECTED);
 
-    this.requestSubscribeTopics(wsKey, [...this.wsStore.getTopics(wsKey)]);
+    // TODO: persistence not working yet for spot topics
+    if (wsKey !== 'spotPublic' && wsKey !== 'spotPrivate') {
+      this.requestSubscribeTopics(wsKey, [...this.wsStore.getTopics(wsKey)]);
+    }
 
     this.wsStore.get(wsKey, true)!.activePingTimer = setInterval(
       () => this.ping(wsKey),
@@ -383,14 +542,17 @@ export class WebsocketClient extends EventEmitter {
   }
 
   private onWsMessage(event, wsKey: WsKey) {
-    const msg = JSON.parse(event && event.data || event);
-
-    if ('success' in msg) {
-      this.onWsMessageResponse(msg, wsKey);
-    } else if (msg.topic) {
-      this.onWsMessageUpdate(msg);
-    } else {
-      this.logger.warning('Got unhandled ws message', { ...loggerCategory, message: msg, event, wsKey});
+    try {
+      const msg = JSON.parse(event && event.data || event);
+      if ('success' in msg || msg?.pong) {
+        this.onWsMessageResponse(msg, wsKey);
+      } else if (msg.topic) {
+        this.onWsMessageUpdate(msg);
+      } else {
+        this.logger.warning('Got unhandled ws message', { ...loggerCategory, message: msg, event, wsKey});
+      }
+    } catch (e) {
+      this.logger.error('Failed to parse ws event message', { ...loggerCategory, error: e, event, wsKey})
     }
   }
 
@@ -406,10 +568,10 @@ export class WebsocketClient extends EventEmitter {
 
     if (this.wsStore.getConnectionState(wsKey) !== READY_STATE_CLOSING) {
       this.reconnectWithDelay(wsKey, this.options.reconnectTimeout!);
-      this.emit('reconnect');
+      this.emit('reconnect', { wsKey });
     } else {
       this.setWsState(wsKey, READY_STATE_INITIAL);
-      this.emit('close');
+      this.emit('close', { wsKey });
     }
   }
 
@@ -439,7 +601,8 @@ export class WebsocketClient extends EventEmitter {
       return this.options.wsUrl;
     }
 
-    const networkKey = this.options.livenet ? 'livenet' : 'testnet';
+    const networkKey = this.isLivenet() ? 'livenet' : 'testnet';
+    // TODO: reptitive
     if (this.isLinear() || wsKey.startsWith('linear')){
       if (wsKey === wsKeyLinearPublic) {
         return linearEndpoints.public[networkKey];
@@ -452,10 +615,123 @@ export class WebsocketClient extends EventEmitter {
       this.logger.error('Unhandled linear wsKey: ', { ...loggerCategory, wsKey });
       return linearEndpoints[networkKey];
     }
+
+    if (this.isSpot() || wsKey.startsWith('spot')){
+      if (wsKey === wsKeySpotPublic) {
+        return spotEndpoints.public[networkKey];
+      }
+
+      if (wsKey === wsKeySpotPrivate) {
+        return spotEndpoints.private[networkKey];
+      }
+
+      this.logger.error('Unhandled spot wsKey: ', { ...loggerCategory, wsKey });
+      return spotEndpoints[networkKey];
+    }
+
+    // fallback to inverse
     return inverseEndpoints[networkKey];
   }
 
   private getWsKeyForTopic(topic: string) {
-    return this.isInverse() ? wsKeyInverse : getLinearWsKeyForTopic(topic);
+    if (this.isInverse()) {
+      return wsKeyInverse;
+    }
+    if (this.isLinear()) {
+      return getLinearWsKeyForTopic(topic)
+    }
+    return getSpotWsKeyForTopic(topic);
   }
+
+  private wrongMarketError(market: APIMarket) {
+    return new Error(`This WS client was instanced for the ${this.options.market} market. Make another WebsocketClient instance with "market: '${market}' to listen to spot topics`);
+  }
+
+  // TODO: persistance for subbed topics. Look at ftx-api implementation.
+  public subscribePublicSpotTrades(symbol: string, binary?: boolean) {
+    if (!this.isSpot()) {
+      throw this.wrongMarketError('spot');
+    }
+
+    return this.tryWsSend(wsKeySpotPublic, JSON.stringify({
+      topic: 'trade',
+      event: 'sub',
+      symbol,
+      params: {
+        binary: !!binary,
+      }
+    }));
+  }
+
+  public subscribePublicSpotTradingPair(symbol: string, binary?: boolean) {
+    if (!this.isSpot()) {
+      throw this.wrongMarketError('spot');
+    }
+
+    return this.tryWsSend(wsKeySpotPublic, JSON.stringify({
+      symbol,
+      topic: 'realtimes',
+      event: 'sub',
+      params: {
+        binary: !!binary,
+      },
+    }));
+  }
+
+  public subscribePublicSpotV1Kline(symbol: string, candleSize: KlineInterval, binary?: boolean) {
+    if (!this.isSpot()) {
+      throw this.wrongMarketError('spot');
+    }
+
+    return this.tryWsSend(wsKeySpotPublic, JSON.stringify({
+      symbol,
+      topic: 'kline_' + candleSize,
+      event: 'sub',
+      params: {
+        binary: !!binary,
+      },
+    }));
+  }
+
+  //ws.send('{"symbol":"BTCUSDT","topic":"depth","event":"sub","params":{"binary":false}}');
+  //ws.send('{"symbol":"BTCUSDT","topic":"mergedDepth","event":"sub","params":{"binary":false,"dumpScale":1}}');
+  //ws.send('{"symbol":"BTCUSDT","topic":"diffDepth","event":"sub","params":{"binary":false}}');
+  public subscribePublicSpotOrderbook(symbol: string, depth: 'full' | 'merge' | 'delta', dumpScale?: number, binary?: boolean) {
+    if (!this.isSpot()) {
+      throw this.wrongMarketError('spot');
+    }
+
+    let topic: string;
+    switch (depth) {
+      case 'full': {
+        topic = 'depth';
+        break;
+      };
+      case 'merge': {
+        topic = 'mergedDepth';
+        if (!dumpScale) {
+          throw new Error(`Dumpscale must be provided for merged orderbooks`);
+        }
+        break;
+      }
+      case 'delta': {
+        topic = 'diffDepth';
+        break;
+      }
+    }
+
+    const msg: any = {
+      symbol,
+      topic,
+      event: 'sub',
+      params: {
+        binary: !!binary,
+      },
+    };
+    if (dumpScale) {
+      msg.params.dumpScale = dumpScale;
+    }
+    return this.tryWsSend(wsKeySpotPublic, JSON.stringify(msg));
+  }
+
 };

@@ -26,6 +26,7 @@ This project uses typescript. Resources are stored in 3 key structures:
 - [src](./src) - the whole connector written in typescript
 - [lib](./lib) - the javascript version of the project (compiled from typescript). This should not be edited directly, as it will be overwritten with each release.
 - [dist](./dist) - the packed bundle of the project for use in browser environments.
+- [examples](./examples) - some implementation examples & demonstrations. Contributions are welcome!
 
 ---
 
@@ -42,7 +43,7 @@ There are three REST API modules as there are some differences in each contract 
 3. `LinearClient` for linear perpetual
 
 ### REST Inverse
-<details><summary>To use the inverse REST APIs, import the `InverseClient`. Click here to expand and see full sample:</summary>
+To use the inverse REST APIs, import the `InverseClient`:
 
 ```javascript
 const { InverseClient } = require('bybit-api');
@@ -100,12 +101,11 @@ client.getOrderBook({ symbol: 'BTCUSD' })
   });
 ```
 
-</details>
 
 See [inverse-client.ts](./src/inverse-client.ts) for further information.
 
 ### REST Inverse Futures
-<details><summary>To use the inverse futures REST APIs, import the `InverseFuturesClient`. Click here to expand and see full sample:</summary>
+To use the inverse futures REST APIs, import the `InverseFuturesClient`:
 
 ```javascript
 const { InverseFuturesClient } = require('bybit-api');
@@ -142,12 +142,10 @@ client.getOrderBook({ symbol: 'BTCUSDH21' })
   });
 ```
 
-</details>
-
 See [inverse-futures-client.ts](./src/inverse-futures-client.ts) for further information.
 
 ### REST Linear
-<details><summary>To use the Linear (USDT) REST APIs, import the `LinearClient`. Click here to expand and see full sample:</summary>
+To use the Linear (USDT) REST APIs, import the `LinearClient`:
 
 ```javascript
 const { LinearClient } = require('bybit-api');
@@ -184,10 +182,50 @@ client.getOrderBook({ symbol: 'BTCUSDT' })
   });
 ```
 
-</details>
+See [linear-client.ts](./src/linear-client.ts) for further information.
+
+### REST Spot
+To use the Spot REST APIs, import the `SpotClient`:
+
+```javascript
+const { SpotClient } = require('bybit-api');
+
+const API_KEY = 'xxx';
+const PRIVATE_KEY = 'yyy';
+const useLivenet = false;
+
+const client = new javascript(
+  API_KEY,
+  PRIVATE_KEY,
+
+  // optional, uses testnet by default. Set to 'true' to use livenet.
+  useLivenet,
+
+  // restClientOptions,
+  // requestLibraryOptions
+);
+
+client.getSymbols()
+  .then(result => {
+    console.log(result);
+  })
+  .catch(err => {
+    console.error(err);
+  });
+
+client.getBalances()
+  .then(result => {
+    console.log("getBalances result: ", result);
+  })
+  .catch(err => {
+    console.error("getBalances error: ", err);
+  });
+```
+
+See [spot-client.ts](./src/spot-client.ts) for further information.
 
 ## WebSockets
-<details><summary>Inverse & linear WebSockets can be used via a shared `WebsocketClient`. Click here to expand and see full sample:</summary>
+Inverse, linear & spot WebSockets can be used via a shared `WebsocketClient`. However, make sure to make one instance of WebsocketClient per market type (spot vs inverse vs linear vs linearfutures):
 
 ```javascript
 const { WebsocketClient } = require('bybit-api');
@@ -206,8 +244,12 @@ const wsConfig = {
   // defaults to false == testnet. Set to true for livenet.
   // livenet: true
 
-  // defaults to false == inverse. Set to true for linear (USDT) trading.
-  // linear: true
+  // NOTE: to listen to multiple markets (spot vs inverse vs linear vs linearfutures) at once, make one WebsocketClient instance per market
+
+  // defaults to inverse:
+  // market: 'inverse'
+  // market: 'linear'
+  // market: 'spot'
 
   // how long to wait (in ms) before deciding the connection should be terminated & reconnected
   // pongTimeout: 1000,
@@ -263,7 +305,6 @@ ws.on('error', err => {
 });
 ```
 
-</details>
 
 See [websocket-client.ts](./src/websocket-client.ts) for further information.
 
@@ -273,8 +314,6 @@ Note: for linear websockets, pass `linear: true` in the constructor options when
 
 ## Customise Logging
 Pass a custom logger which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired.
-
-<details><summary>Click here to expand and see full sample:</summary>
 
 ```javascript
 const { WebsocketClient, DefaultLogger } = require('bybit-api');
@@ -287,8 +326,6 @@ const ws = new WebsocketClient(
   DefaultLogger
 );
 ```
-
-</details>
 
 ## Browser Usage
 Build a bundle using webpack:
