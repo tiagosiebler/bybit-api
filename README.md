@@ -194,7 +194,7 @@ const API_KEY = 'xxx';
 const PRIVATE_KEY = 'yyy';
 const useLivenet = false;
 
-const client = new javascript(
+const client = new SpotClient(
   API_KEY,
   PRIVATE_KEY,
 

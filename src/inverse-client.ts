@@ -294,6 +294,7 @@ export class InverseClient extends SharedEndpoints {
   setUserLeverage(params: {
     symbol: string;
     leverage: number;
+    leverage_only?: boolean;
   }): GenericAPIResponse {
     return this.requestWrapper.post('v2/private/position/leverage/save', params);
   }
