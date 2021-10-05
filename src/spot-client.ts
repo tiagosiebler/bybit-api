@@ -73,7 +73,7 @@ export class SpotClient extends BaseRestClient {
   }
 
   getCandles(symbol: string, interval: KlineInterval, limit?: number, startTime?: number, endTime?: number) {
-    return this.get('/spot/v1/trades', {
+    return this.get('/spot/quote/v1/kline', {
       symbol,
       interval,
       limit,
