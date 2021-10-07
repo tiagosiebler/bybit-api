@@ -537,14 +537,17 @@ export class WebsocketClient extends EventEmitter {
     (async () => {
       if (wsKey === 'spotPrivate') {
         const { key, secret } = this.options;
-        const timeOffset = await this.restClient.getTimeOffset();
-        const expires = (Date.now() + timeOffset + 5000);
-        const signature = await signMessage('GET/realtime' + expires, secret);
-  
-        this.tryWsSend(wsKey, JSON.stringify({
-          op: 'auth',
-          args: [key, expires, signature]
-        }));
+
+        if (key && secret) {
+          const timeOffset = await this.restClient.getTimeOffset();
+          const expires = (Date.now() + timeOffset + 5000);
+          const signature = await signMessage('GET/realtime' + expires, secret);
+    
+          this.tryWsSend(wsKey, JSON.stringify({
+            op: 'auth',
+            args: [key, expires, signature]
+          }));
+        }
       }
     })();
 
