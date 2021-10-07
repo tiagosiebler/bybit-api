@@ -557,10 +557,16 @@ export class WebsocketClient extends EventEmitter {
   private onWsMessage(event, wsKey: WsKey) {
     try {
       const msg = JSON.parse(event && event.data || event);
-      if ('success' in msg || msg?.pong) {
+      if ('success' in msg || msg?.pong || msg?.auth === 'success' || msg?.ping) {
         this.onWsMessageResponse(msg, wsKey);
       } else if (msg.topic) {
         this.onWsMessageUpdate(msg);
+      } else if (Array.isArray(msg)) {
+        for (const item of msg) {
+          if (['outboundAccountInfo', 'executionReport', 'ticketInfo'].includes(item.e)) {
+            this.onWsMessageUpdate(msg);
+          }
+        }
       } else {
         this.logger.warning('Got unhandled ws message', { ...loggerCategory, message: msg, event, wsKey});
       }
