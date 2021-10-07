@@ -219,7 +219,6 @@ export class WebsocketClient extends EventEmitter {
     } else if (this.isSpot()) {
       // TODO: spot client
       this.restClient = new LinearClient(undefined, undefined, this.isLivenet(), this.options.restOptions, this.options.requestOptions);
-      this.connectPublic();
     } else {
       this.restClient = new InverseClient(undefined, undefined, this.isLivenet(), this.options.restOptions, this.options.requestOptions);
     }
@@ -534,6 +533,20 @@ export class WebsocketClient extends EventEmitter {
     if (wsKey !== 'spotPublic' && wsKey !== 'spotPrivate') {
       this.requestSubscribeTopics(wsKey, [...this.wsStore.getTopics(wsKey)]);
     }
+
+    (async () => {
+      if (wsKey === 'spotPrivate') {
+        const { key, secret } = this.options;
+        const timeOffset = await this.restClient.getTimeOffset();
+        const expires = (Date.now() + timeOffset + 5000);
+        const signature = await signMessage('GET/realtime' + expires, secret);
+  
+        this.tryWsSend(wsKey, JSON.stringify({
+          op: 'auth',
+          args: [key, expires, signature]
+        }));
+      }
+    })();
 
     this.wsStore.get(wsKey, true)!.activePingTimer = setInterval(
       () => this.ping(wsKey),
