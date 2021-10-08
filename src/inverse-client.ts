@@ -77,19 +77,6 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.get('v2/public/trading-records', params);
   }
 
-  /**
-   * @deprecated use getLiquidations() instead
-   */
-  getPublicLiquidations(params: {
-    symbol: string;
-    from?: number;
-    limit?: number;
-    start_time?: number;
-    end_time?: number;
-  }): GenericAPIResponse {
-    return this.getLiquidations(params);
-  }
-
   getMarkPriceKline(params: {
     symbol: string;
     interval: string;

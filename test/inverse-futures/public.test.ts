@@ -55,10 +55,6 @@ describe('Public Inverse Futures REST API Endpoints', () => {
       expect(await api.getSymbols()).toMatchObject(successResponseList());
     });
 
-    it('getLiquidations()', async () => {
-      expect(await api.getLiquidations({ symbol })).toMatchObject(successResponseList());
-    });
-
     it('getServerTime()', async () => {
       expect(await api.getServerTime()).toMatchObject(successResponseObject());
     });

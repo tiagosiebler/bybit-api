@@ -31,19 +31,6 @@ export default class SharedEndpoints {
   }
 
   /**
-   * Get liquidated orders
-   */
-  getLiquidations(params: {
-    symbol: string;
-    from?: number;
-    limit?: number;
-    start_time?: number;
-    end_time?: number;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/liq-records', params);
-  }
-
-  /**
    *
    * Market Data : Advanced
    *
