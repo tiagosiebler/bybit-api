@@ -512,7 +512,7 @@ export class WebsocketClient extends EventEmitter {
     this.logger.silly(`Opening WS connection to URL: ${url}`, { ...loggerCategory, wsKey })
 
     const ws = new WebSocket(url);
-    ws.onopen = async event => await this.onWsOpen(event, wsKey);
+    ws.onopen = event => this.onWsOpen(event, wsKey);
     ws.onmessage = event => this.onWsMessage(event, wsKey);
     ws.onerror = event => this.onWsError(event, wsKey);
     ws.onclose = event => this.onWsClose(event, wsKey);
