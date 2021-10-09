@@ -395,13 +395,15 @@ export class WebsocketClient extends EventEmitter {
       this.logger.debug('Getting auth\'d request params', { ...loggerCategory, wsKey });
 
       const timeOffset = await this.restClient.getTimeOffset();
+      const expires = Date.now() + timeOffset + 5000;
+      const signature = await signMessage('GET/realtime' + expires, secret);
 
       const params: any = {
         api_key: this.options.key,
-        expires: (Date.now() + timeOffset + 5000)
+        expires: expires,
+        signature: signature
       };
 
-      params.signature = await signMessage('GET/realtime' + params.expires, secret);
       return '?' + serializeParams(params);
 
     } else if (!key || !secret) {
@@ -510,7 +512,7 @@ export class WebsocketClient extends EventEmitter {
     this.logger.silly(`Opening WS connection to URL: ${url}`, { ...loggerCategory, wsKey })
 
     const ws = new WebSocket(url);
-    ws.onopen = event => this.onWsOpen(event, wsKey);
+    ws.onopen = async event => await this.onWsOpen(event, wsKey);
     ws.onmessage = event => this.onWsMessage(event, wsKey);
     ws.onerror = event => this.onWsError(event, wsKey);
     ws.onclose = event => this.onWsClose(event, wsKey);
@@ -518,7 +520,7 @@ export class WebsocketClient extends EventEmitter {
     return ws;
   }
 
-  private onWsOpen(event, wsKey: WsKey) {
+  private async onWsOpen(event, wsKey: WsKey) {
     if (this.wsStore.isConnectionState(wsKey, READY_STATE_CONNECTING)) {
       this.logger.info('Websocket connected', { ...loggerCategory, wsKey, livenet: this.isLivenet(), linear: this.isLinear(), spot: this.isSpot() });
       this.emit('open', { wsKey, event });
@@ -534,22 +536,9 @@ export class WebsocketClient extends EventEmitter {
       this.requestSubscribeTopics(wsKey, [...this.wsStore.getTopics(wsKey)]);
     }
 
-    (async () => {
-      if (wsKey === 'spotPrivate') {
-        const { key, secret } = this.options;
-
-        if (key && secret) {
-          const timeOffset = await this.restClient.getTimeOffset();
-          const expires = (Date.now() + timeOffset + 5000);
-          const signature = await signMessage('GET/realtime' + expires, secret);
-    
-          this.tryWsSend(wsKey, JSON.stringify({
-            op: 'auth',
-            args: [key, expires, signature]
-          }));
-        }
-      }
-    })();
+    if (wsKey === 'spotPrivate') {
+      await this.authenticatePrivateSpot();
+    }
 
     this.wsStore.get(wsKey, true)!.activePingTimer = setInterval(
       () => this.ping(wsKey),
@@ -667,6 +656,21 @@ export class WebsocketClient extends EventEmitter {
 
   private wrongMarketError(market: APIMarket) {
     return new Error(`This WS client was instanced for the ${this.options.market} market. Make another WebsocketClient instance with "market: '${market}' to listen to spot topics`);
+  }
+
+  private async authenticatePrivateSpot() {
+    const { key, secret } = this.options;
+
+    if (key && secret) {
+      const timeOffset = await this.restClient.getTimeOffset();
+      const expires = Date.now() + timeOffset + 5000;
+      const signature = await signMessage('GET/realtime' + expires, secret);
+
+      this.tryWsSend(wsKeySpotPrivate, JSON.stringify({
+        op: 'auth',
+        args: [key, expires, signature]
+      }));
+    }
   }
 
   // TODO: persistance for subbed topics. Look at ftx-api implementation.
