@@ -549,8 +549,14 @@ export class WebsocketClient extends EventEmitter {
   private onWsMessage(event, wsKey: WsKey) {
     try {
       const msg = JSON.parse(event && event.data || event);
-      if ('success' in msg || msg?.pong || msg?.auth === 'success' || msg?.ping) {
+      if ('success' in msg || msg?.pong || msg?.ping) {
         this.onWsMessageResponse(msg, wsKey);
+      } else if (msg?.auth) {
+        if (msg?.auth === 'success') {
+          this.logger.info('Authenticated', { ...loggerCategory, wsKey });
+        } else {
+          this.logger.warning('Fail to authenticated', { ...loggerCategory, message: msg, event, wsKey});
+        }
       } else if (msg.topic) {
         this.onWsMessageUpdate(msg);
       } else if (Array.isArray(msg)) {
