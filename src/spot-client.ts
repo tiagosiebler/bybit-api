@@ -66,7 +66,7 @@ export class SpotClient extends BaseRestClient {
   }
 
   getTrades(symbol: string, limit?: number) {
-    return this.get('/spot/v1/trades', {
+    return this.get('/spot/quote/v1/trades', {
       symbol,
       limit,
     });
