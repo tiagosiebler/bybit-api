@@ -124,6 +124,8 @@ export class InverseClient extends SharedEndpoints {
     take_profit?: number;
     stop_loss?: number;
     reduce_only?: boolean;
+    tp_trigger_by?: boolean;
+    sl_trigger_by?: boolean;
     close_on_trigger?: boolean;
     order_link_id?: string;
   }): GenericAPIResponse {
