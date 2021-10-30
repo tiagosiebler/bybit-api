@@ -110,7 +110,7 @@ export class InverseClient extends SharedEndpoints {
    *
    */
 
-	/**
+  /**
    * Active orders
    */
 
@@ -124,8 +124,8 @@ export class InverseClient extends SharedEndpoints {
     take_profit?: number;
     stop_loss?: number;
     reduce_only?: boolean;
-    tp_trigger_by?: boolean;
-    sl_trigger_by?: boolean;
+    tp_trigger_by?: 'LastPrice' | 'MarkPrice' | 'IndexPrice';
+    sl_trigger_by?: 'LastPrice' | 'MarkPrice' | 'IndexPrice';
     close_on_trigger?: boolean;
     order_link_id?: string;
   }): GenericAPIResponse {
@@ -174,7 +174,7 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.get('v2/private/order', params);
   }
 
-	/**
+  /**
    * Conditional orders
    */
 
@@ -237,7 +237,7 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.get('v2/private/stop-order', params);
   }
 
-	/**
+  /**
    * Position
    */
 
@@ -340,7 +340,7 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.post('v2/private/position/switch-isolated', params);
   }
 
-	/**
+  /**
    * Risk Limit
    */
 
@@ -355,7 +355,7 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.post('open-api/wallet/risk-limit', params);
   }
 
-	/**
+  /**
    * Funding
    */
 
@@ -377,7 +377,7 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.get('v2/private/funding/predicted-funding', params);
   }
 
-	/**
+  /**
    * LCP Info
    */
 
