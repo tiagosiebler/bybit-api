@@ -510,7 +510,8 @@ export class WebsocketClient extends EventEmitter {
   private connectToWsUrl(url: string, wsKey: WsKey): WebSocket {
     this.logger.silly(`Opening WS connection to URL: ${url}`, { ...loggerCategory, wsKey })
 
-    const ws = new WebSocket(url);
+    const agent = this.options.requestOptions?.agent;
+    const ws = new WebSocket(url, undefined, agent ? { agent } : undefined);
     ws.onopen = event => this.onWsOpen(event, wsKey);
     ws.onmessage = event => this.onWsMessage(event, wsKey);
     ws.onerror = event => this.onWsError(event, wsKey);
