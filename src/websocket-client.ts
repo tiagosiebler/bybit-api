@@ -404,7 +404,10 @@ export class WebsocketClient extends EventEmitter {
         signature: signature
       };
 
-      return '?' + serializeParams(params);
+      return wsKey === wsKeySpotPrivate ? JSON.stringify({
+        op: 'auth',
+        args: [key, expires, signature]
+      }) : '?' + serializeParams(params);
 
     } else if (!key || !secret) {
       this.logger.warning('Connot authenticate websocket, either api or private keys missing.', { ...loggerCategory, wsKey });
@@ -537,7 +540,7 @@ export class WebsocketClient extends EventEmitter {
     }
 
     if (wsKey === 'spotPrivate') {
-      await this.authenticatePrivateSpot();
+      this.tryWsSend(wsKeySpotPrivate, await this.getAuthParams(wsKeySpotPrivate));
     }
 
     this.wsStore.get(wsKey, true)!.activePingTimer = setInterval(
@@ -662,21 +665,6 @@ export class WebsocketClient extends EventEmitter {
 
   private wrongMarketError(market: APIMarket) {
     return new Error(`This WS client was instanced for the ${this.options.market} market. Make another WebsocketClient instance with "market: '${market}' to listen to spot topics`);
-  }
-
-  private async authenticatePrivateSpot() {
-    const { key, secret } = this.options;
-
-    if (key && secret) {
-      const timeOffset = await this.restClient.getTimeOffset();
-      const expires = Date.now() + timeOffset + 5000;
-      const signature = await signMessage('GET/realtime' + expires, secret);
-
-      this.tryWsSend(wsKeySpotPrivate, JSON.stringify({
-        op: 'auth',
-        args: [key, expires, signature]
-      }));
-    }
   }
 
   // TODO: persistance for subbed topics. Look at ftx-api implementation.
