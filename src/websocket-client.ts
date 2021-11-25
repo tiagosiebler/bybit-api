@@ -398,16 +398,20 @@ export class WebsocketClient extends EventEmitter {
       const expires = Date.now() + timeOffset + 5000;
       const signature = await signMessage('GET/realtime' + expires, secret);
 
+      if (wsKey === wsKeySpotPrivate) {
+        return JSON.stringify({
+          op: 'auth',
+          args: [key, expires, signature]
+        });
+      }
+
       const params: any = {
-        api_key: this.options.key,
+        api_key: key,
         expires: expires,
         signature: signature
       };
 
-      return wsKey === wsKeySpotPrivate ? JSON.stringify({
-        op: 'auth',
-        args: [key, expires, signature]
-      }) : '?' + serializeParams(params);
+      return '?' + serializeParams(params);
 
     } else if (!key || !secret) {
       this.logger.warning('Connot authenticate websocket, either api or private keys missing.', { ...loggerCategory, wsKey });
