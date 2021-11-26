@@ -388,7 +388,7 @@ export class WebsocketClient extends EventEmitter {
   /**
    * Return params required to make authorized request
    */
-  private async getAuthParams(wsKey: WsKey): Promise<string> {
+  private async getAuthParams(wsKey: WsKey, authSpotPrivate=false): Promise<string> {
     const { key, secret } = this.options;
 
     if (key && secret && wsKey !== wsKeyLinearPublic && wsKey !== wsKeySpotPublic) {
@@ -398,7 +398,7 @@ export class WebsocketClient extends EventEmitter {
       const expires = Date.now() + timeOffset + 5000;
       const signature = await signMessage('GET/realtime' + expires, secret);
 
-      if (wsKey === wsKeySpotPrivate) {
+      if (authSpotPrivate) {
         return JSON.stringify({
           op: 'auth',
           args: [key, expires, signature]
@@ -544,7 +544,7 @@ export class WebsocketClient extends EventEmitter {
     }
 
     if (wsKey === 'spotPrivate') {
-      this.tryWsSend(wsKeySpotPrivate, await this.getAuthParams(wsKeySpotPrivate));
+      this.tryWsSend(wsKeySpotPrivate, await this.getAuthParams(wsKeySpotPrivate, true));
     }
 
     this.wsStore.get(wsKey, true)!.activePingTimer = setInterval(
