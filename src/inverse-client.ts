@@ -386,4 +386,10 @@ export class InverseClient extends SharedEndpoints {
   }): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/account/lcp', params);
   }
+  
+  //API Key Info
+  getAPIKeyInfo(): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/account/api-key');
+  }
+
 };
