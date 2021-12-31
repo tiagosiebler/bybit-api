@@ -14,7 +14,6 @@
     "sourceMap": true,
     "esModuleInterop": true,
     "lib": ["es2017","dom"],
-    "baseUrl": ".",
     "outDir": "lib"
   },
   "include": ["src/**/*"],
