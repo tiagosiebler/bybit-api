@@ -544,6 +544,9 @@ export class WebsocketClient extends EventEmitter {
 
   private onWsMessage(event, wsKey: WsKey) {
     try {
+      // any message can clear the pong timer - wouldn't get a message if the ws dropped
+      this.clearPongTimer(wsKey);
+
       const msg = JSON.parse(event && event.data || event);
       if ('success' in msg || msg?.pong) {
         this.onWsMessageResponse(msg, wsKey);
@@ -579,7 +582,6 @@ export class WebsocketClient extends EventEmitter {
   private onWsMessageResponse(response: any, wsKey: WsKey) {
     if (isWsPong(response)) {
       this.logger.silly('Received pong', { ...loggerCategory, wsKey });
-      this.clearPongTimer(wsKey);
     } else {
       this.emit('response', response);
     }

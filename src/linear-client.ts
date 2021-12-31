@@ -2,6 +2,7 @@ import { AxiosRequestConfig } from 'axios';
 import { GenericAPIResponse, getRestBaseUrl, RestClientOptions } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
 import SharedEndpoints from './shared-endpoints';
+import { SymbolIntervalFromLimitParam, SymbolLimitParam, SymbolParam } from '.';
 
 export class LinearClient extends SharedEndpoints {
   protected requestWrapper: RequestWrapper;
@@ -40,52 +41,27 @@ export class LinearClient extends SharedEndpoints {
    *
    */
 
-  getKline(params: {
-    symbol: string;
-    interval: string;
-    from: number;
-    limit?: number;
-  }): GenericAPIResponse {
+  getKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
     return this.requestWrapper.get('public/linear/kline', params);
   }
 
-  getTrades(params: {
-    symbol: string;
-    limit?: number;
-  }): GenericAPIResponse {
+  getTrades(params: SymbolLimitParam): GenericAPIResponse {
     return this.requestWrapper.get('public/linear/recent-trading-records', params);
   }
 
-  getLastFundingRate(params: {
-    symbol: string;
-  }): GenericAPIResponse {
+  getLastFundingRate(params: SymbolParam): GenericAPIResponse {
     return this.requestWrapper.get('public/linear/funding/prev-funding-rate', params);
   }
 
-  getMarkPriceKline(params: {
-    symbol: string;
-    interval: string;
-    from: number;
-    limit?: number;
-  }): GenericAPIResponse {
+  getMarkPriceKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
     return this.requestWrapper.get('public/linear/mark-price-kline', params);
   }
 
-  getIndexPriceKline(params: {
-    symbol: string;
-    interval: string;
-    from: number;
-    limit?: number;
-  }): GenericAPIResponse {
+  getIndexPriceKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
     return this.requestWrapper.get('public/linear/index-price-kline', params);
   }
 
-  getPremiumIndexKline(params: {
-    symbol: string;
-    interval: string;
-    from: number;
-    limit?: number;
-  }): GenericAPIResponse {
+  getPremiumIndexKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
     return this.requestWrapper.get('public/linear/premium-index-kline', params);
   }
 
@@ -133,9 +109,7 @@ export class LinearClient extends SharedEndpoints {
     return this.requestWrapper.post('private/linear/order/cancel', params);
   }
 
-  cancelAllActiveOrders(params: {
-    symbol: string;
-  }): GenericAPIResponse {
+  cancelAllActiveOrders(params: SymbolParam): GenericAPIResponse {
     return this.requestWrapper.post('private/linear/order/cancel-all', params);
   }
 
@@ -206,9 +180,7 @@ export class LinearClient extends SharedEndpoints {
     return this.requestWrapper.post('private/linear/stop-order/cancel', params);
   }
 
-  cancelAllConditionalOrders(params: {
-    symbol: string;
-  }): GenericAPIResponse {
+  cancelAllConditionalOrders(params: SymbolParam): GenericAPIResponse {
     return this.requestWrapper.post('private/linear/stop-order/cancel-all', params);
   }
 
@@ -239,9 +211,7 @@ export class LinearClient extends SharedEndpoints {
    * Position
    */
 
-  getPosition(params?: {
-    symbol?: string;
-  }): GenericAPIResponse {
+  getPosition(params?: Partial<SymbolParam>): GenericAPIResponse {
     return this.requestWrapper.get('private/linear/position/list', params);
   }
 
@@ -325,9 +295,7 @@ export class LinearClient extends SharedEndpoints {
   * Risk Limit
   */
 
-  getRiskLimitList(params: {
-    symbol: string;
-  }): GenericAPIResponse {
+  getRiskLimitList(params: SymbolParam): GenericAPIResponse {
     return this.requestWrapper.get('public/linear/risk-limit', params);
   }
 
@@ -343,15 +311,11 @@ export class LinearClient extends SharedEndpoints {
   * Funding
   */
 
-  getPredictedFundingFee(params: {
-    symbol: string;
-  }): GenericAPIResponse {
+  getPredictedFundingFee(params: SymbolParam): GenericAPIResponse {
     return this.requestWrapper.get('private/linear/funding/predicted-funding', params);
   }
 
-  getLastFundingFee(params: {
-    symbol: string;
-  }): GenericAPIResponse {
+  getLastFundingFee(params: SymbolParam): GenericAPIResponse {
     return this.requestWrapper.get('private/linear/funding/prev-funding', params);
   }
 }

@@ -1,3 +1,14 @@
+import {
+  APIResponse,
+  AssetExchangeRecordsReq,
+  CoinParam,
+  SymbolInfo,
+  SymbolLimitParam,
+  SymbolParam,
+  SymbolPeriodLimitParam,
+  WalletFundRecordsReq,
+  WithdrawRecordsReq,
+} from './types/shared';
 import { GenericAPIResponse } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
 
@@ -11,22 +22,18 @@ export default class SharedEndpoints {
    *
    */
 
-  getOrderBook(params: {
-    symbol: string;
-  }): GenericAPIResponse {
+  getOrderBook(params: SymbolParam): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/orderBook/L2', params);
   }
 
   /**
    * Get latest information for symbol
    */
-  getTickers(params?: {
-    symbol?: string;
-  }): GenericAPIResponse {
+  getTickers(params?: Partial<SymbolParam>): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/tickers', params);
   }
 
-  getSymbols(): GenericAPIResponse {
+  getSymbols(): Promise<APIResponse<SymbolInfo[]>> {
     return this.requestWrapper.get('v2/public/symbols');
   }
 
@@ -36,26 +43,15 @@ export default class SharedEndpoints {
    *
    */
 
-  getOpenInterest(params: {
-    symbol: string;
-    period: string;
-    limit?: number;
-  }): GenericAPIResponse {
+  getOpenInterest(params: SymbolPeriodLimitParam): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/open-interest', params);
   }
 
-  getLatestBigDeal(params: {
-    symbol: string;
-    limit?: number;
-  }): GenericAPIResponse {
+  getLatestBigDeal(params: SymbolLimitParam): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/big-deal', params);
   }
 
-  getLongShortRatio(params: {
-    symbol: string;
-    period: string;
-    limit?: number;
-  }): GenericAPIResponse {
+  getLongShortRatio(params: SymbolPeriodLimitParam): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/account-ratio', params);
   }
 
@@ -75,40 +71,19 @@ export default class SharedEndpoints {
    *
    */
 
-  getWalletBalance(params: {
-    coin?: string;
-  }): GenericAPIResponse {
+  getWalletBalance(params?: Partial<CoinParam>): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/wallet/balance', params)
   }
 
-  getWalletFundRecords(params?: {
-    start_date?: string;
-    end_date?: string;
-    currency?: string;
-    coin?: string;
-    wallet_fund_type?: string;
-    page?: number;
-    limit?: number;
-  }): GenericAPIResponse {
+  getWalletFundRecords(params?: WalletFundRecordsReq): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/wallet/fund/records', params);
   }
 
-  getWithdrawRecords(params: {
-    start_date?: string;
-    end_date?: string;
-    coin?: string;
-    status?: string;
-    page?: number;
-    limit?: number;
-  }): GenericAPIResponse {
+  getWithdrawRecords(params: WithdrawRecordsReq): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/wallet/withdraw/list', params);
   }
 
-  getAssetExchangeRecords(params?: {
-    limit?: number;
-    from?: number;
-    direction?: string;
-  }): GenericAPIResponse {
+  getAssetExchangeRecords(params?: AssetExchangeRecordsReq): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/exchange-order/list', params);
   }
 

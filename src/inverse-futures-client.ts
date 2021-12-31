@@ -2,6 +2,7 @@ import { AxiosRequestConfig } from 'axios';
 import { GenericAPIResponse, getRestBaseUrl, RestClientOptions } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
 import SharedEndpoints from './shared-endpoints';
+import { SymbolFromLimitParam, SymbolIntervalFromLimitParam, SymbolParam } from './types/shared';
 
 export class InverseFuturesClient extends SharedEndpoints {
   protected requestWrapper: RequestWrapper;
@@ -40,50 +41,26 @@ export class InverseFuturesClient extends SharedEndpoints {
    *    Note: These are currently the same as the inverse client
    */
 
-  getKline(params: {
-    symbol: string;
-    interval: string;
-    from: number;
-    limit?: number;
-  }): GenericAPIResponse {
+  getKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/kline/list', params);
   }
 
   /**
    * Public trading records
    */
-  getTrades(params: {
-    symbol: string;
-    from?: number;
-    limit?: number;
-  }): GenericAPIResponse {
+  getTrades(params: SymbolFromLimitParam): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/trading-records', params);
   }
 
-  getMarkPriceKline(params: {
-    symbol: string;
-    interval: string;
-    from: number;
-    limit?: number;
-  }): GenericAPIResponse {
+  getMarkPriceKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/mark-price-kline', params);
   }
 
-  getIndexPriceKline(params: {
-    symbol: string;
-    interval: string;
-    from: number;
-    limit?: number;
-  }): GenericAPIResponse {
+  getIndexPriceKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/index-price-kline', params);
   }
 
-  getPremiumIndexKline(params: {
-    symbol: string;
-    interval: string;
-    from: number;
-    limit?: number;
-  }): GenericAPIResponse {
+  getPremiumIndexKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/premium-index-kline', params);
   }
 
@@ -131,9 +108,7 @@ export class InverseFuturesClient extends SharedEndpoints {
     return this.requestWrapper.post('futures/private/order/cancel', params);
   }
 
-  cancelAllActiveOrders(params: {
-    symbol: string;
-  }): GenericAPIResponse {
+  cancelAllActiveOrders(params: SymbolParam): GenericAPIResponse {
     return this.requestWrapper.post('futures/private/order/cancelAll', params);
   }
 
@@ -193,9 +168,7 @@ export class InverseFuturesClient extends SharedEndpoints {
     return this.requestWrapper.post('futures/private/stop-order/cancel', params);
   }
 
-  cancelAllConditionalOrders(params: {
-    symbol: string;
-  }): GenericAPIResponse {
+  cancelAllConditionalOrders(params: SymbolParam): GenericAPIResponse {
     return this.requestWrapper.post('futures/private/stop-order/cancelAll', params);
   }
 
@@ -226,9 +199,7 @@ export class InverseFuturesClient extends SharedEndpoints {
   /**
    * Get position list
    */
-  getPosition(params?: {
-    symbol?: string;
-  }): GenericAPIResponse {
+  getPosition(params?: Partial<SymbolParam>): GenericAPIResponse {
     return this.requestWrapper.get('futures/private/position/list', params);
   }
 
@@ -325,21 +296,15 @@ export class InverseFuturesClient extends SharedEndpoints {
    * Funding
    */
 
-  getLastFundingRate(params: {
-    symbol: string;
-  }): GenericAPIResponse {
+  getLastFundingRate(params: SymbolParam): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/funding/prev-funding-rate', params);
   }
 
-  getMyLastFundingFee(params: {
-    symbol: string;
-  }): GenericAPIResponse {
+  getMyLastFundingFee(params: SymbolParam): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/funding/prev-funding', params);
   }
 
-  getPredictedFunding(params: {
-    symbol: string;
-  }): GenericAPIResponse {
+  getPredictedFunding(params: SymbolParam): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/funding/predicted-funding', params);
   }
 
@@ -347,9 +312,7 @@ export class InverseFuturesClient extends SharedEndpoints {
    * LCP Info
    */
 
-  getLcpInfo(params: {
-    symbol: string;
-  }): GenericAPIResponse {
+  getLcpInfo(params: SymbolParam): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/account/lcp', params);
   }
 };
