@@ -56,18 +56,18 @@ export default class RequestUtil {
     this.secret = secret;
   }
 
-  get(endpoint: string, params?: any): GenericAPIResponse {
+  get<T>(endpoint: string, params?: any): Promise<T> {
     return this._call('GET', endpoint, params);
   }
 
-  post(endpoint: string, params?: any): GenericAPIResponse {
+  post<T>(endpoint: string, params?: any): Promise<T> {
     return this._call('POST', endpoint, params);
   }
 
   /**
    * @private Make a HTTP request to a specific endpoint. Private endpoints are automatically signed.
    */
-  async _call(method: Method, endpoint: string, params?: any): GenericAPIResponse {
+  async _call<T>(method: Method, endpoint: string, params?: any): Promise<T> {
     if (!isPublicEndpoint(endpoint)) {
       if (!this.key || !this.secret) {
         throw new Error('Private endpoints require api and private keys set');
@@ -183,7 +183,7 @@ export default class RequestUtil {
    */
   async getTimeOffset(): Promise<number> {
     const start = Date.now();
-    const result = await this.get('v2/public/time');
+    const result = await this.get<any>('v2/public/time');
     const end = Date.now();
 
     return Math.ceil((result.time_now * 1000) - end + ((end - start) / 2));
