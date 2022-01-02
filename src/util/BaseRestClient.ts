@@ -99,7 +99,7 @@ export default abstract class BaseRestClient {
       json: true
     };
 
-    if (method === 'GET') {
+    if (method === 'GET' || endpoint.includes('spot')) {
       options.params = params;
     } else {
       options.data = params;
