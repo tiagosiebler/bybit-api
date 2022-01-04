@@ -136,12 +136,14 @@ export class SpotClient {
     });
   }
 
-  getMyTrades(symbol?: string, limit?: number, fromId?: number, toId?: number) {
+  getMyTrades(symbol?: string, limit?: number, fromId?: number, toId?: number, startTime?: number, endTime?: number) {
     return this.requestWrapper.get('spot/v1/myTrades', {
       symbol,
       limit,
       fromId,
       toId,
+      startTime,
+      endTime
     });
   }
 
