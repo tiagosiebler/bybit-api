@@ -21,23 +21,23 @@ export function successResponseObject() {
   };
 };
 
-export function successResponseListSpot() {
+export function successResponseListSpot(msg: null | string = null) {
   return {
     "ext_code": null,
     "ext_info": null,
     "result": expect.any(Array),
     "ret_code": 0,
-    "ret_msg": "",
+    "ret_msg": msg,
   };
 };
 
-export function successResponseObjectSpot() {
+export function successResponseObjectSpot(msg: null | string = null) {
   return {
     "ext_code": null,
     "ext_info": null,
     "result": expect.any(Object),
     "ret_code": 0,
-    "ret_msg": "",
+    "ret_msg": msg,
   };
 };
 

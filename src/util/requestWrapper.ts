@@ -64,6 +64,10 @@ export default class RequestUtil {
     return this._call('POST', endpoint, params);
   }
 
+  delete<T>(endpoint: string, params?: any): Promise<T> {
+    return this._call('DELETE', endpoint, params);
+  }
+
   /**
    * @private Make a HTTP request to a specific endpoint. Private endpoints are automatically signed.
    */
