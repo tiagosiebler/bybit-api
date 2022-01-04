@@ -1,11 +1,10 @@
 import { AxiosRequestConfig } from 'axios';
-import { KlineInterval } from './types/shared';
+import {KlineInterval, APIResponse, SymbolInfo} from './types/shared';
 import { NewSpotOrder, OrderSide, OrderTypeSpot, SpotOrderQueryById } from './types/spot';
-import BaseRestClient from './util/BaseRestClient';
 import { GenericAPIResponse, getRestBaseUrl, RestClientOptions } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
 
-export class SpotClient extends BaseRestClient {
+export class SpotClient {
   protected requestWrapper: RequestWrapper;
 
   /**
@@ -24,21 +23,18 @@ export class SpotClient extends BaseRestClient {
     restClientOptions: RestClientOptions = {},
     requestOptions: AxiosRequestConfig = {}
   ) {
-    super(key, secret, getRestBaseUrl(useLivenet, restClientOptions), restClientOptions, requestOptions);
-
-    // this.requestWrapper = new RequestWrapper(
-    //   key,
-    //   secret,
-    //   getRestBaseUrl(useLivenet, restClientOptions),
-    //   restClientOptions,
-    //   requestOptions
-    // );
+    this.requestWrapper = new RequestWrapper(
+      key,
+      secret,
+      getRestBaseUrl(useLivenet, restClientOptions),
+      restClientOptions,
+      requestOptions
+    );
     return this;
   }
 
-  async getServerTime(urlKeyOverride?: string): Promise<number> {
-    const result = await this.get('/spot/v1/time');
-    return result.serverTime;
+  getServerTime(): GenericAPIResponse {
+    return this.requestWrapper.get('spot/v1/time');
   }
 
   /**
@@ -47,18 +43,23 @@ export class SpotClient extends BaseRestClient {
    *
   **/
 
-  getSymbols() {
-    return this.get('/spot/v1/symbols');
+
+  getSymbols(): Promise<APIResponse<SymbolInfo[]>> {
+    return this.requestWrapper.get('spot/v1/symbols');
   }
 
+  /*
+
+
+
   getOrderBook(symbol: string, limit?: number) {
-    return this.get('/spot/quote/v1/depth', {
+    return this.requestWrapper.get('/spot/quote/v1/depth', {
       symbol, limit
     });
   }
 
   getMergedOrderBook(symbol: string, scale?: number, limit?: number) {
-    return this.get('/spot/quote/v1/depth/merged', {
+    return this.requestWrapper.get('/spot/quote/v1/depth/merged', {
       symbol,
       scale,
       limit,
@@ -66,14 +67,14 @@ export class SpotClient extends BaseRestClient {
   }
 
   getTrades(symbol: string, limit?: number) {
-    return this.get('/spot/quote/v1/trades', {
+    return this.requestWrapper.get('/spot/quote/v1/trades', {
       symbol,
       limit,
     });
   }
 
   getCandles(symbol: string, interval: KlineInterval, limit?: number, startTime?: number, endTime?: number) {
-    return this.get('/spot/quote/v1/kline', {
+    return this.requestWrapper.get('/spot/quote/v1/kline', {
       symbol,
       interval,
       limit,
@@ -83,27 +84,25 @@ export class SpotClient extends BaseRestClient {
   }
 
   get24hrTicker(symbol?: string) {
-    return this.get('/spot/quote/v1/ticker/24hr', { symbol });
+    return this.requestWrapper.get('/spot/quote/v1/ticker/24hr', { symbol });
   }
 
   getLastTradedPrice(symbol?: string) {
-    return this.get('/spot/quote/v1/ticker/price', { symbol });
+    return this.requestWrapper.get('/spot/quote/v1/ticker/price', { symbol });
   }
 
   getBestBidAskPrice(symbol?: string) {
-    return this.get('/spot/quote/v1/ticker/book_ticker', { symbol });
+    return this.requestWrapper.get('/spot/quote/v1/ticker/book_ticker', { symbol });
   }
 
-  /**
-   * Account Data Endpoints
-   */
+
 
   submitOrder(params: NewSpotOrder) {
     return this.postPrivate('/spot/v1/order', params);
   }
 
   getOrder(params: SpotOrderQueryById) {
-    return this.getPrivate('/spot/v1/order', params);
+    return this.requestWrapper.getPrivate('/spot/v1/order', params);
   }
 
   cancelOrder(params: SpotOrderQueryById) {
@@ -123,7 +122,7 @@ export class SpotClient extends BaseRestClient {
   }
 
   getOpenOrders(symbol?: string, orderId?: string, limit?: number) {
-    return this.getPrivate('/spot/v1/open-orders', {
+    return this.requestWrapper.getPrivate('/spot/v1/open-orders', {
       symbol,
       orderId,
       limit,
@@ -131,7 +130,7 @@ export class SpotClient extends BaseRestClient {
   }
 
   getPastOrders(symbol?: string, orderId?: string, limit?: number) {
-    return this.getPrivate('/spot/v1/history-orders', {
+    return this.requestWrapper.getPrivate('/spot/v1/history-orders', {
       symbol,
       orderId,
       limit,
@@ -139,7 +138,7 @@ export class SpotClient extends BaseRestClient {
   }
 
   getMyTrades(symbol?: string, limit?: number, fromId?: number, toId?: number) {
-    return this.getPrivate('/spot/v1/myTrades', {
+    return this.requestWrapper.getPrivate('/spot/v1/myTrades', {
       symbol,
       limit,
       fromId,
@@ -147,11 +146,10 @@ export class SpotClient extends BaseRestClient {
     });
   }
 
-  /**
-   * Wallet Data Endpoints
-   */
 
   getBalances() {
-    return this.getPrivate('/spot/v1/account');
+    return this.requestWrapper.getPrivate('/spot/v1/account');
   }
+
+  */
 }

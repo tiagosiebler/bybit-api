@@ -51,11 +51,17 @@ export function getRestBaseUrl(useLivenet: boolean, restInverseOptions: RestClie
 }
 
 export function isPublicEndpoint (endpoint: string): boolean {
-  if (endpoint.startsWith('v2/public')) {
-    return true;
-  }
-  if (endpoint.startsWith('public/linear')) {
-    return true;
+
+  const publicPrefixes = [
+    'v2/public',
+    'public/linear',
+    'spot/quote/v1',
+    'spot/v1/symbols',
+    'spot/v1/time'
+  ]
+
+  for (const prefix of publicPrefixes) {
+    if (endpoint.startsWith(prefix)) return true
   }
   return false;
 }
