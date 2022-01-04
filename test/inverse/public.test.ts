@@ -5,10 +5,24 @@ describe('Public Inverse REST API Endpoints', () => {
   const useLivenet = true;
   const api = new InverseClient(undefined, undefined, useLivenet, { disable_time_sync: true });
 
+  const KEY = process.env.BYBIT_KEY
+  const SECRET = process.env.BYBIT_SECRET
+  const apiAuth = new InverseClient(KEY, SECRET, useLivenet, { disable_time_sync: true });
+
   const symbol = 'BTCUSD';
   const interval = '15';
   const timestampOneHourAgo = (new Date().getTime() / 1000) - (1000 * 60 * 60);
   const from = Number(timestampOneHourAgo.toFixed(0));
+
+
+  describe('Inverse Authenticated Read-Only Endpoints', () => {
+
+    it('getTrades()', async () => {
+      let trades = await apiAuth.getTrades({ symbol });
+      expect(trades).toMatchObject(successResponseObject());
+    });
+
+  });
 
   describe('Inverse only endpoints', () => {
     it('should throw for unauthenticated private calls', async () => {
@@ -17,7 +31,7 @@ describe('Public Inverse REST API Endpoints', () => {
 
     it('getKline()', async () => {
       expect(
-        await api.getKline({ symbol, interval, from })
+          await api.getKline({ symbol, interval, from })
       ).toMatchObject(successResponseList());
     });
 

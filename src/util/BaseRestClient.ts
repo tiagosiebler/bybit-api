@@ -1,9 +1,15 @@
-import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 
 import { signMessage } from './node-support';
-import { serializeParams, RestClientOptions, GenericAPIResponse, isPublicEndpoint } from './requestUtils';
+import {
+  RestClientOptions,
+  GenericAPIResponse,
+  getRestBaseUrl,
+  serializeParams,
+  isPublicEndpoint
+} from './requestUtils';
 
-export default class RequestUtil {
+export default abstract class BaseRestClient {
   private timeOffset: number | null;
   private syncTimePromise: null | Promise<any>;
   private options: RestClientOptions;
@@ -23,6 +29,7 @@ export default class RequestUtil {
     this.syncTimePromise = null;
 
     this.options = {
+      recv_window: 5000,
       // how often to sync time drift with bybit servers
       sync_interval_ms: 3600000,
       // if true, we'll throw errors if any params are undefined
@@ -55,23 +62,31 @@ export default class RequestUtil {
     this.secret = secret;
   }
 
-  get<T>(endpoint: string, params?: any): Promise<T> {
-    return this._call('GET', endpoint, params);
+  get(endpoint: string, params?: any): GenericAPIResponse {
+    return this._call('GET', endpoint, params, true);
   }
 
-  post<T>(endpoint: string, params?: any): Promise<T> {
-    return this._call('POST', endpoint, params);
+  post(endpoint: string, params?: any): GenericAPIResponse {
+    return this._call('POST', endpoint, params, true);
   }
 
-  delete<T>(endpoint: string, params?: any): Promise<T> {
-    return this._call('DELETE', endpoint, params);
+  getPrivate(endpoint: string, params?: any): GenericAPIResponse {
+    return this._call('GET', endpoint, params, false);
+  }
+
+  postPrivate(endpoint: string, params?: any): GenericAPIResponse {
+    return this._call('POST', endpoint, params, false);
+  }
+
+  deletePrivate(endpoint: string, params?: any): GenericAPIResponse {
+    return this._call('DELETE', endpoint, params, false);
   }
 
   /**
    * @private Make a HTTP request to a specific endpoint. Private endpoints are automatically signed.
    */
-  async _call<T>(method: Method, endpoint: string, params?: any): Promise<T> {
-    if (!isPublicEndpoint(endpoint)) {
+  private async _call(method: Method, endpoint: string, params?: any, isPublicApi?: boolean): GenericAPIResponse {
+    if (!isPublicApi) {
       if (!this.key || !this.secret) {
         throw new Error('Private endpoints require api and private keys set');
       }
@@ -80,27 +95,17 @@ export default class RequestUtil {
         await this.syncTime();
       }
 
-      // Optional, set to 5000 by default. Increase if timestamp/recv_window errors are seen.
-      if (this.options.recv_window) {
-
-        if (endpoint.includes("spot/")) { // lucky us. only the spot API uses a different param for this
-          params = { ...params, recvWindow: this.options.recv_window };
-        } else {
-          params = { ...params, recv_window: this.options.recv_window }
-        }
-      }
-
       params = await this.signRequest(params);
     }
 
     const options = {
       ...this.globalRequestOptions,
-      url: [this.baseUrl, endpoint].join('/'),
+      url: [this.baseUrl, endpoint].join(endpoint.startsWith('/') ? '' : '/'),
       method: method,
       json: true
     };
 
-    if (method === 'GET') {
+    if (method === 'GET' || endpoint.includes('spot')) {
       options.params = params;
     } else {
       options.data = params;
@@ -155,15 +160,13 @@ export default class RequestUtil {
       timestamp: Date.now() + (this.timeOffset || 0)
     };
 
+    // Optional, set to 5000 by default. Increase if timestamp/recv_window errors are seen.
+    if (this.options.recv_window && !params.recv_window) {
+      params.recv_window = this.options.recv_window;
+    }
+
     if (this.key && this.secret) {
       const serializedParams = serializeParams(params, this.options.strict_param_validation);
-
-      for (const key of Object.keys(params)) {
-        if (typeof params[key] === 'undefined') {
-          delete params[key]
-        }
-      }
-
       params.sign = await signMessage(serializedParams, this.secret);
     }
 
@@ -171,9 +174,9 @@ export default class RequestUtil {
   }
 
   /**
-   * @private trigger time sync and store promise
+   * Trigger time sync and store promise
    */
-  syncTime(): GenericAPIResponse {
+  private syncTime(): GenericAPIResponse {
     if (this.options.disable_time_sync === true) {
       return Promise.resolve(false);
     }
@@ -182,7 +185,7 @@ export default class RequestUtil {
       return this.syncTimePromise;
     }
 
-    this.syncTimePromise = this.getTimeOffset().then(offset => {
+    this.syncTimePromise = this.fetchTimeOffset().then(offset => {
       this.timeOffset = offset;
       this.syncTimePromise = null;
     });
@@ -190,17 +193,22 @@ export default class RequestUtil {
     return this.syncTimePromise;
   }
 
-  /**
-   * @deprecated move this somewhere else, because v2/public/time shouldn't be hardcoded here
-   *
-   * @returns {Promise<number>}
-   * @memberof RequestUtil
-   */
-  async getTimeOffset(): Promise<number> {
-    const start = Date.now();
-    const result = await this.get<any>(this.options.timePath || 'v2/public/time');
-    const end = Date.now();
+  abstract getServerTime(baseUrlKeyOverride?: string): Promise<number>;
 
-    return Math.ceil((result.time_now * 1000) - end + ((end - start) / 2));
+  /**
+   * Estimate drift based on client<->server latency
+   */
+  async fetchTimeOffset(): Promise<number> {
+    try {
+      const start = Date.now();
+      const serverTime = await this.getServerTime();
+      const end = Date.now();
+
+      const avgDrift = ((end - start) / 2);
+      return Math.ceil(serverTime - end + avgDrift);
+    } catch (e) {
+      console.error('Failed to fetch get time offset: ', e);
+      return 0;
+    }
   }
 };

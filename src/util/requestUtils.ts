@@ -15,6 +15,10 @@ export interface RestClientOptions {
   // e.g 'https://api.bytick.com'
   baseUrl?: string;
 
+  // Optionally override time API endpoint
+  // e.g 'spot/v1/time'
+  timePath?: string;
+
   // Default: true. whether to try and post-process request exceptions.
   parse_exceptions?: boolean;
 }
@@ -23,15 +27,17 @@ export type GenericAPIResponse = Promise<any>;
 
 export function serializeParams(params: object = {}, strict_validation = false): string {
   return Object.keys(params)
-    .sort()
-    .map(key => {
-      const value = params[key];
-      if (strict_validation === true && typeof value === 'undefined') {
-        throw new Error('Failed to sign API request due to undefined parameter');
-      }
-      return `${key}=${value}`;
-    })
-    .join('&');
+      .sort().reduce((acc: string[], key) => {
+        const value = params[key];
+        if (typeof value === 'undefined') {
+          if (strict_validation) {
+            throw new Error('Failed to sign API request due to undefined parameter');
+          }
+          return acc
+        }
+        acc.push(`${key}=${value}`);
+        return acc
+      }, []).join("&");
 };
 
 export function getRestBaseUrl(useLivenet: boolean, restInverseOptions: RestClientOptions) {
@@ -50,7 +56,7 @@ export function getRestBaseUrl(useLivenet: boolean, restInverseOptions: RestClie
   return baseUrlsInverse.testnet;
 }
 
-export function isPublicEndpoint (endpoint: string): boolean {
+export function isPublicEndpoint(endpoint: string): boolean {
 
   const publicPrefixes = [
     'v2/public',
@@ -71,9 +77,9 @@ export function isWsPong(response: any) {
     return true;
   }
   return (
-    response.request &&
-    response.request.op === 'ping' &&
-    response.ret_msg === 'pong' &&
-    response.success === true
+      response.request &&
+      response.request.op === 'ping' &&
+      response.ret_msg === 'pong' &&
+      response.success === true
   );
 }
