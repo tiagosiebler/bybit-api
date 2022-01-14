@@ -129,8 +129,12 @@ export class InverseClient extends SharedEndpoints {
     order_id?: string;
     order_link_id?: string;
     symbol: string;
-    p_r_qty?: string;
+    p_r_qty?: number;
     p_r_price?: string;
+    take_profit?: number;
+    stop_loss?: number;
+    tp_trigger_by?:string;
+    sl_trigger_by?:string;
   }): GenericAPIResponse {
     return this.requestWrapper.post('v2/private/order/replace', params);
   }
