@@ -85,7 +85,7 @@ export class LinearClient extends SharedEndpoints {
     reduce_only: boolean;
     close_on_trigger: boolean;
     order_link_id?: string;
-    position_idx: number;
+    position_idx?: number;
   }): GenericAPIResponse {
     return this.requestWrapper.post('private/linear/order/create', params);
   }
