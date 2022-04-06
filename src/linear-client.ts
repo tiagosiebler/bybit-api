@@ -1,8 +1,17 @@
 import { AxiosRequestConfig } from 'axios';
-import { GenericAPIResponse, getRestBaseUrl, RestClientOptions } from './util/requestUtils';
+import {
+  GenericAPIResponse,
+  getRestBaseUrl,
+  RestClientOptions,
+} from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
 import SharedEndpoints from './shared-endpoints';
-import { SymbolIntervalFromLimitParam, SymbolLimitParam, SymbolParam } from '.';
+import {
+  SymbolIntervalFromLimitParam,
+  SymbolLimitParam,
+  SymbolParam,
+} from './types/shared';
+import { linearPositionModeEnum, positionTpSlModeEnum } from './constants/enum';
 
 export class LinearClient extends SharedEndpoints {
   protected requestWrapper: RequestWrapper;
@@ -46,11 +55,17 @@ export class LinearClient extends SharedEndpoints {
   }
 
   getTrades(params: SymbolLimitParam): GenericAPIResponse {
-    return this.requestWrapper.get('public/linear/recent-trading-records', params);
+    return this.requestWrapper.get(
+      'public/linear/recent-trading-records',
+      params
+    );
   }
 
   getLastFundingRate(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get('public/linear/funding/prev-funding-rate', params);
+    return this.requestWrapper.get(
+      'public/linear/funding/prev-funding-rate',
+      params
+    );
   }
 
   getMarkPriceKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
@@ -61,7 +76,9 @@ export class LinearClient extends SharedEndpoints {
     return this.requestWrapper.get('public/linear/index-price-kline', params);
   }
 
-  getPremiumIndexKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
+  getPremiumIndexKline(
+    params: SymbolIntervalFromLimitParam
+  ): GenericAPIResponse {
     return this.requestWrapper.get('public/linear/premium-index-kline', params);
   }
 
@@ -90,7 +107,7 @@ export class LinearClient extends SharedEndpoints {
     return this.requestWrapper.post('private/linear/order/create', params);
   }
 
-   getActiveOrderList(params: {
+  getActiveOrderList(params: {
     order_id?: string;
     order_link_id?: string;
     symbol: string;
@@ -137,8 +154,8 @@ export class LinearClient extends SharedEndpoints {
   }
 
   /**
-  * Conditional orders
-  */
+   * Conditional orders
+   */
 
   placeConditionalOrder(params: {
     side: string;
@@ -182,7 +199,10 @@ export class LinearClient extends SharedEndpoints {
   }
 
   cancelAllConditionalOrders(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/stop-order/cancel-all', params);
+    return this.requestWrapper.post(
+      'private/linear/stop-order/cancel-all',
+      params
+    );
   }
 
   replaceConditionalOrder(params: {
@@ -197,7 +217,10 @@ export class LinearClient extends SharedEndpoints {
     tp_trigger_by?: string;
     sl_trigger_by?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/stop-order/replace', params);
+    return this.requestWrapper.post(
+      'private/linear/stop-order/replace',
+      params
+    );
   }
 
   queryConditionalOrder(params: {
@@ -221,7 +244,10 @@ export class LinearClient extends SharedEndpoints {
     side: string;
     auto_add_margin: boolean;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/position/set-auto-add-margin', params);
+    return this.requestWrapper.post(
+      'private/linear/position/set-auto-add-margin',
+      params
+    );
   }
 
   setMarginSwitch(params?: {
@@ -230,12 +256,40 @@ export class LinearClient extends SharedEndpoints {
     buy_leverage: number;
     sell_leverage: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/position/switch-isolated', params);
+    return this.requestWrapper.post(
+      'private/linear/position/switch-isolated',
+      params
+    );
   }
 
+  /**
+   * Switch between one-way vs hedge mode. Use `linearPositionModeEnum` for the mode parameter.
+   */
+  setPositionMode(params: {
+    symbol: string;
+    mode: typeof linearPositionModeEnum[keyof typeof linearPositionModeEnum];
+  }): GenericAPIResponse {
+    return this.requestWrapper.post(
+      'private/linear/position/switch-mode',
+      params
+    );
+  }
+
+  /** @deprecated use setPositionTpSlMode() instead */
   setSwitchMode(params?: {
     symbol: string;
-    tp_sl_mode: string;
+    tp_sl_mode: typeof positionTpSlModeEnum[keyof typeof positionTpSlModeEnum];
+  }): GenericAPIResponse {
+    return this.requestWrapper.post('private/linear/tpsl/switch-mode', params);
+  }
+
+  /**
+   * Switch TP/SL mode between full or partial. When set to Partial, TP/SL orders may have a quantity less than the position size.
+   * This is set with the setTradingStop() method. Use `positionTpSlModeEnum` for the tp_sl_mode parameter.
+   */
+  setPositionTpSlMode(params: {
+    symbol: string;
+    tp_sl_mode: typeof positionTpSlModeEnum[keyof typeof positionTpSlModeEnum];
   }): GenericAPIResponse {
     return this.requestWrapper.post('private/linear/tpsl/switch-mode', params);
   }
@@ -245,7 +299,10 @@ export class LinearClient extends SharedEndpoints {
     side: string;
     margin: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/position/add-margin', params);
+    return this.requestWrapper.post(
+      'private/linear/position/add-margin',
+      params
+    );
   }
 
   setUserLeverage(params: {
@@ -253,7 +310,10 @@ export class LinearClient extends SharedEndpoints {
     buy_leverage: number;
     sell_leverage: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/position/set-leverage', params);
+    return this.requestWrapper.post(
+      'private/linear/position/set-leverage',
+      params
+    );
   }
 
   setTradingStop(params: {
@@ -267,7 +327,10 @@ export class LinearClient extends SharedEndpoints {
     sl_size?: number;
     tp_size?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/position/trading-stop', params);
+    return this.requestWrapper.post(
+      'private/linear/position/trading-stop',
+      params
+    );
   }
 
   getTradeRecords(params: {
@@ -278,7 +341,10 @@ export class LinearClient extends SharedEndpoints {
     page?: number;
     limit?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/trade/execution/list', params);
+    return this.requestWrapper.get(
+      'private/linear/trade/execution/list',
+      params
+    );
   }
 
   getClosedPnl(params: {
@@ -289,12 +355,15 @@ export class LinearClient extends SharedEndpoints {
     page?: number;
     limit?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/trade/closed-pnl/list', params);
+    return this.requestWrapper.get(
+      'private/linear/trade/closed-pnl/list',
+      params
+    );
   }
 
   /**
-  * Risk Limit
-  */
+   * Risk Limit
+   */
 
   getRiskLimitList(params: SymbolParam): GenericAPIResponse {
     return this.requestWrapper.get('public/linear/risk-limit', params);
@@ -309,14 +378,20 @@ export class LinearClient extends SharedEndpoints {
   }
 
   /**
-  * Funding
-  */
+   * Funding
+   */
 
   getPredictedFundingFee(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/funding/predicted-funding', params);
+    return this.requestWrapper.get(
+      'private/linear/funding/predicted-funding',
+      params
+    );
   }
 
   getLastFundingFee(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/funding/prev-funding', params);
+    return this.requestWrapper.get(
+      'private/linear/funding/prev-funding',
+      params
+    );
   }
 }
