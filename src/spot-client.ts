@@ -46,8 +46,8 @@ export class SpotClient extends BaseRestClient {
   }
 
   async getServerTime(): Promise<number> {
-    const result = await this.get('/spot/v1/time');
-    return result.serverTime;
+    const res = await this.get('/spot/v1/time');
+    return res.result.serverTime;
   }
 
   /**
@@ -80,7 +80,7 @@ export class SpotClient extends BaseRestClient {
   }
 
   getTrades(symbol: string, limit?: number): Promise<APIResponse<any[]>> {
-    return this.get('/spot/v1/trades', {
+    return this.get('/spot/quote/v1/trades', {
       symbol,
       limit,
     });
@@ -175,27 +175,5 @@ export class SpotClient extends BaseRestClient {
 
   getBalances() {
     return this.getPrivate('/spot/v1/account');
-  }
-
-  /**
-   * Leveraged Token Endpoints
-   */
-
-  getLeveragedTokenAssetInfo(
-    leverageTokenCode: string,
-    timestamp?: number
-  ): Promise<APIResponse<any>> {
-    return this.get('/spot/lt/v1/info', {
-      ltCode: leverageTokenCode,
-      timestamp,
-    });
-  }
-
-  getLeveragedTokenMarketInfo(
-    leverageTokenCode: string
-  ): Promise<APIResponse<any>> {
-    return this.get('/spot/lt/v1/reference', {
-      ltCode: leverageTokenCode,
-    });
   }
 }
