@@ -1,4 +1,5 @@
-export type KlineInterval = '1m'
+export type KlineInterval =
+  | '1m'
   | '3m'
   | '5m'
   | '15m'
@@ -16,10 +17,15 @@ export type numberInString = string;
 
 export interface APIResponse<T> {
   ret_code: number;
-  ret_msg: "OK" | string;
+  ret_msg: 'OK' | string;
   ext_code: string;
   ext_info: string;
   result: T;
+}
+
+export interface APIResponseWithTime<T> extends APIResponse<T> {
+  /** UTC timestamp */
+  time_now: string;
 }
 
 /**
@@ -115,4 +121,8 @@ export interface SymbolInfo {
   leverage_filter: LeverageFilter;
   price_filter: PriceFilter;
   lot_size_filter: LotSizeFilter;
+}
+
+export interface TimeResult {
+  time_now: number;
 }

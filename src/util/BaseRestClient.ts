@@ -1,7 +1,18 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from 'axios';
+import axios, {
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosResponse,
+  Method,
+} from 'axios';
 
 import { signMessage } from './node-support';
-import { RestClientOptions, GenericAPIResponse, getRestBaseUrl, serializeParams, isPublicEndpoint } from './requestUtils';
+import {
+  RestClientOptions,
+  GenericAPIResponse,
+  getRestBaseUrl,
+  serializeParams,
+  isPublicEndpoint,
+} from './requestUtils';
 
 export default abstract class BaseRestClient {
   private timeOffset: number | null;
@@ -11,6 +22,9 @@ export default abstract class BaseRestClient {
   private globalRequestOptions: AxiosRequestConfig;
   private key: string | undefined;
   private secret: string | undefined;
+
+  /** Function that calls exchange API to query & resolve server time, used by time sync */
+  abstract fetchServerTime(): Promise<number>;
 
   constructor(
     key: string | undefined,
@@ -28,7 +42,7 @@ export default abstract class BaseRestClient {
       sync_interval_ms: 3600000,
       // if true, we'll throw errors if any params are undefined
       strict_param_validation: false,
-      ...options
+      ...options,
     };
 
     this.globalRequestOptions = {
@@ -37,14 +51,16 @@ export default abstract class BaseRestClient {
       // custom request options based on axios specs - see: https://github.com/axios/axios#request-config
       ...requestOptions,
       headers: {
-        'x-referer': 'bybitapinode'
+        'x-referer': 'bybitapinode',
       },
     };
 
     this.baseUrl = baseUrl;
 
     if (key && !secret) {
-      throw new Error('API Key & Secret are both required for private enpoints')
+      throw new Error(
+        'API Key & Secret are both required for private enpoints'
+      );
     }
 
     if (this.options.disable_time_sync !== true) {
@@ -79,7 +95,12 @@ export default abstract class BaseRestClient {
   /**
    * @private Make a HTTP request to a specific endpoint. Private endpoints are automatically signed.
    */
-  private async _call(method: Method, endpoint: string, params?: any, isPublicApi?: boolean): GenericAPIResponse {
+  private async _call(
+    method: Method,
+    endpoint: string,
+    params?: any,
+    isPublicApi?: boolean
+  ): GenericAPIResponse {
     if (!isPublicApi) {
       if (!this.key || !this.secret) {
         throw new Error('Private endpoints require api and private keys set');
@@ -96,7 +117,7 @@ export default abstract class BaseRestClient {
       ...this.globalRequestOptions,
       url: [this.baseUrl, endpoint].join(endpoint.startsWith('/') ? '' : '/'),
       method: method,
-      json: true
+      json: true,
     };
 
     if (method === 'GET') {
@@ -105,13 +126,15 @@ export default abstract class BaseRestClient {
       options.data = params;
     }
 
-    return axios(options).then(response => {
-      if (response.status == 200) {
-        return response.data;
-      }
+    return axios(options)
+      .then((response) => {
+        if (response.status == 200) {
+          return response.data;
+        }
 
-      throw response;
-    }).catch(e => this.parseException(e));
+        throw response;
+      })
+      .catch((e) => this.parseException(e));
   }
 
   /**
@@ -140,7 +163,7 @@ export default abstract class BaseRestClient {
       message: response.statusText,
       body: response.data,
       headers: response.headers,
-      requestOptions: this.options
+      requestOptions: this.options,
     };
   }
 
@@ -151,7 +174,7 @@ export default abstract class BaseRestClient {
     const params = {
       ...data,
       api_key: this.key,
-      timestamp: Date.now() + (this.timeOffset || 0)
+      timestamp: Date.now() + (this.timeOffset || 0),
     };
 
     // Optional, set to 5000 by default. Increase if timestamp/recv_window errors are seen.
@@ -160,7 +183,10 @@ export default abstract class BaseRestClient {
     }
 
     if (this.key && this.secret) {
-      const serializedParams = serializeParams(params, this.options.strict_param_validation);
+      const serializedParams = serializeParams(
+        params,
+        this.options.strict_param_validation
+      );
       params.sign = await signMessage(serializedParams, this.secret);
     }
 
@@ -179,7 +205,7 @@ export default abstract class BaseRestClient {
       return this.syncTimePromise;
     }
 
-    this.syncTimePromise = this.fetchTimeOffset().then(offset => {
+    this.syncTimePromise = this.fetchTimeOffset().then((offset) => {
       this.timeOffset = offset;
       this.syncTimePromise = null;
     });
@@ -187,22 +213,27 @@ export default abstract class BaseRestClient {
     return this.syncTimePromise;
   }
 
-  abstract getServerTime(baseUrlKeyOverride?: string): Promise<number>;
-
   /**
    * Estimate drift based on client<->server latency
    */
   async fetchTimeOffset(): Promise<number> {
     try {
       const start = Date.now();
-      const serverTime = await this.getServerTime();
+      const serverTime = await this.fetchServerTime();
+
+      if (!serverTime || isNaN(serverTime)) {
+        throw new Error(
+          `fetchServerTime() returned non-number: "${serverTime}" typeof(${typeof serverTime})`
+        );
+      }
+
       const end = Date.now();
 
-      const avgDrift = ((end - start) / 2);
+      const avgDrift = (end - start) / 2;
       return Math.ceil(serverTime - end + avgDrift);
     } catch (e) {
       console.error('Failed to fetch get time offset: ', e);
       return 0;
     }
   }
-};
+}

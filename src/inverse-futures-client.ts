@@ -1,10 +1,28 @@
 import { AxiosRequestConfig } from 'axios';
-import { GenericAPIResponse, getRestBaseUrl, RestClientOptions } from './util/requestUtils';
+import {
+  GenericAPIResponse,
+  getRestBaseUrl,
+  RestClientOptions,
+} from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
-import SharedEndpoints from './shared-endpoints';
-import { SymbolFromLimitParam, SymbolIntervalFromLimitParam, SymbolParam } from './types/shared';
+import {
+  APIResponse,
+  AssetExchangeRecordsReq,
+  CoinParam,
+  SymbolFromLimitParam,
+  SymbolInfo,
+  SymbolIntervalFromLimitParam,
+  SymbolLimitParam,
+  SymbolParam,
+  SymbolPeriodLimitParam,
+  TimeResult,
+  WalletFundRecordsReq,
+  WithdrawRecordsReq,
+} from './types/shared';
+import BaseRestClient from './util/BaseRestClient';
 
-export class InverseFuturesClient extends SharedEndpoints {
+export class InverseFuturesClient extends BaseRestClient {
+  /** @deprecated,  */
   protected requestWrapper: RequestWrapper;
 
   /**
@@ -23,8 +41,13 @@ export class InverseFuturesClient extends SharedEndpoints {
     restClientOptions: RestClientOptions = {},
     requestOptions: AxiosRequestConfig = {}
   ) {
-    super();
-
+    super(
+      key,
+      secret,
+      getRestBaseUrl(useLivenet, restClientOptions),
+      restClientOptions,
+      requestOptions
+    );
     this.requestWrapper = new RequestWrapper(
       key,
       secret,
@@ -33,6 +56,98 @@ export class InverseFuturesClient extends SharedEndpoints {
       requestOptions
     );
     return this;
+  }
+
+  async fetchServerTime(): Promise<number> {
+    const res = await this.getServerTime();
+    return res.time_now;
+  }
+
+  /**
+   *
+   * Market Data Endpoints
+   *
+   */
+
+  getOrderBook(params: SymbolParam): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/orderBook/L2', params);
+  }
+
+  /**
+   * Get latest information for symbol
+   */
+  getTickers(params?: Partial<SymbolParam>): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/tickers', params);
+  }
+
+  getSymbols(): Promise<APIResponse<SymbolInfo[]>> {
+    return this.requestWrapper.get('v2/public/symbols');
+  }
+
+  /**
+   *
+   * Market Data : Advanced
+   *
+   */
+
+  getOpenInterest(params: SymbolPeriodLimitParam): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/open-interest', params);
+  }
+
+  getLatestBigDeal(params: SymbolLimitParam): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/big-deal', params);
+  }
+
+  getLongShortRatio(params: SymbolPeriodLimitParam): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/account-ratio', params);
+  }
+
+  /**
+   *
+   * Account Data Endpoints
+   *
+   */
+
+  getApiKeyInfo(): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/account/api-key');
+  }
+
+  /**
+   *
+   * Wallet Data Endpoints
+   *
+   */
+
+  getWalletBalance(params?: Partial<CoinParam>): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/wallet/balance', params);
+  }
+
+  getWalletFundRecords(params?: WalletFundRecordsReq): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/wallet/fund/records', params);
+  }
+
+  getWithdrawRecords(params: WithdrawRecordsReq): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/wallet/withdraw/list', params);
+  }
+
+  getAssetExchangeRecords(
+    params?: AssetExchangeRecordsReq
+  ): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/exchange-order/list', params);
+  }
+
+  /**
+   *
+   * API Data Endpoints
+   *
+   */
+
+  getServerTime(): GenericAPIResponse<TimeResult> {
+    return this.requestWrapper.get('v2/public/time');
+  }
+
+  getApiAnnouncements(): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/announcement');
   }
 
   /**
@@ -60,7 +175,9 @@ export class InverseFuturesClient extends SharedEndpoints {
     return this.requestWrapper.get('v2/public/index-price-kline', params);
   }
 
-  getPremiumIndexKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
+  getPremiumIndexKline(
+    params: SymbolIntervalFromLimitParam
+  ): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/premium-index-kline', params);
   }
 
@@ -70,7 +187,7 @@ export class InverseFuturesClient extends SharedEndpoints {
    *
    */
 
-	/**
+  /**
    * Active orders
    */
 
@@ -87,7 +204,10 @@ export class InverseFuturesClient extends SharedEndpoints {
     close_on_trigger?: boolean;
     order_link_id?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('futures/private/order/create', orderRequest);
+    return this.requestWrapper.post(
+      'futures/private/order/create',
+      orderRequest
+    );
   }
 
   getActiveOrderList(params: {
@@ -130,7 +250,7 @@ export class InverseFuturesClient extends SharedEndpoints {
     return this.requestWrapper.get('futures/private/order', params);
   }
 
-	/**
+  /**
    * Conditional orders
    */
 
@@ -147,7 +267,10 @@ export class InverseFuturesClient extends SharedEndpoints {
     close_on_trigger?: boolean;
     order_link_id?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('futures/private/stop-order/create', params);
+    return this.requestWrapper.post(
+      'futures/private/stop-order/create',
+      params
+    );
   }
 
   getConditionalOrder(params: {
@@ -165,11 +288,17 @@ export class InverseFuturesClient extends SharedEndpoints {
     stop_order_id?: string;
     order_link_id?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('futures/private/stop-order/cancel', params);
+    return this.requestWrapper.post(
+      'futures/private/stop-order/cancel',
+      params
+    );
   }
 
   cancelAllConditionalOrders(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.post('futures/private/stop-order/cancelAll', params);
+    return this.requestWrapper.post(
+      'futures/private/stop-order/cancelAll',
+      params
+    );
   }
 
   replaceConditionalOrder(params: {
@@ -180,7 +309,10 @@ export class InverseFuturesClient extends SharedEndpoints {
     p_r_price?: string;
     p_r_trigger_price?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('futures/private/stop-order/replace', params);
+    return this.requestWrapper.post(
+      'futures/private/stop-order/replace',
+      params
+    );
   }
 
   queryConditionalOrder(params: {
@@ -191,10 +323,9 @@ export class InverseFuturesClient extends SharedEndpoints {
     return this.requestWrapper.get('futures/private/stop-order', params);
   }
 
-	/**
+  /**
    * Position
    */
-
 
   /**
    * Get position list
@@ -207,7 +338,10 @@ export class InverseFuturesClient extends SharedEndpoints {
     symbol: string;
     margin: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('futures/private/position/change-position-margin', params);
+    return this.requestWrapper.post(
+      'futures/private/position/change-position-margin',
+      params
+    );
   }
 
   setTradingStop(params: {
@@ -219,7 +353,10 @@ export class InverseFuturesClient extends SharedEndpoints {
     sl_trigger_by?: string;
     new_trailing_active?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('futures/private/position/trading-stop', params);
+    return this.requestWrapper.post(
+      'futures/private/position/trading-stop',
+      params
+    );
   }
 
   setUserLeverage(params: {
@@ -227,7 +364,10 @@ export class InverseFuturesClient extends SharedEndpoints {
     buy_leverage: number;
     sell_leverage: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('futures/private/position/leverage/save', params);
+    return this.requestWrapper.post(
+      'futures/private/position/leverage/save',
+      params
+    );
   }
 
   /**
@@ -237,7 +377,10 @@ export class InverseFuturesClient extends SharedEndpoints {
     symbol: string;
     mode: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('futures/private/position/switch-mode', params);
+    return this.requestWrapper.post(
+      'futures/private/position/switch-mode',
+      params
+    );
   }
 
   /**
@@ -249,7 +392,10 @@ export class InverseFuturesClient extends SharedEndpoints {
     buy_leverage: number;
     sell_leverage: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('futures/private/position/switch-isolated', params);
+    return this.requestWrapper.post(
+      'futures/private/position/switch-isolated',
+      params
+    );
   }
 
   getTradeRecords(params: {
@@ -271,14 +417,17 @@ export class InverseFuturesClient extends SharedEndpoints {
     page?: number;
     limit?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('futures/private/trade/closed-pnl/list', params);
+    return this.requestWrapper.get(
+      'futures/private/trade/closed-pnl/list',
+      params
+    );
   }
 
   /**
    **** The following are all the same as the inverse client ****
    */
 
-	/**
+  /**
    * Risk Limit
    */
   getRiskLimitList(): GenericAPIResponse {
@@ -292,12 +441,15 @@ export class InverseFuturesClient extends SharedEndpoints {
     return this.requestWrapper.post('open-api/wallet/risk-limit', params);
   }
 
-	/**
+  /**
    * Funding
    */
 
   getLastFundingRate(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/funding/prev-funding-rate', params);
+    return this.requestWrapper.get(
+      'v2/public/funding/prev-funding-rate',
+      params
+    );
   }
 
   getMyLastFundingFee(params: SymbolParam): GenericAPIResponse {
@@ -305,14 +457,17 @@ export class InverseFuturesClient extends SharedEndpoints {
   }
 
   getPredictedFunding(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/funding/predicted-funding', params);
+    return this.requestWrapper.get(
+      'v2/private/funding/predicted-funding',
+      params
+    );
   }
 
-	/**
+  /**
    * LCP Info
    */
 
   getLcpInfo(params: SymbolParam): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/account/lcp', params);
   }
-};
+}

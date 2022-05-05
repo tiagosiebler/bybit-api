@@ -5,19 +5,28 @@ import {
   RestClientOptions,
 } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
-import SharedEndpoints from './shared-endpoints';
 import {
+  APIResponse,
+  AssetExchangeRecordsReq,
+  CoinParam,
+  SymbolInfo,
   SymbolIntervalFromLimitParam,
   SymbolLimitParam,
   SymbolParam,
+  SymbolPeriodLimitParam,
+  TimeResult,
+  WalletFundRecordsReq,
+  WithdrawRecordsReq,
 } from './types/shared';
 import { linearPositionModeEnum, positionTpSlModeEnum } from './constants/enum';
+import BaseRestClient from './util/BaseRestClient';
 
-export class LinearClient extends SharedEndpoints {
+export class LinearClient extends BaseRestClient {
+  /** @deprecated,  */
   protected requestWrapper: RequestWrapper;
 
   /**
-   * @public Creates an instance of the linear REST API client.
+   * @public Creates an instance of the linear (USD Perps) REST API client.
    *
    * @param {string} key - your API key
    * @param {string} secret - your API secret
@@ -32,7 +41,13 @@ export class LinearClient extends SharedEndpoints {
     restClientOptions: RestClientOptions = {},
     requestOptions: AxiosRequestConfig = {}
   ) {
-    super();
+    super(
+      key,
+      secret,
+      getRestBaseUrl(useLivenet, restClientOptions),
+      restClientOptions,
+      requestOptions
+    );
 
     this.requestWrapper = new RequestWrapper(
       key,
@@ -42,6 +57,98 @@ export class LinearClient extends SharedEndpoints {
       requestOptions
     );
     return this;
+  }
+
+  async fetchServerTime(): Promise<number> {
+    const timeRes = await this.getServerTime();
+    return timeRes.time_now;
+  }
+
+  /**
+   *
+   * Market Data Endpoints
+   *
+   */
+
+  getOrderBook(params: SymbolParam): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/orderBook/L2', params);
+  }
+
+  /**
+   * Get latest information for symbol
+   */
+  getTickers(params?: Partial<SymbolParam>): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/tickers', params);
+  }
+
+  getSymbols(): Promise<APIResponse<SymbolInfo[]>> {
+    return this.requestWrapper.get('v2/public/symbols');
+  }
+
+  /**
+   *
+   * Market Data : Advanced
+   *
+   */
+
+  getOpenInterest(params: SymbolPeriodLimitParam): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/open-interest', params);
+  }
+
+  getLatestBigDeal(params: SymbolLimitParam): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/big-deal', params);
+  }
+
+  getLongShortRatio(params: SymbolPeriodLimitParam): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/account-ratio', params);
+  }
+
+  /**
+   *
+   * Account Data Endpoints
+   *
+   */
+
+  getApiKeyInfo(): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/account/api-key');
+  }
+
+  /**
+   *
+   * Wallet Data Endpoints
+   *
+   */
+
+  getWalletBalance(params?: Partial<CoinParam>): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/wallet/balance', params);
+  }
+
+  getWalletFundRecords(params?: WalletFundRecordsReq): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/wallet/fund/records', params);
+  }
+
+  getWithdrawRecords(params: WithdrawRecordsReq): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/wallet/withdraw/list', params);
+  }
+
+  getAssetExchangeRecords(
+    params?: AssetExchangeRecordsReq
+  ): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/exchange-order/list', params);
+  }
+
+  /**
+   *
+   * API Data Endpoints
+   *
+   */
+
+  getServerTime(): GenericAPIResponse<TimeResult> {
+    return this.requestWrapper.get('v2/public/time');
+  }
+
+  getApiAnnouncements(): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/announcement');
   }
 
   /**

@@ -1,10 +1,29 @@
 import { AxiosRequestConfig } from 'axios';
-import { GenericAPIResponse, getRestBaseUrl, RestClientOptions } from './util/requestUtils';
+import {
+  GenericAPIResponse,
+  getRestBaseUrl,
+  RestClientOptions,
+} from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
-import SharedEndpoints from './shared-endpoints';
-import { SymbolFromLimitParam, SymbolIntervalFromLimitParam, SymbolParam } from './types/shared';
+import {
+  APIResponse,
+  APIResponseWithTime,
+  AssetExchangeRecordsReq,
+  CoinParam,
+  SymbolFromLimitParam,
+  SymbolInfo,
+  SymbolIntervalFromLimitParam,
+  SymbolLimitParam,
+  SymbolParam,
+  SymbolPeriodLimitParam,
+  TimeResult,
+  WalletFundRecordsReq,
+  WithdrawRecordsReq,
+} from './types/shared';
+import BaseRestClient from './util/BaseRestClient';
 
-export class InverseClient extends SharedEndpoints {
+export class InverseClient extends BaseRestClient {
+  /** @deprecated,  */
   protected requestWrapper: RequestWrapper;
 
   /**
@@ -23,8 +42,13 @@ export class InverseClient extends SharedEndpoints {
     restClientOptions: RestClientOptions = {},
     requestOptions: AxiosRequestConfig = {}
   ) {
-    super();
-
+    super(
+      key,
+      secret,
+      getRestBaseUrl(useLivenet, restClientOptions),
+      restClientOptions,
+      requestOptions
+    );
     this.requestWrapper = new RequestWrapper(
       key,
       secret,
@@ -35,44 +59,126 @@ export class InverseClient extends SharedEndpoints {
     return this;
   }
 
+  async fetchServerTime(): Promise<number> {
+    const res = await this.getServerTime();
+    return Number(res.time_now);
+  }
+
   /**
    *
    * Market Data Endpoints
    *
    */
 
-  getKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
+  getOrderBook(params: SymbolParam): Promise<APIResponseWithTime<any[]>> {
+    return this.requestWrapper.get('v2/public/orderBook/L2', params);
+  }
+
+  getKline(
+    params: SymbolIntervalFromLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
     return this.requestWrapper.get('v2/public/kline/list', params);
   }
 
   /**
-   * @deprecated use getTickers() instead
+   * Get latest information for symbol
    */
-  getLatestInformation(params?: Partial<SymbolParam>): GenericAPIResponse {
-    return this.getTickers(params);
+  getTickers(
+    params?: Partial<SymbolParam>
+  ): Promise<APIResponseWithTime<any[]>> {
+    return this.requestWrapper.get('v2/public/tickers', params);
   }
 
-  /**
-   * @deprecated use getTrades() instead
-   */
-  getPublicTradingRecords(params: SymbolFromLimitParam): GenericAPIResponse {
-    return this.getTrades(params);
-  }
-
-  getTrades(params: SymbolFromLimitParam): GenericAPIResponse {
+  getTrades(params: SymbolLimitParam): Promise<APIResponseWithTime<any[]>> {
     return this.requestWrapper.get('v2/public/trading-records', params);
   }
 
-  getMarkPriceKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
+  getSymbols(): Promise<APIResponseWithTime<SymbolInfo[]>> {
+    return this.requestWrapper.get('v2/public/symbols');
+  }
+
+  getMarkPriceKline(
+    params: SymbolIntervalFromLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
     return this.requestWrapper.get('v2/public/mark-price-kline', params);
   }
 
-  getIndexPriceKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
+  getIndexPriceKline(
+    params: SymbolIntervalFromLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
     return this.requestWrapper.get('v2/public/index-price-kline', params);
   }
 
-  getPremiumIndexKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
+  getPremiumIndexKline(
+    params: SymbolIntervalFromLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
     return this.requestWrapper.get('v2/public/premium-index-kline', params);
+  }
+
+  /**
+   *
+   * Market Data : Advanced
+   *
+   */
+
+  getOpenInterest(params: SymbolPeriodLimitParam): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/open-interest', params);
+  }
+
+  getLatestBigDeal(params: SymbolLimitParam): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/big-deal', params);
+  }
+
+  getLongShortRatio(params: SymbolPeriodLimitParam): GenericAPIResponse {
+    return this.requestWrapper.get('v2/public/account-ratio', params);
+  }
+
+  /**
+   *
+   * Account Data Endpoints
+   *
+   */
+
+  getApiKeyInfo(): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/account/api-key');
+  }
+
+  /**
+   *
+   * Wallet Data Endpoints
+   *
+   */
+
+  getWalletBalance(params?: Partial<CoinParam>): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/wallet/balance', params);
+  }
+
+  getWalletFundRecords(params?: WalletFundRecordsReq): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/wallet/fund/records', params);
+  }
+
+  getWithdrawRecords(params: WithdrawRecordsReq): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/wallet/withdraw/list', params);
+  }
+
+  getAssetExchangeRecords(
+    params?: AssetExchangeRecordsReq
+  ): GenericAPIResponse {
+    return this.requestWrapper.get('v2/private/exchange-order/list', params);
+  }
+
+  /**
+   *
+   * API Data Endpoints
+   *
+   */
+
+  getServerTime(): Promise<APIResponseWithTime<{}>> {
+    return this.requestWrapper.get('v2/public/time');
+  }
+
+  getApiAnnouncements(): Promise<APIResponseWithTime<any[]>> {
+    return this.requestWrapper.get('v2/public/announcement');
   }
 
   /**
@@ -133,8 +239,8 @@ export class InverseClient extends SharedEndpoints {
     p_r_price?: string;
     take_profit?: number;
     stop_loss?: number;
-    tp_trigger_by?:string;
-    sl_trigger_by?:string;
+    tp_trigger_by?: string;
+    sl_trigger_by?: string;
   }): GenericAPIResponse {
     return this.requestWrapper.post('v2/private/order/replace', params);
   }
@@ -254,7 +360,10 @@ export class InverseClient extends SharedEndpoints {
     leverage: number;
     leverage_only?: boolean;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('v2/private/position/leverage/save', params);
+    return this.requestWrapper.post(
+      'v2/private/position/leverage/save',
+      params
+    );
   }
 
   /**
@@ -286,10 +395,7 @@ export class InverseClient extends SharedEndpoints {
     return this.requestWrapper.get('v2/private/trade/closed-pnl/list', params);
   }
 
-  setPositionMode(params: {
-    symbol: string;
-    mode: 0 | 3;
-  }): GenericAPIResponse {
+  setPositionMode(params: { symbol: string; mode: 0 | 3 }): GenericAPIResponse {
     return this.requestWrapper.post('v2/private/position/switch-mode', params);
   }
 
@@ -306,7 +412,10 @@ export class InverseClient extends SharedEndpoints {
     buy_leverage: number;
     sell_leverage: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('v2/private/position/switch-isolated', params);
+    return this.requestWrapper.post(
+      'v2/private/position/switch-isolated',
+      params
+    );
   }
 
   /**
@@ -329,7 +438,10 @@ export class InverseClient extends SharedEndpoints {
    */
 
   getLastFundingRate(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/funding/prev-funding-rate', params);
+    return this.requestWrapper.get(
+      'v2/public/funding/prev-funding-rate',
+      params
+    );
   }
 
   getMyLastFundingFee(params: SymbolParam): GenericAPIResponse {
@@ -337,7 +449,10 @@ export class InverseClient extends SharedEndpoints {
   }
 
   getPredictedFunding(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/funding/predicted-funding', params);
+    return this.requestWrapper.get(
+      'v2/private/funding/predicted-funding',
+      params
+    );
   }
 
   /**
@@ -352,5 +467,4 @@ export class InverseClient extends SharedEndpoints {
   getAPIKeyInfo(): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/account/api-key');
   }
-
-};
+}
