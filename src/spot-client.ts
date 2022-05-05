@@ -1,10 +1,11 @@
 import { AxiosRequestConfig } from 'axios';
-import { KlineInterval } from './types/shared';
+import { APIResponse, KlineInterval } from './types/shared';
 import {
   NewSpotOrder,
   OrderSide,
   OrderTypeSpot,
   SpotOrderQueryById,
+  SpotSymbolInfo,
 } from './types/spot';
 import BaseRestClient from './util/BaseRestClient';
 import { getRestBaseUrl, RestClientOptions } from './util/requestUtils';
@@ -55,18 +56,22 @@ export class SpotClient extends BaseRestClient {
    *
    **/
 
-  getSymbols() {
+  getSymbols(): Promise<APIResponse<SpotSymbolInfo[]>> {
     return this.get('/spot/v1/symbols');
   }
 
-  getOrderBook(symbol: string, limit?: number) {
+  getOrderBook(symbol: string, limit?: number): Promise<APIResponse<any>> {
     return this.get('/spot/quote/v1/depth', {
       symbol,
       limit,
     });
   }
 
-  getMergedOrderBook(symbol: string, scale?: number, limit?: number) {
+  getMergedOrderBook(
+    symbol: string,
+    scale?: number,
+    limit?: number
+  ): Promise<APIResponse<any>> {
     return this.get('/spot/quote/v1/depth/merged', {
       symbol,
       scale,
@@ -74,7 +79,7 @@ export class SpotClient extends BaseRestClient {
     });
   }
 
-  getTrades(symbol: string, limit?: number) {
+  getTrades(symbol: string, limit?: number): Promise<APIResponse<any[]>> {
     return this.get('/spot/v1/trades', {
       symbol,
       limit,
@@ -87,7 +92,7 @@ export class SpotClient extends BaseRestClient {
     limit?: number,
     startTime?: number,
     endTime?: number
-  ) {
+  ): Promise<APIResponse<any[]>> {
     return this.get('/spot/quote/v1/kline', {
       symbol,
       interval,
@@ -97,15 +102,15 @@ export class SpotClient extends BaseRestClient {
     });
   }
 
-  get24hrTicker(symbol?: string) {
+  get24hrTicker(symbol?: string): Promise<APIResponse<any>> {
     return this.get('/spot/quote/v1/ticker/24hr', { symbol });
   }
 
-  getLastTradedPrice(symbol?: string) {
+  getLastTradedPrice(symbol?: string): Promise<APIResponse<any>> {
     return this.get('/spot/quote/v1/ticker/price', { symbol });
   }
 
-  getBestBidAskPrice(symbol?: string) {
+  getBestBidAskPrice(symbol?: string): Promise<APIResponse<any>> {
     return this.get('/spot/quote/v1/ticker/book_ticker', { symbol });
   }
 
@@ -170,5 +175,27 @@ export class SpotClient extends BaseRestClient {
 
   getBalances() {
     return this.getPrivate('/spot/v1/account');
+  }
+
+  /**
+   * Leveraged Token Endpoints
+   */
+
+  getLeveragedTokenAssetInfo(
+    leverageTokenCode: string,
+    timestamp?: number
+  ): Promise<APIResponse<any>> {
+    return this.get('/spot/lt/v1/info', {
+      ltCode: leverageTokenCode,
+      timestamp,
+    });
+  }
+
+  getLeveragedTokenMarketInfo(
+    leverageTokenCode: string
+  ): Promise<APIResponse<any>> {
+    return this.get('/spot/lt/v1/reference', {
+      ltCode: leverageTokenCode,
+    });
   }
 }
