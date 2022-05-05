@@ -70,13 +70,13 @@ export class InverseClient extends BaseRestClient {
    */
 
   getOrderBook(params: SymbolParam): Promise<APIResponseWithTime<any[]>> {
-    return this.requestWrapper.get('v2/public/orderBook/L2', params);
+    return this.get('v2/public/orderBook/L2', params);
   }
 
   getKline(
     params: SymbolIntervalFromLimitParam
   ): Promise<APIResponseWithTime<any[]>> {
-    return this.requestWrapper.get('v2/public/kline/list', params);
+    return this.get('v2/public/kline/list', params);
   }
 
   /**
@@ -85,33 +85,33 @@ export class InverseClient extends BaseRestClient {
   getTickers(
     params?: Partial<SymbolParam>
   ): Promise<APIResponseWithTime<any[]>> {
-    return this.requestWrapper.get('v2/public/tickers', params);
+    return this.get('v2/public/tickers', params);
   }
 
   getTrades(params: SymbolLimitParam): Promise<APIResponseWithTime<any[]>> {
-    return this.requestWrapper.get('v2/public/trading-records', params);
+    return this.get('v2/public/trading-records', params);
   }
 
   getSymbols(): Promise<APIResponseWithTime<SymbolInfo[]>> {
-    return this.requestWrapper.get('v2/public/symbols');
+    return this.get('v2/public/symbols');
   }
 
   getMarkPriceKline(
     params: SymbolIntervalFromLimitParam
   ): Promise<APIResponseWithTime<any[]>> {
-    return this.requestWrapper.get('v2/public/mark-price-kline', params);
+    return this.get('v2/public/mark-price-kline', params);
   }
 
   getIndexPriceKline(
     params: SymbolIntervalFromLimitParam
   ): Promise<APIResponseWithTime<any[]>> {
-    return this.requestWrapper.get('v2/public/index-price-kline', params);
+    return this.get('v2/public/index-price-kline', params);
   }
 
   getPremiumIndexKline(
     params: SymbolIntervalFromLimitParam
   ): Promise<APIResponseWithTime<any[]>> {
-    return this.requestWrapper.get('v2/public/premium-index-kline', params);
+    return this.get('v2/public/premium-index-kline', params);
   }
 
   /**
@@ -123,19 +123,19 @@ export class InverseClient extends BaseRestClient {
   getOpenInterest(
     params: SymbolPeriodLimitParam
   ): Promise<APIResponseWithTime<any[]>> {
-    return this.requestWrapper.get('v2/public/open-interest', params);
+    return this.get('v2/public/open-interest', params);
   }
 
   getLatestBigDeal(
     params: SymbolLimitParam
   ): Promise<APIResponseWithTime<any[]>> {
-    return this.requestWrapper.get('v2/public/big-deal', params);
+    return this.get('v2/public/big-deal', params);
   }
 
   getLongShortRatio(
     params: SymbolPeriodLimitParam
   ): Promise<APIResponseWithTime<any[]>> {
-    return this.requestWrapper.get('v2/public/account-ratio', params);
+    return this.get('v2/public/account-ratio', params);
   }
 
   /**
@@ -179,11 +179,11 @@ export class InverseClient extends BaseRestClient {
    */
 
   getServerTime(): Promise<APIResponseWithTime<{}>> {
-    return this.requestWrapper.get('v2/public/time');
+    return this.get('v2/public/time');
   }
 
   getApiAnnouncements(): Promise<APIResponseWithTime<any[]>> {
-    return this.requestWrapper.get('v2/public/announcement');
+    return this.get('v2/public/announcement');
   }
 
   /**
@@ -443,10 +443,7 @@ export class InverseClient extends BaseRestClient {
    */
 
   getLastFundingRate(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get(
-      'v2/public/funding/prev-funding-rate',
-      params
-    );
+    return this.get('v2/public/funding/prev-funding-rate', params);
   }
 
   getMyLastFundingFee(params: SymbolParam): GenericAPIResponse {
