@@ -9,11 +9,8 @@ import {
 } from './types/spot';
 import BaseRestClient from './util/BaseRestClient';
 import { getRestBaseUrl, RestClientOptions } from './util/requestUtils';
-import RequestWrapper from './util/requestWrapper';
 
 export class SpotClient extends BaseRestClient {
-  protected requestWrapper: RequestWrapper;
-
   /**
    * @public Creates an instance of the Spot REST API client.
    *
