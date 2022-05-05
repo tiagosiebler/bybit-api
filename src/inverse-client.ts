@@ -162,7 +162,7 @@ export class InverseClient extends BaseRestClient {
     return this.requestWrapper.get('v2/private/wallet/fund/records', params);
   }
 
-  getWithdrawRecords(params: WithdrawRecordsReq): GenericAPIResponse {
+  getWithdrawRecords(params?: WithdrawRecordsReq): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/wallet/withdraw/list', params);
   }
 
@@ -278,6 +278,7 @@ export class InverseClient extends BaseRestClient {
     return this.requestWrapper.post('v2/private/stop-order/create', params);
   }
 
+  /** get conditional order list. This may see delays, use queryConditionalOrder() for real-time queries */
   getConditionalOrder(params: {
     symbol: string;
     stop_order_status?: string;
@@ -323,22 +324,8 @@ export class InverseClient extends BaseRestClient {
    * Position
    */
 
-  /**
-   * @deprecated use getPosition() instead
-   */
-  getUserLeverage(): GenericAPIResponse {
-    return this.requestWrapper.get('user/leverage');
-  }
-
   getPosition(params?: Partial<SymbolParam>): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/position/list', params);
-  }
-
-  /**
-   * @deprecated use getPosition() instead
-   */
-  getPositions(): GenericAPIResponse {
-    return this.requestWrapper.get('position/list');
   }
 
   changePositionMargin(params: {
@@ -369,13 +356,6 @@ export class InverseClient extends BaseRestClient {
       'v2/private/position/leverage/save',
       params
     );
-  }
-
-  /**
-   * @deprecated use setUserLeverage() instead
-   */
-  changeUserLeverage(params: any): GenericAPIResponse {
-    return this.setUserLeverage(params);
   }
 
   getTradeRecords(params: {
@@ -428,7 +408,7 @@ export class InverseClient extends BaseRestClient {
    */
 
   getRiskLimitList(): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/wallet/risk-limit/list');
+    return this.get('open-api/wallet/risk-limit/list');
   }
 
   setRiskLimit(params: {
@@ -463,10 +443,5 @@ export class InverseClient extends BaseRestClient {
 
   getLcpInfo(params: SymbolParam): GenericAPIResponse {
     return this.requestWrapper.get('v2/private/account/lcp', params);
-  }
-
-  //API Key Info
-  getAPIKeyInfo(): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/account/api-key');
   }
 }
