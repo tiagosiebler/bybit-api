@@ -70,13 +70,6 @@ describe('Public Inverse REST API Endpoints', () => {
       ).toMatchObject(successResponseList());
     });
 
-    //
-    //
-    //
-    //
-    //
-    //
-
     it('getLastFundingRate()', async () => {
       expect(await api.getLastFundingRate({ symbol })).toMatchObject(
         successResponseObject()
