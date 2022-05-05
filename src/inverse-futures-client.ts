@@ -7,6 +7,7 @@ import {
 import RequestWrapper from './util/requestWrapper';
 import {
   APIResponse,
+  APIResponseWithTime,
   AssetExchangeRecordsReq,
   CoinParam,
   SymbolFromLimitParam,
@@ -15,7 +16,6 @@ import {
   SymbolLimitParam,
   SymbolParam,
   SymbolPeriodLimitParam,
-  TimeResult,
   WalletFundRecordsReq,
   WithdrawRecordsReq,
 } from './types/shared';
@@ -60,7 +60,7 @@ export class InverseFuturesClient extends BaseRestClient {
 
   async fetchServerTime(): Promise<number> {
     const res = await this.getServerTime();
-    return res.time_now;
+    return Number(res.time_now);
   }
 
   /**
@@ -69,19 +69,52 @@ export class InverseFuturesClient extends BaseRestClient {
    *
    */
 
-  getOrderBook(params: SymbolParam): GenericAPIResponse {
+  getOrderBook(params: SymbolParam): Promise<APIResponseWithTime<any[]>> {
     return this.requestWrapper.get('v2/public/orderBook/L2', params);
+  }
+
+  getKline(
+    params: SymbolIntervalFromLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
+    return this.requestWrapper.get('v2/public/kline/list', params);
   }
 
   /**
    * Get latest information for symbol
    */
-  getTickers(params?: Partial<SymbolParam>): GenericAPIResponse {
+  getTickers(
+    params?: Partial<SymbolParam>
+  ): Promise<APIResponseWithTime<any[]>> {
     return this.requestWrapper.get('v2/public/tickers', params);
   }
 
-  getSymbols(): Promise<APIResponse<SymbolInfo[]>> {
+  /**
+   * Public trading records
+   */
+  getTrades(params: SymbolLimitParam): Promise<APIResponseWithTime<any[]>> {
+    return this.requestWrapper.get('v2/public/trading-records', params);
+  }
+
+  getSymbols(): Promise<APIResponseWithTime<SymbolInfo[]>> {
     return this.requestWrapper.get('v2/public/symbols');
+  }
+
+  getMarkPriceKline(
+    params: SymbolIntervalFromLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
+    return this.requestWrapper.get('v2/public/mark-price-kline', params);
+  }
+
+  getIndexPriceKline(
+    params: SymbolIntervalFromLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
+    return this.requestWrapper.get('v2/public/index-price-kline', params);
+  }
+
+  getPremiumIndexKline(
+    params: SymbolIntervalFromLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
+    return this.requestWrapper.get('v2/public/premium-index-kline', params);
   }
 
   /**
@@ -90,15 +123,21 @@ export class InverseFuturesClient extends BaseRestClient {
    *
    */
 
-  getOpenInterest(params: SymbolPeriodLimitParam): GenericAPIResponse {
+  getOpenInterest(
+    params: SymbolPeriodLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
     return this.requestWrapper.get('v2/public/open-interest', params);
   }
 
-  getLatestBigDeal(params: SymbolLimitParam): GenericAPIResponse {
+  getLatestBigDeal(
+    params: SymbolLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
     return this.requestWrapper.get('v2/public/big-deal', params);
   }
 
-  getLongShortRatio(params: SymbolPeriodLimitParam): GenericAPIResponse {
+  getLongShortRatio(
+    params: SymbolPeriodLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
     return this.requestWrapper.get('v2/public/account-ratio', params);
   }
 
@@ -142,43 +181,12 @@ export class InverseFuturesClient extends BaseRestClient {
    *
    */
 
-  getServerTime(): GenericAPIResponse<TimeResult> {
+  getServerTime(): Promise<APIResponseWithTime<{}>> {
     return this.requestWrapper.get('v2/public/time');
   }
 
   getApiAnnouncements(): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/announcement');
-  }
-
-  /**
-   *
-   * Market Data Endpoints
-   *    Note: These are currently the same as the inverse client
-   */
-
-  getKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/kline/list', params);
-  }
-
-  /**
-   * Public trading records
-   */
-  getTrades(params: SymbolFromLimitParam): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/trading-records', params);
-  }
-
-  getMarkPriceKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/mark-price-kline', params);
-  }
-
-  getIndexPriceKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/index-price-kline', params);
-  }
-
-  getPremiumIndexKline(
-    params: SymbolIntervalFromLimitParam
-  ): GenericAPIResponse {
-    return this.requestWrapper.get('v2/public/premium-index-kline', params);
   }
 
   /**

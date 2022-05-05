@@ -80,6 +80,10 @@ describe('Public Inverse REST API Endpoints', () => {
       expect(await api.getServerTime()).toMatchObject(successResponseObject());
     });
 
+    it('fetchServertime() returns number', async () => {
+      expect(await api.fetchServerTime()).toStrictEqual(expect.any(Number));
+    });
+
     it('getApiAnnouncements()', async () => {
       expect(await api.getApiAnnouncements()).toMatchObject(
         successResponseList()

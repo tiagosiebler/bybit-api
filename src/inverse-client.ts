@@ -16,7 +16,6 @@ import {
   SymbolLimitParam,
   SymbolParam,
   SymbolPeriodLimitParam,
-  TimeResult,
   WalletFundRecordsReq,
   WithdrawRecordsReq,
 } from './types/shared';
@@ -121,15 +120,21 @@ export class InverseClient extends BaseRestClient {
    *
    */
 
-  getOpenInterest(params: SymbolPeriodLimitParam): GenericAPIResponse {
+  getOpenInterest(
+    params: SymbolPeriodLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
     return this.requestWrapper.get('v2/public/open-interest', params);
   }
 
-  getLatestBigDeal(params: SymbolLimitParam): GenericAPIResponse {
+  getLatestBigDeal(
+    params: SymbolLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
     return this.requestWrapper.get('v2/public/big-deal', params);
   }
 
-  getLongShortRatio(params: SymbolPeriodLimitParam): GenericAPIResponse {
+  getLongShortRatio(
+    params: SymbolPeriodLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
     return this.requestWrapper.get('v2/public/account-ratio', params);
   }
 

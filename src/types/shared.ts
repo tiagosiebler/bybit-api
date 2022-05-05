@@ -122,7 +122,3 @@ export interface SymbolInfo {
   price_filter: PriceFilter;
   lot_size_filter: LotSizeFilter;
 }
-
-export interface TimeResult {
-  time_now: number;
-}
