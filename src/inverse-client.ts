@@ -52,7 +52,7 @@ export class InverseClient extends BaseRestClient {
       key,
       secret,
       getRestBaseUrl(useLivenet, restClientOptions),
-      restClientOptions,
+      { ...restClientOptions, disable_time_sync: true },
       requestOptions
     );
     return this;

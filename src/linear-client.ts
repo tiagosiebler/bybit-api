@@ -7,6 +7,7 @@ import {
 import RequestWrapper from './util/requestWrapper';
 import {
   APIResponse,
+  APIResponseWithTime,
   AssetExchangeRecordsReq,
   CoinParam,
   SymbolInfo,
@@ -14,7 +15,6 @@ import {
   SymbolLimitParam,
   SymbolParam,
   SymbolPeriodLimitParam,
-  TimeResult,
   WalletFundRecordsReq,
   WithdrawRecordsReq,
 } from './types/shared';
@@ -53,7 +53,7 @@ export class LinearClient extends BaseRestClient {
       key,
       secret,
       getRestBaseUrl(useLivenet, restClientOptions),
-      restClientOptions,
+      { ...restClientOptions, disable_time_sync: true },
       requestOptions
     );
     return this;
@@ -61,7 +61,7 @@ export class LinearClient extends BaseRestClient {
 
   async fetchServerTime(): Promise<number> {
     const timeRes = await this.getServerTime();
-    return timeRes.time_now;
+    return Number(timeRes.time_now);
   }
 
   /**
@@ -70,19 +70,59 @@ export class LinearClient extends BaseRestClient {
    *
    */
 
-  getOrderBook(params: SymbolParam): GenericAPIResponse {
+  getOrderBook(params: SymbolParam): Promise<APIResponseWithTime<any[]>> {
     return this.requestWrapper.get('v2/public/orderBook/L2', params);
+  }
+
+  getKline(
+    params: SymbolIntervalFromLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
+    return this.requestWrapper.get('public/linear/kline', params);
   }
 
   /**
    * Get latest information for symbol
    */
-  getTickers(params?: Partial<SymbolParam>): GenericAPIResponse {
+  getTickers(
+    params?: Partial<SymbolParam>
+  ): Promise<APIResponseWithTime<any[]>> {
     return this.requestWrapper.get('v2/public/tickers', params);
+  }
+
+  getTrades(params: SymbolLimitParam): Promise<APIResponseWithTime<any[]>> {
+    return this.requestWrapper.get(
+      'public/linear/recent-trading-records',
+      params
+    );
   }
 
   getSymbols(): Promise<APIResponse<SymbolInfo[]>> {
     return this.requestWrapper.get('v2/public/symbols');
+  }
+
+  getLastFundingRate(params: SymbolParam): Promise<APIResponseWithTime<any[]>> {
+    return this.requestWrapper.get(
+      'public/linear/funding/prev-funding-rate',
+      params
+    );
+  }
+
+  getMarkPriceKline(
+    params: SymbolIntervalFromLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
+    return this.requestWrapper.get('public/linear/mark-price-kline', params);
+  }
+
+  getIndexPriceKline(
+    params: SymbolIntervalFromLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
+    return this.requestWrapper.get('public/linear/index-price-kline', params);
+  }
+
+  getPremiumIndexKline(
+    params: SymbolIntervalFromLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
+    return this.requestWrapper.get('public/linear/premium-index-kline', params);
   }
 
   /**
@@ -91,15 +131,21 @@ export class LinearClient extends BaseRestClient {
    *
    */
 
-  getOpenInterest(params: SymbolPeriodLimitParam): GenericAPIResponse {
+  getOpenInterest(
+    params: SymbolPeriodLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
     return this.requestWrapper.get('v2/public/open-interest', params);
   }
 
-  getLatestBigDeal(params: SymbolLimitParam): GenericAPIResponse {
+  getLatestBigDeal(
+    params: SymbolLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
     return this.requestWrapper.get('v2/public/big-deal', params);
   }
 
-  getLongShortRatio(params: SymbolPeriodLimitParam): GenericAPIResponse {
+  getLongShortRatio(
+    params: SymbolPeriodLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
     return this.requestWrapper.get('v2/public/account-ratio', params);
   }
 
@@ -143,50 +189,12 @@ export class LinearClient extends BaseRestClient {
    *
    */
 
-  getServerTime(): GenericAPIResponse<TimeResult> {
+  getServerTime(): Promise<APIResponseWithTime<{}>> {
     return this.requestWrapper.get('v2/public/time');
   }
 
   getApiAnnouncements(): GenericAPIResponse {
     return this.requestWrapper.get('v2/public/announcement');
-  }
-
-  /**
-   *
-   * Market Data Endpoints
-   *
-   */
-
-  getKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
-    return this.requestWrapper.get('public/linear/kline', params);
-  }
-
-  getTrades(params: SymbolLimitParam): GenericAPIResponse {
-    return this.requestWrapper.get(
-      'public/linear/recent-trading-records',
-      params
-    );
-  }
-
-  getLastFundingRate(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get(
-      'public/linear/funding/prev-funding-rate',
-      params
-    );
-  }
-
-  getMarkPriceKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
-    return this.requestWrapper.get('public/linear/mark-price-kline', params);
-  }
-
-  getIndexPriceKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
-    return this.requestWrapper.get('public/linear/index-price-kline', params);
-  }
-
-  getPremiumIndexKline(
-    params: SymbolIntervalFromLimitParam
-  ): GenericAPIResponse {
-    return this.requestWrapper.get('public/linear/premium-index-kline', params);
   }
 
   /**
