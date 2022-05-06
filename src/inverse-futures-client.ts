@@ -6,11 +6,9 @@ import {
 } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
 import {
-  APIResponse,
   APIResponseWithTime,
   AssetExchangeRecordsReq,
   CoinParam,
-  SymbolFromLimitParam,
   SymbolInfo,
   SymbolIntervalFromLimitParam,
   SymbolLimitParam,
@@ -148,7 +146,7 @@ export class InverseFuturesClient extends BaseRestClient {
    */
 
   getApiKeyInfo(): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/account/api-key');
+    return this.getPrivate('v2/private/account/api-key');
   }
 
   /**
@@ -158,21 +156,21 @@ export class InverseFuturesClient extends BaseRestClient {
    */
 
   getWalletBalance(params?: Partial<CoinParam>): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/wallet/balance', params);
+    return this.getPrivate('v2/private/wallet/balance', params);
   }
 
   getWalletFundRecords(params?: WalletFundRecordsReq): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/wallet/fund/records', params);
+    return this.getPrivate('v2/private/wallet/fund/records', params);
   }
 
-  getWithdrawRecords(params: WithdrawRecordsReq): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/wallet/withdraw/list', params);
+  getWithdrawRecords(params?: WithdrawRecordsReq): GenericAPIResponse {
+    return this.getPrivate('v2/private/wallet/withdraw/list', params);
   }
 
   getAssetExchangeRecords(
     params?: AssetExchangeRecordsReq
   ): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/exchange-order/list', params);
+    return this.getPrivate('v2/private/exchange-order/list', params);
   }
 
   /**
@@ -225,7 +223,7 @@ export class InverseFuturesClient extends BaseRestClient {
     limit?: number;
     cursor?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('futures/private/order/list', params);
+    return this.getPrivate('futures/private/order/list', params);
   }
 
   cancelActiveOrder(params: {
@@ -255,7 +253,7 @@ export class InverseFuturesClient extends BaseRestClient {
     order_link_id?: string;
     symbol: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('futures/private/order', params);
+    return this.getPrivate('futures/private/order', params);
   }
 
   /**
@@ -288,7 +286,7 @@ export class InverseFuturesClient extends BaseRestClient {
     limit?: number;
     cursor?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('futures/private/stop-order/list', params);
+    return this.getPrivate('futures/private/stop-order/list', params);
   }
 
   cancelConditionalOrder(params: {
@@ -328,7 +326,7 @@ export class InverseFuturesClient extends BaseRestClient {
     stop_order_id?: string;
     order_link_id?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('futures/private/stop-order', params);
+    return this.getPrivate('futures/private/stop-order', params);
   }
 
   /**
@@ -339,7 +337,7 @@ export class InverseFuturesClient extends BaseRestClient {
    * Get position list
    */
   getPosition(params?: Partial<SymbolParam>): GenericAPIResponse {
-    return this.requestWrapper.get('futures/private/position/list', params);
+    return this.getPrivate('futures/private/position/list', params);
   }
 
   changePositionMargin(params: {
@@ -414,7 +412,7 @@ export class InverseFuturesClient extends BaseRestClient {
     limit?: number;
     order?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('futures/private/execution/list', params);
+    return this.getPrivate('futures/private/execution/list', params);
   }
 
   getClosedPnl(params: {
@@ -425,10 +423,7 @@ export class InverseFuturesClient extends BaseRestClient {
     page?: number;
     limit?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.get(
-      'futures/private/trade/closed-pnl/list',
-      params
-    );
+    return this.getPrivate('futures/private/trade/closed-pnl/list', params);
   }
 
   /**
@@ -439,7 +434,7 @@ export class InverseFuturesClient extends BaseRestClient {
    * Risk Limit
    */
   getRiskLimitList(): GenericAPIResponse {
-    return this.requestWrapper.get('open-api/wallet/risk-limit/list');
+    return this.getPrivate('open-api/wallet/risk-limit/list');
   }
 
   setRiskLimit(params: {
@@ -454,21 +449,15 @@ export class InverseFuturesClient extends BaseRestClient {
    */
 
   getLastFundingRate(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get(
-      'v2/public/funding/prev-funding-rate',
-      params
-    );
+    return this.get('v2/public/funding/prev-funding-rate', params);
   }
 
   getMyLastFundingFee(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/funding/prev-funding', params);
+    return this.getPrivate('v2/private/funding/prev-funding', params);
   }
 
   getPredictedFunding(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get(
-      'v2/private/funding/predicted-funding',
-      params
-    );
+    return this.getPrivate('v2/private/funding/predicted-funding', params);
   }
 
   /**
@@ -476,6 +465,6 @@ export class InverseFuturesClient extends BaseRestClient {
    */
 
   getLcpInfo(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/account/lcp', params);
+    return this.getPrivate('v2/private/account/lcp', params);
   }
 }

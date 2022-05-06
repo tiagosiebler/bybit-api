@@ -145,7 +145,7 @@ export class InverseClient extends BaseRestClient {
    */
 
   getApiKeyInfo(): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/account/api-key');
+    return this.getPrivate('v2/private/account/api-key');
   }
 
   /**
@@ -155,21 +155,21 @@ export class InverseClient extends BaseRestClient {
    */
 
   getWalletBalance(params?: Partial<CoinParam>): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/wallet/balance', params);
+    return this.getPrivate('v2/private/wallet/balance', params);
   }
 
   getWalletFundRecords(params?: WalletFundRecordsReq): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/wallet/fund/records', params);
+    return this.getPrivate('v2/private/wallet/fund/records', params);
   }
 
   getWithdrawRecords(params?: WithdrawRecordsReq): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/wallet/withdraw/list', params);
+    return this.getPrivate('v2/private/wallet/withdraw/list', params);
   }
 
   getAssetExchangeRecords(
     params?: AssetExchangeRecordsReq
   ): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/exchange-order/list', params);
+    return this.getPrivate('v2/private/exchange-order/list', params);
   }
 
   /**
@@ -221,7 +221,7 @@ export class InverseClient extends BaseRestClient {
     limit?: number;
     cursor?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/order/list', params);
+    return this.getPrivate('v2/private/order/list', params);
   }
 
   cancelActiveOrder(params: {
@@ -255,7 +255,7 @@ export class InverseClient extends BaseRestClient {
     order_link_id?: string;
     symbol: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/order', params);
+    return this.getPrivate('v2/private/order', params);
   }
 
   /**
@@ -286,7 +286,7 @@ export class InverseClient extends BaseRestClient {
     limit?: number;
     cursor?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/stop-order/list', params);
+    return this.getPrivate('v2/private/stop-order/list', params);
   }
 
   cancelConditionalOrder(params: {
@@ -317,7 +317,7 @@ export class InverseClient extends BaseRestClient {
     stop_order_id?: string;
     order_link_id?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/stop-order', params);
+    return this.getPrivate('v2/private/stop-order', params);
   }
 
   /**
@@ -325,7 +325,7 @@ export class InverseClient extends BaseRestClient {
    */
 
   getPosition(params?: Partial<SymbolParam>): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/position/list', params);
+    return this.getPrivate('v2/private/position/list', params);
   }
 
   changePositionMargin(params: {
@@ -366,7 +366,7 @@ export class InverseClient extends BaseRestClient {
     limit?: number;
     order?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/execution/list', params);
+    return this.getPrivate('v2/private/execution/list', params);
   }
 
   getClosedPnl(params: {
@@ -377,7 +377,7 @@ export class InverseClient extends BaseRestClient {
     page?: number;
     limit?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/trade/closed-pnl/list', params);
+    return this.getPrivate('v2/private/trade/closed-pnl/list', params);
   }
 
   setPositionMode(params: { symbol: string; mode: 0 | 3 }): GenericAPIResponse {
@@ -427,14 +427,11 @@ export class InverseClient extends BaseRestClient {
   }
 
   getMyLastFundingFee(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/funding/prev-funding', params);
+    return this.getPrivate('v2/private/funding/prev-funding', params);
   }
 
   getPredictedFunding(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get(
-      'v2/private/funding/predicted-funding',
-      params
-    );
+    return this.getPrivate('v2/private/funding/predicted-funding', params);
   }
 
   /**
@@ -442,6 +439,6 @@ export class InverseClient extends BaseRestClient {
    */
 
   getLcpInfo(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/account/lcp', params);
+    return this.getPrivate('v2/private/account/lcp', params);
   }
 }
