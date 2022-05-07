@@ -408,7 +408,7 @@ export class InverseClient extends BaseRestClient {
    */
 
   getRiskLimitList(): GenericAPIResponse {
-    return this.get('open-api/wallet/risk-limit/list');
+    return this.getPrivate('open-api/wallet/risk-limit/list');
   }
 
   setRiskLimit(params: {
