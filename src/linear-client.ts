@@ -150,7 +150,7 @@ export class LinearClient extends BaseRestClient {
    */
 
   getApiKeyInfo(): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/account/api-key');
+    return this.getPrivate('v2/private/account/api-key');
   }
 
   /**
@@ -160,21 +160,21 @@ export class LinearClient extends BaseRestClient {
    */
 
   getWalletBalance(params?: Partial<CoinParam>): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/wallet/balance', params);
+    return this.getPrivate('v2/private/wallet/balance', params);
   }
 
   getWalletFundRecords(params?: WalletFundRecordsReq): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/wallet/fund/records', params);
+    return this.getPrivate('v2/private/wallet/fund/records', params);
   }
 
-  getWithdrawRecords(params: WithdrawRecordsReq): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/wallet/withdraw/list', params);
+  getWithdrawRecords(params?: WithdrawRecordsReq): GenericAPIResponse {
+    return this.getPrivate('v2/private/wallet/withdraw/list', params);
   }
 
   getAssetExchangeRecords(
     params?: AssetExchangeRecordsReq
   ): GenericAPIResponse {
-    return this.requestWrapper.get('v2/private/exchange-order/list', params);
+    return this.getPrivate('v2/private/exchange-order/list', params);
   }
 
   /**
@@ -225,7 +225,7 @@ export class LinearClient extends BaseRestClient {
     limit?: number;
     order_status?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/order/list', params);
+    return this.getPrivate('private/linear/order/list', params);
   }
 
   cancelActiveOrder(params: {
@@ -259,7 +259,7 @@ export class LinearClient extends BaseRestClient {
     order_link_id?: string;
     symbol: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/order/search', params);
+    return this.getPrivate('private/linear/order/search', params);
   }
 
   /**
@@ -296,7 +296,7 @@ export class LinearClient extends BaseRestClient {
     page?: number;
     limit?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/stop-order/list', params);
+    return this.getPrivate('private/linear/stop-order/list', params);
   }
 
   cancelConditionalOrder(params: {
@@ -337,7 +337,7 @@ export class LinearClient extends BaseRestClient {
     stop_order_id?: string;
     order_link_id?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/stop-order/search', params);
+    return this.getPrivate('private/linear/stop-order/search', params);
   }
 
   /**
@@ -345,7 +345,7 @@ export class LinearClient extends BaseRestClient {
    */
 
   getPosition(params?: Partial<SymbolParam>): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/position/list', params);
+    return this.getPrivate('private/linear/position/list', params);
   }
 
   setAutoAddMargin(params?: {
@@ -450,10 +450,7 @@ export class LinearClient extends BaseRestClient {
     page?: number;
     limit?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.get(
-      'private/linear/trade/execution/list',
-      params
-    );
+    return this.getPrivate('private/linear/trade/execution/list', params);
   }
 
   getClosedPnl(params: {
@@ -464,10 +461,7 @@ export class LinearClient extends BaseRestClient {
     page?: number;
     limit?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.get(
-      'private/linear/trade/closed-pnl/list',
-      params
-    );
+    return this.getPrivate('private/linear/trade/closed-pnl/list', params);
   }
 
   /**
@@ -475,7 +469,7 @@ export class LinearClient extends BaseRestClient {
    */
 
   getRiskLimitList(params: SymbolParam): GenericAPIResponse {
-    return this.get('public/linear/risk-limit', params);
+    return this.getPrivate('public/linear/risk-limit', params);
   }
 
   setRiskLimit(params: {
@@ -483,7 +477,7 @@ export class LinearClient extends BaseRestClient {
     side: string;
     risk_id: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/position/set-risk', params);
+    return this.requestWrapper.post('private/linear/position/set-risk', params);
   }
 
   /**
@@ -491,16 +485,10 @@ export class LinearClient extends BaseRestClient {
    */
 
   getPredictedFundingFee(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get(
-      'private/linear/funding/predicted-funding',
-      params
-    );
+    return this.getPrivate('private/linear/funding/predicted-funding', params);
   }
 
   getLastFundingFee(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get(
-      'private/linear/funding/prev-funding',
-      params
-    );
+    return this.getPrivate('private/linear/funding/prev-funding', params);
   }
 }
