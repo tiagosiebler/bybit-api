@@ -76,7 +76,7 @@ export function isPublicEndpoint(endpoint: string): boolean {
 }
 
 export function isWsPong(response: any) {
-  if (response.pong) {
+  if (response.pong || response.ping) {
     return true;
   }
   return (
@@ -86,3 +86,13 @@ export function isWsPong(response: any) {
     response.success === true
   );
 }
+
+export const REST_CLIENT_TYPE_ENUM = {
+  inverse: 'inverse',
+  inverseFutures: 'inverseFutures',
+  linear: 'linear',
+  spot: 'spot',
+} as const;
+
+export type RestClientType =
+  typeof REST_CLIENT_TYPE_ENUM[keyof typeof REST_CLIENT_TYPE_ENUM];

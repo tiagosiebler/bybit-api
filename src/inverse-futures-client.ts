@@ -3,6 +3,7 @@ import {
   GenericAPIResponse,
   getRestBaseUrl,
   RestClientOptions,
+  REST_CLIENT_TYPE_ENUM,
 } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
 import {
@@ -44,7 +45,8 @@ export class InverseFuturesClient extends BaseRestClient {
       secret,
       getRestBaseUrl(useLivenet, restClientOptions),
       restClientOptions,
-      requestOptions
+      requestOptions,
+      REST_CLIENT_TYPE_ENUM.inverseFutures
     );
     this.requestWrapper = new RequestWrapper(
       key,

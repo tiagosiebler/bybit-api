@@ -3,6 +3,7 @@ import {
   GenericAPIResponse,
   getRestBaseUrl,
   RestClientOptions,
+  REST_CLIENT_TYPE_ENUM,
 } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
 import {
@@ -46,7 +47,8 @@ export class LinearClient extends BaseRestClient {
       secret,
       getRestBaseUrl(useLivenet, restClientOptions),
       restClientOptions,
-      requestOptions
+      requestOptions,
+      REST_CLIENT_TYPE_ENUM.linear
     );
 
     this.requestWrapper = new RequestWrapper(

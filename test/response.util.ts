@@ -14,6 +14,18 @@ export function successResponseObject(successMsg: string | null = 'OK') {
   };
 }
 
+export function errorResponseObject(
+  result: null | any = null,
+  ret_code: number,
+  ret_msg: string
+) {
+  return {
+    result,
+    ret_code,
+    ret_msg,
+  };
+}
+
 export function notAuthenticatedError() {
   return new Error('Private endpoints require api and private keys set');
 }

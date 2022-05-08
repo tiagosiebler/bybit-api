@@ -8,7 +8,11 @@ import {
   SpotSymbolInfo,
 } from './types/spot';
 import BaseRestClient from './util/BaseRestClient';
-import { getRestBaseUrl, RestClientOptions } from './util/requestUtils';
+import {
+  getRestBaseUrl,
+  RestClientOptions,
+  REST_CLIENT_TYPE_ENUM,
+} from './util/requestUtils';
 
 export class SpotClient extends BaseRestClient {
   /**
@@ -32,7 +36,8 @@ export class SpotClient extends BaseRestClient {
       secret,
       getRestBaseUrl(useLivenet, restClientOptions),
       restClientOptions,
-      requestOptions
+      requestOptions,
+      REST_CLIENT_TYPE_ENUM.spot
     );
 
     return this;

@@ -9,10 +9,25 @@ import { signMessage } from './node-support';
 import {
   RestClientOptions,
   GenericAPIResponse,
-  getRestBaseUrl,
   serializeParams,
-  isPublicEndpoint,
+  RestClientType,
+  REST_CLIENT_TYPE_ENUM,
 } from './requestUtils';
+
+
+interface SignedRequestContext {
+  timestamp: number;
+  api_key?: string;
+  recv_window?: number;
+  // spot is diff from the rest...
+  recvWindow?: number;
+}
+
+interface SignedRequest<T> {
+  originalParams: T & SignedRequestContext;
+  paramsWithSign?: T & SignedRequestContext & { sign: string };
+  sign: string;
+}
 
 export default abstract class BaseRestClient {
   private timeOffset: number | null;
@@ -22,6 +37,7 @@ export default abstract class BaseRestClient {
   private globalRequestOptions: AxiosRequestConfig;
   private key: string | undefined;
   private secret: string | undefined;
+  private clientType: RestClientType;
 
   /** Function that calls exchange API to query & resolve server time, used by time sync */
   abstract fetchServerTime(): Promise<number>;
@@ -31,10 +47,13 @@ export default abstract class BaseRestClient {
     secret: string | undefined,
     baseUrl: string,
     options: RestClientOptions = {},
-    requestOptions: AxiosRequestConfig = {}
+    requestOptions: AxiosRequestConfig = {},
+    clientType: RestClientType
   ) {
     this.timeOffset = null;
     this.syncTimePromise = null;
+
+    this.clientType = clientType;
 
     this.options = {
       recv_window: 5000,
@@ -72,6 +91,10 @@ export default abstract class BaseRestClient {
     this.secret = secret;
   }
 
+  private isSpotClient() {
+    return this.clientType === REST_CLIENT_TYPE_ENUM.spot;
+  }
+
   get(endpoint: string, params?: any): GenericAPIResponse {
     return this._call('GET', endpoint, params, true);
   }
@@ -92,6 +115,26 @@ export default abstract class BaseRestClient {
     return this._call('DELETE', endpoint, params, false);
   }
 
+  private async prepareSignParams(params?: any, isPublicApi?: boolean) {
+    if (isPublicApi) {
+      return {
+        originalParams: params,
+        paramsWithSign: params,
+      };
+    }
+
+    if (!this.key || !this.secret) {
+      throw new Error('Private endpoints require api and private keys set');
+    }
+
+    if (this.timeOffset === null) {
+      await this.syncTime();
+    }
+
+    const signedRequest = await this.signRequest(params);
+    return signedRequest;
+  }
+
   /**
    * @private Make a HTTP request to a specific endpoint. Private endpoints are automatically signed.
    */
@@ -101,18 +144,6 @@ export default abstract class BaseRestClient {
     params?: any,
     isPublicApi?: boolean
   ): GenericAPIResponse {
-    if (!isPublicApi) {
-      if (!this.key || !this.secret) {
-        throw new Error('Private endpoints require api and private keys set');
-      }
-
-      if (this.timeOffset === null) {
-        await this.syncTime();
-      }
-
-      params = await this.signRequest(params);
-    }
-
     const options = {
       ...this.globalRequestOptions,
       url: [this.baseUrl, endpoint].join(endpoint.startsWith('/') ? '' : '/'),
@@ -120,10 +151,21 @@ export default abstract class BaseRestClient {
       json: true,
     };
 
+    for (const key in params) {
+      if (typeof params[key] === 'undefined') {
+        delete params[key];
+      }
+    }
+
+    const preparedRequestParams = await this.prepareSignParams(
+      params,
+      isPublicApi
+    );
+
     if (method === 'GET') {
-      options.params = params;
+      options.params = preparedRequestParams.paramsWithSign;
     } else {
-      options.data = params;
+      options.data = preparedRequestParams.paramsWithSign;
     }
 
     return axios(options)
@@ -170,27 +212,40 @@ export default abstract class BaseRestClient {
   /**
    * @private sign request and set recv window
    */
-  async signRequest(data: any): Promise<any> {
-    const params = {
-      ...data,
-      api_key: this.key,
-      timestamp: Date.now() + (this.timeOffset || 0),
+  private async signRequest<T extends Object>(
+    data: T & SignedRequestContext
+  ): Promise<SignedRequest<T>> {
+    const res: SignedRequest<T> = {
+      originalParams: {
+        ...data,
+        api_key: this.key,
+        timestamp: Date.now() + (this.timeOffset || 0),
+      },
+      sign: '',
     };
 
     // Optional, set to 5000 by default. Increase if timestamp/recv_window errors are seen.
-    if (this.options.recv_window && !params.recv_window) {
-      params.recv_window = this.options.recv_window;
+    if (this.options.recv_window && !res.originalParams.recv_window) {
+      if (this.isSpotClient()) {
+        res.originalParams.recvWindow = this.options.recv_window;
+      } else {
+        res.originalParams.recv_window = this.options.recv_window;
+      }
     }
 
     if (this.key && this.secret) {
       const serializedParams = serializeParams(
-        params,
+        res.originalParams,
         this.options.strict_param_validation
       );
-      params.sign = await signMessage(serializedParams, this.secret);
+      res.sign = await signMessage(serializedParams, this.secret);
+      res.paramsWithSign = {
+        ...res.originalParams,
+        sign: res.sign,
+      };
     }
 
-    return params;
+    return res;
   }
 
   /**
