@@ -157,15 +157,12 @@ export default abstract class BaseRestClient {
       }
     }
 
-    const preparedRequestParams = await this.prepareSignParams(
-      params,
-      isPublicApi
-    );
+    const signResult = await this.prepareSignParams(params, isPublicApi);
 
     if (method === 'GET') {
-      options.params = preparedRequestParams.paramsWithSign;
+      options.params = signResult.paramsWithSign;
     } else {
-      options.data = preparedRequestParams.paramsWithSign;
+      options.data = signResult.paramsWithSign;
     }
 
     return axios(options)
