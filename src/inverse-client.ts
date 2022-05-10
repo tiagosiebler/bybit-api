@@ -7,11 +7,9 @@ import {
 } from './util/requestUtils';
 import RequestWrapper from './util/requestWrapper';
 import {
-  APIResponse,
   APIResponseWithTime,
   AssetExchangeRecordsReq,
   CoinParam,
-  SymbolFromLimitParam,
   SymbolInfo,
   SymbolIntervalFromLimitParam,
   SymbolLimitParam,
@@ -380,10 +378,6 @@ export class InverseClient extends BaseRestClient {
     limit?: number;
   }): GenericAPIResponse {
     return this.getPrivate('v2/private/trade/closed-pnl/list', params);
-  }
-
-  setPositionMode(params: { symbol: string; mode: 0 | 3 }): GenericAPIResponse {
-    return this.requestWrapper.post('v2/private/position/switch-mode', params);
   }
 
   setSlTpPositionMode(params: {

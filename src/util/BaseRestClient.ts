@@ -131,8 +131,7 @@ export default abstract class BaseRestClient {
       await this.syncTime();
     }
 
-    const signedRequest = await this.signRequest(params);
-    return signedRequest;
+    return this.signRequest(params);
   }
 
   /**
