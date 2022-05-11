@@ -5,7 +5,6 @@ import {
   RestClientOptions,
   REST_CLIENT_TYPE_ENUM,
 } from './util/requestUtils';
-import RequestWrapper from './util/requestWrapper';
 import {
   APIResponseWithTime,
   AssetExchangeRecordsReq,
@@ -21,9 +20,6 @@ import {
 import BaseRestClient from './util/BaseRestClient';
 
 export class InverseClient extends BaseRestClient {
-  /** @deprecated,  */
-  protected requestWrapper: RequestWrapper;
-
   /**
    * @public Creates an instance of the inverse REST API client.
    *
@@ -47,13 +43,6 @@ export class InverseClient extends BaseRestClient {
       restClientOptions,
       requestOptions,
       REST_CLIENT_TYPE_ENUM.inverse
-    );
-    this.requestWrapper = new RequestWrapper(
-      key,
-      secret,
-      getRestBaseUrl(useLivenet, restClientOptions),
-      { ...restClientOptions, disable_time_sync: true },
-      requestOptions
     );
     return this;
   }
@@ -211,7 +200,7 @@ export class InverseClient extends BaseRestClient {
     close_on_trigger?: boolean;
     order_link_id?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('v2/private/order/create', orderRequest);
+    return this.postPrivate('v2/private/order/create', orderRequest);
   }
 
   getActiveOrderList(params: {
@@ -229,11 +218,11 @@ export class InverseClient extends BaseRestClient {
     order_id?: string;
     order_link_id?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('v2/private/order/cancel', params);
+    return this.postPrivate('v2/private/order/cancel', params);
   }
 
   cancelAllActiveOrders(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.post('v2/private/order/cancelAll', params);
+    return this.postPrivate('v2/private/order/cancelAll', params);
   }
 
   replaceActiveOrder(params: {
@@ -247,7 +236,7 @@ export class InverseClient extends BaseRestClient {
     tp_trigger_by?: string;
     sl_trigger_by?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('v2/private/order/replace', params);
+    return this.postPrivate('v2/private/order/replace', params);
   }
 
   queryActiveOrder(params: {
@@ -275,7 +264,7 @@ export class InverseClient extends BaseRestClient {
     close_on_trigger?: boolean;
     order_link_id?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('v2/private/stop-order/create', params);
+    return this.postPrivate('v2/private/stop-order/create', params);
   }
 
   /** get conditional order list. This may see delays, use queryConditionalOrder() for real-time queries */
@@ -294,11 +283,11 @@ export class InverseClient extends BaseRestClient {
     stop_order_id?: string;
     order_link_id?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('v2/private/stop-order/cancel', params);
+    return this.postPrivate('v2/private/stop-order/cancel', params);
   }
 
   cancelAllConditionalOrders(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.post('v2/private/stop-order/cancelAll', params);
+    return this.postPrivate('v2/private/stop-order/cancelAll', params);
   }
 
   replaceConditionalOrder(params: {
@@ -309,7 +298,7 @@ export class InverseClient extends BaseRestClient {
     p_r_price?: string;
     p_r_trigger_price?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('v2/private/stop-order/replace', params);
+    return this.postPrivate('v2/private/stop-order/replace', params);
   }
 
   queryConditionalOrder(params: {
@@ -332,7 +321,7 @@ export class InverseClient extends BaseRestClient {
     symbol: string;
     margin: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('position/change-position-margin', params);
+    return this.postPrivate('position/change-position-margin', params);
   }
 
   setTradingStop(params: {
@@ -344,7 +333,7 @@ export class InverseClient extends BaseRestClient {
     sl_trigger_by?: string;
     new_trailing_active?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('v2/private/position/trading-stop', params);
+    return this.postPrivate('v2/private/position/trading-stop', params);
   }
 
   setUserLeverage(params: {
@@ -352,10 +341,7 @@ export class InverseClient extends BaseRestClient {
     leverage: number;
     leverage_only?: boolean;
   }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'v2/private/position/leverage/save',
-      params
-    );
+    return this.postPrivate('v2/private/position/leverage/save', params);
   }
 
   getTradeRecords(params: {
@@ -384,7 +370,7 @@ export class InverseClient extends BaseRestClient {
     symbol: string;
     tp_sl_mode: 'Full' | 'Partial';
   }): GenericAPIResponse {
-    return this.requestWrapper.post('v2/private/tpsl/switch-mode', params);
+    return this.postPrivate('v2/private/tpsl/switch-mode', params);
   }
 
   setMarginType(params: {
@@ -393,10 +379,7 @@ export class InverseClient extends BaseRestClient {
     buy_leverage: number;
     sell_leverage: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'v2/private/position/switch-isolated',
-      params
-    );
+    return this.postPrivate('v2/private/position/switch-isolated', params);
   }
 
   /**
@@ -411,7 +394,7 @@ export class InverseClient extends BaseRestClient {
     symbol: string;
     risk_id: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('open-api/wallet/risk-limit', params);
+    return this.postPrivate('open-api/wallet/risk-limit', params);
   }
 
   /**

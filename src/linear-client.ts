@@ -5,7 +5,6 @@ import {
   RestClientOptions,
   REST_CLIENT_TYPE_ENUM,
 } from './util/requestUtils';
-import RequestWrapper from './util/requestWrapper';
 import {
   APIResponse,
   APIResponseWithTime,
@@ -23,9 +22,6 @@ import { linearPositionModeEnum, positionTpSlModeEnum } from './constants/enum';
 import BaseRestClient from './util/BaseRestClient';
 
 export class LinearClient extends BaseRestClient {
-  /** @deprecated,  */
-  protected requestWrapper: RequestWrapper;
-
   /**
    * @public Creates an instance of the linear (USD Perps) REST API client.
    *
@@ -49,14 +45,6 @@ export class LinearClient extends BaseRestClient {
       restClientOptions,
       requestOptions,
       REST_CLIENT_TYPE_ENUM.linear
-    );
-
-    this.requestWrapper = new RequestWrapper(
-      key,
-      secret,
-      getRestBaseUrl(useLivenet, restClientOptions),
-      { ...restClientOptions, disable_time_sync: true },
-      requestOptions
     );
     return this;
   }
@@ -215,7 +203,7 @@ export class LinearClient extends BaseRestClient {
     order_link_id?: string;
     position_idx?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/order/create', params);
+    return this.postPrivate('private/linear/order/create', params);
   }
 
   getActiveOrderList(params: {
@@ -235,11 +223,11 @@ export class LinearClient extends BaseRestClient {
     order_id?: string;
     order_link_id?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/order/cancel', params);
+    return this.postPrivate('private/linear/order/cancel', params);
   }
 
   cancelAllActiveOrders(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/order/cancel-all', params);
+    return this.postPrivate('private/linear/order/cancel-all', params);
   }
 
   replaceActiveOrder(params: {
@@ -253,7 +241,7 @@ export class LinearClient extends BaseRestClient {
     tp_trigger_by?: string;
     sl_trigger_by?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/order/replace', params);
+    return this.postPrivate('private/linear/order/replace', params);
   }
 
   queryActiveOrder(params: {
@@ -286,7 +274,7 @@ export class LinearClient extends BaseRestClient {
     tp_trigger_by?: string;
     sl_trigger_by?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/stop-order/create', params);
+    return this.postPrivate('private/linear/stop-order/create', params);
   }
 
   getConditionalOrder(params: {
@@ -306,14 +294,11 @@ export class LinearClient extends BaseRestClient {
     stop_order_id?: string;
     order_link_id?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/stop-order/cancel', params);
+    return this.postPrivate('private/linear/stop-order/cancel', params);
   }
 
   cancelAllConditionalOrders(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'private/linear/stop-order/cancel-all',
-      params
-    );
+    return this.postPrivate('private/linear/stop-order/cancel-all', params);
   }
 
   replaceConditionalOrder(params: {
@@ -328,10 +313,7 @@ export class LinearClient extends BaseRestClient {
     tp_trigger_by?: string;
     sl_trigger_by?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'private/linear/stop-order/replace',
-      params
-    );
+    return this.postPrivate('private/linear/stop-order/replace', params);
   }
 
   queryConditionalOrder(params: {
@@ -355,7 +337,7 @@ export class LinearClient extends BaseRestClient {
     side: string;
     auto_add_margin: boolean;
   }): GenericAPIResponse {
-    return this.requestWrapper.post(
+    return this.postPrivate(
       'private/linear/position/set-auto-add-margin',
       params
     );
@@ -367,10 +349,7 @@ export class LinearClient extends BaseRestClient {
     buy_leverage: number;
     sell_leverage: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'private/linear/position/switch-isolated',
-      params
-    );
+    return this.postPrivate('private/linear/position/switch-isolated', params);
   }
 
   /**
@@ -380,10 +359,7 @@ export class LinearClient extends BaseRestClient {
     symbol: string;
     mode: typeof linearPositionModeEnum[keyof typeof linearPositionModeEnum];
   }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'private/linear/position/switch-mode',
-      params
-    );
+    return this.postPrivate('private/linear/position/switch-mode', params);
   }
 
   /**
@@ -394,7 +370,7 @@ export class LinearClient extends BaseRestClient {
     symbol: string;
     tp_sl_mode: typeof positionTpSlModeEnum[keyof typeof positionTpSlModeEnum];
   }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/tpsl/switch-mode', params);
+    return this.postPrivate('private/linear/tpsl/switch-mode', params);
   }
 
   setAddReduceMargin(params?: {
@@ -402,10 +378,7 @@ export class LinearClient extends BaseRestClient {
     side: string;
     margin: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'private/linear/position/add-margin',
-      params
-    );
+    return this.postPrivate('private/linear/position/add-margin', params);
   }
 
   setUserLeverage(params: {
@@ -413,10 +386,7 @@ export class LinearClient extends BaseRestClient {
     buy_leverage: number;
     sell_leverage: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'private/linear/position/set-leverage',
-      params
-    );
+    return this.postPrivate('private/linear/position/set-leverage', params);
   }
 
   setTradingStop(params: {
@@ -430,10 +400,7 @@ export class LinearClient extends BaseRestClient {
     sl_size?: number;
     tp_size?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'private/linear/position/trading-stop',
-      params
-    );
+    return this.postPrivate('private/linear/position/trading-stop', params);
   }
 
   getTradeRecords(params: {
@@ -471,7 +438,7 @@ export class LinearClient extends BaseRestClient {
     side: string;
     risk_id: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/position/set-risk', params);
+    return this.postPrivate('private/linear/position/set-risk', params);
   }
 
   /**

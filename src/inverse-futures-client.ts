@@ -5,7 +5,6 @@ import {
   RestClientOptions,
   REST_CLIENT_TYPE_ENUM,
 } from './util/requestUtils';
-import RequestWrapper from './util/requestWrapper';
 import {
   APIResponseWithTime,
   AssetExchangeRecordsReq,
@@ -21,9 +20,6 @@ import {
 import BaseRestClient from './util/BaseRestClient';
 
 export class InverseFuturesClient extends BaseRestClient {
-  /** @deprecated,  */
-  protected requestWrapper: RequestWrapper;
-
   /**
    * @public Creates an instance of the inverse futures REST API client.
    *
@@ -47,13 +43,6 @@ export class InverseFuturesClient extends BaseRestClient {
       restClientOptions,
       requestOptions,
       REST_CLIENT_TYPE_ENUM.inverseFutures
-    );
-    this.requestWrapper = new RequestWrapper(
-      key,
-      secret,
-      getRestBaseUrl(useLivenet, restClientOptions),
-      { ...restClientOptions, disable_time_sync: true },
-      requestOptions
     );
     return this;
   }
@@ -212,10 +201,7 @@ export class InverseFuturesClient extends BaseRestClient {
     close_on_trigger?: boolean;
     order_link_id?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'futures/private/order/create',
-      orderRequest
-    );
+    return this.postPrivate('futures/private/order/create', orderRequest);
   }
 
   getActiveOrderList(params: {
@@ -233,11 +219,11 @@ export class InverseFuturesClient extends BaseRestClient {
     order_id?: string;
     order_link_id?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('futures/private/order/cancel', params);
+    return this.postPrivate('futures/private/order/cancel', params);
   }
 
   cancelAllActiveOrders(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.post('futures/private/order/cancelAll', params);
+    return this.postPrivate('futures/private/order/cancelAll', params);
   }
 
   replaceActiveOrder(params: {
@@ -247,7 +233,7 @@ export class InverseFuturesClient extends BaseRestClient {
     p_r_qty?: string;
     p_r_price?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('futures/private/order/replace', params);
+    return this.postPrivate('futures/private/order/replace', params);
   }
 
   queryActiveOrder(params: {
@@ -275,10 +261,7 @@ export class InverseFuturesClient extends BaseRestClient {
     close_on_trigger?: boolean;
     order_link_id?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'futures/private/stop-order/create',
-      params
-    );
+    return this.postPrivate('futures/private/stop-order/create', params);
   }
 
   getConditionalOrder(params: {
@@ -296,17 +279,11 @@ export class InverseFuturesClient extends BaseRestClient {
     stop_order_id?: string;
     order_link_id?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'futures/private/stop-order/cancel',
-      params
-    );
+    return this.postPrivate('futures/private/stop-order/cancel', params);
   }
 
   cancelAllConditionalOrders(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'futures/private/stop-order/cancelAll',
-      params
-    );
+    return this.postPrivate('futures/private/stop-order/cancelAll', params);
   }
 
   replaceConditionalOrder(params: {
@@ -317,10 +294,7 @@ export class InverseFuturesClient extends BaseRestClient {
     p_r_price?: string;
     p_r_trigger_price?: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'futures/private/stop-order/replace',
-      params
-    );
+    return this.postPrivate('futures/private/stop-order/replace', params);
   }
 
   queryConditionalOrder(params: {
@@ -346,7 +320,7 @@ export class InverseFuturesClient extends BaseRestClient {
     symbol: string;
     margin: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post(
+    return this.postPrivate(
       'futures/private/position/change-position-margin',
       params
     );
@@ -361,10 +335,7 @@ export class InverseFuturesClient extends BaseRestClient {
     sl_trigger_by?: string;
     new_trailing_active?: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'futures/private/position/trading-stop',
-      params
-    );
+    return this.postPrivate('futures/private/position/trading-stop', params);
   }
 
   setUserLeverage(params: {
@@ -372,10 +343,7 @@ export class InverseFuturesClient extends BaseRestClient {
     buy_leverage: number;
     sell_leverage: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'futures/private/position/leverage/save',
-      params
-    );
+    return this.postPrivate('futures/private/position/leverage/save', params);
   }
 
   /**
@@ -385,10 +353,7 @@ export class InverseFuturesClient extends BaseRestClient {
     symbol: string;
     mode: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'futures/private/position/switch-mode',
-      params
-    );
+    return this.postPrivate('futures/private/position/switch-mode', params);
   }
 
   /**
@@ -400,10 +365,7 @@ export class InverseFuturesClient extends BaseRestClient {
     buy_leverage: number;
     sell_leverage: number;
   }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'futures/private/position/switch-isolated',
-      params
-    );
+    return this.postPrivate('futures/private/position/switch-isolated', params);
   }
 
   getTradeRecords(params: {
@@ -443,7 +405,7 @@ export class InverseFuturesClient extends BaseRestClient {
     symbol: string;
     risk_id: string;
   }): GenericAPIResponse {
-    return this.requestWrapper.post('open-api/wallet/risk-limit', params);
+    return this.postPrivate('open-api/wallet/risk-limit', params);
   }
 
   /**
