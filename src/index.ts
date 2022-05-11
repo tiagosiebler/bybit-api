@@ -7,5 +7,4 @@ export * from './logger';
 export * from './types/shared';
 export * from './types/spot';
 export * from './util/WsStore';
-export * from './util/enum';
 export * from './constants/enum';

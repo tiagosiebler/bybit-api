@@ -7,6 +7,7 @@ import {
   serializeParams,
   RestClientType,
   REST_CLIENT_TYPE_ENUM,
+  agentSource,
 } from './requestUtils';
 
 // axios.interceptors.request.use((request) => {
@@ -162,8 +163,13 @@ export default abstract class BaseRestClient {
 
     const signResult = await this.prepareSignParams(params, isPublicApi);
 
-    if (method === 'GET') {
+    if (method === 'GET' || this.isSpotClient()) {
       options.params = signResult.paramsWithSign;
+      if (options.params?.agentSource) {
+        options.data = {
+          agentSource: agentSource,
+        };
+      }
     } else {
       options.data = signResult.paramsWithSign;
     }

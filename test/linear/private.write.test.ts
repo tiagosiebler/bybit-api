@@ -1,5 +1,4 @@
-import { LinearClient } from '../../src';
-import { API_ERROR_CODE } from '../../src/util/enum';
+import { API_ERROR_CODE, LinearClient } from '../../src';
 import { successResponseObject } from '../response.util';
 
 describe('Private Inverse-Futures REST API POST Endpoints', () => {

@@ -1,6 +1,6 @@
+import { API_ERROR_CODE } from '../../src';
 import { InverseClient } from '../../src/inverse-client';
-import { API_ERROR_CODE } from '../../src/util/enum';
-import { successResponseList, successResponseObject } from '../response.util';
+import { successResponseObject } from '../response.util';
 
 describe('Private Inverse REST API Endpoints', () => {
   const useLivenet = true;

@@ -9,6 +9,7 @@ import {
 } from './types/spot';
 import BaseRestClient from './util/BaseRestClient';
 import {
+  agentSource,
   getRestBaseUrl,
   RestClientOptions,
   REST_CLIENT_TYPE_ENUM,
@@ -121,7 +122,10 @@ export class SpotClient extends BaseRestClient {
    */
 
   submitOrder(params: NewSpotOrder): Promise<APIResponse<any>> {
-    return this.postPrivate('/spot/v1/order', params);
+    return this.postPrivate('/spot/v1/order', {
+      ...params,
+      agentSource,
+    });
   }
 
   getOrder(params: SpotOrderQueryById): Promise<APIResponse<any>> {

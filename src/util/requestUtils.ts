@@ -85,6 +85,8 @@ export function isWsPong(response: any) {
   );
 }
 
+export const agentSource = 'bybitapinode';
+
 export const REST_CLIENT_TYPE_ENUM = {
   inverse: 'inverse',
   inverseFutures: 'inverseFutures',
