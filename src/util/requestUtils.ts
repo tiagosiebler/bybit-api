@@ -19,8 +19,6 @@ export interface RestClientOptions {
   parse_exceptions?: boolean;
 }
 
-export type GenericAPIResponse<T = any> = Promise<T>;
-
 export function serializeParams(
   params: object = {},
   strict_validation = false

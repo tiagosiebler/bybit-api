@@ -1,19 +1,23 @@
-import axios, {
-  AxiosError,
-  AxiosRequestConfig,
-  AxiosResponse,
-  Method,
-} from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
+import { APIResponse, APIResponseWithTime } from '../types/shared';
 
 import { signMessage } from './node-support';
 import {
   RestClientOptions,
-  GenericAPIResponse,
   serializeParams,
   RestClientType,
   REST_CLIENT_TYPE_ENUM,
 } from './requestUtils';
 
+// axios.interceptors.request.use((request) => {
+//   console.log(new Date(), 'Starting Request', JSON.stringify(request, null, 2));
+//   return request;
+// });
+
+// axios.interceptors.response.use((response) => {
+//   console.log(new Date(), 'Response:', JSON.stringify(response, null, 2));
+//   return response;
+// });
 
 interface SignedRequestContext {
   timestamp: number;
@@ -95,23 +99,23 @@ export default abstract class BaseRestClient {
     return this.clientType === REST_CLIENT_TYPE_ENUM.spot;
   }
 
-  get(endpoint: string, params?: any): GenericAPIResponse {
+  get(endpoint: string, params?: any) {
     return this._call('GET', endpoint, params, true);
   }
 
-  post(endpoint: string, params?: any): GenericAPIResponse {
+  post(endpoint: string, params?: any) {
     return this._call('POST', endpoint, params, true);
   }
 
-  getPrivate(endpoint: string, params?: any): GenericAPIResponse {
+  getPrivate(endpoint: string, params?: any) {
     return this._call('GET', endpoint, params, false);
   }
 
-  postPrivate(endpoint: string, params?: any): GenericAPIResponse {
+  postPrivate(endpoint: string, params?: any) {
     return this._call('POST', endpoint, params, false);
   }
 
-  deletePrivate(endpoint: string, params?: any): GenericAPIResponse {
+  deletePrivate(endpoint: string, params?: any) {
     return this._call('DELETE', endpoint, params, false);
   }
 
@@ -142,7 +146,7 @@ export default abstract class BaseRestClient {
     endpoint: string,
     params?: any,
     isPublicApi?: boolean
-  ): GenericAPIResponse {
+  ): Promise<any> {
     const options = {
       ...this.globalRequestOptions,
       url: [this.baseUrl, endpoint].join(endpoint.startsWith('/') ? '' : '/'),
@@ -247,7 +251,7 @@ export default abstract class BaseRestClient {
   /**
    * Trigger time sync and store promise
    */
-  private syncTime(): GenericAPIResponse {
+  private syncTime(): Promise<any> {
     if (this.options.disable_time_sync === true) {
       return Promise.resolve(false);
     }

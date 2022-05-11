@@ -1,6 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
 import {
-  GenericAPIResponse,
   getRestBaseUrl,
   RestClientOptions,
   REST_CLIENT_TYPE_ENUM,
@@ -139,7 +138,7 @@ export class LinearClient extends BaseRestClient {
    *
    */
 
-  getApiKeyInfo(): GenericAPIResponse {
+  getApiKeyInfo(): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/account/api-key');
   }
 
@@ -149,21 +148,27 @@ export class LinearClient extends BaseRestClient {
    *
    */
 
-  getWalletBalance(params?: Partial<CoinParam>): GenericAPIResponse {
+  getWalletBalance(
+    params?: Partial<CoinParam>
+  ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/wallet/balance', params);
   }
 
-  getWalletFundRecords(params?: WalletFundRecordsReq): GenericAPIResponse {
+  getWalletFundRecords(
+    params?: WalletFundRecordsReq
+  ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/wallet/fund/records', params);
   }
 
-  getWithdrawRecords(params?: WithdrawRecordsReq): GenericAPIResponse {
+  getWithdrawRecords(
+    params?: WithdrawRecordsReq
+  ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/wallet/withdraw/list', params);
   }
 
   getAssetExchangeRecords(
     params?: AssetExchangeRecordsReq
-  ): GenericAPIResponse {
+  ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/exchange-order/list', params);
   }
 
@@ -177,7 +182,7 @@ export class LinearClient extends BaseRestClient {
     return this.get('v2/public/time');
   }
 
-  getApiAnnouncements(): GenericAPIResponse {
+  getApiAnnouncements(): Promise<APIResponseWithTime<any>> {
     return this.get('v2/public/announcement');
   }
 
@@ -202,7 +207,7 @@ export class LinearClient extends BaseRestClient {
     close_on_trigger: boolean;
     order_link_id?: string;
     position_idx?: number;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/order/create', params);
   }
 
@@ -214,7 +219,7 @@ export class LinearClient extends BaseRestClient {
     page?: number;
     limit?: number;
     order_status?: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('private/linear/order/list', params);
   }
 
@@ -222,11 +227,13 @@ export class LinearClient extends BaseRestClient {
     symbol: string;
     order_id?: string;
     order_link_id?: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/order/cancel', params);
   }
 
-  cancelAllActiveOrders(params: SymbolParam): GenericAPIResponse {
+  cancelAllActiveOrders(
+    params: SymbolParam
+  ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/order/cancel-all', params);
   }
 
@@ -240,7 +247,7 @@ export class LinearClient extends BaseRestClient {
     stop_loss?: number;
     tp_trigger_by?: string;
     sl_trigger_by?: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/order/replace', params);
   }
 
@@ -248,7 +255,7 @@ export class LinearClient extends BaseRestClient {
     order_id?: string;
     order_link_id?: string;
     symbol: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('private/linear/order/search', params);
   }
 
@@ -273,7 +280,7 @@ export class LinearClient extends BaseRestClient {
     stop_loss?: number;
     tp_trigger_by?: string;
     sl_trigger_by?: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/stop-order/create', params);
   }
 
@@ -285,7 +292,7 @@ export class LinearClient extends BaseRestClient {
     order?: string;
     page?: number;
     limit?: number;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('private/linear/stop-order/list', params);
   }
 
@@ -293,11 +300,13 @@ export class LinearClient extends BaseRestClient {
     symbol: string;
     stop_order_id?: string;
     order_link_id?: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/stop-order/cancel', params);
   }
 
-  cancelAllConditionalOrders(params: SymbolParam): GenericAPIResponse {
+  cancelAllConditionalOrders(
+    params: SymbolParam
+  ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/stop-order/cancel-all', params);
   }
 
@@ -312,7 +321,7 @@ export class LinearClient extends BaseRestClient {
     stop_loss?: number;
     tp_trigger_by?: string;
     sl_trigger_by?: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/stop-order/replace', params);
   }
 
@@ -320,7 +329,7 @@ export class LinearClient extends BaseRestClient {
     symbol: string;
     stop_order_id?: string;
     order_link_id?: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('private/linear/stop-order/search', params);
   }
 
@@ -328,7 +337,9 @@ export class LinearClient extends BaseRestClient {
    * Position
    */
 
-  getPosition(params?: Partial<SymbolParam>): GenericAPIResponse {
+  getPosition(
+    params?: Partial<SymbolParam>
+  ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('private/linear/position/list', params);
   }
 
@@ -336,7 +347,7 @@ export class LinearClient extends BaseRestClient {
     symbol: string;
     side: string;
     auto_add_margin: boolean;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate(
       'private/linear/position/set-auto-add-margin',
       params
@@ -348,7 +359,7 @@ export class LinearClient extends BaseRestClient {
     is_isolated: boolean;
     buy_leverage: number;
     sell_leverage: number;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/position/switch-isolated', params);
   }
 
@@ -358,7 +369,7 @@ export class LinearClient extends BaseRestClient {
   setPositionMode(params: {
     symbol: string;
     mode: typeof linearPositionModeEnum[keyof typeof linearPositionModeEnum];
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/position/switch-mode', params);
   }
 
@@ -369,7 +380,7 @@ export class LinearClient extends BaseRestClient {
   setPositionTpSlMode(params: {
     symbol: string;
     tp_sl_mode: typeof positionTpSlModeEnum[keyof typeof positionTpSlModeEnum];
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/tpsl/switch-mode', params);
   }
 
@@ -377,7 +388,7 @@ export class LinearClient extends BaseRestClient {
     symbol: string;
     side: string;
     margin: number;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/position/add-margin', params);
   }
 
@@ -385,7 +396,7 @@ export class LinearClient extends BaseRestClient {
     symbol: string;
     buy_leverage: number;
     sell_leverage: number;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/position/set-leverage', params);
   }
 
@@ -399,7 +410,7 @@ export class LinearClient extends BaseRestClient {
     sl_trigger_by?: string;
     sl_size?: number;
     tp_size?: number;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/position/trading-stop', params);
   }
 
@@ -410,7 +421,7 @@ export class LinearClient extends BaseRestClient {
     exec_type?: string;
     page?: number;
     limit?: number;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('private/linear/trade/execution/list', params);
   }
 
@@ -421,7 +432,7 @@ export class LinearClient extends BaseRestClient {
     exec_type?: string;
     page?: number;
     limit?: number;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('private/linear/trade/closed-pnl/list', params);
   }
 
@@ -429,7 +440,7 @@ export class LinearClient extends BaseRestClient {
    * Risk Limit
    */
 
-  getRiskLimitList(params: SymbolParam): GenericAPIResponse {
+  getRiskLimitList(params: SymbolParam): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('public/linear/risk-limit', params);
   }
 
@@ -437,7 +448,7 @@ export class LinearClient extends BaseRestClient {
     symbol: string;
     side: string;
     risk_id: number;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/position/set-risk', params);
   }
 
@@ -445,11 +456,13 @@ export class LinearClient extends BaseRestClient {
    * Funding
    */
 
-  getPredictedFundingFee(params: SymbolParam): GenericAPIResponse {
+  getPredictedFundingFee(
+    params: SymbolParam
+  ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('private/linear/funding/predicted-funding', params);
   }
 
-  getLastFundingFee(params: SymbolParam): GenericAPIResponse {
+  getLastFundingFee(params: SymbolParam): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('private/linear/funding/prev-funding', params);
   }
 }

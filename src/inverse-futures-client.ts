@@ -1,6 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
 import {
-  GenericAPIResponse,
   getRestBaseUrl,
   RestClientOptions,
   REST_CLIENT_TYPE_ENUM,
@@ -136,7 +135,7 @@ export class InverseFuturesClient extends BaseRestClient {
    *
    */
 
-  getApiKeyInfo(): GenericAPIResponse {
+  getApiKeyInfo(): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/account/api-key');
   }
 
@@ -146,21 +145,27 @@ export class InverseFuturesClient extends BaseRestClient {
    *
    */
 
-  getWalletBalance(params?: Partial<CoinParam>): GenericAPIResponse {
+  getWalletBalance(
+    params?: Partial<CoinParam>
+  ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/wallet/balance', params);
   }
 
-  getWalletFundRecords(params?: WalletFundRecordsReq): GenericAPIResponse {
+  getWalletFundRecords(
+    params?: WalletFundRecordsReq
+  ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/wallet/fund/records', params);
   }
 
-  getWithdrawRecords(params?: WithdrawRecordsReq): GenericAPIResponse {
+  getWithdrawRecords(
+    params?: WithdrawRecordsReq
+  ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/wallet/withdraw/list', params);
   }
 
   getAssetExchangeRecords(
     params?: AssetExchangeRecordsReq
-  ): GenericAPIResponse {
+  ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/exchange-order/list', params);
   }
 
@@ -174,7 +179,7 @@ export class InverseFuturesClient extends BaseRestClient {
     return this.get('v2/public/time');
   }
 
-  getApiAnnouncements(): GenericAPIResponse {
+  getApiAnnouncements(): Promise<APIResponseWithTime<any>> {
     return this.get('v2/public/announcement');
   }
 
@@ -200,7 +205,7 @@ export class InverseFuturesClient extends BaseRestClient {
     reduce_only?: boolean;
     close_on_trigger?: boolean;
     order_link_id?: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('futures/private/order/create', orderRequest);
   }
 
@@ -210,7 +215,7 @@ export class InverseFuturesClient extends BaseRestClient {
     direction?: string;
     limit?: number;
     cursor?: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('futures/private/order/list', params);
   }
 
@@ -218,11 +223,13 @@ export class InverseFuturesClient extends BaseRestClient {
     symbol: string;
     order_id?: string;
     order_link_id?: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('futures/private/order/cancel', params);
   }
 
-  cancelAllActiveOrders(params: SymbolParam): GenericAPIResponse {
+  cancelAllActiveOrders(
+    params: SymbolParam
+  ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('futures/private/order/cancelAll', params);
   }
 
@@ -232,7 +239,7 @@ export class InverseFuturesClient extends BaseRestClient {
     symbol: string;
     p_r_qty?: string;
     p_r_price?: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('futures/private/order/replace', params);
   }
 
@@ -240,7 +247,7 @@ export class InverseFuturesClient extends BaseRestClient {
     order_id?: string;
     order_link_id?: string;
     symbol: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('futures/private/order', params);
   }
 
@@ -260,7 +267,7 @@ export class InverseFuturesClient extends BaseRestClient {
     trigger_by?: string;
     close_on_trigger?: boolean;
     order_link_id?: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('futures/private/stop-order/create', params);
   }
 
@@ -270,7 +277,7 @@ export class InverseFuturesClient extends BaseRestClient {
     direction?: string;
     limit?: number;
     cursor?: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('futures/private/stop-order/list', params);
   }
 
@@ -278,11 +285,13 @@ export class InverseFuturesClient extends BaseRestClient {
     symbol: string;
     stop_order_id?: string;
     order_link_id?: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('futures/private/stop-order/cancel', params);
   }
 
-  cancelAllConditionalOrders(params: SymbolParam): GenericAPIResponse {
+  cancelAllConditionalOrders(
+    params: SymbolParam
+  ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('futures/private/stop-order/cancelAll', params);
   }
 
@@ -293,7 +302,7 @@ export class InverseFuturesClient extends BaseRestClient {
     p_r_qty?: number;
     p_r_price?: string;
     p_r_trigger_price?: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('futures/private/stop-order/replace', params);
   }
 
@@ -301,7 +310,7 @@ export class InverseFuturesClient extends BaseRestClient {
     symbol: string;
     stop_order_id?: string;
     order_link_id?: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('futures/private/stop-order', params);
   }
 
@@ -312,14 +321,16 @@ export class InverseFuturesClient extends BaseRestClient {
   /**
    * Get position list
    */
-  getPosition(params?: Partial<SymbolParam>): GenericAPIResponse {
+  getPosition(
+    params?: Partial<SymbolParam>
+  ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('futures/private/position/list', params);
   }
 
   changePositionMargin(params: {
     symbol: string;
     margin: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate(
       'futures/private/position/change-position-margin',
       params
@@ -334,7 +345,7 @@ export class InverseFuturesClient extends BaseRestClient {
     tp_trigger_by?: string;
     sl_trigger_by?: string;
     new_trailing_active?: number;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('futures/private/position/trading-stop', params);
   }
 
@@ -342,7 +353,7 @@ export class InverseFuturesClient extends BaseRestClient {
     symbol: string;
     buy_leverage: number;
     sell_leverage: number;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('futures/private/position/leverage/save', params);
   }
 
@@ -352,7 +363,7 @@ export class InverseFuturesClient extends BaseRestClient {
   setPositionMode(params: {
     symbol: string;
     mode: number;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('futures/private/position/switch-mode', params);
   }
 
@@ -364,7 +375,7 @@ export class InverseFuturesClient extends BaseRestClient {
     is_isolated: boolean;
     buy_leverage: number;
     sell_leverage: number;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('futures/private/position/switch-isolated', params);
   }
 
@@ -375,7 +386,7 @@ export class InverseFuturesClient extends BaseRestClient {
     page?: number;
     limit?: number;
     order?: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('futures/private/execution/list', params);
   }
 
@@ -386,7 +397,7 @@ export class InverseFuturesClient extends BaseRestClient {
     exec_type?: string;
     page?: number;
     limit?: number;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('futures/private/trade/closed-pnl/list', params);
   }
 
@@ -397,14 +408,14 @@ export class InverseFuturesClient extends BaseRestClient {
   /**
    * Risk Limit
    */
-  getRiskLimitList(): GenericAPIResponse {
+  getRiskLimitList(): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('open-api/wallet/risk-limit/list');
   }
 
   setRiskLimit(params: {
     symbol: string;
     risk_id: string;
-  }): GenericAPIResponse {
+  }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('open-api/wallet/risk-limit', params);
   }
 
@@ -412,15 +423,15 @@ export class InverseFuturesClient extends BaseRestClient {
    * Funding
    */
 
-  getLastFundingRate(params: SymbolParam): GenericAPIResponse {
+  getLastFundingRate(params: SymbolParam): Promise<APIResponseWithTime<any>> {
     return this.get('v2/public/funding/prev-funding-rate', params);
   }
 
-  getMyLastFundingFee(params: SymbolParam): GenericAPIResponse {
+  getMyLastFundingFee(params: SymbolParam): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/funding/prev-funding', params);
   }
 
-  getPredictedFunding(params: SymbolParam): GenericAPIResponse {
+  getPredictedFunding(params: SymbolParam): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/funding/predicted-funding', params);
   }
 
@@ -428,7 +439,7 @@ export class InverseFuturesClient extends BaseRestClient {
    * LCP Info
    */
 
-  getLcpInfo(params: SymbolParam): GenericAPIResponse {
+  getLcpInfo(params: SymbolParam): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/account/lcp', params);
   }
 }

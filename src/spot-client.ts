@@ -120,15 +120,15 @@ export class SpotClient extends BaseRestClient {
    * Account Data Endpoints
    */
 
-  submitOrder(params: NewSpotOrder) {
+  submitOrder(params: NewSpotOrder): Promise<APIResponse<any>> {
     return this.postPrivate('/spot/v1/order', params);
   }
 
-  getOrder(params: SpotOrderQueryById) {
+  getOrder(params: SpotOrderQueryById): Promise<APIResponse<any>> {
     return this.getPrivate('/spot/v1/order', params);
   }
 
-  cancelOrder(params: SpotOrderQueryById) {
+  cancelOrder(params: SpotOrderQueryById): Promise<APIResponse<any>> {
     return this.deletePrivate('/spot/v1/order', params);
   }
 
@@ -136,7 +136,7 @@ export class SpotClient extends BaseRestClient {
     symbol: string;
     side?: OrderSide;
     orderTypes: OrderTypeSpot[];
-  }) {
+  }): Promise<APIResponse<any>> {
     const orderTypes = params.orderTypes
       ? params.orderTypes.join(',')
       : undefined;
@@ -146,7 +146,11 @@ export class SpotClient extends BaseRestClient {
     });
   }
 
-  getOpenOrders(symbol?: string, orderId?: string, limit?: number) {
+  getOpenOrders(
+    symbol?: string,
+    orderId?: string,
+    limit?: number
+  ): Promise<APIResponse<any>> {
     return this.getPrivate('/spot/v1/open-orders', {
       symbol,
       orderId,
@@ -154,7 +158,11 @@ export class SpotClient extends BaseRestClient {
     });
   }
 
-  getPastOrders(symbol?: string, orderId?: string, limit?: number) {
+  getPastOrders(
+    symbol?: string,
+    orderId?: string,
+    limit?: number
+  ): Promise<APIResponse<any>> {
     return this.getPrivate('/spot/v1/history-orders', {
       symbol,
       orderId,
@@ -162,7 +170,12 @@ export class SpotClient extends BaseRestClient {
     });
   }
 
-  getMyTrades(symbol?: string, limit?: number, fromId?: number, toId?: number) {
+  getMyTrades(
+    symbol?: string,
+    limit?: number,
+    fromId?: number,
+    toId?: number
+  ): Promise<APIResponse<any>> {
     return this.getPrivate('/spot/v1/myTrades', {
       symbol,
       limit,
@@ -175,7 +188,7 @@ export class SpotClient extends BaseRestClient {
    * Wallet Data Endpoints
    */
 
-  getBalances() {
+  getBalances(): Promise<APIResponse<any>> {
     return this.getPrivate('/spot/v1/account');
   }
 }
