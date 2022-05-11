@@ -386,14 +386,6 @@ export class LinearClient extends BaseRestClient {
     );
   }
 
-  /** @deprecated use setPositionTpSlMode() instead */
-  setSwitchMode(params?: {
-    symbol: string;
-    tp_sl_mode: typeof positionTpSlModeEnum[keyof typeof positionTpSlModeEnum];
-  }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/tpsl/switch-mode', params);
-  }
-
   /**
    * Switch TP/SL mode between full or partial. When set to Partial, TP/SL orders may have a quantity less than the position size.
    * This is set with the setTradingStop() method. Use `positionTpSlModeEnum` for the tp_sl_mode parameter.
@@ -477,7 +469,7 @@ export class LinearClient extends BaseRestClient {
   setRiskLimit(params: {
     symbol: string;
     side: string;
-    risk_id: string;
+    risk_id: number;
   }): GenericAPIResponse {
     return this.requestWrapper.post('private/linear/position/set-risk', params);
   }
