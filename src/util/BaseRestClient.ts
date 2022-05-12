@@ -36,12 +36,19 @@ interface SignedRequest<T> {
 
 export default abstract class BaseRestClient {
   private timeOffset: number | null;
+
   private syncTimePromise: null | Promise<any>;
+
   private options: RestClientOptions;
+
   private baseUrl: string;
+
   private globalRequestOptions: AxiosRequestConfig;
+
   private key: string | undefined;
+
   private secret: string | undefined;
+
   private clientType: RestClientType;
 
   /** Function that calls exchange API to query & resolve server time, used by time sync */
