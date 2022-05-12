@@ -18,5 +18,5 @@ export const DefaultLogger = {
   },
   error: (...params: LogParams): void => {
     console.error(params);
-  }
+  },
 };
