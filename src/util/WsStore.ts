@@ -9,14 +9,13 @@ type WsTopicList = Set<WsTopic>;
 interface WsStoredState {
   ws?: WebSocket;
   connectionState?: WsConnectionState;
-  activePingTimer?: NodeJS.Timeout | undefined;
-  activePongTimer?: NodeJS.Timeout | undefined;
+  activePingTimer?: ReturnType<typeof setTimeout> | undefined;
+  activePongTimer?: ReturnType<typeof setTimeout> | undefined;
   subscribedTopics: WsTopicList;
-};
-
+}
 
 export default class WsStore {
-  private wsState: Record<string, WsStoredState>
+  private wsState: Record<string, WsStoredState>;
   private logger: typeof DefaultLogger;
 
   constructor(logger: typeof DefaultLogger) {
@@ -40,11 +39,14 @@ export default class WsStore {
 
   create(key: string): WsStoredState | undefined {
     if (this.hasExistingActiveConnection(key)) {
-      this.logger.warning('WsStore setConnection() overwriting existing open connection: ', this.getWs(key));
+      this.logger.warning(
+        'WsStore setConnection() overwriting existing open connection: ',
+        this.getWs(key)
+      );
     }
     this.wsState[key] = {
       subscribedTopics: new Set(),
-      connectionState: WsConnectionState.READY_STATE_INITIAL
+      connectionState: WsConnectionState.READY_STATE_INITIAL,
     };
     return this.get(key);
   }
@@ -52,7 +54,10 @@ export default class WsStore {
   delete(key: string) {
     if (this.hasExistingActiveConnection(key)) {
       const ws = this.getWs(key);
-      this.logger.warning('WsStore deleting state for connection still open: ', ws);
+      this.logger.warning(
+        'WsStore deleting state for connection still open: ',
+        ws
+      );
       ws?.close();
     }
     delete this.wsState[key];
@@ -70,7 +75,10 @@ export default class WsStore {
 
   setWs(key: string, wsConnection: WebSocket): WebSocket {
     if (this.isWsOpen(key)) {
-      this.logger.warning('WsStore setConnection() overwriting existing open connection: ', this.getWs(key));
+      this.logger.warning(
+        'WsStore setConnection() overwriting existing open connection: ',
+        this.getWs(key)
+      );
     }
     this.get(key, true)!.ws = wsConnection;
     return wsConnection;
@@ -80,7 +88,10 @@ export default class WsStore {
 
   isWsOpen(key: string): boolean {
     const existingConnection = this.getWs(key);
-    return !!existingConnection && existingConnection.readyState === existingConnection.OPEN;
+    return (
+      !!existingConnection &&
+      existingConnection.readyState === existingConnection.OPEN
+    );
   }
 
   getConnectionState(key: string): WsConnectionState {
@@ -102,7 +113,7 @@ export default class WsStore {
   }
 
   getTopicsByKey(): Record<string, WsTopicList> {
-  const result = {};
+    const result = {};
     for (const refKey in this.wsState) {
       result[refKey] = this.getTopics(refKey);
     }

@@ -1,26 +1,31 @@
-
-export function successResponseList() {
+export function successResponseList(successMsg: string | null = 'OK') {
   return {
-    "ext_code": "",
-    "ext_info": "",
-    "result": expect.any(Array),
-    "ret_code": 0,
-    "ret_msg": "OK",
-    "time_now": expect.any(String),
+    result: expect.any(Array),
+    ret_code: 0,
+    ret_msg: successMsg,
   };
-};
+}
 
-export function successResponseObject() {
+export function successResponseObject(successMsg: string | null = 'OK') {
   return {
-    "ext_code": "",
-    "ext_info": "",
-    "result": expect.any(Object),
-    "ret_code": 0,
-    "ret_msg": "OK",
-    "time_now": expect.any(String),
+    result: expect.any(Object),
+    ret_code: 0,
+    ret_msg: successMsg,
   };
-};
+}
+
+export function errorResponseObject(
+  result: null | any = null,
+  ret_code: number,
+  ret_msg: string
+) {
+  return {
+    result,
+    ret_code,
+    ret_msg,
+  };
+}
 
 export function notAuthenticatedError() {
   return new Error('Private endpoints require api and private keys set');
-};
+}

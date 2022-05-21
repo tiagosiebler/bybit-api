@@ -1,3 +1,5 @@
+import { numberInString } from './shared';
+
 export type OrderSide = 'Buy' | 'Sell';
 export type OrderTypeSpot = 'LIMIT' | 'MARKET' | 'LIMIT_MAKER';
 export type OrderTimeInForce = 'GTC' | 'FOK' | 'IOC';
@@ -15,4 +17,19 @@ export interface NewSpotOrder {
 export interface SpotOrderQueryById {
   orderId?: string;
   orderLinkId?: string;
+}
+
+export interface SpotSymbolInfo {
+  name: string;
+  alias: string;
+  baseCurrency: string;
+  quoteCurrency: string;
+  basePrecision: numberInString;
+  quotePrecision: numberInString;
+  minTradeQuantity: numberInString;
+  minTradeAmount: numberInString;
+  minPricePrecision: numberInString;
+  maxTradeQuantity: numberInString;
+  maxTradeAmount: numberInString;
+  category: numberInString;
 }

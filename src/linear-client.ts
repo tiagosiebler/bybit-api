@@ -1,23 +1,28 @@
 import { AxiosRequestConfig } from 'axios';
 import {
-  GenericAPIResponse,
   getRestBaseUrl,
   RestClientOptions,
+  REST_CLIENT_TYPE_ENUM,
 } from './util/requestUtils';
-import RequestWrapper from './util/requestWrapper';
-import SharedEndpoints from './shared-endpoints';
 import {
+  APIResponse,
+  APIResponseWithTime,
+  AssetExchangeRecordsReq,
+  CoinParam,
+  SymbolInfo,
   SymbolIntervalFromLimitParam,
   SymbolLimitParam,
   SymbolParam,
+  SymbolPeriodLimitParam,
+  WalletFundRecordsReq,
+  WithdrawRecordsReq,
 } from './types/shared';
 import { linearPositionModeEnum, positionTpSlModeEnum } from './constants/enum';
+import BaseRestClient from './util/BaseRestClient';
 
-export class LinearClient extends SharedEndpoints {
-  protected requestWrapper: RequestWrapper;
-
+export class LinearClient extends BaseRestClient {
   /**
-   * @public Creates an instance of the linear REST API client.
+   * @public Creates an instance of the linear (USD Perps) REST API client.
    *
    * @param {string} key - your API key
    * @param {string} secret - your API secret
@@ -32,16 +37,20 @@ export class LinearClient extends SharedEndpoints {
     restClientOptions: RestClientOptions = {},
     requestOptions: AxiosRequestConfig = {}
   ) {
-    super();
-
-    this.requestWrapper = new RequestWrapper(
+    super(
       key,
       secret,
       getRestBaseUrl(useLivenet, restClientOptions),
       restClientOptions,
-      requestOptions
+      requestOptions,
+      REST_CLIENT_TYPE_ENUM.linear
     );
     return this;
+  }
+
+  async fetchServerTime(): Promise<number> {
+    const timeRes = await this.getServerTime();
+    return Number(timeRes.time_now);
   }
 
   /**
@@ -50,36 +59,131 @@ export class LinearClient extends SharedEndpoints {
    *
    */
 
-  getKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
-    return this.requestWrapper.get('public/linear/kline', params);
+  getOrderBook(params: SymbolParam): Promise<APIResponseWithTime<any[]>> {
+    return this.get('v2/public/orderBook/L2', params);
   }
 
-  getTrades(params: SymbolLimitParam): GenericAPIResponse {
-    return this.requestWrapper.get(
-      'public/linear/recent-trading-records',
-      params
-    );
+  getKline(
+    params: SymbolIntervalFromLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
+    return this.get('public/linear/kline', params);
   }
 
-  getLastFundingRate(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get(
-      'public/linear/funding/prev-funding-rate',
-      params
-    );
+  /**
+   * Get latest information for symbol
+   */
+  getTickers(
+    params?: Partial<SymbolParam>
+  ): Promise<APIResponseWithTime<any[]>> {
+    return this.get('v2/public/tickers', params);
   }
 
-  getMarkPriceKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
-    return this.requestWrapper.get('public/linear/mark-price-kline', params);
+  getTrades(params: SymbolLimitParam): Promise<APIResponseWithTime<any[]>> {
+    return this.get('public/linear/recent-trading-records', params);
   }
 
-  getIndexPriceKline(params: SymbolIntervalFromLimitParam): GenericAPIResponse {
-    return this.requestWrapper.get('public/linear/index-price-kline', params);
+  getSymbols(): Promise<APIResponse<SymbolInfo[]>> {
+    return this.get('v2/public/symbols');
+  }
+
+  getLastFundingRate(params: SymbolParam): Promise<APIResponseWithTime<any[]>> {
+    return this.get('public/linear/funding/prev-funding-rate', params);
+  }
+
+  getMarkPriceKline(
+    params: SymbolIntervalFromLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
+    return this.get('public/linear/mark-price-kline', params);
+  }
+
+  getIndexPriceKline(
+    params: SymbolIntervalFromLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
+    return this.get('public/linear/index-price-kline', params);
   }
 
   getPremiumIndexKline(
     params: SymbolIntervalFromLimitParam
-  ): GenericAPIResponse {
-    return this.requestWrapper.get('public/linear/premium-index-kline', params);
+  ): Promise<APIResponseWithTime<any[]>> {
+    return this.get('public/linear/premium-index-kline', params);
+  }
+
+  /**
+   *
+   * Market Data : Advanced
+   *
+   */
+
+  getOpenInterest(
+    params: SymbolPeriodLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
+    return this.get('v2/public/open-interest', params);
+  }
+
+  getLatestBigDeal(
+    params: SymbolLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
+    return this.get('v2/public/big-deal', params);
+  }
+
+  getLongShortRatio(
+    params: SymbolPeriodLimitParam
+  ): Promise<APIResponseWithTime<any[]>> {
+    return this.get('v2/public/account-ratio', params);
+  }
+
+  /**
+   *
+   * Account Data Endpoints
+   *
+   */
+
+  getApiKeyInfo(): Promise<APIResponseWithTime<any>> {
+    return this.getPrivate('v2/private/account/api-key');
+  }
+
+  /**
+   *
+   * Wallet Data Endpoints
+   *
+   */
+
+  getWalletBalance(
+    params?: Partial<CoinParam>
+  ): Promise<APIResponseWithTime<any>> {
+    return this.getPrivate('v2/private/wallet/balance', params);
+  }
+
+  getWalletFundRecords(
+    params?: WalletFundRecordsReq
+  ): Promise<APIResponseWithTime<any>> {
+    return this.getPrivate('v2/private/wallet/fund/records', params);
+  }
+
+  getWithdrawRecords(
+    params?: WithdrawRecordsReq
+  ): Promise<APIResponseWithTime<any>> {
+    return this.getPrivate('v2/private/wallet/withdraw/list', params);
+  }
+
+  getAssetExchangeRecords(
+    params?: AssetExchangeRecordsReq
+  ): Promise<APIResponseWithTime<any>> {
+    return this.getPrivate('v2/private/exchange-order/list', params);
+  }
+
+  /**
+   *
+   * API Data Endpoints
+   *
+   */
+
+  getServerTime(): Promise<APIResponseWithTime<{}>> {
+    return this.get('v2/public/time');
+  }
+
+  getApiAnnouncements(): Promise<APIResponseWithTime<any>> {
+    return this.get('v2/public/announcement');
   }
 
   /**
@@ -103,8 +207,8 @@ export class LinearClient extends SharedEndpoints {
     close_on_trigger: boolean;
     order_link_id?: string;
     position_idx?: number;
-  }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/order/create', params);
+  }): Promise<APIResponseWithTime<any>> {
+    return this.postPrivate('private/linear/order/create', params);
   }
 
   getActiveOrderList(params: {
@@ -115,20 +219,22 @@ export class LinearClient extends SharedEndpoints {
     page?: number;
     limit?: number;
     order_status?: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/order/list', params);
+  }): Promise<APIResponseWithTime<any>> {
+    return this.getPrivate('private/linear/order/list', params);
   }
 
   cancelActiveOrder(params: {
     symbol: string;
     order_id?: string;
     order_link_id?: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/order/cancel', params);
+  }): Promise<APIResponseWithTime<any>> {
+    return this.postPrivate('private/linear/order/cancel', params);
   }
 
-  cancelAllActiveOrders(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/order/cancel-all', params);
+  cancelAllActiveOrders(
+    params: SymbolParam
+  ): Promise<APIResponseWithTime<any>> {
+    return this.postPrivate('private/linear/order/cancel-all', params);
   }
 
   replaceActiveOrder(params: {
@@ -141,16 +247,16 @@ export class LinearClient extends SharedEndpoints {
     stop_loss?: number;
     tp_trigger_by?: string;
     sl_trigger_by?: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/order/replace', params);
+  }): Promise<APIResponseWithTime<any>> {
+    return this.postPrivate('private/linear/order/replace', params);
   }
 
   queryActiveOrder(params: {
     order_id?: string;
     order_link_id?: string;
     symbol: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/order/search', params);
+  }): Promise<APIResponseWithTime<any>> {
+    return this.getPrivate('private/linear/order/search', params);
   }
 
   /**
@@ -174,8 +280,8 @@ export class LinearClient extends SharedEndpoints {
     stop_loss?: number;
     tp_trigger_by?: string;
     sl_trigger_by?: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/stop-order/create', params);
+  }): Promise<APIResponseWithTime<any>> {
+    return this.postPrivate('private/linear/stop-order/create', params);
   }
 
   getConditionalOrder(params: {
@@ -186,23 +292,22 @@ export class LinearClient extends SharedEndpoints {
     order?: string;
     page?: number;
     limit?: number;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/stop-order/list', params);
+  }): Promise<APIResponseWithTime<any>> {
+    return this.getPrivate('private/linear/stop-order/list', params);
   }
 
   cancelConditionalOrder(params: {
     symbol: string;
     stop_order_id?: string;
     order_link_id?: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/stop-order/cancel', params);
+  }): Promise<APIResponseWithTime<any>> {
+    return this.postPrivate('private/linear/stop-order/cancel', params);
   }
 
-  cancelAllConditionalOrders(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'private/linear/stop-order/cancel-all',
-      params
-    );
+  cancelAllConditionalOrders(
+    params: SymbolParam
+  ): Promise<APIResponseWithTime<any>> {
+    return this.postPrivate('private/linear/stop-order/cancel-all', params);
   }
 
   replaceConditionalOrder(params: {
@@ -216,35 +321,34 @@ export class LinearClient extends SharedEndpoints {
     stop_loss?: number;
     tp_trigger_by?: string;
     sl_trigger_by?: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'private/linear/stop-order/replace',
-      params
-    );
+  }): Promise<APIResponseWithTime<any>> {
+    return this.postPrivate('private/linear/stop-order/replace', params);
   }
 
   queryConditionalOrder(params: {
     symbol: string;
     stop_order_id?: string;
     order_link_id?: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/stop-order/search', params);
+  }): Promise<APIResponseWithTime<any>> {
+    return this.getPrivate('private/linear/stop-order/search', params);
   }
 
   /**
    * Position
    */
 
-  getPosition(params?: Partial<SymbolParam>): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/position/list', params);
+  getPosition(
+    params?: Partial<SymbolParam>
+  ): Promise<APIResponseWithTime<any>> {
+    return this.getPrivate('private/linear/position/list', params);
   }
 
   setAutoAddMargin(params?: {
     symbol: string;
     side: string;
     auto_add_margin: boolean;
-  }): GenericAPIResponse {
-    return this.requestWrapper.post(
+  }): Promise<APIResponseWithTime<any>> {
+    return this.postPrivate(
       'private/linear/position/set-auto-add-margin',
       params
     );
@@ -255,11 +359,8 @@ export class LinearClient extends SharedEndpoints {
     is_isolated: boolean;
     buy_leverage: number;
     sell_leverage: number;
-  }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'private/linear/position/switch-isolated',
-      params
-    );
+  }): Promise<APIResponseWithTime<any>> {
+    return this.postPrivate('private/linear/position/switch-isolated', params);
   }
 
   /**
@@ -268,19 +369,8 @@ export class LinearClient extends SharedEndpoints {
   setPositionMode(params: {
     symbol: string;
     mode: typeof linearPositionModeEnum[keyof typeof linearPositionModeEnum];
-  }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'private/linear/position/switch-mode',
-      params
-    );
-  }
-
-  /** @deprecated use setPositionTpSlMode() instead */
-  setSwitchMode(params?: {
-    symbol: string;
-    tp_sl_mode: typeof positionTpSlModeEnum[keyof typeof positionTpSlModeEnum];
-  }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/tpsl/switch-mode', params);
+  }): Promise<APIResponseWithTime<any>> {
+    return this.postPrivate('private/linear/position/switch-mode', params);
   }
 
   /**
@@ -290,30 +380,24 @@ export class LinearClient extends SharedEndpoints {
   setPositionTpSlMode(params: {
     symbol: string;
     tp_sl_mode: typeof positionTpSlModeEnum[keyof typeof positionTpSlModeEnum];
-  }): GenericAPIResponse {
-    return this.requestWrapper.post('private/linear/tpsl/switch-mode', params);
+  }): Promise<APIResponseWithTime<any>> {
+    return this.postPrivate('private/linear/tpsl/switch-mode', params);
   }
 
   setAddReduceMargin(params?: {
     symbol: string;
     side: string;
     margin: number;
-  }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'private/linear/position/add-margin',
-      params
-    );
+  }): Promise<APIResponseWithTime<any>> {
+    return this.postPrivate('private/linear/position/add-margin', params);
   }
 
   setUserLeverage(params: {
     symbol: string;
     buy_leverage: number;
     sell_leverage: number;
-  }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'private/linear/position/set-leverage',
-      params
-    );
+  }): Promise<APIResponseWithTime<any>> {
+    return this.postPrivate('private/linear/position/set-leverage', params);
   }
 
   setTradingStop(params: {
@@ -326,11 +410,8 @@ export class LinearClient extends SharedEndpoints {
     sl_trigger_by?: string;
     sl_size?: number;
     tp_size?: number;
-  }): GenericAPIResponse {
-    return this.requestWrapper.post(
-      'private/linear/position/trading-stop',
-      params
-    );
+  }): Promise<APIResponseWithTime<any>> {
+    return this.postPrivate('private/linear/position/trading-stop', params);
   }
 
   getTradeRecords(params: {
@@ -340,11 +421,8 @@ export class LinearClient extends SharedEndpoints {
     exec_type?: string;
     page?: number;
     limit?: number;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get(
-      'private/linear/trade/execution/list',
-      params
-    );
+  }): Promise<APIResponseWithTime<any>> {
+    return this.getPrivate('private/linear/trade/execution/list', params);
   }
 
   getClosedPnl(params: {
@@ -354,44 +432,37 @@ export class LinearClient extends SharedEndpoints {
     exec_type?: string;
     page?: number;
     limit?: number;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get(
-      'private/linear/trade/closed-pnl/list',
-      params
-    );
+  }): Promise<APIResponseWithTime<any>> {
+    return this.getPrivate('private/linear/trade/closed-pnl/list', params);
   }
 
   /**
    * Risk Limit
    */
 
-  getRiskLimitList(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get('public/linear/risk-limit', params);
+  getRiskLimitList(params: SymbolParam): Promise<APIResponseWithTime<any>> {
+    return this.getPrivate('public/linear/risk-limit', params);
   }
 
   setRiskLimit(params: {
     symbol: string;
     side: string;
-    risk_id: string;
-  }): GenericAPIResponse {
-    return this.requestWrapper.get('private/linear/position/set-risk', params);
+    risk_id: number;
+  }): Promise<APIResponseWithTime<any>> {
+    return this.postPrivate('private/linear/position/set-risk', params);
   }
 
   /**
    * Funding
    */
 
-  getPredictedFundingFee(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get(
-      'private/linear/funding/predicted-funding',
-      params
-    );
+  getPredictedFundingFee(
+    params: SymbolParam
+  ): Promise<APIResponseWithTime<any>> {
+    return this.getPrivate('private/linear/funding/predicted-funding', params);
   }
 
-  getLastFundingFee(params: SymbolParam): GenericAPIResponse {
-    return this.requestWrapper.get(
-      'private/linear/funding/prev-funding',
-      params
-    );
+  getLastFundingFee(params: SymbolParam): Promise<APIResponseWithTime<any>> {
+    return this.getPrivate('private/linear/funding/prev-funding', params);
   }
 }

@@ -19,25 +19,31 @@ export interface RestClientOptions {
   parse_exceptions?: boolean;
 }
 
-export type GenericAPIResponse = Promise<any>;
-
-export function serializeParams(params: object = {}, strict_validation = false): string {
+export function serializeParams(
+  params: object = {},
+  strict_validation = false
+): string {
   return Object.keys(params)
     .sort()
-    .map(key => {
+    .map((key) => {
       const value = params[key];
       if (strict_validation === true && typeof value === 'undefined') {
-        throw new Error('Failed to sign API request due to undefined parameter');
+        throw new Error(
+          'Failed to sign API request due to undefined parameter'
+        );
       }
       return `${key}=${value}`;
     })
     .join('&');
-};
+}
 
-export function getRestBaseUrl(useLivenet: boolean, restInverseOptions: RestClientOptions) {
+export function getRestBaseUrl(
+  useLivenet: boolean,
+  restInverseOptions: RestClientOptions
+) {
   const baseUrlsInverse = {
     livenet: 'https://api.bybit.com',
-    testnet: 'https://api-testnet.bybit.com'
+    testnet: 'https://api-testnet.bybit.com',
   };
 
   if (restInverseOptions.baseUrl) {
@@ -50,18 +56,25 @@ export function getRestBaseUrl(useLivenet: boolean, restInverseOptions: RestClie
   return baseUrlsInverse.testnet;
 }
 
-export function isPublicEndpoint (endpoint: string): boolean {
-  if (endpoint.startsWith('v2/public')) {
-    return true;
-  }
-  if (endpoint.startsWith('public/linear')) {
-    return true;
+export function isPublicEndpoint(endpoint: string): boolean {
+  const publicPrefixes = [
+    'v2/public',
+    'public/linear',
+    'spot/quote/v1',
+    'spot/v1/symbols',
+    'spot/v1/time',
+  ];
+
+  for (const prefix of publicPrefixes) {
+    if (endpoint.startsWith(prefix)) {
+      return true;
+    }
   }
   return false;
 }
 
 export function isWsPong(response: any) {
-  if (response.pong) {
+  if (response.pong || response.ping) {
     return true;
   }
   return (
@@ -71,3 +84,15 @@ export function isWsPong(response: any) {
     response.success === true
   );
 }
+
+export const agentSource = 'bybitapinode';
+
+export const REST_CLIENT_TYPE_ENUM = {
+  inverse: 'inverse',
+  inverseFutures: 'inverseFutures',
+  linear: 'linear',
+  spot: 'spot',
+} as const;
+
+export type RestClientType =
+  typeof REST_CLIENT_TYPE_ENUM[keyof typeof REST_CLIENT_TYPE_ENUM];
