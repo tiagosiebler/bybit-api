@@ -6,7 +6,11 @@ import { LinearClient } from './linear-client';
 import { DefaultLogger } from './logger';
 import { KlineInterval } from './types/shared';
 import { signMessage } from './util/node-support';
-import { serializeParams, isWsPong } from './util/requestUtils';
+import {
+  serializeParams,
+  isWsPong,
+  RestClientOptions,
+} from './util/requestUtils';
 
 import WsStore from './util/WsStore';
 
@@ -141,7 +145,7 @@ export interface WSClientConfigurableOptions {
   pongTimeout?: number;
   pingInterval?: number;
   reconnectTimeout?: number;
-  restOptions?: any;
+  restOptions?: RestClientOptions;
   requestOptions?: any;
   wsUrl?: string;
 }

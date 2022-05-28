@@ -288,9 +288,10 @@ export default abstract class BaseRestClient {
       }
 
       const end = Date.now();
+      const severTimeMs = serverTime * 1000;
 
       const avgDrift = (end - start) / 2;
-      return Math.ceil(serverTime - end + avgDrift);
+      return Math.ceil(severTimeMs - end + avgDrift);
     } catch (e) {
       console.error('Failed to fetch get time offset: ', e);
       return 0;
