@@ -15,6 +15,17 @@ Node.js connector for the Bybit APIs and WebSockets, with TypeScript & browser s
 - Issues? Check the [issues tab](https://github.com/tiagosiebler/bybit-api/issues).
 - Discuss & collaborate with other node devs? Join our [Node.js Algo Traders](https://t.me/nodetraders) engineering community on telegram.
 
+## Related projects
+Check out my related projects:
+- Try my connectors:
+  - [ftx-api](https://www.npmjs.com/package/ftx-api)
+  - [bybit-api](https://www.npmjs.com/package/bybit-api)
+  - [binance](https://www.npmjs.com/package/binance)
+- Try my misc utilities:
+  - [orderbooks](https://www.npmjs.com/package/orderbooks)
+- Check out my examples:
+  - [awesome-crypto-examples](https://github.com/tiagosiebler/awesome-crypto-examples)
+
 ## Documentation
 Most methods accept JS objects. These can be populated using parameters specified by Bybit's API documentation.
 - [Bybit API Inverse Documentation](https://bybit-exchange.github.io/docs/inverse/#t-introduction).
