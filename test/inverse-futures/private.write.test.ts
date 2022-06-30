@@ -183,16 +183,4 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       ret_msg: 'Isolated not modified',
     });
   });
-
-  it('setRiskLimit()', async () => {
-    expect(
-      await api.setRiskLimit({
-        symbol,
-        risk_id: 'myriskid',
-      })
-    ).toMatchObject({
-      ret_code: -1,
-      ret_msg: `Currently not support symbol[${symbol}]`,
-    });
-  });
 });

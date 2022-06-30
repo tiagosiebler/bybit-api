@@ -178,16 +178,4 @@ describe('Private Inverse REST API Endpoints', () => {
       })
     ).toMatchObject(successResponseObject());
   });
-
-  it('setRiskLimit()', async () => {
-    expect(
-      await api.setRiskLimit({
-        symbol,
-        risk_id: 'myriskid',
-      })
-    ).toMatchObject({
-      ret_code: API_ERROR_CODE.RISK_LIMIT_NOT_EXISTS,
-      ret_msg: 'risk limit not exists',
-    });
-  });
 });

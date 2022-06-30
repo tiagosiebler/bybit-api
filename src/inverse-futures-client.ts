@@ -402,24 +402,6 @@ export class InverseFuturesClient extends BaseRestClient {
   }
 
   /**
-   **** The following are all the same as the inverse client ****
-   */
-
-  /**
-   * Risk Limit
-   */
-  getRiskLimitList(): Promise<APIResponseWithTime<any>> {
-    return this.getPrivate('open-api/wallet/risk-limit/list');
-  }
-
-  setRiskLimit(params: {
-    symbol: string;
-    risk_id: string;
-  }): Promise<APIResponseWithTime<any>> {
-    return this.postPrivate('open-api/wallet/risk-limit', params);
-  }
-
-  /**
    * Funding
    */
 
