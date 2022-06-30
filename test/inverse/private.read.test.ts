@@ -77,12 +77,6 @@ describe('Private Inverse REST API Endpoints', () => {
     );
   });
 
-  it('getRiskLimitList()', async () => {
-    expect(await api.getRiskLimitList()).toMatchObject(
-      successResponseList('ok')
-    );
-  });
-
   it('getClosedPnl()', async () => {
     expect(await api.getClosedPnl({ symbol: symbol })).toMatchObject(
       successResponseObject()

@@ -79,12 +79,6 @@ describe('Public Inverse-Futures REST API GET Endpoints', () => {
     );
   });
 
-  it('getRiskLimitList()', async () => {
-    expect(await api.getRiskLimitList()).toMatchObject(
-      successResponseList('ok')
-    );
-  });
-
   it('getMyLastFundingFee()', async () => {
     expect(await api.getMyLastFundingFee({ symbol: symbol })).toMatchObject(
       successResponseObject()
