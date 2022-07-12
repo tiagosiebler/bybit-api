@@ -7,9 +7,7 @@ import {
 
 describe('Public Inverse REST API Endpoints', () => {
   const useLivenet = true;
-  const api = new InverseClient(undefined, undefined, useLivenet, {
-    disable_time_sync: true,
-  });
+  const api = new InverseClient(undefined, undefined, useLivenet);
 
   const symbol = 'BTCUSD';
   const interval = '15';

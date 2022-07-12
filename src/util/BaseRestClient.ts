@@ -61,10 +61,13 @@ export default abstract class BaseRestClient {
 
     this.options = {
       recv_window: 5000,
-      // how often to sync time drift with bybit servers
-      sync_interval_ms: 3600000,
-      // if true, we'll throw errors if any params are undefined
+
+      /** Throw errors if any params are undefined */
       strict_param_validation: false,
+      /** Disable time sync by default */
+      enable_time_sync: false,
+      /** How often to sync time drift with bybit servers (if time sync is enabled) */
+      sync_interval_ms: 3600000,
       ...options,
     };
 
@@ -86,7 +89,7 @@ export default abstract class BaseRestClient {
       );
     }
 
-    if (this.options.disable_time_sync !== true) {
+    if (this.options.enable_time_sync) {
       this.syncTime();
       setInterval(this.syncTime.bind(this), +this.options.sync_interval_ms!);
     }
@@ -254,10 +257,11 @@ export default abstract class BaseRestClient {
   }
 
   /**
-   * Trigger time sync and store promise
+   * Trigger time sync and store promise. Use force: true, if automatic time sync is disabled
    */
-  private syncTime(): Promise<any> {
-    if (this.options.disable_time_sync === true) {
+  private syncTime(force?: boolean): Promise<any> {
+    if (!force && !this.options.enable_time_sync) {
+      this.timeOffset = 0;
       return Promise.resolve(false);
     }
 

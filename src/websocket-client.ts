@@ -4,6 +4,7 @@ import WebSocket from 'isomorphic-ws';
 import { InverseClient } from './inverse-client';
 import { LinearClient } from './linear-client';
 import { DefaultLogger } from './logger';
+import { SpotClient } from './spot-client';
 import { KlineInterval } from './types/shared';
 import { signMessage } from './util/node-support';
 import {
@@ -148,6 +149,8 @@ export interface WSClientConfigurableOptions {
   restOptions?: RestClientOptions;
   requestOptions?: any;
   wsUrl?: string;
+  /** If true, fetch server time before trying to authenticate (disabled by default) */
+  fetchTimeOffsetBeforeAuth?: boolean;
 }
 
 export interface WebsocketClientOptions extends WSClientConfigurableOptions {
@@ -229,7 +232,7 @@ function resolveMarket(options: WSClientConfigurableOptions): APIMarket {
 
 export class WebsocketClient extends EventEmitter {
   private logger: typeof DefaultLogger;
-  private restClient: InverseClient | LinearClient;
+  private restClient: InverseClient | LinearClient | SpotClient;
   private options: WebsocketClientOptions;
   private wsStore: WsStore;
 
@@ -247,6 +250,7 @@ export class WebsocketClient extends EventEmitter {
       pongTimeout: 1000,
       pingInterval: 10000,
       reconnectTimeout: 500,
+      fetchTimeOffsetBeforeAuth: false,
       ...options,
     };
 
@@ -263,8 +267,7 @@ export class WebsocketClient extends EventEmitter {
         this.options.requestOptions
       );
     } else if (this.isSpot()) {
-      // TODO: spot client
-      this.restClient = new LinearClient(
+      this.restClient = new SpotClient(
         undefined,
         undefined,
         this.isLivenet(),
@@ -474,7 +477,9 @@ export class WebsocketClient extends EventEmitter {
         wsKey,
       });
 
-      const timeOffset = await this.restClient.fetchTimeOffset();
+      const timeOffset = this.options.fetchTimeOffsetBeforeAuth
+        ? await this.restClient.fetchTimeOffset()
+        : 0;
 
       const params: any = {
         api_key: this.options.key,

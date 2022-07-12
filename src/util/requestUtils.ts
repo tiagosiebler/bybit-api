@@ -1,21 +1,26 @@
 export interface RestClientOptions {
-  // override the max size of the request window (in ms)
+  /** Override the max size of the request window (in ms) */
   recv_window?: number;
 
-  // how often to sync time drift with bybit servers
-  sync_interval_ms?: number | string;
-
-  // Default: false. Disable above sync mechanism if true.
+  /** @deprecated Time sync is now disabled by default. To re-enable it, use enable_time_sync instead. */
   disable_time_sync?: boolean;
 
-  // Default: false. If true, we'll throw errors if any params are undefined
+  /** Disabled by default. This can help on machines with consistent latency problems. */
+  enable_time_sync?: boolean;
+
+  /** How often to sync time drift with bybit servers */
+  sync_interval_ms?: number | string;
+
+  /** Default: false. If true, we'll throw errors if any params are undefined */
   strict_param_validation?: boolean;
 
-  // Optionally override API protocol + domain
-  // e.g 'https://api.bytick.com'
+  /**
+   * Optionally override API protocol + domain
+   * e.g baseUrl: 'https://api.bytick.com'
+   **/
   baseUrl?: string;
 
-  // Default: true. whether to try and post-process request exceptions.
+  /** Default: true. whether to try and post-process request exceptions. */
   parse_exceptions?: boolean;
 }
 

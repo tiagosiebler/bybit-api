@@ -7,9 +7,7 @@ import {
 
 describe('Public Spot REST API Endpoints', () => {
   const useLivenet = true;
-  const api = new SpotClient(undefined, undefined, useLivenet, {
-    disable_time_sync: true,
-  });
+  const api = new SpotClient(undefined, undefined, useLivenet);
 
   const symbol = 'BTCUSDT';
   const interval = '15m';
