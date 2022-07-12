@@ -11,9 +11,7 @@ describe('Private Inverse REST API Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new InverseClient(API_KEY, API_SECRET, useLivenet, {
-    disable_time_sync: true,
-  });
+  const api = new InverseClient(API_KEY, API_SECRET, useLivenet);
 
   const symbol = 'BTCUSD';
 

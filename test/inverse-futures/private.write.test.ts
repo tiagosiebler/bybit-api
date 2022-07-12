@@ -11,9 +11,7 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new InverseFuturesClient(API_KEY, API_SECRET, useLivenet, {
-    disable_time_sync: true,
-  });
+  const api = new InverseFuturesClient(API_KEY, API_SECRET, useLivenet);
 
   // Warning: if some of these start to fail with 10001 params error, it's probably that this future expired and a newer one exists with a different symbol!
   const symbol = 'BTCUSDU22';

@@ -64,10 +64,10 @@ const restClientOptions = {
   recv_window?: number;
 
   // how often to sync time drift with bybit servers
-  sync_interval_ms?: number | string;
+  sync_interval_ms?: number;
 
   // Default: false. Disable above sync mechanism if true.
-  disable_time_sync?: boolean;
+  enable_time_sync?: boolean;
 
   // Default: false. If true, we'll throw errors if any params are undefined
   strict_param_validation?: boolean;

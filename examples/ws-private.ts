@@ -27,7 +27,7 @@ import { WebsocketClient, wsKeySpotPublic } from '../src/websocket-client';
       market: market,
       livenet: true,
       restOptions: {
-        // disable_time_sync: true,
+        // enable_time_sync: true,
       },
     },
     logger

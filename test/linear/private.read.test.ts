@@ -11,9 +11,7 @@ describe('Public Linear REST API GET Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new LinearClient(API_KEY, API_SECRET, useLivenet, {
-    disable_time_sync: true,
-  });
+  const api = new LinearClient(API_KEY, API_SECRET, useLivenet);
 
   const symbol = 'BTCUSDT';
 

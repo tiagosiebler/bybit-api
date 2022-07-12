@@ -16,9 +16,7 @@ describe('Private Spot REST API Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new SpotClient(API_KEY, API_SECRET, useLivenet, {
-    disable_time_sync: true,
-  });
+  const api = new SpotClient(API_KEY, API_SECRET, useLivenet);
 
   const symbol = 'BTCUSDT';
   const interval = '15m';

@@ -7,9 +7,7 @@ import {
 
 describe('Public Linear REST API Endpoints', () => {
   const useLivenet = true;
-  const api = new LinearClient(undefined, undefined, useLivenet, {
-    disable_time_sync: true,
-  });
+  const api = new LinearClient(undefined, undefined, useLivenet);
 
   const symbol = 'BTCUSDT';
   const interval = '15';
