@@ -167,11 +167,6 @@ export default abstract class BaseRestClient {
 
     if (method === 'GET' || this.isSpotClient()) {
       options.params = signResult.paramsWithSign;
-      if (options.params?.agentSource) {
-        options.data = {
-          agentSource: agentSource,
-        };
-      }
     } else {
       options.data = signResult.paramsWithSign;
     }

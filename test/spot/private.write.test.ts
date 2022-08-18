@@ -18,7 +18,7 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
 
   // These tests are primarily check auth is working by expecting balance or order not found style errors
 
-  it.skip('submitOrder()', async () => {
+  it('submitOrder()', async () => {
     expect(
       await api.submitOrder({
         side: 'Buy',
