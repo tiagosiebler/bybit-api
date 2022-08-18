@@ -24,7 +24,7 @@ describe('Private Spot REST API Endpoints', () => {
   it('getOrder()', async () => {
     // No auth error == test pass
     expect(await api.getOrder({ orderId: '123123' })).toMatchObject(
-      errorResponseObject(null, -2013, 'Order does not exist.')
+      errorResponseObject({}, -2013, 'Order does not exist.')
     );
   });
 
