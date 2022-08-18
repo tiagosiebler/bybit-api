@@ -1,3 +1,7 @@
+export type numberInString = string;
+
+export type OrderSide = 'Buy' | 'Sell';
+
 export type KlineInterval =
   | '1m'
   | '3m'
@@ -12,8 +16,6 @@ export type KlineInterval =
   | '1d'
   | '1w'
   | '1M';
-
-export type numberInString = string;
 
 export interface APIResponse<T> {
   ret_code: number;

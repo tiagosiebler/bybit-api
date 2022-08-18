@@ -1,12 +1,15 @@
 import { AxiosRequestConfig } from 'axios';
-import { APIResponse, KlineInterval } from './types/shared';
 import {
   NewSpotOrder,
+  APIResponse,
+  KlineInterval,
   OrderSide,
   OrderTypeSpot,
+  SpotBalances,
+  SpotLastPrice,
   SpotOrderQueryById,
   SpotSymbolInfo,
-} from './types/spot';
+} from './types';
 import BaseRestClient from './util/BaseRestClient';
 import {
   agentSource,
@@ -109,7 +112,11 @@ export class SpotClient extends BaseRestClient {
     return this.get('/spot/quote/v1/ticker/24hr', { symbol });
   }
 
-  getLastTradedPrice(symbol?: string): Promise<APIResponse<any>> {
+  getLastTradedPrice(): Promise<APIResponse<SpotLastPrice[]>>;
+  getLastTradedPrice(symbol: string): Promise<APIResponse<SpotLastPrice>>;
+  getLastTradedPrice(
+    symbol?: string
+  ): Promise<APIResponse<SpotLastPrice | SpotLastPrice[]>> {
     return this.get('/spot/quote/v1/ticker/price', { symbol });
   }
 
@@ -192,7 +199,7 @@ export class SpotClient extends BaseRestClient {
    * Wallet Data Endpoints
    */
 
-  getBalances(): Promise<APIResponse<any>> {
+  getBalances(): Promise<APIResponse<SpotBalances>> {
     return this.getPrivate('/spot/v1/account');
   }
 }

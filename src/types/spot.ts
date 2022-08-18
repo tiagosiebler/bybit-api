@@ -1,6 +1,5 @@
-import { numberInString } from './shared';
+import { numberInString, OrderSide } from './shared';
 
-export type OrderSide = 'Buy' | 'Sell';
 export type OrderTypeSpot = 'LIMIT' | 'MARKET' | 'LIMIT_MAKER';
 export type OrderTimeInForce = 'GTC' | 'FOK' | 'IOC';
 
