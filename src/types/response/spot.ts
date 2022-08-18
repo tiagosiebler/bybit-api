@@ -1,7 +1,3 @@
-export interface SpotBalances {
-  balances: SpotBalance[];
-}
-
 export interface SpotBalance {
   coin: string;
   coinId: string;
@@ -9,6 +5,10 @@ export interface SpotBalance {
   total: string;
   free: string;
   locked: string;
+}
+
+export interface SpotBalances {
+  balances: SpotBalance[];
 }
 
 export interface SpotLastPrice {
