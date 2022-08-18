@@ -9,14 +9,19 @@ import {
   APIResponseWithTime,
   AssetExchangeRecordsReq,
   CoinParam,
+  LinearOrder,
+  NewLinearOrder,
+  PerpPosition,
+  PerpPositionRoot,
   SymbolInfo,
   SymbolIntervalFromLimitParam,
   SymbolLimitParam,
   SymbolParam,
   SymbolPeriodLimitParam,
+  WalletBalances,
   WalletFundRecordsReq,
   WithdrawRecordsReq,
-} from './types/shared';
+} from './types';
 import { linearPositionModeEnum, positionTpSlModeEnum } from './constants/enum';
 import BaseRestClient from './util/BaseRestClient';
 
@@ -150,7 +155,7 @@ export class LinearClient extends BaseRestClient {
 
   getWalletBalance(
     params?: Partial<CoinParam>
-  ): Promise<APIResponseWithTime<any>> {
+  ): Promise<APIResponseWithTime<WalletBalances>> {
     return this.getPrivate('v2/private/wallet/balance', params);
   }
 
@@ -192,22 +197,9 @@ export class LinearClient extends BaseRestClient {
    *
    */
 
-  placeActiveOrder(params: {
-    side: string;
-    symbol: string;
-    order_type: string;
-    qty: number;
-    price?: number;
-    time_in_force: string;
-    take_profit?: number;
-    stop_loss?: number;
-    tp_trigger_by?: string;
-    sl_trigger_by?: string;
-    reduce_only: boolean;
-    close_on_trigger: boolean;
-    order_link_id?: string;
-    position_idx?: number;
-  }): Promise<APIResponseWithTime<any>> {
+  placeActiveOrder(
+    params: NewLinearOrder
+  ): Promise<APIResponseWithTime<LinearOrder | null>> {
     return this.postPrivate('private/linear/order/create', params);
   }
 
@@ -337,9 +329,14 @@ export class LinearClient extends BaseRestClient {
    * Position
    */
 
+  getPosition(): Promise<APIResponseWithTime<PerpPositionRoot[]>>;
+  getPosition(
+    params: Partial<SymbolParam>
+  ): Promise<APIResponseWithTime<PerpPosition[]>>;
+
   getPosition(
     params?: Partial<SymbolParam>
-  ): Promise<APIResponseWithTime<any>> {
+  ): Promise<APIResponseWithTime<PerpPosition[] | PerpPositionRoot[]>> {
     return this.getPrivate('private/linear/position/list', params);
   }
 

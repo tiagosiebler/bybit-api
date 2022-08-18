@@ -40,3 +40,13 @@ export const API_ERROR_CODE = {
   SAME_SLTP_MODE_LINEAR: 130150,
   RISK_ID_NOT_MODIFIED: 134026,
 } as const;
+
+/**
+ * Position idx, used to identify positions in different position modes.
+ * Required if you are under One-Way Mode:
+ */
+export enum LinearPositionIdx {
+  OneWayMode = 0,
+  BuySide = 1,
+  SellSide = 2,
+}

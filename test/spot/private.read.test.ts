@@ -24,20 +24,20 @@ describe('Private Spot REST API Endpoints', () => {
   it('getOrder()', async () => {
     // No auth error == test pass
     expect(await api.getOrder({ orderId: '123123' })).toMatchObject(
-      errorResponseObject(null, -2013, 'Order does not exist.')
+      errorResponseObject({}, -2013, 'Order does not exist.')
     );
   });
 
   it('getOpenOrders()', async () => {
-    expect(await api.getOpenOrders()).toMatchObject(successResponseList(''));
+    expect(await api.getOpenOrders()).toMatchObject(successResponseList());
   });
 
   it('getPastOrders()', async () => {
-    expect(await api.getPastOrders()).toMatchObject(successResponseList(''));
+    expect(await api.getPastOrders()).toMatchObject(successResponseList());
   });
 
   it('getMyTrades()', async () => {
-    expect(await api.getMyTrades()).toMatchObject(successResponseList(''));
+    expect(await api.getMyTrades()).toMatchObject(successResponseList());
   });
 
   it('getBalances()', async () => {
@@ -46,7 +46,7 @@ describe('Private Spot REST API Endpoints', () => {
         balances: expect.any(Array),
       },
       ret_code: 0,
-      ret_msg: '',
+      ret_msg: 'OK',
     });
   });
 });

@@ -24,7 +24,7 @@ describe('Public Spot REST API Endpoints', () => {
   });
 
   it('getSymbols()', async () => {
-    expect(await api.getSymbols()).toMatchObject(successResponseList(''));
+    expect(await api.getSymbols()).toMatchObject(successResponseList());
   });
 
   it('getOrderBook()', async () => {
