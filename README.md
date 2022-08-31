@@ -27,6 +27,7 @@ Check out my related projects:
   - [ftx-api](https://www.npmjs.com/package/ftx-api)
   - [bybit-api](https://www.npmjs.com/package/bybit-api)
   - [binance](https://www.npmjs.com/package/binance)
+  - [okx-api](https://www.npmjs.com/package/okx-api)
 - Try my misc utilities:
   - [orderbooks](https://www.npmjs.com/package/orderbooks)
 - Check out my examples:
@@ -50,9 +51,10 @@ Each REST API category has a dedicated REST client. Here are the REST clients an
 | Derivatives V3 unified margin                         	| Under Development              	|
 
 ## Structure
-This project uses typescript. Resources are stored in 3 key structures:
-- [src](./src) - the whole connector written in typescript
-- [lib](./lib) - the javascript version of the project (compiled from typescript). This should not be edited directly, as it will be overwritten with each release.
+The connector is written in TypeScript. A pure JavaScript version can be built using `npm run build`, which is also the version published to [npm](https://www.npmjs.com/package/bybit-api). This connector is fully compatible with both TypeScript and pure JavaScript projects.
+
+- [src](./src) - the whole connector written in TypeScript
+- [lib](./lib) - the JavaScript version of the project (built from TypeScript). This should not be edited directly, as it will be overwritten with each release.
 - [dist](./dist) - the packed bundle of the project for use in browser environments.
 - [examples](./examples) - some implementation examples & demonstrations. Contributions are welcome!
 
