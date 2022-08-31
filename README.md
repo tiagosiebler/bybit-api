@@ -4,9 +4,15 @@
 [![last commit](https://img.shields.io/github/last-commit/tiagosiebler/bybit-api)][1]
 [![CodeFactor](https://www.codefactor.io/repository/github/tiagosiebler/bybit-api/badge)](https://www.codefactor.io/repository/github/tiagosiebler/bybit-api)
 
+[![connector logo](https://cdn.builder.io/api/v1/image/assets%2Ffddee401a9284ab792b271538c28932d%2F5190c99403ac474699a1959fdee1ab6c?format=webp&width=2000)][1]
+
 [1]: https://www.npmjs.com/package/bybit-api
 
-Node.js connector for the Bybit APIs and WebSockets, with TypeScript & browser support.
+Node.js connector for the Bybit APIs and WebSockets:
+- TypeScript support (with type declarations for most API requests & responses).
+- Integration tests with real API calls validating any changes before they reach npm.
+- Robust WebSocket integration with connection heartbeats & automatic reconnection.
+- Browser support (via webpack bundle - see "Browser Usage" below).
 
 ## Installation
 `npm install --save bybit-api`
@@ -31,6 +37,17 @@ Most methods accept JS objects. These can be populated using parameters specifie
 - [Bybit API Inverse Documentation](https://bybit-exchange.github.io/docs/inverse/#t-introduction).
 - [Bybit API Inverse Futures Documentation](https://bybit-exchange.github.io/docs/inverse_futures/#t-introduction).
 - [Bybit API Linear Documentation](https://bybit-exchange.github.io/docs/linear/#t-introduction)
+
+## REST Clients
+Each REST API category has a dedicated REST client. Here are the REST clients and their API group:
+|                         Class                         	|           Description          	|
+|:-----------------------------------------------------:	|:------------------------------:	|
+| [InverseClient](src/inverse-client.ts)                	| Inverse Perpetual Futures (v2) 	|
+| [LinearClient](src/linear-client.ts)                  	| USDT Perpetual Futures (v2)    	|
+| [InverseFuturesClient](src/inverse-futures-client.ts) 	| Inverse Futures (v2)           	|
+| [SpotClient](src/spot-client.ts)                      	| Spot Markets                   	|
+| USDC Options & Perpetual Contracts                    	| Under Development              	|
+| Derivatives V3 unified margin                         	| Under Development              	|
 
 ## Structure
 This project uses typescript. Resources are stored in 3 key structures:
