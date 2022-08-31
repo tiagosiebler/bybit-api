@@ -94,7 +94,7 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
-      ret_msg: 'order not exists or too late to cancel',
+      ret_msg: 'Order not exists',
     });
   });
 
@@ -138,8 +138,8 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
         take_profit: 50000,
       })
     ).toMatchObject({
-      ret_code: API_ERROR_CODE.POSITION_STATUS_NOT_NORMAL,
-      ret_msg: 'position status is not normal',
+      ret_code: API_ERROR_CODE.POSITION_IDX_NOT_MATCH_POSITION_MODE,
+      ret_msg: 'position idx not match position mode',
     });
   });
 

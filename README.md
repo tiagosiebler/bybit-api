@@ -4,9 +4,15 @@
 [![last commit](https://img.shields.io/github/last-commit/tiagosiebler/bybit-api)][1]
 [![CodeFactor](https://www.codefactor.io/repository/github/tiagosiebler/bybit-api/badge)](https://www.codefactor.io/repository/github/tiagosiebler/bybit-api)
 
+[![connector logo](https://cdn.builder.io/api/v1/image/assets%2Ffddee401a9284ab792b271538c28932d%2F5190c99403ac474699a1959fdee1ab6c?format=webp&width=2000)][1]
+
 [1]: https://www.npmjs.com/package/bybit-api
 
-Node.js connector for the Bybit APIs and WebSockets, with TypeScript & browser support.
+Node.js connector for the Bybit APIs and WebSockets:
+- TypeScript support (with type declarations for most API requests & responses).
+- Integration tests with real API calls validating any changes before they reach npm.
+- Robust WebSocket integration with connection heartbeats & automatic reconnection.
+- Browser support (via webpack bundle - see "Browser Usage" below).
 
 ## Installation
 `npm install --save bybit-api`
@@ -21,6 +27,7 @@ Check out my related projects:
   - [ftx-api](https://www.npmjs.com/package/ftx-api)
   - [bybit-api](https://www.npmjs.com/package/bybit-api)
   - [binance](https://www.npmjs.com/package/binance)
+  - [okx-api](https://www.npmjs.com/package/okx-api)
 - Try my misc utilities:
   - [orderbooks](https://www.npmjs.com/package/orderbooks)
 - Check out my examples:
@@ -32,10 +39,22 @@ Most methods accept JS objects. These can be populated using parameters specifie
 - [Bybit API Inverse Futures Documentation](https://bybit-exchange.github.io/docs/inverse_futures/#t-introduction).
 - [Bybit API Linear Documentation](https://bybit-exchange.github.io/docs/linear/#t-introduction)
 
+## REST Clients
+Each REST API category has a dedicated REST client. Here are the REST clients and their API group:
+|                         Class                         	|           Description          	|
+|:-----------------------------------------------------:	|:------------------------------:	|
+| [InverseClient](src/inverse-client.ts)                	| Inverse Perpetual Futures (v2) 	|
+| [LinearClient](src/linear-client.ts)                  	| USDT Perpetual Futures (v2)    	|
+| [InverseFuturesClient](src/inverse-futures-client.ts) 	| Inverse Futures (v2)           	|
+| [SpotClient](src/spot-client.ts)                      	| Spot Markets                   	|
+| USDC Options & Perpetual Contracts                    	| Under Development              	|
+| Derivatives V3 unified margin                         	| Under Development              	|
+
 ## Structure
-This project uses typescript. Resources are stored in 3 key structures:
-- [src](./src) - the whole connector written in typescript
-- [lib](./lib) - the javascript version of the project (compiled from typescript). This should not be edited directly, as it will be overwritten with each release.
+The connector is written in TypeScript. A pure JavaScript version can be built using `npm run build`, which is also the version published to [npm](https://www.npmjs.com/package/bybit-api). This connector is fully compatible with both TypeScript and pure JavaScript projects.
+
+- [src](./src) - the whole connector written in TypeScript
+- [lib](./lib) - the JavaScript version of the project (built from TypeScript). This should not be edited directly, as it will be overwritten with each release.
 - [dist](./dist) - the packed bundle of the project for use in browser environments.
 - [examples](./examples) - some implementation examples & demonstrations. Contributions are welcome!
 
