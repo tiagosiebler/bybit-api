@@ -93,7 +93,7 @@ describe('Private Inverse REST API Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
-      ret_msg: 'order not exists or too late to cancel',
+      ret_msg: 'order not exists',
     });
   });
 
@@ -126,7 +126,7 @@ describe('Private Inverse REST API Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.POSITION_IS_CROSS_MARGIN,
-      ret_msg: 'position is in crossMargin',
+      ret_msg: expect.any(String),
     });
   });
 
