@@ -93,7 +93,7 @@ describe('Private Inverse REST API Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
-      ret_msg: 'order not exists',
+      ret_msg: expect.any(String),
     });
   });
 
