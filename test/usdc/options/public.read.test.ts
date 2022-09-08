@@ -1,4 +1,4 @@
-import { USDCOptionsClient } from '../../../src';
+import { USDCOptionClient } from '../../../src';
 import {
   successResponseObject,
   successUSDCResponseObject,
@@ -9,7 +9,7 @@ describe('Public USDC Options REST API Endpoints', () => {
   const API_KEY = undefined;
   const API_SECRET = undefined;
 
-  const api = new USDCOptionsClient(API_KEY, API_SECRET, useLivenet);
+  const api = new USDCOptionClient(API_KEY, API_SECRET, useLivenet);
   const symbol = 'BTC-30SEP22-400000-C';
 
   it('getOrderBook()', async () => {

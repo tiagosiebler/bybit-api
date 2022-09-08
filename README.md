@@ -41,16 +41,19 @@ Most methods accept JS objects. These can be populated using parameters specifie
 
 ## REST Clients
 Each REST API category has a dedicated REST client. Here are the REST clients and their API group:
-|                         Class                         	|                                         Description                                         	         	|
-|:-----------------------------------------------------:	|:-----------------------------------------------------------------------------------------------------:	|
-| [InverseClient](src/inverse-client.ts)                	| [Inverse Perpetual Futures (v2)](https://bybit-exchange.github.io/docs/futuresV2/inverse/)              |
-| [LinearClient](src/linear-client.ts)                  	| [USDT Perpetual Futures (v2)](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-introduction)   |
-| [InverseFuturesClient](src/inverse-futures-client.ts) 	| [Inverse Futures (v2)](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-introduction) |
-| [SpotClient](src/spot-client.ts)                      	| [Spot Markets](https://bybit-exchange.github.io/docs/spot/#t-introduction)                   	          |
-| [AccountAssetClient](src/account-asset-client.ts)       | [Account Asset API](https://bybit-exchange.github.io/docs/account_asset/#t-introduction)                |
-| USDC Options & Perpetual Contracts                    	| Under Development              	                        	                        	                    |
-| Derivatives V3 unified margin                         	| Under Development              	                        	                        	                    |
-| [WebsocketClient](src/websocket-client.ts)              | All WebSocket Events (Public & Private for all API categories)                                          |
+|                         Class                         	|                                                Description                                       	           |
+|:-----------------------------------------------------:	|:-----------------------------------------------------------------------------------------------------------: |
+| [InverseClient](src/inverse-client.ts)                	| [Inverse Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse/)              |
+| [LinearClient](src/linear-client.ts)                  	| [USDT Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-introduction)   |
+| [InverseFuturesClient](src/inverse-futures-client.ts) 	| [Inverse Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-introduction) |
+| [SpotClient](src/spot-client.ts)                      	| [Spot Market APIs](https://bybit-exchange.github.io/docs/spot/#t-introduction)                   	           |
+| [AccountAssetClient](src/account-asset-client.ts)       | [Account Asset APIs](https://bybit-exchange.github.io/docs/account_asset/#t-introduction)                    |
+| [USDC Perpetual](src/usdc-perpetual-client.ts)          | [USDC Perpetual APIs](https://bybit-exchange.github.io/docs/usdc/option/?console#t-querydeliverylog)         |
+| [USDC Option](src/usdc-options-client.ts)               | [USDC Option APIs](https://bybit-exchange.github.io/docs/usdc/option/#t-introduction)                        |
+| [AccountAssetClient](src/account-asset-client.ts)       | [Account Asset APIs](https://bybit-exchange.github.io/docs/account_asset/#t-introduction)                    |
+| Spot v3                                               	| Under Development              	                        	                        	                         |
+| Derivatives V3 unified margin                         	| Under Development              	                        	                        	                         |
+| [WebsocketClient](src/websocket-client.ts)              | All WebSocket Events (Public & Private for all API categories)                                               |
 
 Examples for using each client can be found in the [examples](./examples) folder and the [awesome-crypto-examples](https://github.com/tiagosiebler/awesome-crypto-examples) repository.
 

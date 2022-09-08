@@ -23,9 +23,9 @@ import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
 
 /**
- * REST API client for USDC Options APIs
+ * REST API client for USDC Option APIs
  */
-export class USDCOptionsClient extends BaseRestClient {
+export class USDCOptionClient extends BaseRestClient {
   getClientType() {
     return REST_CLIENT_TYPE_ENUM.usdc;
   }

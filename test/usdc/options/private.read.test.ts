@@ -1,4 +1,4 @@
-import { USDCOptionsClient } from '../../../src';
+import { USDCOptionClient } from '../../../src';
 import {
   successResponseObject,
   successUSDCResponseObject,
@@ -15,7 +15,7 @@ describe('Private Account Asset REST API Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new USDCOptionsClient(API_KEY, API_SECRET, useLivenet);
+  const api = new USDCOptionClient(API_KEY, API_SECRET, useLivenet);
   const category = 'OPTION';
 
   it('getActiveRealtimeOrders()', async () => {

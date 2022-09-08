@@ -1,4 +1,4 @@
-import { API_ERROR_CODE, USDCOptionsClient } from '../../../src';
+import { API_ERROR_CODE, USDCOptionClient } from '../../../src';
 import { successUSDCResponseObject } from '../../response.util';
 
 describe('Private Account Asset REST API Endpoints', () => {
@@ -11,7 +11,7 @@ describe('Private Account Asset REST API Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new USDCOptionsClient(API_KEY, API_SECRET, useLivenet);
+  const api = new USDCOptionClient(API_KEY, API_SECRET, useLivenet);
 
   const currency = 'USDC';
   const symbol = 'BTC-30SEP22-400000-C';
