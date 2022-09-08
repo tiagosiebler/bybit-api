@@ -7,6 +7,7 @@ import {
   RestClientType,
   REST_CLIENT_TYPE_ENUM,
   agentSource,
+  getRestBaseUrl,
 } from './requestUtils';
 
 // axios.interceptors.request.use((request) => {
@@ -53,21 +54,32 @@ export default abstract class BaseRestClient {
   private secret: string | undefined;
   private clientType: RestClientType;
 
-  /** Function that calls exchange API to query & resolve server time, used by time sync */
+  /** Function that calls exchange API to query & resolve server time, used by time sync, disabled by default */
   abstract fetchServerTime(): Promise<number>;
 
+  /** Defines the client type (affecting how requests & signatures behave) */
+  abstract getClientType(): RestClientType;
+
+  /**
+   * Create an instance of the REST client
+   * @param {string} key - your API key
+   * @param {string} secret - your API secret
+   * @param {boolean} [useLivenet=false]
+   * @param {RestClientOptions} [restClientOptions={}] options to configure REST API connectivity
+   * @param {AxiosRequestConfig} [requestOptions={}] HTTP networking options for axios
+   */
   constructor(
-    key: string | undefined,
-    secret: string | undefined,
-    baseUrl: string,
+    key?: string | undefined,
+    secret?: string | undefined,
+    useLivenet: boolean = false,
     options: RestClientOptions = {},
-    requestOptions: AxiosRequestConfig = {},
-    clientType: RestClientType
+    requestOptions: AxiosRequestConfig = {}
   ) {
+    const baseUrl = getRestBaseUrl(useLivenet, options);
     this.timeOffset = null;
     this.syncTimePromise = null;
 
-    this.clientType = clientType;
+    this.clientType = this.getClientType();
 
     this.options = {
       recv_window: 5000,
@@ -86,7 +98,7 @@ export default abstract class BaseRestClient {
       // custom request options based on axios specs - see: https://github.com/axios/axios#request-config
       ...requestOptions,
       headers: {
-        'x-referer': 'bybitapinode',
+        'x-referer': agentSource,
       },
     };
 

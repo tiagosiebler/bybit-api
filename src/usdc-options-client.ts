@@ -1,38 +1,13 @@
-import { AxiosRequestConfig } from 'axios';
 import { APIResponseWithTime } from './types';
-import {
-  RestClientOptions,
-  getRestBaseUrl,
-  REST_CLIENT_TYPE_ENUM,
-} from './util';
+import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
 
+/**
+ * REST API client for USDC Options APIs
+ */
 export class USDCOptionsClient extends BaseRestClient {
-  /**
-   * @public Creates an instance of the USDC Options REST API client.
-   *
-   * @param {string} key - your API key
-   * @param {string} secret - your API secret
-   * @param {boolean} [useLivenet=false] uses testnet by default
-   * @param {RestClientOptions} [restClientOptions={}] options to configure REST API connectivity
-   * @param {AxiosRequestConfig} [requestOptions={}] HTTP networking options for axios
-   */
-  constructor(
-    key?: string | undefined,
-    secret?: string | undefined,
-    useLivenet: boolean = false,
-    restClientOptions: RestClientOptions = {},
-    requestOptions: AxiosRequestConfig = {}
-  ) {
-    super(
-      key,
-      secret,
-      getRestBaseUrl(useLivenet, restClientOptions),
-      restClientOptions,
-      requestOptions,
-      REST_CLIENT_TYPE_ENUM.usdcOptions
-    );
-    return this;
+  getClientType() {
+    return REST_CLIENT_TYPE_ENUM.usdcOptions;
   }
 
   async fetchServerTime(): Promise<number> {

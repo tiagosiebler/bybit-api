@@ -1,9 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
-import {
-  getRestBaseUrl,
-  RestClientOptions,
-  REST_CLIENT_TYPE_ENUM,
-} from './util/requestUtils';
+import { REST_CLIENT_TYPE_ENUM } from './util/requestUtils';
 import {
   APIResponseWithTime,
   AssetExchangeRecordsReq,
@@ -18,32 +13,12 @@ import {
 } from './types/shared';
 import BaseRestClient from './util/BaseRestClient';
 
+/**
+ * REST API client for Inverse Futures APIs (e.g. quarterly futures) (v2)
+ */
 export class InverseFuturesClient extends BaseRestClient {
-  /**
-   * @public Creates an instance of the inverse futures REST API client.
-   *
-   * @param {string} key - your API key
-   * @param {string} secret - your API secret
-   * @param {boolean} [useLivenet=false]
-   * @param {RestClientOptions} [restClientOptions={}] options to configure REST API connectivity
-   * @param {AxiosRequestConfig} [requestOptions={}] HTTP networking options for axios
-   */
-  constructor(
-    key?: string | undefined,
-    secret?: string | undefined,
-    useLivenet: boolean = false,
-    restClientOptions: RestClientOptions = {},
-    requestOptions: AxiosRequestConfig = {}
-  ) {
-    super(
-      key,
-      secret,
-      getRestBaseUrl(useLivenet, restClientOptions),
-      restClientOptions,
-      requestOptions,
-      REST_CLIENT_TYPE_ENUM.inverseFutures
-    );
-    return this;
+  getClientType() {
+    return REST_CLIENT_TYPE_ENUM.inverseFutures;
   }
 
   async fetchServerTime(): Promise<number> {

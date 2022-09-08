@@ -1,4 +1,3 @@
-import { AxiosRequestConfig } from 'axios';
 import {
   AccountAssetInformationRequest,
   APIResponseWithTime,
@@ -12,39 +11,15 @@ import {
   WithdrawalRecordsRequest,
   WithdrawalRequest,
 } from './types';
-import {
-  RestClientOptions,
-  getRestBaseUrl,
-  REST_CLIENT_TYPE_ENUM,
-} from './util';
+import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
 
+/**
+ * REST API client for Account Asset APIs
+ */
 export class AccountAssetClient extends BaseRestClient {
-  /**
-   * @public Creates an instance of the Account Asset REST API client.
-   *
-   * @param {string} key - your API key
-   * @param {string} secret - your API secret
-   * @param {boolean} [useLivenet=false]
-   * @param {RestClientOptions} [restClientOptions={}] options to configure REST API connectivity
-   * @param {AxiosRequestConfig} [requestOptions={}] HTTP networking options for axios
-   */
-  constructor(
-    key?: string | undefined,
-    secret?: string | undefined,
-    useLivenet: boolean = false,
-    restClientOptions: RestClientOptions = {},
-    requestOptions: AxiosRequestConfig = {}
-  ) {
-    super(
-      key,
-      secret,
-      getRestBaseUrl(useLivenet, restClientOptions),
-      restClientOptions,
-      requestOptions,
-      REST_CLIENT_TYPE_ENUM.accountAsset
-    );
-    return this;
+  getClientType() {
+    return REST_CLIENT_TYPE_ENUM.accountAsset;
   }
 
   async fetchServerTime(): Promise<number> {

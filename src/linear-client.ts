@@ -1,9 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
-import {
-  getRestBaseUrl,
-  RestClientOptions,
-  REST_CLIENT_TYPE_ENUM,
-} from './util/requestUtils';
+import { REST_CLIENT_TYPE_ENUM } from './util/requestUtils';
 import {
   APIResponse,
   APIResponseWithTime,
@@ -25,32 +20,12 @@ import {
 import { linearPositionModeEnum, positionTpSlModeEnum } from './constants/enum';
 import BaseRestClient from './util/BaseRestClient';
 
+/**
+ * REST API client for linear/USD perpetual futures APIs (v2)
+ */
 export class LinearClient extends BaseRestClient {
-  /**
-   * @public Creates an instance of the linear (USD Perps) REST API client.
-   *
-   * @param {string} key - your API key
-   * @param {string} secret - your API secret
-   * @param {boolean} [useLivenet=false]
-   * @param {RestClientOptions} [restClientOptions={}] options to configure REST API connectivity
-   * @param {AxiosRequestConfig} [requestOptions={}] HTTP networking options for axios
-   */
-  constructor(
-    key?: string | undefined,
-    secret?: string | undefined,
-    useLivenet: boolean = false,
-    restClientOptions: RestClientOptions = {},
-    requestOptions: AxiosRequestConfig = {}
-  ) {
-    super(
-      key,
-      secret,
-      getRestBaseUrl(useLivenet, restClientOptions),
-      restClientOptions,
-      requestOptions,
-      REST_CLIENT_TYPE_ENUM.linear
-    );
-    return this;
+  getClientType() {
+    return REST_CLIENT_TYPE_ENUM.linear;
   }
 
   async fetchServerTime(): Promise<number> {
