@@ -41,6 +41,7 @@ describe('Private Account Asset REST API Endpoints', () => {
         symbol,
         orderId: 'somethingFake',
         orderPrice: '20000',
+        orderFilter: 'Order',
       })
     ).toMatchObject({
       retCode: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,

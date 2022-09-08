@@ -36,8 +36,8 @@ describe('Public USDC Options REST API Endpoints', () => {
     );
   });
 
-  it('getLastTrades()', async () => {
-    expect(await api.getLastTrades({ category: 'OPTION' })).toMatchObject(
+  it('getLast500Trades()', async () => {
+    expect(await api.getLast500Trades({ category: 'OPTION' })).toMatchObject(
       successUSDCResponseObject()
     );
   });

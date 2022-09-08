@@ -6,6 +6,16 @@ import {
   USDCKlineRequest,
   USDCLast500TradesRequest,
   USDCOpenInterestRequest,
+  USDCOrderFilter,
+  USDCPerpActiveOrdersRequest,
+  USDCPerpCancelOrderRequest,
+  USDCPerpHistoricOrdersRequest,
+  USDCPerpModifyOrderRequest,
+  USDCPerpOrderRequest,
+  USDCPositionsRequest,
+  USDCSymbolDirectionLimit,
+  USDCSymbolDirectionLimitCursor,
+  USDCTransactionLogRequest,
 } from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
@@ -34,7 +44,9 @@ export class USDCPerpetualClient extends BaseRestClient {
   }
 
   /** Fetch trading rules (such as min/max qty). Query for all if blank. */
-  getContractInfo(params?: unknown): Promise<USDCAPIResponse<any>> {
+  getContractInfo(
+    params?: USDCSymbolDirectionLimit
+  ): Promise<USDCAPIResponse<any>> {
     return this.get('/perpetual/usdc/openapi/public/v1/symbols', params);
   }
 
@@ -108,7 +120,7 @@ export class USDCPerpetualClient extends BaseRestClient {
    * The request status can be queried in real-time.
    * The response parameters must be queried through a query or a WebSocket response.
    */
-  submitOrder(params: unknown): Promise<USDCAPIResponse<any>> {
+  submitOrder(params: USDCPerpOrderRequest): Promise<USDCAPIResponse<any>> {
     return this.postPrivate(
       '/perpetual/usdc/openapi/private/v1/place-order',
       params
@@ -116,7 +128,9 @@ export class USDCPerpetualClient extends BaseRestClient {
   }
 
   /** Active order parameters (such as quantity, price) and stop order parameters cannot be modified in one request at the same time. Please request modification separately. */
-  modifyOrder(params: unknown): Promise<USDCAPIResponse<any>> {
+  modifyOrder(
+    params: USDCPerpModifyOrderRequest
+  ): Promise<USDCAPIResponse<any>> {
     return this.postPrivate(
       '/perpetual/usdc/openapi/private/v1/replace-order',
       params
@@ -124,7 +138,9 @@ export class USDCPerpetualClient extends BaseRestClient {
   }
 
   /** Cancel order */
-  cancelOrder(params: unknown): Promise<USDCAPIResponse<any>> {
+  cancelOrder(
+    params: USDCPerpCancelOrderRequest
+  ): Promise<USDCAPIResponse<any>> {
     return this.postPrivate(
       '/perpetual/usdc/openapi/private/v1/cancel-order',
       params
@@ -134,7 +150,7 @@ export class USDCPerpetualClient extends BaseRestClient {
   /** Cancel all active orders. The real-time response indicates whether the request is successful, depending on retCode. */
   cancelActiveOrders(
     symbol: string,
-    orderFilter: string
+    orderFilter: USDCOrderFilter
   ): Promise<USDCAPIResponse<any>> {
     return this.postPrivate('/perpetual/usdc/openapi/private/v1/cancel-all', {
       symbol,
@@ -143,7 +159,9 @@ export class USDCPerpetualClient extends BaseRestClient {
   }
 
   /** Query Unfilled/Partially Filled Orders */
-  getActiveOrders(params: unknown): Promise<USDCAPIResponse<any>> {
+  getActiveOrders(
+    params: USDCPerpActiveOrdersRequest
+  ): Promise<USDCAPIResponse<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-active-orders',
       params
@@ -151,7 +169,9 @@ export class USDCPerpetualClient extends BaseRestClient {
   }
 
   /** Query order history. The endpoint only supports up to 30 days of queried records */
-  getHistoricOrders(params: unknown): Promise<USDCAPIResponse<any>> {
+  getHistoricOrders(
+    params: USDCPerpHistoricOrdersRequest
+  ): Promise<USDCAPIResponse<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-order-history',
       params
@@ -159,7 +179,9 @@ export class USDCPerpetualClient extends BaseRestClient {
   }
 
   /** Query trade history. The endpoint only supports up to 30 days of queried records. An error will be returned if startTime is more than 30 days. */
-  getOrderExecutionHistory(params: unknown): Promise<USDCAPIResponse<any>> {
+  getOrderExecutionHistory(
+    params: USDCPerpActiveOrdersRequest
+  ): Promise<USDCAPIResponse<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/execution-list',
       params
@@ -169,7 +191,9 @@ export class USDCPerpetualClient extends BaseRestClient {
   /** -> Account API */
 
   /** The endpoint only supports up to 30 days of queried records. An error will be returned if startTime is more than 30 days. */
-  getTransactionLog(params: unknown): Promise<USDCAPIResponse<any>> {
+  getTransactionLog(
+    params: USDCTransactionLogRequest
+  ): Promise<USDCAPIResponse<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-transaction-log',
       params
@@ -177,10 +201,9 @@ export class USDCPerpetualClient extends BaseRestClient {
   }
 
   /** Wallet info for USDC account. */
-  getBalance(params?: unknown): Promise<USDCAPIResponse<any>> {
+  getBalance(): Promise<USDCAPIResponse<any>> {
     return this.postPrivate(
-      '/option/usdc/openapi/private/v1/query-wallet-balance',
-      params
+      '/option/usdc/openapi/private/v1/query-wallet-balance'
     );
   }
 
@@ -215,7 +238,7 @@ export class USDCPerpetualClient extends BaseRestClient {
   /** -> Positions API */
 
   /** Query my positions */
-  getPositions(params: unknown): Promise<USDCAPIResponse<any>> {
+  getPositions(params: USDCPositionsRequest): Promise<USDCAPIResponse<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-position',
       params
@@ -231,7 +254,9 @@ export class USDCPerpetualClient extends BaseRestClient {
   }
 
   /** Query Settlement History */
-  getSettlementHistory(params?: unknown): Promise<USDCAPIResponse<any>> {
+  getSettlementHistory(
+    params?: USDCSymbolDirectionLimitCursor
+  ): Promise<USDCAPIResponse<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/session-settlement',
       params
