@@ -25,7 +25,7 @@ export interface APIResponse<T> {
   result: T;
 }
 
-export interface APIResponseWithTime<T> extends APIResponse<T> {
+export interface APIResponseWithTime<T = {}> extends APIResponse<T> {
   /** UTC timestamp */
   time_now: numberInString;
 }

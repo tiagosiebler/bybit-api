@@ -41,14 +41,18 @@ Most methods accept JS objects. These can be populated using parameters specifie
 
 ## REST Clients
 Each REST API category has a dedicated REST client. Here are the REST clients and their API group:
-|                         Class                         	|           Description          	|
-|:-----------------------------------------------------:	|:------------------------------:	|
-| [InverseClient](src/inverse-client.ts)                	| Inverse Perpetual Futures (v2) 	|
-| [LinearClient](src/linear-client.ts)                  	| USDT Perpetual Futures (v2)    	|
-| [InverseFuturesClient](src/inverse-futures-client.ts) 	| Inverse Futures (v2)           	|
-| [SpotClient](src/spot-client.ts)                      	| Spot Markets                   	|
-| USDC Options & Perpetual Contracts                    	| Under Development              	|
-| Derivatives V3 unified margin                         	| Under Development              	|
+|                         Class                         	|                                         Description                                         	         	|
+|:-----------------------------------------------------:	|:-----------------------------------------------------------------------------------------------------:	|
+| [InverseClient](src/inverse-client.ts)                	| [Inverse Perpetual Futures (v2)](https://bybit-exchange.github.io/docs/futuresV2/inverse/)              |
+| [LinearClient](src/linear-client.ts)                  	| [USDT Perpetual Futures (v2)](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-introduction)   |
+| [InverseFuturesClient](src/inverse-futures-client.ts) 	| [Inverse Futures (v2)](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-introduction) |
+| [SpotClient](src/spot-client.ts)                      	| [Spot Markets](https://bybit-exchange.github.io/docs/spot/#t-introduction)                   	          |
+| [AccountAssetClient](src/account-asset-client.ts)       | [Account Asset API](https://bybit-exchange.github.io/docs/account_asset/#t-introduction)                |
+| USDC Options & Perpetual Contracts                    	| Under Development              	                        	                        	                    |
+| Derivatives V3 unified margin                         	| Under Development              	                        	                        	                    |
+| [WebsocketClient](src/websocket-client.ts)              | All WebSocket Events (Public & Private for all API categories)                                          |
+
+Examples for using each client can be found in the [examples](./examples) folder and the [awesome-crypto-examples](https://github.com/tiagosiebler/awesome-crypto-examples) repository.
 
 ## Structure
 The connector is written in TypeScript. A pure JavaScript version can be built using `npm run build`, which is also the version published to [npm](https://www.npmjs.com/package/bybit-api). This connector is fully compatible with both TypeScript and pure JavaScript projects.
@@ -60,17 +64,12 @@ The connector is written in TypeScript. A pure JavaScript version can be built u
 
 ---
 
-# Usage
+## Usage
 Create API credentials at Bybit
 - [Livenet](https://bybit.com/app/user/api-management?affiliate_id=9410&language=en-US&group_id=0&group_type=1)
 - [Testnet](https://testnet.bybit.com/app/user/api-management)
 
 ## REST API Clients
-
-There are three REST API modules as there are some differences in each contract type.
-1. `InverseClient` for inverse perpetual
-2. `InverseFuturesClient` for inverse futures
-3. `LinearClient` for linear perpetual
 
 ### REST Inverse
 To use the inverse REST APIs, import the `InverseClient`:

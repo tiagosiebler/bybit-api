@@ -3,7 +3,7 @@ import {
   getRestBaseUrl,
   RestClientOptions,
   REST_CLIENT_TYPE_ENUM,
-} from './util/requestUtils';
+} from './util';
 import {
   APIResponseWithTime,
   AssetExchangeRecordsReq,
@@ -15,7 +15,7 @@ import {
   SymbolPeriodLimitParam,
   WalletFundRecordsReq,
   WithdrawRecordsReq,
-} from './types/shared';
+} from './types';
 import BaseRestClient from './util/BaseRestClient';
 
 export class InverseClient extends BaseRestClient {

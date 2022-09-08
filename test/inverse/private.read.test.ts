@@ -1,4 +1,4 @@
-import { InverseClient } from '../../src/inverse-client';
+import { InverseClient } from '../../src/';
 import { successResponseList, successResponseObject } from '../response.util';
 
 describe('Private Inverse REST API Endpoints', () => {

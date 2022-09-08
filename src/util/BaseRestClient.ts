@@ -20,7 +20,7 @@ import {
 // });
 
 interface SignedRequestContext {
-  timestamp: number;
+  timestamp?: number;
   api_key?: string;
   recv_window?: number;
   // spot is diff from the rest...
@@ -30,8 +30,18 @@ interface SignedRequestContext {
 interface SignedRequest<T> {
   originalParams: T & SignedRequestContext;
   paramsWithSign?: T & SignedRequestContext & { sign: string };
+  serializedParams: string;
   sign: string;
+  timestamp: number;
+  recvWindow: number;
 }
+
+interface UnsignedRequest<T> {
+  originalParams: T;
+  paramsWithSign: T;
+}
+
+type SignMethod = 'keyInBody' | 'usdc';
 
 export default abstract class BaseRestClient {
   private timeOffset: number | null;
@@ -61,8 +71,7 @@ export default abstract class BaseRestClient {
 
     this.options = {
       recv_window: 5000,
-
-      /** Throw errors if any params are undefined */
+      /** Throw errors if any request params are empty */
       strict_param_validation: false,
       /** Disable time sync by default */
       enable_time_sync: false,
@@ -102,6 +111,10 @@ export default abstract class BaseRestClient {
     return this.clientType === REST_CLIENT_TYPE_ENUM.spot;
   }
 
+  private isUSDCClient() {
+    return this.clientType === REST_CLIENT_TYPE_ENUM.usdcOptions;
+  }
+
   get(endpoint: string, params?: any) {
     return this._call('GET', endpoint, params, true);
   }
@@ -122,7 +135,24 @@ export default abstract class BaseRestClient {
     return this._call('DELETE', endpoint, params, false);
   }
 
-  private async prepareSignParams(params?: any, isPublicApi?: boolean) {
+  private async prepareSignParams<TParams = any>(
+    method: Method,
+    signMethod: SignMethod,
+    params?: TParams,
+    isPublicApi?: true
+  ): Promise<UnsignedRequest<TParams>>;
+  private async prepareSignParams<TParams = any>(
+    method: Method,
+    signMethod: SignMethod,
+    params?: TParams,
+    isPublicApi?: false | undefined
+  ): Promise<SignedRequest<TParams>>;
+  private async prepareSignParams<TParams = any>(
+    method: Method,
+    signMethod: SignMethod,
+    params?: TParams,
+    isPublicApi?: boolean
+  ) {
     if (isPublicApi) {
       return {
         originalParams: params,
@@ -138,7 +168,85 @@ export default abstract class BaseRestClient {
       await this.syncTime();
     }
 
-    return this.signRequest(params);
+    return this.signRequest(params, method, signMethod);
+  }
+
+  /** Returns an axios request object. Handles signing process automatically if this is a private API call */
+  private async buildRequest(
+    method: Method,
+    url: string,
+    params?: any,
+    isPublicApi?: boolean
+  ): Promise<AxiosRequestConfig> {
+    const options: AxiosRequestConfig = {
+      ...this.globalRequestOptions,
+      url: url,
+      method: method,
+    };
+
+    for (const key in params) {
+      if (typeof params[key] === 'undefined') {
+        delete params[key];
+      }
+    }
+
+    if (isPublicApi) {
+      return {
+        ...options,
+        params: params,
+      };
+    }
+
+    // USDC Options uses a different way of authenticating requests (headers instead of params)
+    if (this.isUSDCClient()) {
+      if (!options.headers) {
+        options.headers = {};
+      }
+
+      const signResult = await this.prepareSignParams(
+        method,
+        'usdc',
+        params,
+        isPublicApi
+      );
+
+      options.headers['X-BAPI-SIGN-TYPE'] = 2;
+      options.headers['X-BAPI-API-KEY'] = this.key;
+      options.headers['X-BAPI-TIMESTAMP'] = signResult.timestamp;
+      options.headers['X-BAPI-SIGN'] = signResult.sign;
+      options.headers['X-BAPI-RECV-WINDOW'] = signResult.recvWindow;
+
+      if (method === 'GET') {
+        return {
+          ...options,
+          params: signResult.originalParams,
+        };
+      }
+
+      return {
+        ...options,
+        data: signResult.originalParams,
+      };
+    }
+
+    const signResult = await this.prepareSignParams(
+      method,
+      'keyInBody',
+      params,
+      isPublicApi
+    );
+
+    if (method === 'GET' || this.isSpotClient()) {
+      return {
+        ...options,
+        params: signResult.paramsWithSign,
+      };
+    }
+
+    return {
+      ...options,
+      data: signResult.paramsWithSign,
+    };
   }
 
   /**
@@ -150,27 +258,20 @@ export default abstract class BaseRestClient {
     params?: any,
     isPublicApi?: boolean
   ): Promise<any> {
-    const options = {
-      ...this.globalRequestOptions,
-      url: [this.baseUrl, endpoint].join(endpoint.startsWith('/') ? '' : '/'),
-      method: method,
-      json: true,
-    };
+    // Sanity check to make sure it's only ever signed by
+    const requestUrl = [this.baseUrl, endpoint].join(
+      endpoint.startsWith('/') ? '' : '/'
+    );
 
-    for (const key in params) {
-      if (typeof params[key] === 'undefined') {
-        delete params[key];
-      }
-    }
+    // Build a request and handle signature process
+    const options = await this.buildRequest(
+      method,
+      requestUrl,
+      params,
+      isPublicApi
+    );
 
-    const signResult = await this.prepareSignParams(params, isPublicApi);
-
-    if (method === 'GET' || this.isSpotClient()) {
-      options.params = signResult.paramsWithSign;
-    } else {
-      options.data = signResult.paramsWithSign;
-    }
-
+    // Dispatch request
     return axios(options)
       .then((response) => {
         if (response.status == 200) {
@@ -215,37 +316,70 @@ export default abstract class BaseRestClient {
   /**
    * @private sign request and set recv window
    */
-  private async signRequest<T extends Object>(
-    data: T & SignedRequestContext
+  private async signRequest<T = {}>(
+    data: T,
+    method: Method,
+    signMethod: SignMethod
   ): Promise<SignedRequest<T>> {
+    const timestamp = Date.now() + (this.timeOffset || 0);
+
     const res: SignedRequest<T> = {
       originalParams: {
         ...data,
-        api_key: this.key,
-        timestamp: Date.now() + (this.timeOffset || 0),
       },
       sign: '',
+      timestamp,
+      recvWindow: 0,
+      serializedParams: '',
     };
 
-    // Optional, set to 5000 by default. Increase if timestamp/recv_window errors are seen.
-    if (this.options.recv_window && !res.originalParams.recv_window) {
-      if (this.isSpotClient()) {
-        res.originalParams.recvWindow = this.options.recv_window;
-      } else {
-        res.originalParams.recv_window = this.options.recv_window;
-      }
+    if (!this.key || !this.secret) {
+      return res;
+    }
+    const key = this.key;
+    const recvWindow =
+      res.originalParams.recv_window || this.options.recv_window || 5000;
+    const strictParamValidation = this.options.strict_param_validation;
+
+    // In case the parent function needs it (e.g. USDC uses a header)
+    res.recvWindow = recvWindow;
+
+    // usdc is different for some reason
+    if (signMethod === 'usdc') {
+      const signRequestParams =
+        method === 'GET'
+          ? serializeParams(res.originalParams, strictParamValidation)
+          : JSON.stringify(res.originalParams);
+
+      const paramsStr = timestamp + key + recvWindow + signRequestParams;
+      res.sign = await signMessage(paramsStr, this.secret);
+      return res;
     }
 
-    if (this.key && this.secret) {
-      const serializedParams = serializeParams(
+    // spot/v2 derivatives
+    if (signMethod === 'keyInBody') {
+      res.originalParams.api_key = key;
+      res.originalParams.timestamp = timestamp;
+
+      // Optional, set to 5000 by default. Increase if timestamp/recv_window errors are seen.
+      if (recvWindow) {
+        if (this.isSpotClient()) {
+          res.originalParams.recvWindow = recvWindow;
+        } else {
+          res.originalParams.recv_window = recvWindow;
+        }
+      }
+
+      res.serializedParams = serializeParams(
         res.originalParams,
-        this.options.strict_param_validation
+        strictParamValidation
       );
-      res.sign = await signMessage(serializedParams, this.secret);
+      res.sign = await signMessage(res.serializedParams, this.secret);
       res.paramsWithSign = {
         ...res.originalParams,
         sign: res.sign,
       };
+      return res;
     }
 
     return res;

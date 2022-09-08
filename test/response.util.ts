@@ -14,6 +14,14 @@ export function successResponseObject(successMsg: string | null = 'OK') {
   };
 }
 
+export function successUSDCResponseObject() {
+  return {
+    result: expect.any(Object),
+    retCode: 0,
+    retMsg: expect.stringMatching(/OK|SUCCESS|success|success\./gim),
+  };
+}
+
 export function errorResponseObject(
   result: null | any = null,
   ret_code: number,

@@ -45,8 +45,8 @@ export function serializeParams(
 export function getRestBaseUrl(
   useLivenet: boolean,
   restInverseOptions: RestClientOptions
-) {
-  const baseUrlsInverse = {
+): string {
+  const exchangeBaseUrls = {
     livenet: 'https://api.bybit.com',
     testnet: 'https://api-testnet.bybit.com',
   };
@@ -56,9 +56,9 @@ export function getRestBaseUrl(
   }
 
   if (useLivenet === true) {
-    return baseUrlsInverse.livenet;
+    return exchangeBaseUrls.livenet;
   }
-  return baseUrlsInverse.testnet;
+  return exchangeBaseUrls.testnet;
 }
 
 export function isPublicEndpoint(endpoint: string): boolean {
@@ -92,11 +92,16 @@ export function isWsPong(response: any) {
 
 export const agentSource = 'bybitapinode';
 
+/**
+ * Used to switch how authentication/requests work under the hood (primarily for SPOT since it's different there)
+ */
 export const REST_CLIENT_TYPE_ENUM = {
+  accountAsset: 'accountAsset',
   inverse: 'inverse',
   inverseFutures: 'inverseFutures',
   linear: 'linear',
   spot: 'spot',
+  usdcOptions: 'usdcOptions',
 } as const;
 
 export type RestClientType =
