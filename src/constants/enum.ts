@@ -13,6 +13,7 @@ export const positionTpSlModeEnum = {
 export const API_ERROR_CODE = {
   BALANCE_INSUFFICIENT_SPOT: -1131,
   ORDER_NOT_FOUND_OR_TOO_LATE_SPOT: -2013,
+  SUCCESS: 0,
   /** This could mean bad request, incorrect value types or even incorrect/missing values */
   PARAMS_MISSING_OR_WRONG: 10001,
   ORDER_NOT_FOUND_OR_TOO_LATE: 20001,
@@ -39,6 +40,12 @@ export const API_ERROR_CODE = {
   INSUFFICIENT_BALANCE_FOR_ORDER_COST_LINEAR: 130080,
   SAME_SLTP_MODE_LINEAR: 130150,
   RISK_ID_NOT_MODIFIED: 134026,
+  ORDER_NOT_EXIST: 3100136,
+  NO_ACTIVE_ORDER: 3100205,
+  /** E.g. USDC Options trading when the account hasn't been opened for USDC Options yet */
+  ACCOUNT_NOT_EXIST: 3200200,
+  INCORRECT_MMP_PARAMETERS: 3500712,
+  INSTITION_MMP_PROFILE_NOT_FOUND: 3500713,
 } as const;
 
 /**
