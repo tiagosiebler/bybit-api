@@ -25,6 +25,12 @@ export interface APIResponse<T> {
   result: T;
 }
 
+export interface USDCAPIResponse<T> {
+  retCode: number;
+  retMsg: 'OK' | string;
+  result: T;
+}
+
 export interface APIResponseWithTime<T = {}> extends APIResponse<T> {
   /** UTC timestamp */
   time_now: numberInString;
@@ -37,15 +43,15 @@ export interface SymbolParam {
   symbol: string;
 }
 
-export interface SymbolLimitParam {
+export interface SymbolLimitParam<TLimit = number> {
   symbol: string;
-  limit?: number;
+  limit?: TLimit;
 }
 
-export interface SymbolPeriodLimitParam {
+export interface SymbolPeriodLimitParam<TLimit = number> {
   symbol: string;
   period: string;
-  limit?: number;
+  limit?: TLimit;
 }
 
 export interface SymbolFromLimitParam {

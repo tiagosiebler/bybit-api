@@ -1,8 +1,5 @@
 import { API_ERROR_CODE, USDCOptionsClient } from '../../../src';
-import {
-  successResponseObject,
-  successUSDCResponseObject,
-} from '../../response.util';
+import { successUSDCResponseObject } from '../../response.util';
 
 describe('Private Account Asset REST API Endpoints', () => {
   const useLivenet = true;
@@ -16,7 +13,6 @@ describe('Private Account Asset REST API Endpoints', () => {
 
   const api = new USDCOptionsClient(API_KEY, API_SECRET, useLivenet);
 
-  const category = 'OPTION';
   const currency = 'USDC';
   const symbol = 'BTC-30SEP22-400000-C';
 
@@ -159,11 +155,4 @@ describe('Private Account Asset REST API Endpoints', () => {
       retCode: API_ERROR_CODE.INSTITION_MMP_PROFILE_NOT_FOUND,
     });
   });
-
-  /**
-
-  it('asdfasfasdfasdf()', async () => {
-    expect(await api.asadfasdfasdfasf()).toStrictEqual('');
-  });
-   */
 });

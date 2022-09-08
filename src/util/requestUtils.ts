@@ -61,23 +61,6 @@ export function getRestBaseUrl(
   return exchangeBaseUrls.testnet;
 }
 
-export function isPublicEndpoint(endpoint: string): boolean {
-  const publicPrefixes = [
-    'v2/public',
-    'public/linear',
-    'spot/quote/v1',
-    'spot/v1/symbols',
-    'spot/v1/time',
-  ];
-
-  for (const prefix of publicPrefixes) {
-    if (endpoint.startsWith(prefix)) {
-      return true;
-    }
-  }
-  return false;
-}
-
 export function isWsPong(response: any) {
   if (response.pong || response.ping) {
     return true;
@@ -101,7 +84,7 @@ export const REST_CLIENT_TYPE_ENUM = {
   inverseFutures: 'inverseFutures',
   linear: 'linear',
   spot: 'spot',
-  usdcOptions: 'usdcOptions',
+  usdc: 'usdc',
 } as const;
 
 export type RestClientType =

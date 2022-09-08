@@ -7,7 +7,7 @@ import BaseRestClient from './util/BaseRestClient';
  */
 export class USDCOptionsClient extends BaseRestClient {
   getClientType() {
-    return REST_CLIENT_TYPE_ENUM.usdcOptions;
+    return REST_CLIENT_TYPE_ENUM.usdc;
   }
 
   async fetchServerTime(): Promise<number> {

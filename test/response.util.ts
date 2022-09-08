@@ -19,9 +19,15 @@ export function successResponseObject(successMsg: string | null = 'OK') {
 export function successUSDCResponseObject() {
   return {
     result: expect.any(Object),
+    ...successUSDCEmptyResponseObject(),
+  };
+}
+
+export function successUSDCEmptyResponseObject() {
+  return {
     retCode: API_ERROR_CODE.SUCCESS,
     retMsg: expect.stringMatching(
-      /OK|SUCCESS|success|success\.|Request accepted/gim
+      /OK|SUCCESS|success|success\.|Request accepted|/gim
     ),
   };
 }
