@@ -34,28 +34,8 @@ Check out my related projects:
   - [awesome-crypto-examples](https://github.com/tiagosiebler/awesome-crypto-examples)
 
 ## Documentation
-Most methods accept JS objects. These can be populated using parameters specified by Bybit's API documentation.
-- [Bybit API Inverse Documentation](https://bybit-exchange.github.io/docs/inverse/#t-introduction).
-- [Bybit API Inverse Futures Documentation](https://bybit-exchange.github.io/docs/inverse_futures/#t-introduction).
-- [Bybit API Linear Documentation](https://bybit-exchange.github.io/docs/linear/#t-introduction)
-
-## REST Clients
-Each REST API category has a dedicated REST client. Here are the REST clients and their API group:
-|                         Class                         	|                                                Description                                       	           |
-|:-----------------------------------------------------:	|:-----------------------------------------------------------------------------------------------------------: |
-| [InverseClient](src/inverse-client.ts)                	| [Inverse Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse/)              |
-| [LinearClient](src/linear-client.ts)                  	| [USDT Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-introduction)   |
-| [InverseFuturesClient](src/inverse-futures-client.ts) 	| [Inverse Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-introduction) |
-| [SpotClient](src/spot-client.ts)                      	| [Spot Market APIs](https://bybit-exchange.github.io/docs/spot/#t-introduction)                   	           |
-| [AccountAssetClient](src/account-asset-client.ts)       | [Account Asset APIs](https://bybit-exchange.github.io/docs/account_asset/#t-introduction)                    |
-| [USDC Perpetual](src/usdc-perpetual-client.ts)          | [USDC Perpetual APIs](https://bybit-exchange.github.io/docs/usdc/option/?console#t-querydeliverylog)         |
-| [USDC Option](src/usdc-options-client.ts)               | [USDC Option APIs](https://bybit-exchange.github.io/docs/usdc/option/#t-introduction)                        |
-| [AccountAssetClient](src/account-asset-client.ts)       | [Account Asset APIs](https://bybit-exchange.github.io/docs/account_asset/#t-introduction)                    |
-| Spot v3                                               	| Under Development              	                        	                        	                         |
-| Derivatives V3 unified margin                         	| Under Development              	                        	                        	                         |
-| [WebsocketClient](src/websocket-client.ts)              | All WebSocket Events (Public & Private for all API categories)                                               |
-
-Examples for using each client can be found in the [examples](./examples) folder and the [awesome-crypto-examples](https://github.com/tiagosiebler/awesome-crypto-examples) repository.
+Most methods accept JS objects. These can be populated using parameters specified by Bybit's API documentation, or check the type definition in each class within this repository (see table below for convenient links to each class).
+- [Bybit API Docs (choose API category from the tabs at the top)](https://bybit-exchange.github.io/docs/futuresV2/inverse/#t-introduction).
 
 ## Structure
 The connector is written in TypeScript. A pure JavaScript version can be built using `npm run build`, which is also the version published to [npm](https://www.npmjs.com/package/bybit-api). This connector is fully compatible with both TypeScript and pure JavaScript projects.
@@ -66,19 +46,45 @@ The connector is written in TypeScript. A pure JavaScript version can be built u
 - [examples](./examples) - some implementation examples & demonstrations. Contributions are welcome!
 
 ---
+## REST API Clients
+Each REST API group has a dedicated REST client. To avoid confusion, here are the available REST clients and the corresponding API groups:
+|                         Class                         	|                                                Description                                       	           |
+|:-----------------------------------------------------:	|:-----------------------------------------------------------------------------------------------------------: |
+| [InverseClient](src/inverse-client.ts)                	| [Inverse Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse/)              |
+| [LinearClient](src/linear-client.ts)                  	| [USDT Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-introduction)   |
+| [InverseFuturesClient](src/inverse-futures-client.ts) 	| [Inverse Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-introduction) |
+| [SpotClient](src/spot-client.ts)                      	| [Spot Market APIs](https://bybit-exchange.github.io/docs/spot/#t-introduction)                   	           |
+| [AccountAssetClient](src/account-asset-client.ts)       | [Account Asset APIs](https://bybit-exchange.github.io/docs/account_asset/#t-introduction)                    |
+| [USDCPerpetualClient](src/usdc-perpetual-client.ts)     | [USDC Perpetual APIs](https://bybit-exchange.github.io/docs/usdc/option/?console#t-querydeliverylog)         |
+| [USDCOptionClient](src/usdc-option-client.ts)           | [USDC Option APIs](https://bybit-exchange.github.io/docs/usdc/option/#t-introduction)                        |
+| Copy Trading                                           	| Under Development              	                        	                        	                         |
+| Spot v3                                               	| Under Development              	                        	                        	                         |
+| Derivatives V3 unified margin                         	| Under Development              	                        	                        	                         |
+| [WebsocketClient](src/websocket-client.ts)              | All WebSocket Events (Public & Private for all API categories)                                               |
 
-## Usage
-Create API credentials at Bybit
+Examples for using each client can be found in:
+- the [examples](./examples) folder.
+- the [awesome-crypto-examples](https://github.com/tiagosiebler/awesome-crypto-examples) repository.
+
+If you're missing an example, you're welcome to request one. Priority will be given to [github sponsors](https://github.com/sponsors/tiagosiebler).
+
+### Usage
+Create API credentials on Bybit's website:
 - [Livenet](https://bybit.com/app/user/api-management?affiliate_id=9410&language=en-US&group_id=0&group_type=1)
 - [Testnet](https://testnet.bybit.com/app/user/api-management)
 
-## REST API Clients
-
-### REST Inverse
-To use the inverse REST APIs, import the `InverseClient`:
+All REST clients have can be used in a similar way. However, method names, parameters and responses may vary depending on the API category you're using!
 
 ```javascript
-const { InverseClient } = require('bybit-api');
+const {
+  InverseClient,
+  LinearClient,
+  InverseFuturesClient,
+  SpotClient,
+  USDCOptionClient,
+  USDCPerpetualClient,
+  AccountAssetClient,
+} = require('bybit-api');
 
 const restClientOptions = {
   // override the max size of the request window (in ms)
@@ -118,146 +124,23 @@ const client = new InverseClient(
 
 client.getApiKeyInfo()
   .then(result => {
-    console.log("apiKey result: ", result);
+    console.log("getApiKeyInfo result: ", result);
   })
   .catch(err => {
-    console.error("apiKey error: ", err);
+    console.error("getApiKeyInfo error: ", err);
   });
 
 client.getOrderBook({ symbol: 'BTCUSD' })
   .then(result => {
-    console.log("getOrderBook inverse result: ", result);
+    console.log("getOrderBook result: ", result);
   })
   .catch(err => {
-    console.error("getOrderBook inverse error: ", err);
+    console.error("getOrderBook error: ", err);
   });
 ```
-
-
-See [inverse-client.ts](./src/inverse-client.ts) for further information.
-
-### REST Inverse Futures
-To use the inverse futures REST APIs, import the `InverseFuturesClient`:
-
-```javascript
-const { InverseFuturesClient } = require('bybit-api');
-
-const API_KEY = 'xxx';
-const PRIVATE_KEY = 'yyy';
-const useLivenet = false;
-
-const client = new InverseFuturesClient(
-  API_KEY,
-  PRIVATE_KEY,
-
-  // optional, uses testnet by default. Set to 'true' to use livenet.
-  useLivenet,
-
-  // restClientOptions,
-  // requestLibraryOptions
-);
-
-client.getApiKeyInfo()
-  .then(result => {
-    console.log("apiKey result: ", result);
-  })
-  .catch(err => {
-    console.error("apiKey error: ", err);
-  });
-
-client.getOrderBook({ symbol: 'BTCUSDH21' })
-  .then(result => {
-    console.log("getOrderBook inverse futures result: ", result);
-  })
-  .catch(err => {
-    console.error("getOrderBook inverse futures error: ", err);
-  });
-```
-
-See [inverse-futures-client.ts](./src/inverse-futures-client.ts) for further information.
-
-### REST Linear
-To use the Linear (USDT) REST APIs, import the `LinearClient`:
-
-```javascript
-const { LinearClient } = require('bybit-api');
-
-const API_KEY = 'xxx';
-const PRIVATE_KEY = 'yyy';
-const useLivenet = false;
-
-const client = new LinearClient(
-  API_KEY,
-  PRIVATE_KEY,
-
-  // optional, uses testnet by default. Set to 'true' to use livenet.
-  useLivenet,
-
-  // restClientOptions,
-  // requestLibraryOptions
-);
-
-client.getApiKeyInfo()
-  .then(result => {
-    console.log(result);
-  })
-  .catch(err => {
-    console.error(err);
-  });
-
-client.getOrderBook({ symbol: 'BTCUSDT' })
-  .then(result => {
-    console.log("getOrderBook linear result: ", result);
-  })
-  .catch(err => {
-    console.error("getOrderBook linear error: ", err);
-  });
-```
-
-See [linear-client.ts](./src/linear-client.ts) for further information.
-
-### REST Spot
-To use the Spot REST APIs, import the `SpotClient`:
-
-```javascript
-const { SpotClient } = require('bybit-api');
-
-const API_KEY = 'xxx';
-const PRIVATE_KEY = 'yyy';
-const useLivenet = false;
-
-const client = new SpotClient(
-  API_KEY,
-  PRIVATE_KEY,
-
-  // optional, uses testnet by default. Set to 'true' to use livenet.
-  useLivenet,
-
-  // restClientOptions,
-  // requestLibraryOptions
-);
-
-client.getSymbols()
-  .then(result => {
-    console.log(result);
-  })
-  .catch(err => {
-    console.error(err);
-  });
-
-client.getBalances()
-  .then(result => {
-    console.log("getBalances result: ", result);
-  })
-  .catch(err => {
-    console.error("getBalances error: ", err);
-  });
-```
-
-See [spot-client.ts](./src/spot-client.ts) for further information.
 
 ## WebSockets
-Inverse, linear & spot WebSockets can be used via a shared `WebsocketClient`. However, make sure to make one instance of WebsocketClient per market type (spot vs inverse vs linear vs linearfutures):
+All API groups can be used via a shared `WebsocketClient`. However, make sure to make one instance of the WebsocketClient per API group (spot vs inverse vs linear vs linearfutures etc):
 
 ```javascript
 const { WebsocketClient } = require('bybit-api');
@@ -337,10 +220,7 @@ ws.on('error', err => {
 });
 ```
 
-
 See [websocket-client.ts](./src/websocket-client.ts) for further information.
-
-Note: for linear websockets, pass `linear: true` in the constructor options when instancing the `WebsocketClient`. To connect to both linear and inverse websockets, make two instances of the WebsocketClient.
 
 ---
 
@@ -383,7 +263,7 @@ Or buy me a coffee using any of these:
 - ETH (ERC20): `0xd773d8e6a50758e1ada699bb6c4f98bb4abf82da`
 
 #### pixtron
-The original library was started by @pixtron. If this library helps you to trade better on bybit, feel free to donate a coffee to @pixtron:
+An early generation of this library was started by @pixtron. If this library helps you to trade better on bybit, feel free to donate a coffee to @pixtron:
 - BTC `1Fh1158pXXudfM6ZrPJJMR7Y5SgZUz4EdF`
 - ETH `0x21aEdeC53ab7593b77C9558942f0c9E78131e8d7`
 - LTC `LNdHSVtG6UWsriMYLJR3qLdfVNKwJ6GSLF`
