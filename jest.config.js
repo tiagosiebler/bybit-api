@@ -6,10 +6,10 @@ module.exports = {
     __PROD__: false
   },
   testEnvironment: 'node',
-  preset: "ts-jest",
+  preset: 'ts-jest',
   verbose: true, // report individual test
   bail: false, // enable to stop test when an error occur,
-  detectOpenHandles: false,
+  detectOpenHandles: true,
   moduleDirectories: ['node_modules', 'src', 'test'],
   testMatch: ['**/test/**/*.test.ts?(x)'],
   testPathIgnorePatterns: ['node_modules/', 'dist/', '.json'],
