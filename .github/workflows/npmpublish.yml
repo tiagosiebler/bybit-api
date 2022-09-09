@@ -51,6 +51,11 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
+      - name: Create Github Release
+        if: steps.version-updated.outputs.has-updated
+        id: create_release
+        uses: ncipollo/release-action@v1
+
   #publish-gpr:
     #needs: build
     #runs-on: ubuntu-latest

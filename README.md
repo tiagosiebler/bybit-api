@@ -38,7 +38,9 @@ Most methods accept JS objects. These can be populated using parameters specifie
 - [Bybit API Docs (choose API category from the tabs at the top)](https://bybit-exchange.github.io/docs/futuresV2/inverse/#t-introduction).
 
 ## Structure
-The connector is written in TypeScript. A pure JavaScript version can be built using `npm run build`, which is also the version published to [npm](https://www.npmjs.com/package/bybit-api). This connector is fully compatible with both TypeScript and pure JavaScript projects.
+The connector is written in TypeScript. A pure JavaScript version can be built using `npm run build`, which is also the version published to [npm](https://www.npmjs.com/package/bybit-api).
+
+This connector is fully compatible with both TypeScript and pure JavaScript projects. The version on npm is the output from the `build` command and can be used in projects without TypeScript (although TypeScript is definitely recommended).
 
 - [src](./src) - the whole connector written in TypeScript
 - [lib](./lib) - the JavaScript version of the project (built from TypeScript). This should not be edited directly, as it will be overwritten with each release.
