@@ -16,6 +16,7 @@ export const API_ERROR_CODE = {
   SUCCESS: 0,
   /** This could mean bad request, incorrect value types or even incorrect/missing values */
   PARAMS_MISSING_OR_WRONG: 10001,
+  INCORRECT_API_KEY_PERMISSIONS: 10005,
   ORDER_NOT_FOUND_OR_TOO_LATE: 20001,
   POSITION_STATUS_NOT_NORMAL: 30013,
   CANNOT_SET_TRADING_STOP_FOR_ZERO_POS: 30024,

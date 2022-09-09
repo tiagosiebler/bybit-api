@@ -1,7 +1,7 @@
-import { WsConnectionState } from '../websocket-client';
-import { DefaultLogger } from '../logger';
-
 import WebSocket from 'isomorphic-ws';
+
+import { WsConnectionState } from '../websocket-client';
+import { DefaultLogger } from './logger';
 
 type WsTopic = string;
 type WsTopicList = Set<WsTopic>;

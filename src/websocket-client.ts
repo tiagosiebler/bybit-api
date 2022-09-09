@@ -3,7 +3,7 @@ import WebSocket from 'isomorphic-ws';
 
 import { InverseClient } from './inverse-client';
 import { LinearClient } from './linear-client';
-import { DefaultLogger } from './logger';
+import { DefaultLogger } from './util/logger';
 import { SpotClient } from './spot-client';
 import { KlineInterval } from './types/shared';
 import { signMessage } from './util/node-support';
