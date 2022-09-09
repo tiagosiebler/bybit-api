@@ -55,7 +55,7 @@ Each REST API group has a dedicated REST client. To avoid confusion, here are th
 | [InverseClient](src/inverse-client.ts)                	| [Inverse Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse/)              |
 | [LinearClient](src/linear-client.ts)                  	| [USDT Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-introduction)   |
 | [InverseFuturesClient](src/inverse-futures-client.ts) 	| [Inverse Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-introduction) |
-| [SpotClient](src/spot-client.ts)                      	| [Spot Market APIs](https://bybit-exchange.github.io/docs/spot/#t-introduction)                   	           |
+| [SpotClient](src/spot-client.ts)                      	| [Spot Market (v1) APIs](https://bybit-exchange.github.io/docs/spot/v1/#t-introduction)                   	     |
 | [AccountAssetClient](src/account-asset-client.ts)       | [Account Asset APIs](https://bybit-exchange.github.io/docs/account_asset/#t-introduction)                    |
 | [USDCPerpetualClient](src/usdc-perpetual-client.ts)     | [USDC Perpetual APIs](https://bybit-exchange.github.io/docs/usdc/option/?console#t-querydeliverylog)         |
 | [USDCOptionClient](src/usdc-option-client.ts)           | [USDC Option APIs](https://bybit-exchange.github.io/docs/usdc/option/#t-introduction)                        |
