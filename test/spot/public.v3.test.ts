@@ -1,8 +1,6 @@
 import { SpotClientV3 } from '../../src';
 import {
   notAuthenticatedError,
-  successResponseList,
-  successResponseObject,
   successResponseObjectV3,
 } from '../response.util';
 

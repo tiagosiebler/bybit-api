@@ -1,10 +1,7 @@
 import { API_ERROR_CODE, SpotClientV3 } from '../../src';
-import {
-  successResponseObject,
-  successResponseObjectV3,
-} from '../response.util';
+import { successResponseObjectV3 } from '../response.util';
 
-describe('Private Inverse-Futures REST API POST Endpoints', () => {
+describe('Private Spot REST API POST Endpoints', () => {
   const useLivenet = true;
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;

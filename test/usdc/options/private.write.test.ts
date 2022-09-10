@@ -1,7 +1,7 @@
 import { API_ERROR_CODE, USDCOptionClient } from '../../../src';
 import { successResponseObjectV3 } from '../../response.util';
 
-describe('Private Account Asset REST API Endpoints', () => {
+describe('Private USDC Options REST API POST Endpoints', () => {
   const useLivenet = true;
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;

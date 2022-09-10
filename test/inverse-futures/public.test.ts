@@ -5,7 +5,7 @@ import {
   successResponseObject,
 } from '../response.util';
 
-describe('Public Inverse Futures REST API Endpoints', () => {
+describe('Public Inverse-Futures REST API Endpoints', () => {
   const useLivenet = true;
   const api = new InverseFuturesClient(undefined, undefined, useLivenet);
 

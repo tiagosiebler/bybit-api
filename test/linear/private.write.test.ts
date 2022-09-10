@@ -1,7 +1,7 @@
 import { API_ERROR_CODE, LinearClient } from '../../src';
 import { successResponseObject } from '../response.util';
 
-describe('Private Inverse-Futures REST API POST Endpoints', () => {
+describe('Private Linear REST API POST Endpoints', () => {
   const useLivenet = true;
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;

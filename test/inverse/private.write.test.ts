@@ -2,7 +2,7 @@ import { API_ERROR_CODE } from '../../src';
 import { InverseClient } from '../../src/inverse-client';
 import { successResponseObject } from '../response.util';
 
-describe('Private Inverse REST API Endpoints', () => {
+describe('Private Inverse REST API POST Endpoints', () => {
   const useLivenet = true;
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;

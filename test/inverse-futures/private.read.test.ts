@@ -1,7 +1,7 @@
 import { InverseFuturesClient } from '../../src/inverse-futures-client';
 import { successResponseList, successResponseObject } from '../response.util';
 
-describe('Public Inverse-Futures REST API GET Endpoints', () => {
+describe('Private Inverse-Futures REST API GET Endpoints', () => {
   const useLivenet = true;
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;

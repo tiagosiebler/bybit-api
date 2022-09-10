@@ -1,12 +1,7 @@
 import { SpotClient } from '../../src';
-import {
-  errorResponseObject,
-  notAuthenticatedError,
-  successResponseList,
-  successResponseObject,
-} from '../response.util';
+import { errorResponseObject, successResponseList } from '../response.util';
 
-describe('Private Spot REST API Endpoints', () => {
+describe('Private Spot REST API GET Endpoints', () => {
   const useLivenet = true;
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;

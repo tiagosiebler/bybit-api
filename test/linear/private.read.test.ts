@@ -1,7 +1,7 @@
 import { LinearClient } from '../../src/linear-client';
 import { successResponseList, successResponseObject } from '../response.util';
 
-describe('Public Linear REST API GET Endpoints', () => {
+describe('Private Linear REST API GET Endpoints', () => {
   const useLivenet = true;
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;

@@ -1,7 +1,6 @@
 import { API_ERROR_CODE, CopyTradingClient } from '../../src';
-import { successResponseObject } from '../response.util';
 
-describe('Private Copy Trading REST API Endpoints', () => {
+describe('Private Copy Trading REST API GET Endpoints', () => {
   const useLivenet = true;
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;

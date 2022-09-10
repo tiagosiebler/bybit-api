@@ -7,7 +7,7 @@ import {
   successResponseObjectV3,
 } from '../response.util';
 
-describe('Private Spot REST API Endpoints', () => {
+describe('Private Spot REST API GET Endpoints', () => {
   const useLivenet = true;
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;

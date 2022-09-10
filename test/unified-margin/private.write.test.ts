@@ -1,6 +1,6 @@
 import { API_ERROR_CODE, UnifiedMarginClient } from '../../src';
 
-describe('Private Unified Margin REST API Endpoints', () => {
+describe('Private Unified Margin REST API POST Endpoints', () => {
   const useLivenet = true;
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;

@@ -1,7 +1,7 @@
 import { AccountAssetClient } from '../../src/';
 import { successResponseObject } from '../response.util';
 
-describe('Private Account Asset REST API Endpoints', () => {
+describe('Private Account Asset REST API GET Endpoints', () => {
   const useLivenet = true;
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
