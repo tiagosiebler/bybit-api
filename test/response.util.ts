@@ -1,10 +1,21 @@
 import { API_ERROR_CODE } from '../src';
 
+const SUCCESS_MSG_REGEX = /OK|SUCCESS|success|success\.|Request accepted|/gim;
+
 export function successResponseList(successMsg: string | null = 'OK') {
   return {
     result: expect.any(Array),
     ret_code: API_ERROR_CODE.SUCCESS,
     ret_msg: successMsg,
+  };
+}
+
+export function successResponseListV3(successMsg: string | null = 'OK') {
+  return {
+    result: {
+      list: expect.any(Array),
+    },
+    ...successEmptyResponseObjectV3(),
   };
 }
 
@@ -26,9 +37,7 @@ export function successResponseObjectV3() {
 export function successEmptyResponseObjectV3() {
   return {
     retCode: API_ERROR_CODE.SUCCESS,
-    retMsg: expect.stringMatching(
-      /OK|SUCCESS|success|success\.|Request accepted|/gim
-    ),
+    retMsg: expect.stringMatching(SUCCESS_MSG_REGEX),
   };
 }
 
@@ -41,6 +50,16 @@ export function errorResponseObject(
     result,
     ret_code,
     ret_msg,
+  };
+}
+
+export function errorResponseObjectV3(
+  result: null | any = null,
+  retCode: number
+) {
+  return {
+    result,
+    retCode: retCode,
   };
 }
 
