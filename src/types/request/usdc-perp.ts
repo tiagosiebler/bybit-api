@@ -1,5 +1,10 @@
 import { OrderSide } from '../shared';
-import { USDCAPICategory, USDCOrderType, USDCTimeInForce } from './usdc-shared';
+import {
+  USDCAPICategory,
+  USDCOrderFilter,
+  USDCOrderType,
+  USDCTimeInForce,
+} from './usdc-shared';
 
 export interface USDCOpenInterestRequest {
   symbol: string;
@@ -26,8 +31,6 @@ export interface USDCSymbolDirectionLimitCursor {
   limit?: string;
   cursor?: string;
 }
-
-export type USDCOrderFilter = 'Order' | 'StopOrder';
 
 export interface USDCPerpOrderRequest {
   symbol: string;

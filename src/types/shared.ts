@@ -17,6 +17,21 @@ export type KlineInterval =
   | '1w'
   | '1M';
 
+export type KlineIntervalV3 =
+  | '1'
+  | '3'
+  | '5'
+  | '15'
+  | '30'
+  | '60'
+  | '120'
+  | '240'
+  | '360'
+  | '720'
+  | 'D'
+  | 'W'
+  | 'M';
+
 export interface APIResponse<T> {
   ret_code: number;
   ret_msg: 'OK' | string;

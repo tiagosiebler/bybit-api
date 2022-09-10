@@ -270,7 +270,7 @@ export default abstract class BaseRestClient {
     params?: any,
     isPublicApi?: boolean
   ): Promise<any> {
-    // Sanity check to make sure it's only ever signed by
+    // Sanity check to make sure it's only ever prefixed by one forward slash
     const requestUrl = [this.baseUrl, endpoint].join(
       endpoint.startsWith('/') ? '' : '/'
     );

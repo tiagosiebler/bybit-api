@@ -1,11 +1,14 @@
 export type USDCAPICategory = 'PERPETUAL' | 'OPTION';
 
 export type USDCOrderType = 'Limit' | 'Market';
+
 export type USDCTimeInForce =
   | 'GoodTillCancel'
   | 'ImmediateOrCancel'
   | 'FillOrKill'
   | 'PostOnly';
+
+export type USDCOrderFilter = 'Order' | 'StopOrder';
 
 export interface USDCKlineRequest {
   symbol: string;
