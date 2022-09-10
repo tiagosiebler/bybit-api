@@ -1,5 +1,8 @@
-import { API_ERROR_CODE, SpotClient } from '../../src';
-import { successResponseObject } from '../response.util';
+import { API_ERROR_CODE, SpotClientV3 } from '../../src';
+import {
+  successResponseObject,
+  successResponseObjectV3,
+} from '../response.util';
 
 describe('Private Inverse-Futures REST API POST Endpoints', () => {
   const useLivenet = true;
@@ -11,10 +14,10 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new SpotClient(API_KEY, API_SECRET, useLivenet);
+  const api = new SpotClientV3(API_KEY, API_SECRET, useLivenet);
 
-  // Warning: if some of these start to fail with 10001 params error, it's probably that this future expired and a newer one exists with a different symbol!
   const symbol = 'BTCUSDT';
+  const ltCode = 'BTC3S';
 
   // These tests are primarily check auth is working by expecting balance or order not found style errors
 
@@ -23,12 +26,11 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       await api.submitOrder({
         side: 'Buy',
         symbol,
-        qty: 10000,
-        type: 'MARKET',
+        orderQty: '10000',
+        orderType: 'MARKET',
       })
     ).toMatchObject({
-      ret_code: API_ERROR_CODE.BALANCE_INSUFFICIENT_SPOT,
-      ret_msg: 'Balance insufficient ',
+      retCode: API_ERROR_CODE.BALANCE_INSUFFICIENT_SPOT_V3,
     });
   });
 
@@ -38,8 +40,7 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
         orderId: '1231231',
       })
     ).toMatchObject({
-      ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE_SPOT,
-      ret_msg: 'Order does not exist.',
+      retCode: API_ERROR_CODE.ORDER_NOT_FOUND_SPOT_V3,
     });
   });
 
@@ -49,6 +50,30 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
         symbol,
         orderTypes: ['LIMIT', 'LIMIT_MAKER'],
       })
-    ).toMatchObject(successResponseObject());
+    ).toMatchObject(successResponseObjectV3());
+  });
+
+  it('purchaseLeveragedToken()', async () => {
+    expect(await api.purchaseLeveragedToken(ltCode, '1')).toMatchObject({
+      retCode: API_ERROR_CODE.EXCEEDED_UPPER_LIMIT_LEVERAGED_TOKEN,
+    });
+  });
+
+  it('redeemLeveragedToken()', async () => {
+    expect(await api.redeemLeveragedToken(ltCode, '1')).toMatchObject({
+      retCode: 12426, // unknown error code, not listed in docs yet
+    });
+  });
+
+  it('borrowCrossMarginLoan()', async () => {
+    expect(await api.borrowCrossMarginLoan('USDT', '1')).toMatchObject({
+      retCode: API_ERROR_CODE.CROSS_MARGIN_USER_NOT_FOUND,
+    });
+  });
+
+  it('repayCrossMarginLoan()', async () => {
+    expect(await api.repayCrossMarginLoan('USDT', '1')).toMatchObject({
+      retCode: API_ERROR_CODE.CROSS_MARGIN_REPAYMENT_NOT_REQUIRED,
+    });
   });
 });

@@ -18,9 +18,6 @@ describe('Private Spot REST API Endpoints', () => {
 
   const api = new SpotClient(API_KEY, API_SECRET, useLivenet);
 
-  const symbol = 'BTCUSDT';
-  const interval = '15m';
-
   it('getOrder()', async () => {
     // No auth error == test pass
     expect(await api.getOrder({ orderId: '123123' })).toMatchObject(
