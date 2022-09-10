@@ -51,19 +51,19 @@ This connector is fully compatible with both TypeScript and pure JavaScript proj
 ---
 ## REST API Clients
 Each REST API group has a dedicated REST client. To avoid confusion, here are the available REST clients and the corresponding API groups:
-|                         Class                         	|                                                Description                                       	           |
-|:-----------------------------------------------------:	|:-----------------------------------------------------------------------------------------------------------: |
-| [InverseClient](src/inverse-client.ts)                	| [Inverse Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse/)              |
-| [LinearClient](src/linear-client.ts)                  	| [USDT Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-introduction)   |
-| [InverseFuturesClient](src/inverse-futures-client.ts) 	| [Inverse Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-introduction) |
-| [SpotClient](src/spot-client.ts)                      	| [Spot Market (v1) APIs](https://bybit-exchange.github.io/docs/spot/v1/#t-introduction)                   	     |
-| [AccountAssetClient](src/account-asset-client.ts)       | [Account Asset APIs](https://bybit-exchange.github.io/docs/account_asset/#t-introduction)                    |
-| [USDCPerpetualClient](src/usdc-perpetual-client.ts)     | [USDC Perpetual APIs](https://bybit-exchange.github.io/docs/usdc/option/?console#t-querydeliverylog)         |
-| [USDCOptionClient](src/usdc-option-client.ts)           | [USDC Option APIs](https://bybit-exchange.github.io/docs/usdc/option/#t-introduction)                        |
-| Copy Trading                                           	| Under Development              	                        	                        	                         |
-| Spot v3                                               	| Under Development              	                        	                        	                         |
-| Derivatives V3 unified margin                         	| Under Development              	                        	                        	                         |
-| [WebsocketClient](src/websocket-client.ts)              | All WebSocket Events (Public & Private for all API categories)                                               |
+|                         Class                               	        |                                                Description                                       	           |
+|:------------------------------------------------------------------:   |:-----------------------------------------------------------------------------------------------------------: |
+| [InverseClient](src/inverse-client.ts)                	              | [Inverse Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse/)              |
+| [LinearClient](src/linear-client.ts)                  	              | [USDT Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-introduction)   |
+| [InverseFuturesClient](src/inverse-futures-client.ts) 	              | [Inverse Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-introduction) |
+| [SpotClientV3](src/spot-client-v3.ts)                                 | [Spot Market (v3) APIs](https://bybit-exchange.github.io/docs/spot/v3/#t-introduction)                   	   |
+| [~SpotClient~](src/spot-client.ts) (deprecated, v3 client recommended)| [Spot Market (v1) APIs](https://bybit-exchange.github.io/docs/spot/v1/#t-introduction)                   	   |
+| [AccountAssetClient](src/account-asset-client.ts)                     | [Account Asset APIs](https://bybit-exchange.github.io/docs/account_asset/#t-introduction)                    |
+| [USDCPerpetualClient](src/usdc-perpetual-client.ts)                   | [USDC Perpetual APIs](https://bybit-exchange.github.io/docs/usdc/option/?console#t-querydeliverylog)         |
+| [USDCOptionClient](src/usdc-option-client.ts)                         | [USDC Option APIs](https://bybit-exchange.github.io/docs/usdc/option/#t-introduction)                        |
+| [CopyTradingClient](src/copy-trading-client.ts)                       | [Copy Trading APIs](https://bybit-exchange.github.io/docs/copy_trading/#t-introduction)           	         |
+| Derivatives V3 unified margin                                      	  | Under Development              	                        	                        	                         |
+| [WebsocketClient](src/websocket-client.ts)                            | All WebSocket Events (Public & Private for all API categories)                                               |
 
 Examples for using each client can be found in:
 - the [examples](./examples) folder.
@@ -86,8 +86,10 @@ const {
   LinearClient,
   InverseFuturesClient,
   SpotClient,
+  SpotClient3,
   USDCOptionClient,
   USDCPerpetualClient,
+  CopyTradingClient,
   AccountAssetClient,
 } = require('bybit-api');
 
