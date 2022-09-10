@@ -1,10 +1,6 @@
-import { API_ERROR_CODE, USDCPerpetualClient } from '../../../src';
-import {
-  successEmptyResponseObjectV3,
-  successResponseObjectV3,
-} from '../../response.util';
+import { API_ERROR_CODE, UnifiedMarginClient } from '../../src';
 
-describe('Private Account Asset REST API Endpoints', () => {
+describe('Private Unified Margin REST API Endpoints', () => {
   const useLivenet = true;
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
@@ -14,24 +10,30 @@ describe('Private Account Asset REST API Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new USDCPerpetualClient(API_KEY, API_SECRET, useLivenet);
+  const api = new UnifiedMarginClient(API_KEY, API_SECRET, useLivenet);
 
-  const symbol = 'BTCPERP';
+  const symbol = 'BTCUSDT';
+  const category = 'linear';
+
+  /**
+   * While it may seem silly, these tests simply validate the request is processed at all.
+   * Something very wrong would be a sign error or complaints about the endpoint/request method/server error.
+   */
 
   it('submitOrder()', async () => {
     expect(
       await api.submitOrder({
         symbol,
+        category,
         side: 'Sell',
         orderType: 'Limit',
-        orderFilter: 'Order',
-        orderQty: '1',
-        orderPrice: '20000',
+        qty: '1',
+        price: '20000',
         orderLinkId: Date.now().toString(),
         timeInForce: 'GoodTillCancel',
       })
     ).toMatchObject({
-      retCode: API_ERROR_CODE.INSUFFICIENT_BALANCE_FOR_ORDER_COST,
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
     });
   });
 
@@ -39,12 +41,12 @@ describe('Private Account Asset REST API Endpoints', () => {
     expect(
       await api.modifyOrder({
         symbol,
+        category,
         orderId: 'somethingFake',
-        orderPrice: '20000',
-        orderFilter: 'Order',
+        price: '20000',
       })
     ).toMatchObject({
-      retCode: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
     });
   });
 
@@ -52,35 +54,134 @@ describe('Private Account Asset REST API Endpoints', () => {
     expect(
       await api.cancelOrder({
         symbol,
+        category,
         orderId: 'somethingFake1',
         orderFilter: 'Order',
       })
     ).toMatchObject({
-      retCode: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
     });
   });
 
-  it('cancelActiveOrders()', async () => {
-    expect(await api.cancelActiveOrders(symbol, 'Order')).toMatchObject(
-      successEmptyResponseObjectV3()
-    );
+  it('batchSubmitOrders()', async () => {
+    expect(
+      await api.batchSubmitOrders(category, [
+        {
+          symbol,
+          side: 'Buy',
+          orderType: 'Limit',
+          qty: '1',
+          price: '10000',
+          timeInForce: 'FillOrKill',
+        },
+        {
+          symbol,
+          side: 'Buy',
+          orderType: 'Limit',
+          qty: '1',
+          price: '10001',
+          timeInForce: 'FillOrKill',
+        },
+        {
+          symbol,
+          side: 'Buy',
+          orderType: 'Limit',
+          qty: '1',
+          price: '10002',
+          timeInForce: 'FillOrKill',
+        },
+      ])
+    ).toMatchObject({
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+    });
   });
 
-  it('setMarginMode()', async () => {
-    expect(await api.setMarginMode('REGULAR_MARGIN')).toMatchObject(
-      successResponseObjectV3()
-    );
+  it('batchReplaceOrders()', async () => {
+    expect(
+      await api.batchReplaceOrders(category, [
+        {
+          symbol,
+          orderLinkId: 'somethingFake1',
+          qty: '4',
+        },
+        {
+          symbol,
+          orderLinkId: 'somethingFake2',
+          qty: '5',
+        },
+        {
+          symbol,
+          orderLinkId: 'somethingFake3',
+          qty: '6',
+        },
+      ])
+    ).toMatchObject({
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+    });
+  });
+
+  it('batchCancelOrders()', async () => {
+    expect(
+      await api.batchCancelOrders(category, [
+        {
+          symbol,
+          orderLinkId: 'somethingFake1',
+        },
+        {
+          symbol,
+          orderLinkId: 'somethingFake2',
+        },
+        {
+          symbol,
+          orderLinkId: 'somethingFake3',
+        },
+      ])
+    ).toMatchObject({
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+    });
+  });
+
+  it('cancelAllOrders()', async () => {
+    expect(await api.cancelAllOrders({ category })).toMatchObject({
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+    });
   });
 
   it('setLeverage()', async () => {
-    expect(await api.setLeverage(symbol, '10')).toMatchObject({
-      retCode: API_ERROR_CODE.LEVERAGE_NOT_MODIFIED,
+    expect(await api.setLeverage(category, symbol, 5, 5)).toMatchObject({
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+    });
+  });
+
+  it('setTPSLMode()', async () => {
+    expect(await api.setTPSLMode(category, symbol, 1)).toMatchObject({
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
     });
   });
 
   it('setRiskLimit()', async () => {
-    expect(await api.setRiskLimit(symbol, 1)).toMatchObject({
-      retCode: API_ERROR_CODE.RISK_LIMIT_NOT_EXISTS,
+    expect(await api.setRiskLimit(category, symbol, 1, 0)).toMatchObject({
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+    });
+  });
+
+  it('setTPSL()', async () => {
+    expect(await api.setTPSL({ category, symbol })).toMatchObject({
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+    });
+  });
+
+  it('transferFunds()', async () => {
+    expect(
+      await api.transferFunds({
+        amount: '1',
+        coin: 'USDT',
+        from_account_type: 'SPOT',
+        to_account_type: 'CONTRACT',
+        transfer_id: 'testtransfer',
+      })
+    ).toMatchObject({
+      ret_code: API_ERROR_CODE.INVALID_API_KEY_OR_PERMISSIONS,
     });
   });
 });

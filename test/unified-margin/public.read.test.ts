@@ -4,7 +4,7 @@ import {
   successResponseObjectV3,
 } from '../response.util';
 
-describe('Public USDC Options REST API Endpoints', () => {
+describe('Public Unified Margin REST API Endpoints', () => {
   const useLivenet = true;
   const API_KEY = undefined;
   const API_SECRET = undefined;

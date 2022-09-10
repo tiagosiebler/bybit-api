@@ -328,7 +328,10 @@ export class UnifiedMarginClient extends BaseRestClient {
     });
   }
 
-  /** Upgrade to unified margin account */
+  /**
+   * Upgrade to unified margin account.
+   * WARNING: This is currently not reversable!
+   */
   upgradeToUnifiedMargin(): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/unified/v3/private/account/upgrade-unified-account'
