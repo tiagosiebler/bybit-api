@@ -52,7 +52,7 @@ export class UnifiedMarginClient extends BaseRestClient {
   /** Query order book info. Each side has a depth of 25 orders. */
   getOrderBook(
     symbol: string,
-    category?: string,
+    category: string,
     limit?: number
   ): Promise<APIResponseV3<any>> {
     return this.get('/derivatives/v3/public/order-book/L2', {

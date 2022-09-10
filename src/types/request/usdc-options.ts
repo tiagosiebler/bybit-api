@@ -1,5 +1,4 @@
 import { OrderSide } from '../shared';
-import { USDCOrderFilter } from './usdc-perp';
 import { USDCAPICategory, USDCOrderType, USDCTimeInForce } from './usdc-shared';
 
 export interface USDCOptionsContractInfoRequest {
