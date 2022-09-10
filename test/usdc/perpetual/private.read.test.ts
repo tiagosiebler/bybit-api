@@ -1,5 +1,5 @@
 import { USDCPerpetualClient } from '../../../src';
-import { successUSDCResponseObject } from '../../response.util';
+import { successResponseObjectV3 } from '../../response.util';
 
 describe('Private Account Asset REST API Endpoints', () => {
   const useLivenet = true;
@@ -18,57 +18,55 @@ describe('Private Account Asset REST API Endpoints', () => {
 
   it('getActiveOrders()', async () => {
     expect(await api.getActiveOrders({ category })).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getHistoricOrders()', async () => {
     expect(await api.getHistoricOrders({ category })).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getOrderExecutionHistory()', async () => {
     expect(await api.getOrderExecutionHistory({ category })).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getTransactionLog()', async () => {
     expect(await api.getTransactionLog({ type: 'TRADE' })).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getBalances()', async () => {
-    expect(await api.getBalances()).toMatchObject(successUSDCResponseObject());
+    expect(await api.getBalances()).toMatchObject(successResponseObjectV3());
   });
 
   it('getAssetInfo()', async () => {
-    expect(await api.getAssetInfo()).toMatchObject(successUSDCResponseObject());
+    expect(await api.getAssetInfo()).toMatchObject(successResponseObjectV3());
   });
 
   it('getMarginMode()', async () => {
-    expect(await api.getMarginMode()).toMatchObject(
-      successUSDCResponseObject()
-    );
+    expect(await api.getMarginMode()).toMatchObject(successResponseObjectV3());
   });
 
   it('getPositions()', async () => {
     expect(await api.getPositions({ category })).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getSettlementHistory()', async () => {
     expect(await api.getSettlementHistory({ symbol })).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getPredictedFundingRate()', async () => {
     expect(await api.getPredictedFundingRate(symbol)).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 });

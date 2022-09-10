@@ -10,7 +10,7 @@ export function successResponseList(successMsg: string | null = 'OK') {
   };
 }
 
-export function successResponseListV3(successMsg: string | null = 'OK') {
+export function successResponseListV3() {
   return {
     result: {
       list: expect.any(Array),

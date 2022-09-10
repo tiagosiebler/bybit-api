@@ -1,5 +1,5 @@
 import { API_ERROR_CODE, USDCOptionClient } from '../../../src';
-import { successUSDCResponseObject } from '../../response.util';
+import { successResponseObjectV3 } from '../../response.util';
 
 describe('Private Account Asset REST API Endpoints', () => {
   const useLivenet = true;
@@ -132,7 +132,7 @@ describe('Private Account Asset REST API Endpoints', () => {
 
   it('setMarginMode()', async () => {
     expect(await api.setMarginMode('REGULAR_MARGIN')).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 

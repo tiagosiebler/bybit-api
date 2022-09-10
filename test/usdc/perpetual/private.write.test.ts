@@ -1,7 +1,7 @@
 import { API_ERROR_CODE, USDCPerpetualClient } from '../../../src';
 import {
-  successUSDCEmptyResponseObject,
-  successUSDCResponseObject,
+  successEmptyResponseObjectV3,
+  successResponseObjectV3,
 } from '../../response.util';
 
 describe('Private Account Asset REST API Endpoints', () => {
@@ -62,13 +62,13 @@ describe('Private Account Asset REST API Endpoints', () => {
 
   it('cancelActiveOrders()', async () => {
     expect(await api.cancelActiveOrders(symbol, 'Order')).toMatchObject(
-      successUSDCEmptyResponseObject()
+      successEmptyResponseObjectV3()
     );
   });
 
   it('setMarginMode()', async () => {
     expect(await api.setMarginMode('REGULAR_MARGIN')).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 

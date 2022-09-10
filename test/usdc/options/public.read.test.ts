@@ -1,7 +1,7 @@
 import { USDCOptionClient } from '../../../src';
 import {
   successResponseObject,
-  successUSDCResponseObject,
+  successResponseObjectV3,
 } from '../../response.util';
 
 describe('Public USDC Options REST API Endpoints', () => {
@@ -14,37 +14,37 @@ describe('Public USDC Options REST API Endpoints', () => {
 
   it('getOrderBook()', async () => {
     expect(await api.getOrderBook(symbol)).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getContractInfo()', async () => {
     expect(await api.getContractInfo()).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getSymbolTicker()', async () => {
     expect(await api.getSymbolTicker(symbol)).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getDeliveryPrice()', async () => {
     expect(await api.getDeliveryPrice()).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getLast500Trades()', async () => {
     expect(await api.getLast500Trades({ category: 'OPTION' })).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getHistoricalVolatility()', async () => {
     expect(await api.getHistoricalVolatility()).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 

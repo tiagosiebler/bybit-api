@@ -1,7 +1,7 @@
 import { USDCKlineRequest, USDCPerpetualClient } from '../../../src';
 import {
   successResponseObject,
-  successUSDCResponseObject,
+  successResponseObjectV3,
 } from '../../response.util';
 
 describe('Public USDC Options REST API Endpoints', () => {
@@ -19,73 +19,73 @@ describe('Public USDC Options REST API Endpoints', () => {
 
   it('getOrderBook()', async () => {
     expect(await api.getOrderBook(symbol)).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getContractInfo()', async () => {
     expect(await api.getContractInfo()).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getSymbolTicker()', async () => {
     expect(await api.getSymbolTicker(symbol)).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getCandles()', async () => {
     expect(await api.getCandles(candleRequest)).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getMarkPrice()', async () => {
     expect(await api.getMarkPrice(candleRequest)).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getIndexPrice()', async () => {
     expect(await api.getIndexPrice(candleRequest)).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getIndexPremium()', async () => {
     expect(await api.getIndexPremium(candleRequest)).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getOpenInterest()', async () => {
     expect(await api.getOpenInterest({ symbol, period: '1m' })).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getLargeOrders()', async () => {
     expect(await api.getLargeOrders({ symbol })).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getLongShortRatio()', async () => {
     expect(await api.getLongShortRatio({ symbol, period: '1m' })).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getLast500Trades()', async () => {
     expect(await api.getLast500Trades({ category })).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
   it('getLastFundingRate()', async () => {
     expect(await api.getLastFundingRate(symbol)).toMatchObject(
-      successUSDCResponseObject()
+      successResponseObjectV3()
     );
   });
 
