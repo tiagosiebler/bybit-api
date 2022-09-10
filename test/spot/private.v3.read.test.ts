@@ -1,7 +1,5 @@
 import { API_ERROR_CODE, SpotClientV3 } from '../../src';
 import {
-  errorResponseObject,
-  errorResponseObjectV3,
   successEmptyResponseObjectV3,
   successResponseListV3,
   successResponseObjectV3,
