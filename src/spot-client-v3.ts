@@ -18,7 +18,7 @@ import BaseRestClient from './util/BaseRestClient';
 /**
  * REST API client for newer Spot V3 APIs.
  */
-export class SpotV3Client extends BaseRestClient {
+export class SpotClientV3 extends BaseRestClient {
   getClientType() {
     // Follows the same authentication mechanism as other v3 APIs (e.g. USDC)
     return REST_CLIENT_TYPE_ENUM.v3;
@@ -46,7 +46,7 @@ export class SpotV3Client extends BaseRestClient {
   }
 
   /** Get merged orderbook for symbol */
-  getOrderBookMerged(
+  getMergedOrderBook(
     symbol: string,
     scale?: number,
     limit?: number

@@ -4,6 +4,7 @@ export * from './inverse-client';
 export * from './inverse-futures-client';
 export * from './linear-client';
 export * from './spot-client';
+export * from './spot-client-v3';
 export * from './usdc-option-client';
 export * from './usdc-perpetual-client';
 export * from './websocket-client';

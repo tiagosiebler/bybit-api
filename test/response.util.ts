@@ -16,14 +16,14 @@ export function successResponseObject(successMsg: string | null = 'OK') {
   };
 }
 
-export function successUSDCResponseObject() {
+export function successResponseObjectV3() {
   return {
     result: expect.any(Object),
-    ...successUSDCEmptyResponseObject(),
+    ...successEmptyResponseObjectV3(),
   };
 }
 
-export function successUSDCEmptyResponseObject() {
+export function successEmptyResponseObjectV3() {
   return {
     retCode: API_ERROR_CODE.SUCCESS,
     retMsg: expect.stringMatching(
