@@ -25,7 +25,7 @@ export interface APIResponse<T> {
   result: T;
 }
 
-export interface USDCAPIResponse<T> {
+export interface APIResponseV3<T> {
   retCode: number;
   retMsg: 'OK' | string;
   result: T;

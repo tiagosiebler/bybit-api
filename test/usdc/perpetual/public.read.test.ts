@@ -35,8 +35,8 @@ describe('Public USDC Options REST API Endpoints', () => {
     );
   });
 
-  it('getKline()', async () => {
-    expect(await api.getKline(candleRequest)).toMatchObject(
+  it('getCandles()', async () => {
+    expect(await api.getCandles(candleRequest)).toMatchObject(
       successUSDCResponseObject()
     );
   });

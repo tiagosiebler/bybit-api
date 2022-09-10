@@ -6,7 +6,7 @@ import {
   CopyTradingOrderRequest,
   CopyTradingTradingStopRequest,
   CopyTradingTransferRequest,
-  USDCAPIResponse,
+  APIResponseV3,
 } from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
@@ -17,7 +17,7 @@ import BaseRestClient from './util/BaseRestClient';
 export class CopyTradingClient extends BaseRestClient {
   getClientType() {
     // Follows the same authentication mechanism as USDC APIs
-    return REST_CLIENT_TYPE_ENUM.usdc;
+    return REST_CLIENT_TYPE_ENUM.v3;
   }
 
   async fetchServerTime(): Promise<number> {
@@ -31,7 +31,7 @@ export class CopyTradingClient extends BaseRestClient {
    *
    */
 
-  getSymbolList(): Promise<USDCAPIResponse<any>> {
+  getSymbols(): Promise<APIResponseV3<any>> {
     return this.get('/contract/v3/public/copytrading/symbol/list');
   }
 
@@ -44,7 +44,7 @@ export class CopyTradingClient extends BaseRestClient {
   /** -> Order API */
 
   /** Create order */
-  submitOrder(params: CopyTradingOrderRequest): Promise<USDCAPIResponse<any>> {
+  submitOrder(params: CopyTradingOrderRequest): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/contract/v3/private/copytrading/order/create',
       params
@@ -54,7 +54,7 @@ export class CopyTradingClient extends BaseRestClient {
   /** Set Trading Stop */
   setTradingStop(
     params: CopyTradingTradingStopRequest
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/contract/v3/private/copytrading/order/trading-stop',
       params
@@ -64,7 +64,7 @@ export class CopyTradingClient extends BaseRestClient {
   /** Query Order List */
   getActiveOrders(
     params?: CopyTradingOrderListRequest
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.getPrivate(
       '/contract/v3/private/copytrading/order/list',
       params
@@ -74,7 +74,7 @@ export class CopyTradingClient extends BaseRestClient {
   /** Cancel order */
   cancelOrder(
     params: CopyTradingCancelOrderRequest
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/contract/v3/private/copytrading/order/cancel',
       params
@@ -84,7 +84,7 @@ export class CopyTradingClient extends BaseRestClient {
   /** Close Order.  This endpoint's rate_limit will decrease by 10 per request; ie, one request to this endpoint consumes 10 from the limit allowed per minute. */
   closeOrder(
     params: CopyTradingCloseOrderRequest
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate('/contract/v3/private/copytrading/order/close', {
       params,
     });
@@ -93,7 +93,7 @@ export class CopyTradingClient extends BaseRestClient {
   /** -> Positions API */
 
   /** Position List */
-  getPositions(symbol?: string): Promise<USDCAPIResponse<any>> {
+  getPositions(symbol?: string): Promise<APIResponseV3<any>> {
     return this.getPrivate('/contract/v3/private/copytrading/position/list', {
       symbol,
     });
@@ -103,7 +103,7 @@ export class CopyTradingClient extends BaseRestClient {
   closePosition(
     symbol: string,
     positionIdx: string
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate('/contract/v3/private/copytrading/position/close', {
       symbol,
       positionIdx,
@@ -115,7 +115,7 @@ export class CopyTradingClient extends BaseRestClient {
     symbol: string,
     buyLeverage: string,
     sellLeverage: string
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/contract/v3/private/copytrading/position/set-leverage',
       { symbol, buyLeverage, sellLeverage }
@@ -129,12 +129,12 @@ export class CopyTradingClient extends BaseRestClient {
    */
 
   /** Get Wallet Balance */
-  getBalance(): Promise<USDCAPIResponse<any>> {
+  getBalances(): Promise<APIResponseV3<any>> {
     return this.getPrivate('/contract/v3/private/copytrading/wallet/balance');
   }
 
   /** Transfer */
-  transfer(params: CopyTradingTransferRequest): Promise<USDCAPIResponse<any>> {
+  transfer(params: CopyTradingTransferRequest): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/contract/v3/private/copytrading/wallet/transfer',
       params

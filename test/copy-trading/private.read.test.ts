@@ -28,8 +28,8 @@ describe('Private Copy Trading REST API Endpoints', () => {
     });
   });
 
-  it('getBalance()', async () => {
-    expect(await api.getBalance()).toMatchObject({
+  it('getBalances()', async () => {
+    expect(await api.getBalances()).toMatchObject({
       retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
     });
   });

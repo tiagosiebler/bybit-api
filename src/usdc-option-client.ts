@@ -1,6 +1,6 @@
 import {
   APIResponseWithTime,
-  USDCAPIResponse,
+  APIResponseV3,
   USDCOptionsActiveOrdersRealtimeRequest,
   USDCOptionsActiveOrdersRequest,
   USDCOptionsCancelAllOrdersRequest,
@@ -27,7 +27,7 @@ import BaseRestClient from './util/BaseRestClient';
  */
 export class USDCOptionClient extends BaseRestClient {
   getClientType() {
-    return REST_CLIENT_TYPE_ENUM.usdc;
+    return REST_CLIENT_TYPE_ENUM.v3;
   }
 
   async fetchServerTime(): Promise<number> {
@@ -42,33 +42,33 @@ export class USDCOptionClient extends BaseRestClient {
    */
 
   /** Query order book info. Each side has a depth of 25 orders. */
-  getOrderBook(symbol: string): Promise<USDCAPIResponse<any>> {
+  getOrderBook(symbol: string): Promise<APIResponseV3<any>> {
     return this.get('/option/usdc/openapi/public/v1/order-book', { symbol });
   }
 
   /** Fetch trading rules (such as min/max qty). Query for all if blank. */
   getContractInfo(
     params?: USDCOptionsContractInfoRequest
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.get('/option/usdc/openapi/public/v1/symbols', params);
   }
 
   /** Get a symbol price/statistics ticker */
-  getSymbolTicker(symbol: string): Promise<USDCAPIResponse<any>> {
+  getSymbolTicker(symbol: string): Promise<APIResponseV3<any>> {
     return this.get('/option/usdc/openapi/public/v1/tick', { symbol });
   }
 
   /** Get delivery information */
   getDeliveryPrice(
     params?: USDCOptionsDeliveryPriceRequest
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.get('/option/usdc/openapi/public/v1/delivery-price', params);
   }
 
   /** Returned records are Taker Buy in default. */
   getLast500Trades(
     params: USDCOptionsRecentTradesRequest
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.get(
       '/option/usdc/openapi/public/v1/query-trade-latest',
       params
@@ -84,7 +84,7 @@ export class USDCOptionClient extends BaseRestClient {
    */
   getHistoricalVolatility(
     params?: USDCOptionsHistoricalVolatilityRequest
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.get(
       '/option/usdc/openapi/public/v1/query-historical-volatility',
       params
@@ -104,7 +104,7 @@ export class USDCOptionClient extends BaseRestClient {
    * The request status can be queried in real-time.
    * The response parameters must be queried through a query or a WebSocket response.
    */
-  submitOrder(params: USDCOptionsOrderRequest): Promise<USDCAPIResponse<any>> {
+  submitOrder(params: USDCOptionsOrderRequest): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/place-order',
       params
@@ -116,7 +116,7 @@ export class USDCOptionClient extends BaseRestClient {
    */
   batchSubmitOrders(
     orderRequest: USDCOptionsOrderRequest[]
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/batch-place-orders',
       { orderRequest }
@@ -126,7 +126,7 @@ export class USDCOptionClient extends BaseRestClient {
   /** For Options, at least one of the three parameters — price, quantity or implied volatility — must be input. */
   modifyOrder(
     params: USDCOptionsModifyOrderRequest
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/replace-order',
       params
@@ -136,7 +136,7 @@ export class USDCOptionClient extends BaseRestClient {
   /** Each request supports a max. of four orders. The reduceOnly parameter should be separate and unique for each order in the request. */
   batchModifyOrders(
     replaceOrderRequest: USDCOptionsModifyOrderRequest[]
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/batch-replace-orders',
       { replaceOrderRequest }
@@ -146,7 +146,7 @@ export class USDCOptionClient extends BaseRestClient {
   /** Cancel order */
   cancelOrder(
     params: USDCOptionsCancelOrderRequest
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/cancel-order',
       params
@@ -156,7 +156,7 @@ export class USDCOptionClient extends BaseRestClient {
   /** Batch cancel orders */
   batchCancelOrders(
     cancelRequest: USDCOptionsCancelOrderRequest[]
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/batch-cancel-orders',
       { cancelRequest }
@@ -166,7 +166,7 @@ export class USDCOptionClient extends BaseRestClient {
   /** This is used to cancel all active orders. The real-time response indicates whether the request is successful, depending on retCode. */
   cancelActiveOrders(
     params?: USDCOptionsCancelAllOrdersRequest
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/cancel-all',
       params
@@ -176,7 +176,7 @@ export class USDCOptionClient extends BaseRestClient {
   /** Query Unfilled/Partially Filled Orders(real-time), up to last 7 days of partially filled/unfilled orders */
   getActiveRealtimeOrders(
     params?: USDCOptionsActiveOrdersRealtimeRequest
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.getPrivate(
       '/option/usdc/openapi/private/v1/trade/query-active-orders',
       params
@@ -186,7 +186,7 @@ export class USDCOptionClient extends BaseRestClient {
   /** Query Unfilled/Partially Filled Orders */
   getActiveOrders(
     params: USDCOptionsActiveOrdersRequest
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-active-orders',
       params
@@ -196,7 +196,7 @@ export class USDCOptionClient extends BaseRestClient {
   /** Query order history. The endpoint only supports up to 30 days of queried records */
   getHistoricOrders(
     params: USDCOptionsHistoricOrdersRequest
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-order-history',
       params
@@ -206,7 +206,7 @@ export class USDCOptionClient extends BaseRestClient {
   /** Query trade history. The endpoint only supports up to 30 days of queried records. An error will be returned if startTime is more than 30 days. */
   getOrderExecutionHistory(
     params: USDCOptionsOrderExecutionRequest
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/execution-list',
       params
@@ -218,7 +218,7 @@ export class USDCOptionClient extends BaseRestClient {
   /** The endpoint only supports up to 30 days of queried records. An error will be returned if startTime is more than 30 days. */
   getTransactionLog(
     params: USDCTransactionLogRequest
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-transaction-log',
       params
@@ -226,14 +226,14 @@ export class USDCOptionClient extends BaseRestClient {
   }
 
   /** Wallet info for USDC account. */
-  getBalance(): Promise<USDCAPIResponse<any>> {
+  getBalances(): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-wallet-balance'
     );
   }
 
   /** Asset Info */
-  getAssetInfo(baseCoin?: string): Promise<USDCAPIResponse<any>> {
+  getAssetInfo(baseCoin?: string): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-asset-info',
       { baseCoin }
@@ -246,7 +246,7 @@ export class USDCOptionClient extends BaseRestClient {
    */
   setMarginMode(
     newMarginMode: 'REGULAR_MARGIN' | 'PORTFOLIO_MARGIN'
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/private/asset/account/setMarginMode',
       { setMarginMode: newMarginMode }
@@ -254,7 +254,7 @@ export class USDCOptionClient extends BaseRestClient {
   }
 
   /** Query margin mode for USDC account. */
-  getMarginMode(): Promise<USDCAPIResponse<any>> {
+  getMarginMode(): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-margin-info'
     );
@@ -263,7 +263,7 @@ export class USDCOptionClient extends BaseRestClient {
   /** -> Positions API */
 
   /** Query my positions */
-  getPositions(params: USDCPositionsRequest): Promise<USDCAPIResponse<any>> {
+  getPositions(params: USDCPositionsRequest): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-position',
       params
@@ -273,7 +273,7 @@ export class USDCOptionClient extends BaseRestClient {
   /** Query Delivery History */
   getDeliveryHistory(
     params: USDCOptionsDeliveryHistoryRequest
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-delivery-list',
       params
@@ -283,7 +283,7 @@ export class USDCOptionClient extends BaseRestClient {
   /** Query Positions Info Upon Expiry */
   getPositionsInfoUponExpiry(
     params?: USDCOptionsPositionsInfoExpiryRequest
-  ): Promise<USDCAPIResponse<any>> {
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-position-exp-date',
       params
@@ -293,9 +293,7 @@ export class USDCOptionClient extends BaseRestClient {
   /** -> Market Maker Protection */
 
   /** modifyMMP */
-  modifyMMP(
-    params: USDCOptionsModifyMMPRequest
-  ): Promise<USDCAPIResponse<any>> {
+  modifyMMP(params: USDCOptionsModifyMMPRequest): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/mmp-modify',
       params
@@ -303,14 +301,14 @@ export class USDCOptionClient extends BaseRestClient {
   }
 
   /** resetMMP */
-  resetMMP(currency: string): Promise<USDCAPIResponse<any>> {
+  resetMMP(currency: string): Promise<APIResponseV3<any>> {
     return this.postPrivate('/option/usdc/openapi/private/v1/mmp-reset', {
       currency,
     });
   }
 
   /** queryMMPState */
-  queryMMPState(baseCoin: string): Promise<USDCAPIResponse<any>> {
+  queryMMPState(baseCoin: string): Promise<APIResponseV3<any>> {
     return this.postPrivate('/option/usdc/openapi/private/v1/get-mmp-state', {
       baseCoin,
     });

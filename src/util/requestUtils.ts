@@ -84,7 +84,7 @@ export const REST_CLIENT_TYPE_ENUM = {
   inverseFutures: 'inverseFutures',
   linear: 'linear',
   spot: 'spot',
-  usdc: 'usdc',
+  v3: 'v3',
 } as const;
 
 export type RestClientType =

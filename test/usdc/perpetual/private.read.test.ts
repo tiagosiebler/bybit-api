@@ -40,8 +40,8 @@ describe('Private Account Asset REST API Endpoints', () => {
     );
   });
 
-  it('getBalance()', async () => {
-    expect(await api.getBalance()).toMatchObject(successUSDCResponseObject());
+  it('getBalances()', async () => {
+    expect(await api.getBalances()).toMatchObject(successUSDCResponseObject());
   });
 
   it('getAssetInfo()', async () => {

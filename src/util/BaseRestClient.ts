@@ -124,7 +124,7 @@ export default abstract class BaseRestClient {
   }
 
   private isUSDCClient() {
-    return this.clientType === REST_CLIENT_TYPE_ENUM.usdc;
+    return this.clientType === REST_CLIENT_TYPE_ENUM.v3;
   }
 
   get(endpoint: string, params?: any) {

@@ -9,8 +9,9 @@
 [1]: https://www.npmjs.com/package/bybit-api
 
 Node.js connector for the Bybit APIs and WebSockets:
+- Complete integration with all bybit APIs.
 - TypeScript support (with type declarations for most API requests & responses).
-- Integration tests with real API calls validating any changes before they reach npm.
+- Over 200 integration tests making real API calls, validating any changes before they reach npm.
 - Robust WebSocket integration with connection heartbeats & automatic reconnection.
 - Browser support (via webpack bundle - see "Browser Usage" below).
 
@@ -76,6 +77,8 @@ Create API credentials on Bybit's website:
 - [Testnet](https://testnet.bybit.com/app/user/api-management)
 
 All REST clients have can be used in a similar way. However, method names, parameters and responses may vary depending on the API category you're using!
+
+Not sure which function to call or which parameters to use? Click the class name in the table above to look at all the function names (they are in the same order as the official API docs), and check the API docs for a list of endpoints/paramters/responses.
 
 ```javascript
 const {

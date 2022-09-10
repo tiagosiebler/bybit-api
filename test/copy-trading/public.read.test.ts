@@ -8,8 +8,8 @@ describe('Public Copy Trading REST API Endpoints', () => {
 
   const api = new CopyTradingClient(API_KEY, API_SECRET, useLivenet);
 
-  it('getSymbolList()', async () => {
-    expect(await api.getSymbolList()).toMatchObject({
+  it('getSymbols()', async () => {
+    expect(await api.getSymbols()).toMatchObject({
       result: {
         list: expect.any(Array),
       },

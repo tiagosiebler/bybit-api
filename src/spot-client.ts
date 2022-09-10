@@ -13,6 +13,7 @@ import BaseRestClient from './util/BaseRestClient';
 import { agentSource, REST_CLIENT_TYPE_ENUM } from './util/requestUtils';
 
 /**
+ * @deprecated Use SpotV3Client instead, which leverages the newer v3 APIs
  * REST API client for Spot APIs (v1)
  */
 export class SpotClient extends BaseRestClient {
@@ -124,6 +125,7 @@ export class SpotClient extends BaseRestClient {
     const orderTypes = params.orderTypes
       ? params.orderTypes.join(',')
       : undefined;
+
     return this.deletePrivate('/spot/order/batch-cancel', {
       ...params,
       orderTypes,
