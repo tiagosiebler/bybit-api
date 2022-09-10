@@ -5,6 +5,12 @@ import {
   OrderSide,
   OrderTypeSpot,
   SpotBalances,
+  KlineInterval,
+  NewSpotOrderV3,
+  SpotMyTradesRequest,
+  SpotLeveragedTokenPRHistoryRequest,
+  SpotCrossMarginBorrowingInfoRequest,
+  SpotCrossMarginRepaymentHistoryRequest,
 } from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
@@ -40,8 +46,16 @@ export class SpotV3Client extends BaseRestClient {
   }
 
   /** Get merged orderbook for symbol */
-  getOrderBookMerged(params: unknown): Promise<APIResponseV3<any>> {
-    return this.get('/spot/v3/public/quote/depth/merged', params);
+  getOrderBookMerged(
+    symbol: string,
+    scale?: number,
+    limit?: number
+  ): Promise<APIResponseV3<any>> {
+    return this.get('/spot/v3/public/quote/depth/merged', {
+      symbol,
+      scale,
+      limit,
+    });
   }
 
   /** Get public trading records (raw trades) */
@@ -50,8 +64,20 @@ export class SpotV3Client extends BaseRestClient {
   }
 
   /** Get candles/klines */
-  getCandles(params: unknown): Promise<APIResponseV3<any>> {
-    return this.get('/spot/v3/public/quote/kline', params);
+  getCandles(
+    symbol: string,
+    interval: KlineInterval,
+    limit?: number,
+    startTime?: number,
+    endTime?: number
+  ): Promise<APIResponseV3<any>> {
+    return this.get('/spot/v3/public/quote/kline', {
+      symbol,
+      interval,
+      limit,
+      startTime,
+      endTime,
+    });
   }
 
   /** Get latest information for symbol (24hr ticker) */
@@ -78,7 +104,7 @@ export class SpotV3Client extends BaseRestClient {
   /** -> Order API */
 
   /** Create order */
-  submitOrder(params: unknown): Promise<APIResponseV3<any>> {
+  submitOrder(params: NewSpotOrderV3): Promise<APIResponseV3<any>> {
     return this.postPrivate('/spot/v3/private/order', params);
   }
 
@@ -147,7 +173,7 @@ export class SpotV3Client extends BaseRestClient {
    * If startTime is not specified, you can only query for records in the last 7 days.
    * If you want to query for records older than 7 days, startTime is required.
    */
-  getMyTrades(params?: unknown): Promise<APIResponseV3<any>> {
+  getMyTrades(params?: SpotMyTradesRequest): Promise<APIResponseV3<any>> {
     return this.getPrivate('/spot/v3/private/my-trades', params);
   }
 
@@ -215,7 +241,9 @@ export class SpotV3Client extends BaseRestClient {
   }
 
   /** Get leveraged token purchase/redemption history */
-  getLeveragedTokenPRHistory(params: unknown): Promise<APIResponseV3<any>> {
+  getLeveragedTokenPRHistory(
+    params?: SpotLeveragedTokenPRHistoryRequest
+  ): Promise<APIResponseV3<any>> {
     return this.getPrivate('/spot/v3/private/record', params);
   }
 
@@ -245,7 +273,9 @@ export class SpotV3Client extends BaseRestClient {
   }
 
   /** Query borrowing info */
-  getCrossMarginBorrowingInfo(params?: unknown): Promise<APIResponseV3<any>> {
+  getCrossMarginBorrowingInfo(
+    params?: SpotCrossMarginBorrowingInfoRequest
+  ): Promise<APIResponseV3<any>> {
     return this.getPrivate('/spot/v3/private/cross-margin-orders', params);
   }
 
@@ -261,7 +291,7 @@ export class SpotV3Client extends BaseRestClient {
 
   /** Query repayment history */
   getCrossMarginRepaymentHistory(
-    params?: unknown
+    params?: SpotCrossMarginRepaymentHistoryRequest
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate(
       '/spot/v3/private/cross-margin-repay-history',
