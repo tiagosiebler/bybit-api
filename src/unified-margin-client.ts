@@ -234,7 +234,7 @@ export class UnifiedMarginClient extends BaseRestClient {
    * Users can access their position holding information through this interface, such as the number of position holdings and wallet balance.
    */
   getPositions(params: UMPositionsRequest): Promise<APIResponseV3<any>> {
-    return this.postPrivate('/unified/v3/private/position/list', params);
+    return this.getPrivate('/unified/v3/private/position/list', params);
   }
 
   /** Leverage setting. */
@@ -351,7 +351,9 @@ export class UnifiedMarginClient extends BaseRestClient {
   }
 
   /** Exchange Coins */
-  exchangeCoins(params?: UMExchangeCoinsRequest): Promise<APIResponseV3<any>> {
+  getCoinExchangeHistory(
+    params?: UMExchangeCoinsRequest
+  ): Promise<APIResponseV3<any>> {
     return this.getPrivate(
       '/asset/v2/private/exchange/exchange-order-all',
       params

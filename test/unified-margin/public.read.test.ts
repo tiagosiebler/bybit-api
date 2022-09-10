@@ -1,8 +1,4 @@
-import {
-  USDCKlineRequest,
-  UnifiedMarginClient,
-  UMCandlesRequest,
-} from '../../src';
+import { UnifiedMarginClient, UMCandlesRequest } from '../../src';
 import {
   successResponseObject,
   successResponseObjectV3,

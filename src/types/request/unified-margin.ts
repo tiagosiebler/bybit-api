@@ -205,7 +205,7 @@ export interface UM7DayTradingHistoryRequest {
 
 export interface UMOptionsSettlementHistoryRequest {
   category: UMCategory;
-  symbol: string;
+  symbol?: string;
   expDate?: string;
   direction?: UMDirection;
   limit?: number;
@@ -214,7 +214,7 @@ export interface UMOptionsSettlementHistoryRequest {
 
 export interface UMPerpSettlementHistoryRequest {
   category: UMCategory;
-  symbol: string;
+  symbol?: string;
   direction?: UMDirection;
   limit?: number;
   cursor?: string;

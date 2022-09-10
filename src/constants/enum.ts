@@ -17,6 +17,8 @@ export const API_ERROR_CODE = {
   /** This could mean bad request, incorrect value types or even incorrect/missing values */
   PARAMS_MISSING_OR_WRONG: 10001,
   INCORRECT_API_KEY_PERMISSIONS: 10005,
+  /** Account not unified margin, update required */
+  ACCOUNT_NOT_UNIFIED: 10020,
   BALANCE_INSUFFICIENT_SPOT_V3: 12131,
   ORDER_NOT_FOUND_SPOT_V3: 12213,
   ORDER_NOT_FOUND_LEVERAGED_TOKEN: 12407,

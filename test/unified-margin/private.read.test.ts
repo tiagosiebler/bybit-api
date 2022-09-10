@@ -1,5 +1,5 @@
-import { USDCPerpetualClient } from '../../../src';
-import { successResponseObjectV3 } from '../../response.util';
+import { API_ERROR_CODE, UnifiedMarginClient } from '../../src';
+import { successResponseObjectV3 } from '../response.util';
 
 describe('Private Account Asset REST API Endpoints', () => {
   const useLivenet = true;
@@ -11,62 +11,80 @@ describe('Private Account Asset REST API Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new USDCPerpetualClient(API_KEY, API_SECRET, useLivenet);
+  const api = new UnifiedMarginClient(API_KEY, API_SECRET, useLivenet);
 
-  const symbol = 'BTCPERP';
-  const category = 'PERPETUAL';
+  const symbol = 'BTCUSDT';
+  const category = 'linear';
 
   it('getActiveOrders()', async () => {
-    expect(await api.getActiveOrders({ category })).toMatchObject(
-      successResponseObjectV3()
-    );
+    expect(await api.getActiveOrders({ category })).toMatchObject({
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+    });
   });
 
   it('getHistoricOrders()', async () => {
-    expect(await api.getHistoricOrders({ category })).toMatchObject(
-      successResponseObjectV3()
-    );
-  });
-
-  it('getOrderExecutionHistory()', async () => {
-    expect(await api.getOrderExecutionHistory({ category })).toMatchObject(
-      successResponseObjectV3()
-    );
-  });
-
-  it('getTransactionLog()', async () => {
-    expect(await api.getTransactionLog({ type: 'TRADE' })).toMatchObject(
-      successResponseObjectV3()
-    );
-  });
-
-  it('getBalances()', async () => {
-    expect(await api.getBalances()).toMatchObject(successResponseObjectV3());
-  });
-
-  it('getAssetInfo()', async () => {
-    expect(await api.getAssetInfo()).toMatchObject(successResponseObjectV3());
-  });
-
-  it('getMarginMode()', async () => {
-    expect(await api.getMarginMode()).toMatchObject(successResponseObjectV3());
+    expect(await api.getHistoricOrders({ category })).toMatchObject({
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+    });
   });
 
   it('getPositions()', async () => {
-    expect(await api.getPositions({ category })).toMatchObject(
+    expect(await api.getPositions({ category })).toMatchObject({
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+    });
+  });
+
+  it('get7DayTradingHistory()', async () => {
+    expect(await api.get7DayTradingHistory({ category, symbol })).toMatchObject(
+      {
+        retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+      }
+    );
+  });
+
+  it('getOptionsSettlementHistory()', async () => {
+    expect(await api.getOptionsSettlementHistory({ category })).toMatchObject({
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+    });
+  });
+
+  it('getUSDCPerpetualSettlementHistory()', async () => {
+    expect(
+      await api.getUSDCPerpetualSettlementHistory({ category })
+    ).toMatchObject({
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+    });
+  });
+
+  it('getBalances()', async () => {
+    expect(await api.getBalances()).toMatchObject({
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+    });
+  });
+
+  it('getTransactionLog()', async () => {
+    expect(
+      await api.getTransactionLog({ category, currency: 'USDT' })
+    ).toMatchObject({
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+    });
+  });
+
+  it('getCoinExchangeHistory()', async () => {
+    expect(await api.getCoinExchangeHistory()).toMatchObject(
       successResponseObjectV3()
     );
   });
 
-  it('getSettlementHistory()', async () => {
-    expect(await api.getSettlementHistory({ symbol })).toMatchObject(
-      successResponseObjectV3()
-    );
+  it('getBorrowHistory()', async () => {
+    expect(await api.getBorrowHistory()).toMatchObject({
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+    });
   });
 
-  it('getPredictedFundingRate()', async () => {
-    expect(await api.getPredictedFundingRate(symbol)).toMatchObject(
-      successResponseObjectV3()
-    );
+  it('getBorrowRate()', async () => {
+    expect(await api.getBorrowRate()).toMatchObject({
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+    });
   });
 });
