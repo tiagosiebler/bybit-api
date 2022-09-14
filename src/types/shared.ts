@@ -1,3 +1,14 @@
+import { InverseClient } from '../inverse-client';
+import { LinearClient } from '../linear-client';
+import { SpotClient } from '../spot-client';
+import { SpotClientV3 } from '../spot-client-v3';
+
+export type RESTClient =
+  | InverseClient
+  | LinearClient
+  | SpotClient
+  | SpotClientV3;
+
 export type numberInString = string;
 
 export type OrderSide = 'Buy' | 'Sell';
