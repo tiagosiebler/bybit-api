@@ -8,6 +8,7 @@ export enum WsConnectionStateEnum {
   CONNECTED = 2,
   CLOSING = 3,
   RECONNECTING = 4,
+  // ERROR = 5,
 }
 /** A "topic" is always a string */
 type WsTopic = string;

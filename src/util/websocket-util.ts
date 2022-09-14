@@ -6,6 +6,16 @@ export const wsKeyLinearPublic = 'linearPublic';
 export const wsKeySpotPrivate = 'spotPrivate';
 export const wsKeySpotPublic = 'spotPublic';
 
+export const WS_KEY_MAP = {
+  inverse: wsKeyInverse,
+  linearPrivate: wsKeyLinearPrivate,
+  linearPublic: wsKeyLinearPublic,
+  spotPrivate: wsKeySpotPrivate,
+  spotPublic: wsKeySpotPublic,
+};
+
+export const PUBLIC_WS_KEYS = [WS_KEY_MAP.linearPublic, WS_KEY_MAP.spotPublic];
+
 export function getLinearWsKeyForTopic(topic: string): WsKey {
   const privateLinearTopics = [
     'position',

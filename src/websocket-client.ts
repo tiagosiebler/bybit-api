@@ -31,6 +31,7 @@ import {
   wsKeySpotPrivate,
   wsKeySpotPublic,
   WsConnectionStateEnum,
+  PUBLIC_WS_KEYS,
 } from './util';
 
 const inverseEndpoints = {
@@ -38,7 +39,35 @@ const inverseEndpoints = {
   testnet: 'wss://stream-testnet.bybit.com/realtime',
 };
 
-const linearEndpoints = {
+interface NetworkMapV3 {
+  livenet: string;
+  livenet2?: string;
+  testnet: string;
+  testnet2?: string;
+}
+
+type NetworkType = 'public' | 'private';
+
+function neverGuard(x: never, msg: string): Error {
+  return new Error(`Unhandled value exception "x", ${msg}`);
+}
+
+const WS_BASE_URL_MAP: Record<string, Record<NetworkType, NetworkMapV3>> = {
+  linear: {
+    private: {
+      livenet: 'wss://stream.bybit.com/realtime_private',
+      livenet2: 'wss://stream.bytick.com/realtime_private',
+      testnet: 'wss://stream-testnet.bybit.com/realtime_private',
+    },
+    public: {
+      livenet: 'wss://stream.bybit.com/realtime_public',
+      livenet2: 'wss://stream.bytick.com/realtime_public',
+      testnet: 'wss://stream-testnet.bybit.com/realtime_public',
+    },
+  },
+};
+
+const linearEndpoints: Record<NetworkType, NetworkMapV3> = {
   private: {
     livenet: 'wss://stream.bybit.com/realtime_private',
     livenet2: 'wss://stream.bytick.com/realtime_private',
@@ -51,7 +80,7 @@ const linearEndpoints = {
   },
 };
 
-const spotEndpoints = {
+const spotEndpoints: Record<NetworkType, NetworkMapV3> = {
   private: {
     livenet: 'wss://stream.bybit.com/spot/ws',
     testnet: 'wss://stream-testnet.bybit.com/spot/ws',
@@ -80,8 +109,7 @@ export declare interface WebsocketClient {
 
 export class WebsocketClient extends EventEmitter {
   private logger: typeof DefaultLogger;
-  /** Purely used */
-  private restClient: RESTClient;
+  private restClient?: RESTClient;
   private options: WebsocketClientOptions;
   private wsStore: WsStore;
 
@@ -103,39 +131,64 @@ export class WebsocketClient extends EventEmitter {
       ...options,
     };
 
-    if (this.isV3()) {
-      this.restClient = new SpotClientV3(
-        undefined,
-        undefined,
-        this.isLivenet(),
-        this.options.restOptions,
-        this.options.requestOptions
-      );
-    } else if (this.isLinear()) {
-      this.restClient = new LinearClient(
-        undefined,
-        undefined,
-        this.isLivenet(),
-        this.options.restOptions,
-        this.options.requestOptions
-      );
-    } else if (this.isSpot()) {
-      this.restClient = new SpotClient(
-        undefined,
-        undefined,
-        this.isLivenet(),
-        this.options.restOptions,
-        this.options.requestOptions
-      );
-      this.connectPublic();
-    } else {
-      this.restClient = new InverseClient(
-        undefined,
-        undefined,
-        this.isLivenet(),
-        this.options.restOptions,
-        this.options.requestOptions
-      );
+    if (this.options.fetchTimeOffsetBeforeAuth) {
+      this.prepareRESTClient();
+    }
+  }
+
+  /**
+   * Only used if we fetch exchange time before attempting auth.
+   * Disabled by default.
+   * I've removed this for ftx and it's working great, tempted to remove this here
+   */
+  prepareRESTClient(): void {
+    switch (this.options.market) {
+      case 'inverse': {
+        this.restClient = new InverseClient(
+          undefined,
+          undefined,
+          this.isLivenet(),
+          this.options.restOptions,
+          this.options.requestOptions
+        );
+        break;
+      }
+      case 'linear': {
+        this.restClient = new LinearClient(
+          undefined,
+          undefined,
+          this.isLivenet(),
+          this.options.restOptions,
+          this.options.requestOptions
+        );
+        break;
+      }
+      case 'spot': {
+        this.restClient = new SpotClient(
+          undefined,
+          undefined,
+          this.isLivenet(),
+          this.options.restOptions,
+          this.options.requestOptions
+        );
+        this.connectPublic();
+        break;
+      }
+      // if (this.isV3()) {
+      //   this.restClient = new SpotClientV3(
+      //     undefined,
+      //     undefined,
+      //     this.isLivenet(),
+      //     this.options.restOptions,
+      //     this.options.requestOptions
+      //   );
+      // }
+      default: {
+        throw neverGuard(
+          this.options.market,
+          `prepareRESTClient(): Unhandled market`
+        );
+      }
     }
   }
 
@@ -156,9 +209,9 @@ export class WebsocketClient extends EventEmitter {
   }
 
   /** USDC, spot v3, unified margin, account asset */
-  public isV3(): boolean {
-    return this.options.market === 'v3';
-  }
+  // public isV3(): boolean {
+  //   return this.options.market === 'v3';
+  // }
 
   /**
    * Add topic/topics to WS subscription list
@@ -224,48 +277,63 @@ export class WebsocketClient extends EventEmitter {
   /**
    * Request connection of all dependent (public & private) websockets, instead of waiting for automatic connection by library
    */
-  public connectAll(): Promise<WebSocket | undefined>[] | undefined {
-    if (this.isInverse()) {
-      return [this.connect(wsKeyInverse)];
-    }
-
-    if (this.isLinear()) {
-      return [
-        this.connect(wsKeyLinearPublic),
-        this.connect(wsKeyLinearPrivate),
-      ];
-    }
-
-    if (this.isSpot()) {
-      return [this.connect(wsKeySpotPublic), this.connect(wsKeySpotPrivate)];
+  public connectAll(): Promise<WebSocket | undefined>[] {
+    switch (this.options.market) {
+      case 'inverse': {
+        return [this.connect(wsKeyInverse)];
+      }
+      case 'linear': {
+        return [
+          this.connect(wsKeyLinearPublic),
+          this.connect(wsKeyLinearPrivate),
+        ];
+      }
+      case 'spot': {
+        return [this.connect(wsKeySpotPublic), this.connect(wsKeySpotPrivate)];
+      }
+      default: {
+        throw neverGuard(this.options.market, `connectAll(): Unhandled market`);
+      }
     }
   }
 
-  public connectPublic(): Promise<WebSocket | undefined> | undefined {
-    if (this.isInverse()) {
-      return this.connect(wsKeyInverse);
-    }
-
-    if (this.isLinear()) {
-      return this.connect(wsKeyLinearPublic);
-    }
-
-    if (this.isSpot()) {
-      return this.connect(wsKeySpotPublic);
+  public connectPublic(): Promise<WebSocket | undefined> {
+    switch (this.options.market) {
+      case 'inverse': {
+        return this.connect(wsKeyInverse);
+      }
+      case 'linear': {
+        return this.connect(wsKeyLinearPublic);
+      }
+      case 'spot': {
+        return this.connect(wsKeySpotPublic);
+      }
+      default: {
+        throw neverGuard(
+          this.options.market,
+          `connectPublic(): Unhandled market`
+        );
+      }
     }
   }
 
   public connectPrivate(): Promise<WebSocket | undefined> | undefined {
-    if (this.isInverse()) {
-      return this.connect(wsKeyInverse);
-    }
-
-    if (this.isLinear()) {
-      return this.connect(wsKeyLinearPrivate);
-    }
-
-    if (this.isSpot()) {
-      return this.connect(wsKeySpotPrivate);
+    switch (this.options.market) {
+      case 'inverse': {
+        return this.connect(wsKeyInverse);
+      }
+      case 'linear': {
+        return this.connect(wsKeyLinearPrivate);
+      }
+      case 'spot': {
+        return this.connect(wsKeySpotPrivate);
+      }
+      default: {
+        throw neverGuard(
+          this.options.market,
+          `connectPrivate(): Unhandled market`
+        );
+      }
     }
   }
 
@@ -336,48 +404,45 @@ export class WebsocketClient extends EventEmitter {
   private async getAuthParams(wsKey: WsKey): Promise<string> {
     const { key, secret } = this.options;
 
-    if (
-      key &&
-      secret &&
-      wsKey !== wsKeyLinearPublic &&
-      wsKey !== wsKeySpotPublic
-    ) {
-      this.logger.debug("Getting auth'd request params", {
-        ...loggerCategory,
-        wsKey,
-      });
-
-      const timeOffset = this.options.fetchTimeOffsetBeforeAuth
-        ? await this.restClient.fetchTimeOffset()
-        : 0;
-
-      const signatureExpires = Date.now() + timeOffset + 5000;
-
-      const signature = await signMessage(
-        'GET/realtime' + signatureExpires,
-        secret
-      );
-
-      const authParams = {
-        api_key: this.options.key,
-        expires: signatureExpires,
-        signature,
-      };
-
-      return '?' + serializeParams(authParams);
-    } else if (!key || !secret) {
-      this.logger.warning(
-        'Cannot authenticate websocket, either api or private keys missing.',
-        { ...loggerCategory, wsKey }
-      );
-    } else {
+    if (PUBLIC_WS_KEYS.includes(wsKey)) {
       this.logger.debug('Starting public only websocket client.', {
         ...loggerCategory,
         wsKey,
       });
+      return '';
     }
 
-    return '';
+    if (!key || !secret) {
+      this.logger.warning(
+        'Cannot authenticate websocket, either api or private keys missing.',
+        { ...loggerCategory, wsKey }
+      );
+      return '';
+    }
+
+    this.logger.debug("Getting auth'd request params", {
+      ...loggerCategory,
+      wsKey,
+    });
+
+    const timeOffset = this.options.fetchTimeOffsetBeforeAuth
+      ? (await this.restClient?.fetchTimeOffset()) || 0
+      : 0;
+
+    const signatureExpiresAt = Date.now() + timeOffset + 5000;
+
+    const signature = await signMessage(
+      'GET/realtime' + signatureExpiresAt,
+      secret
+    );
+
+    const authParams = {
+      api_key: this.options.key,
+      expires: signatureExpiresAt,
+      signature,
+    };
+
+    return '?' + serializeParams(authParams);
   }
 
   private reconnectWithDelay(wsKey: WsKey, connectionDelayMs: number) {
@@ -621,38 +686,31 @@ export class WebsocketClient extends EventEmitter {
     }
 
     const networkKey = this.isLivenet() ? 'livenet' : 'testnet';
-    // TODO: repetitive
-    if (this.isLinear() || wsKey.startsWith('linear')) {
-      if (wsKey === wsKeyLinearPublic) {
+
+    switch (wsKey) {
+      case wsKeyLinearPublic: {
         return linearEndpoints.public[networkKey];
       }
-
-      if (wsKey === wsKeyLinearPrivate) {
+      case wsKeyLinearPrivate: {
         return linearEndpoints.private[networkKey];
       }
-
-      this.logger.error('Unhandled linear wsKey: ', {
-        ...loggerCategory,
-        wsKey,
-      });
-      return linearEndpoints[networkKey];
-    }
-
-    if (this.isSpot() || wsKey.startsWith('spot')) {
-      if (wsKey === wsKeySpotPublic) {
+      case wsKeySpotPublic: {
         return spotEndpoints.public[networkKey];
       }
-
-      if (wsKey === wsKeySpotPrivate) {
+      case wsKeySpotPrivate: {
         return spotEndpoints.private[networkKey];
       }
-
-      this.logger.error('Unhandled spot wsKey: ', { ...loggerCategory, wsKey });
-      return spotEndpoints[networkKey];
+      case wsKeyInverse: {
+        return inverseEndpoints[networkKey];
+      }
+      default: {
+        this.logger.error('getWsUrl(): Unhandled wsKey: ', {
+          ...loggerCategory,
+          wsKey,
+        });
+        throw neverGuard(wsKey, `getWsUrl(): Unhandled wsKey`);
+      }
     }
-
-    // fallback to inverse
-    return inverseEndpoints[networkKey];
   }
 
   private getWsKeyForTopic(topic: string) {

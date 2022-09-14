@@ -1,6 +1,6 @@
 import { RestClientOptions } from '../util';
 
-export type APIMarket = 'inverse' | 'linear' | 'spot' | 'v3';
+export type APIMarket = 'inverse' | 'linear' | 'spot'; //| 'v3';
 
 // Same as inverse futures
 export type WsPublicInverseTopic =
