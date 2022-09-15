@@ -73,4 +73,28 @@ describe('Public Linear Websocket Client', () => {
       console.error(`Wait for "${wsTopic}" event exception: `, e);
     }
   });
+
+  it('should fail to subscribe to private events (no keys)', async () => {
+    const wsResponsePromise = waitForSocketEvent(wsClient, 'response');
+    // const wsUpdatePromise = waitForSocketEvent(wsClient, 'update');
+
+    const wsTopic = 'wallet';
+    expect(wsResponsePromise).resolves.toMatchObject({
+      request: {
+        args: [wsTopic],
+        op: 'subscribe',
+      },
+      success: true,
+    });
+
+    // No easy way to trigger a private event (other than executing trades)
+    // expect(wsUpdatePromise).resolves.toMatchObject({
+    //   topic: wsTopic,
+    //   data: expect.any(Array),
+    // });
+
+    wsClient.subscribe(wsTopic);
+
+    await Promise.all([wsResponsePromise]);
+  });
 });

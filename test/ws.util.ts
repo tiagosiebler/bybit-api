@@ -13,7 +13,7 @@ export const WS_OPEN_EVENT_PARTIAL = {
   type: 'open',
 };
 
-/** Resolves a promise if an event is seen before a timeout (defaults to 2.5 seconds) */
+/** Resolves a promise if an event is seen before a timeout (defaults to 4.5 seconds) */
 export function waitForSocketEvent(
   wsClient: WebsocketClient,
   event: WsClientEvent,
