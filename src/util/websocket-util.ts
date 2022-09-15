@@ -47,7 +47,7 @@ export const WS_BASE_URL_MAP: Record<
       testnet: 'wss://stream-testnet.bybit.com/spot/ws',
     },
   },
-  spotV3: {
+  spotv3: {
     public: {
       livenet: 'wss://stream.bybit.com/spot/public/v3',
       testnet: 'wss://stream-testnet.bybit.com/spot/public/v3',
@@ -68,6 +68,8 @@ export const WS_KEY_MAP = {
   spotV3Private: 'spotV3Private',
   spotV3Public: 'spotV3Public',
 } as const;
+
+export const WS_AUTH_ON_CONNECT_KEYS: WsKey[] = [WS_KEY_MAP.spotV3Private];
 
 export const PUBLIC_WS_KEYS = [
   WS_KEY_MAP.linearPublic,
@@ -115,3 +117,8 @@ export function getSpotWsKeyForTopic(
   }
   return WS_KEY_MAP.spotPublic;
 }
+
+export const WS_ERROR_ENUM = {
+  NOT_AUTHENTICATED_SPOT_V3: '-1004',
+  BAD_API_KEY_SPOT_V3: '10003',
+};

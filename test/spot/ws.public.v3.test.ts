@@ -6,6 +6,7 @@ import {
 import {
   logAllEvents,
   silentLogger,
+  fullLogger,
   waitForSocketEvent,
   WS_OPEN_EVENT_PARTIAL,
 } from '../ws.util';
@@ -14,7 +15,7 @@ describe('Public Spot V3 Websocket Client', () => {
   let wsClient: WebsocketClient;
 
   const wsClientOptions: WSClientConfigurableOptions = {
-    market: 'spotV3',
+    market: 'spotv3',
   };
 
   beforeAll(() => {
@@ -42,15 +43,27 @@ describe('Public Spot V3 Websocket Client', () => {
     const wsResponsePromise = waitForSocketEvent(wsClient, 'response');
     const wsUpdatePromise = waitForSocketEvent(wsClient, 'update');
 
-    const wsTopic = 'orderbook.40.BTCUSDT';
+    const symbol = 'BTCUSDT';
+    const wsTopic = `orderbook.40.${symbol}`;
+
     expect(wsResponsePromise).resolves.toMatchObject({
-      request: {
-        args: [wsTopic],
-        op: 'subscribe',
-      },
+      op: 'subscribe',
       success: true,
+      ret_msg: 'subscribe',
+      req_id: wsTopic,
     });
-    expect(wsUpdatePromise).resolves.toStrictEqual('');
+
+    expect(wsUpdatePromise).resolves.toMatchObject({
+      data: {
+        a: expect.any(Array),
+        b: expect.any(Array),
+        s: symbol,
+        t: expect.any(Number),
+      },
+      topic: wsTopic,
+      ts: expect.any(Number),
+      type: 'delta',
+    });
 
     wsClient.subscribe(wsTopic);
 

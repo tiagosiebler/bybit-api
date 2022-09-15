@@ -5,8 +5,17 @@ export const silentLogger = {
   debug: () => {},
   notice: () => {},
   info: () => {},
-  warning: () => {},
-  error: () => {},
+  warning: (...params) => console.warn('warning', ...params),
+  error: (...params) => console.error('error', ...params),
+};
+
+export const fullLogger = {
+  silly: (...params) => console.log('silly', ...params),
+  debug: (...params) => console.log('debug', ...params),
+  notice: (...params) => console.log('notice', ...params),
+  info: (...params) => console.info('info', ...params),
+  warning: (...params) => console.warn('warning', ...params),
+  error: (...params) => console.error('error', ...params),
 };
 
 export const WS_OPEN_EVENT_PARTIAL = {
@@ -26,20 +35,29 @@ export function waitForSocketEvent(
       );
     }, timeoutMs);
 
+    function cleanup() {
+      clearTimeout(timeout);
+      resolvedOnce = true;
+      wsClient.removeListener(event, (e) => resolver(e));
+      wsClient.removeListener('error', (e) => rejector(e));
+    }
+
     let resolvedOnce = false;
 
-    wsClient.on(event, (event) => {
-      clearTimeout(timeout);
+    function resolver(event) {
       resolve(event);
-      resolvedOnce = true;
-    });
+      cleanup();
+    }
 
-    wsClient.on('error', (event) => {
-      clearTimeout(timeout);
+    function rejector(event) {
       if (!resolvedOnce) {
         reject(event);
       }
-    });
+      cleanup();
+    }
+
+    wsClient.on(event, (e) => resolver(e));
+    wsClient.on('error', (e) => rejector(e));
 
     // if (event !== 'close') {
     //   wsClient.on('close', (event) => {

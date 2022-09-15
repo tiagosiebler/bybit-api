@@ -26,6 +26,7 @@ import {
   getSpotWsKeyForTopic,
   WsConnectionStateEnum,
   PUBLIC_WS_KEYS,
+  WS_AUTH_ON_CONNECT_KEYS,
   WS_KEY_MAP,
   DefaultLogger,
   WS_BASE_URL_MAP,
@@ -136,7 +137,7 @@ export class WebsocketClient extends EventEmitter {
         this.connectPublic();
         break;
       }
-      case 'spotV3': {
+      case 'spotv3': {
         this.restClient = new SpotClientV3(
           undefined,
           undefined,
@@ -221,7 +222,7 @@ export class WebsocketClient extends EventEmitter {
           this.connect(WS_KEY_MAP.spotPrivate),
         ];
       }
-      case 'spotV3': {
+      case 'spotv3': {
         return [
           this.connect(WS_KEY_MAP.spotV3Public),
           this.connect(WS_KEY_MAP.spotV3Private),
@@ -244,7 +245,7 @@ export class WebsocketClient extends EventEmitter {
       case 'spot': {
         return this.connect(WS_KEY_MAP.spotPublic);
       }
-      case 'spotV3': {
+      case 'spotv3': {
         return this.connect(WS_KEY_MAP.spotV3Public);
       }
       default: {
@@ -267,7 +268,7 @@ export class WebsocketClient extends EventEmitter {
       case 'spot': {
         return this.connect(WS_KEY_MAP.spotPrivate);
       }
-      case 'spotV3': {
+      case 'spotv3': {
         return this.connect(WS_KEY_MAP.spotV3Private);
       }
       default: {
@@ -354,12 +355,49 @@ export class WebsocketClient extends EventEmitter {
       return '';
     }
 
+    try {
+      const { signature, expiresAt } = await this.getWsAuthSignature(wsKey);
+
+      const authParams = {
+        api_key: this.options.key,
+        expires: expiresAt,
+        signature,
+      };
+
+      return '?' + serializeParams(authParams);
+    } catch (e) {
+      this.logger.error(e, { ...loggerCategory, wsKey });
+      return '';
+    }
+  }
+
+  private async sendAuthRequest(wsKey: WsKey): Promise<void> {
+    try {
+      const { signature, expiresAt } = await this.getWsAuthSignature(wsKey);
+
+      const request = {
+        op: 'auth',
+        args: [this.options.key, expiresAt, signature],
+        req_id: `${wsKey}-auth`,
+      };
+
+      return this.tryWsSend(wsKey, JSON.stringify(request));
+    } catch (e) {
+      this.logger.error(e, { ...loggerCategory, wsKey });
+    }
+  }
+
+  private async getWsAuthSignature(
+    wsKey: WsKey
+  ): Promise<{ expiresAt: number; signature: string }> {
+    const { key, secret } = this.options;
+
     if (!key || !secret) {
       this.logger.warning(
         'Cannot authenticate websocket, either api or private keys missing.',
         { ...loggerCategory, wsKey }
       );
-      return '';
+      throw new Error(`Cannot auth - missing api or secret in config`);
     }
 
     this.logger.debug("Getting auth'd request params", {
@@ -378,13 +416,10 @@ export class WebsocketClient extends EventEmitter {
       secret
     );
 
-    const authParams = {
-      api_key: this.options.key,
-      expires: signatureExpiresAt,
+    return {
+      expiresAt: signatureExpiresAt,
       signature,
     };
-
-    return '?' + serializeParams(authParams);
   }
 
   private reconnectWithDelay(wsKey: WsKey, connectionDelayMs: number) {
@@ -451,6 +486,7 @@ export class WebsocketClient extends EventEmitter {
       return;
     }
     const wsMessage = JSON.stringify({
+      req_id: topics.join(','),
       op: 'subscribe',
       args: topics,
     });
@@ -518,7 +554,7 @@ export class WebsocketClient extends EventEmitter {
     return ws;
   }
 
-  private onWsOpen(event, wsKey: WsKey) {
+  private async onWsOpen(event, wsKey: WsKey) {
     if (
       this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTING)
     ) {
@@ -538,8 +574,14 @@ export class WebsocketClient extends EventEmitter {
 
     this.setWsState(wsKey, WsConnectionStateEnum.CONNECTED);
 
-    // TODO: persistence not working yet for spot topics
-    if (wsKey !== 'spotPublic' && wsKey !== 'spotPrivate') {
+    // Some websockets require an auth packet to be sent after opening the connection
+    if (WS_AUTH_ON_CONNECT_KEYS.includes(wsKey)) {
+      this.logger.info(`Sending auth request...`);
+      await this.sendAuthRequest(wsKey);
+    }
+
+    // TODO: persistence not working yet for spot v1 topics
+    if (wsKey !== WS_KEY_MAP.spotPublic && wsKey !== WS_KEY_MAP.spotPrivate) {
       this.requestSubscribeTopics(wsKey, [...this.wsStore.getTopics(wsKey)]);
     }
 
@@ -554,6 +596,8 @@ export class WebsocketClient extends EventEmitter {
       // any message can clear the pong timer - wouldn't get a message if the ws dropped
       this.clearPongTimer(wsKey);
 
+      // this.logger.silly('Received event', { ...this.logger, wsKey, event });
+
       const msg = JSON.parse((event && event.data) || event);
       if (msg['success'] || msg?.pong) {
         if (isWsPong(msg)) {
@@ -564,11 +608,20 @@ export class WebsocketClient extends EventEmitter {
         return;
       }
 
-      if (msg.topic) {
+      if (msg?.topic) {
         return this.emit('update', msg);
       }
 
-      this.logger.warning('Got unhandled ws message', {
+      if (
+        // spot v1
+        msg?.code ||
+        // spot v3
+        msg?.type === 'error'
+      ) {
+        return this.emit('error', msg);
+      }
+
+      this.logger.warning('Unhandled/unrecognised ws event message', {
         ...loggerCategory,
         message: msg,
         event,
@@ -639,10 +692,10 @@ export class WebsocketClient extends EventEmitter {
         return WS_BASE_URL_MAP.spot.private[networkKey];
       }
       case WS_KEY_MAP.spotV3Public: {
-        return WS_BASE_URL_MAP.spot.public[networkKey];
+        return WS_BASE_URL_MAP.spotv3.public[networkKey];
       }
       case WS_KEY_MAP.spotV3Private: {
-        return WS_BASE_URL_MAP.spot.private[networkKey];
+        return WS_BASE_URL_MAP.spotv3.private[networkKey];
       }
       case WS_KEY_MAP.inverse: {
         // private and public are on the same WS connection
@@ -669,7 +722,7 @@ export class WebsocketClient extends EventEmitter {
       case 'spot': {
         return getSpotWsKeyForTopic(topic, 'v1');
       }
-      case 'spotV3': {
+      case 'spotv3': {
         return getSpotWsKeyForTopic(topic, 'v3');
       }
       default: {
@@ -740,7 +793,7 @@ export class WebsocketClient extends EventEmitter {
     });
   }
 
-  // TODO: persistance for subbed topics. Look at ftx-api implementation.
+  /** @deprecated use "market: 'spotv3" client */
   public subscribePublicSpotTrades(symbol: string, binary?: boolean) {
     if (!this.isSpot()) {
       throw this.wrongMarketError('spot');
@@ -759,6 +812,7 @@ export class WebsocketClient extends EventEmitter {
     );
   }
 
+  /** @deprecated use "market: 'spotv3" client */
   public subscribePublicSpotTradingPair(symbol: string, binary?: boolean) {
     if (!this.isSpot()) {
       throw this.wrongMarketError('spot');
@@ -777,6 +831,7 @@ export class WebsocketClient extends EventEmitter {
     );
   }
 
+  /** @deprecated use "market: 'spotv3" client */
   public subscribePublicSpotV1Kline(
     symbol: string,
     candleSize: KlineInterval,
@@ -803,6 +858,7 @@ export class WebsocketClient extends EventEmitter {
   //ws.send('{"symbol":"BTCUSDT","topic":"mergedDepth","event":"sub","params":{"binary":false,"dumpScale":1}}');
   //ws.send('{"symbol":"BTCUSDT","topic":"diffDepth","event":"sub","params":{"binary":false}}');
 
+  /** @deprecated use "market: 'spotv3" client */
   public subscribePublicSpotOrderbook(
     symbol: string,
     depth: 'full' | 'merge' | 'delta',
