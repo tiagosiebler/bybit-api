@@ -34,12 +34,11 @@ describe('Private Inverse Perps Websocket Client', () => {
 
       badClient.connectPrivate();
 
-      expect(wsOpenPromise).rejects.toMatch('Failed to receive');
-
       try {
-        await Promise.all([wsOpenPromise]);
+        expect(await wsOpenPromise).toMatch('Failed to receive');
       } catch (e) {
         // console.error()
+        expect(e?.message).toStrictEqual('Unexpected server response: 401');
       }
       badClient.closeAll();
     });

@@ -321,6 +321,7 @@ export class WebsocketClient extends EventEmitter {
   private parseWsError(context: string, error: any, wsKey: WsKey) {
     if (!error.message) {
       this.logger.error(`${context} due to unexpected error: `, error);
+      this.emit('error', error);
       return;
     }
 
@@ -339,14 +340,13 @@ export class WebsocketClient extends EventEmitter {
         );
         break;
     }
+    this.emit('error', error);
   }
 
   /**
    * Return params required to make authorized request
    */
   private async getAuthParams(wsKey: WsKey): Promise<string> {
-    const { key, secret } = this.options;
-
     if (PUBLIC_WS_KEYS.includes(wsKey)) {
       this.logger.debug('Starting public only websocket client.', {
         ...loggerCategory,
