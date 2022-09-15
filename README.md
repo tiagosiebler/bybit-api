@@ -149,6 +149,19 @@ client.getOrderBook({ symbol: 'BTCUSD' })
 ## WebSockets
 All API groups can be used via a shared `WebsocketClient`. However, make sure to make one instance of the WebsocketClient per API group (spot vs inverse vs linear vs linearfutures etc):
 
+The WebsocketClient can be configured to a specific API group using the market parameter. These are the currently available API groups:
+|         API Category         	|        Market       	| Description                                                                                                                                                                                            	|
+|:----------------------------:	|:-------------------:	|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
+| Unified Margin               	| TBC                 	| The [derivatives v3](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket) category for unified margin.                                                                     	|
+| Futures v2 - Inverse Perps   	| `market: 'inverse'` 	| The [inverse v2 perps](https://bybit-exchange.github.io/docs/futuresV2/inverse/#t-websocket) category.                                                                                                 	|
+| Futures v2 - USDT Perps      	| `market: 'linear'`  	| The [USDT/linear v2 perps](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-websocket) category.                                                                                              	|
+| Futures v2 - Inverse Futures 	| `market: 'inverse'` 	| The [inverse futures v2](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-websocket) category uses the same market as inverse perps.                                                 	|
+| Spot v3                      	| `market: 'spotv3'`  	| The [spot v3](https://bybit-exchange.github.io/docs/spot/v3/#t-websocket) category.                                                                                                                    	|
+| Spot v1                      	| `market: 'spot'`    	| The older [spot v1](https://bybit-exchange.github.io/docs/spot/v1/#t-websocket) category. Use the `spotv3` market if possible, as the v1 category does not have automatic re-subscribe if reconnected. 	|
+| Copy Trading                 	| `market: 'linear'`  	| The [copy trading](https://bybit-exchange.github.io/docs/copy_trading/#t-websocket) category. Use the linear market to listen to private topics.                                                       	|
+| USDC Perps                   	| TBC                 	| The [USDC perps](https://bybit-exchange.github.io/docs/usdc/perpetual/#t-websocket) category.                                                                                                          	|
+| USDC Options                 	| TBC                 	| The [USDC options](https://bybit-exchange.github.io/docs/usdc/option/#t-websocket) category.                                                                                                           	|
+
 ```javascript
 const { WebsocketClient } = require('bybit-api');
 
