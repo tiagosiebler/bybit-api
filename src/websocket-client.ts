@@ -37,16 +37,36 @@ function neverGuard(x: never, msg: string): Error {
 
 const loggerCategory = { category: 'bybit-ws' };
 
+export type WsClientEvent =
+  | 'open'
+  | 'update'
+  | 'close'
+  | 'error'
+  | 'reconnect'
+  | 'reconnected'
+  | 'response';
+
+interface WebsocketClientEvents {
+  open: (evt: { wsKey: WsKey; event: any }) => void;
+  reconnect: (evt: { wsKey: WsKey; event: any }) => void;
+  reconnected: (evt: { wsKey: WsKey; event: any }) => void;
+  close: (evt: { wsKey: WsKey; event: any }) => void;
+  response: (response: any) => void;
+  update: (response: any) => void;
+  error: (response: any) => void;
+}
+
+// Type safety for on and emit handlers: https://stackoverflow.com/a/61609010/880837
 export declare interface WebsocketClient {
-  on(
-    event: 'open' | 'reconnected',
-    listener: ({ wsKey: WsKey, event: any }) => void
+  on<U extends keyof WebsocketClientEvents>(
+    event: U,
+    listener: WebsocketClientEvents[U]
   ): this;
-  on(
-    event: 'response' | 'update' | 'error',
-    listener: (response: any) => void
-  ): this;
-  on(event: 'reconnect' | 'close', listener: ({ wsKey: WsKey }) => void): this;
+
+  emit<U extends keyof WebsocketClientEvents>(
+    event: U,
+    ...args: Parameters<WebsocketClientEvents[U]>
+  ): boolean;
 }
 
 export class WebsocketClient extends EventEmitter {
@@ -65,7 +85,7 @@ export class WebsocketClient extends EventEmitter {
     this.wsStore = new WsStore(this.logger);
 
     this.options = {
-      livenet: false,
+      testnet: false,
       pongTimeout: 1000,
       pingInterval: 10000,
       reconnectTimeout: 500,
@@ -89,7 +109,7 @@ export class WebsocketClient extends EventEmitter {
         this.restClient = new InverseClient(
           undefined,
           undefined,
-          this.isLivenet(),
+          !this.isTestnet(),
           this.options.restOptions,
           this.options.requestOptions
         );
@@ -99,7 +119,7 @@ export class WebsocketClient extends EventEmitter {
         this.restClient = new LinearClient(
           undefined,
           undefined,
-          this.isLivenet(),
+          !this.isTestnet(),
           this.options.restOptions,
           this.options.requestOptions
         );
@@ -109,7 +129,7 @@ export class WebsocketClient extends EventEmitter {
         this.restClient = new SpotClient(
           undefined,
           undefined,
-          this.isLivenet(),
+          !this.isTestnet(),
           this.options.restOptions,
           this.options.requestOptions
         );
@@ -134,8 +154,8 @@ export class WebsocketClient extends EventEmitter {
     }
   }
 
-  public isLivenet(): boolean {
-    return this.options.livenet === true;
+  public isTestnet(): boolean {
+    return this.options.testnet === true;
   }
 
   public isLinear(): boolean {
@@ -214,6 +234,13 @@ export class WebsocketClient extends EventEmitter {
     this.clearTimers(wsKey);
 
     this.getWs(wsKey)?.close();
+  }
+
+  public closeAll() {
+    const keys = this.wsStore.getKeys();
+    keys.forEach((key) => {
+      this.close(key);
+    });
   }
 
   /**
@@ -528,9 +555,8 @@ export class WebsocketClient extends EventEmitter {
       this.logger.info('Websocket connected', {
         ...loggerCategory,
         wsKey,
-        livenet: this.isLivenet(),
-        linear: this.isLinear(),
-        spot: this.isSpot(),
+        testnet: this.isTestnet(),
+        market: this.options.market,
       });
       this.emit('open', { wsKey, event });
     } else if (
@@ -560,7 +586,12 @@ export class WebsocketClient extends EventEmitter {
 
       const msg = JSON.parse((event && event.data) || event);
       if (msg['success'] || msg?.pong) {
-        return this.onWsMessageResponse(msg, wsKey);
+        if (isWsPong(msg)) {
+          this.logger.silly('Received pong', { ...loggerCategory, wsKey });
+        } else {
+          this.emit('response', msg);
+        }
+        return;
       }
 
       if (msg.topic) {
@@ -602,18 +633,10 @@ export class WebsocketClient extends EventEmitter {
       this.wsStore.getConnectionState(wsKey) !== WsConnectionStateEnum.CLOSING
     ) {
       this.reconnectWithDelay(wsKey, this.options.reconnectTimeout!);
-      this.emit('reconnect', { wsKey });
+      this.emit('reconnect', { wsKey, event });
     } else {
       this.setWsState(wsKey, WsConnectionStateEnum.INITIAL);
-      this.emit('close', { wsKey });
-    }
-  }
-
-  private onWsMessageResponse(response: any, wsKey: WsKey) {
-    if (isWsPong(response)) {
-      this.logger.silly('Received pong', { ...loggerCategory, wsKey });
-    } else {
-      this.emit('response', response);
+      this.emit('close', { wsKey, event });
     }
   }
 
@@ -630,7 +653,7 @@ export class WebsocketClient extends EventEmitter {
       return this.options.wsUrl;
     }
 
-    const networkKey = this.isLivenet() ? 'livenet' : 'testnet';
+    const networkKey = this.isTestnet() ? 'testnet' : 'livenet';
 
     switch (wsKey) {
       case WS_KEY_MAP.linearPublic: {

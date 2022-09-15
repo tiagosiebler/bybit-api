@@ -74,7 +74,7 @@ export type WsKey = typeof WS_KEY_MAP[keyof typeof WS_KEY_MAP];
 export interface WSClientConfigurableOptions {
   key?: string;
   secret?: string;
-  livenet?: boolean;
+  testnet?: boolean;
 
   /**
    * The API group this client should connect to.
@@ -94,7 +94,7 @@ export interface WSClientConfigurableOptions {
 }
 
 export interface WebsocketClientOptions extends WSClientConfigurableOptions {
-  livenet: boolean;
+  testnet?: boolean;
   market: APIMarket;
   pongTimeout: number;
   pingInterval: number;
