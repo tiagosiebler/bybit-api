@@ -136,6 +136,17 @@ export class WebsocketClient extends EventEmitter {
         this.connectPublic();
         break;
       }
+      case 'spotV3': {
+        this.restClient = new SpotClientV3(
+          undefined,
+          undefined,
+          !this.isTestnet(),
+          this.options.restOptions,
+          this.options.requestOptions
+        );
+        this.connectPublic();
+        break;
+      }
       // if (this.isV3()) {
       //   this.restClient = new SpotClientV3(
       //     undefined,
@@ -175,59 +186,6 @@ export class WebsocketClient extends EventEmitter {
   //   return this.options.market === 'v3';
   // }
 
-  /**
-   * Add topic/topics to WS subscription list
-   */
-  public subscribe(wsTopics: WsTopic[] | WsTopic) {
-    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
-    topics.forEach((topic) =>
-      this.wsStore.addTopic(this.getWsKeyForTopic(topic), topic)
-    );
-
-    // attempt to send subscription topic per websocket
-    this.wsStore.getKeys().forEach((wsKey: WsKey) => {
-      // if connected, send subscription request
-      if (
-        this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
-      ) {
-        return this.requestSubscribeTopics(wsKey, topics);
-      }
-
-      // start connection process if it hasn't yet begun. Topics are automatically subscribed to on-connect
-      if (
-        !this.wsStore.isConnectionState(
-          wsKey,
-          WsConnectionStateEnum.CONNECTING
-        ) &&
-        !this.wsStore.isConnectionState(
-          wsKey,
-          WsConnectionStateEnum.RECONNECTING
-        )
-      ) {
-        return this.connect(wsKey);
-      }
-    });
-  }
-
-  /**
-   * Remove topic/topics from WS subscription list
-   */
-  public unsubscribe(wsTopics: WsTopic[] | WsTopic) {
-    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
-    topics.forEach((topic) =>
-      this.wsStore.deleteTopic(this.getWsKeyForTopic(topic), topic)
-    );
-
-    this.wsStore.getKeys().forEach((wsKey: WsKey) => {
-      // unsubscribe request only necessary if active connection exists
-      if (
-        this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
-      ) {
-        this.requestUnsubscribeTopics(wsKey, topics);
-      }
-    });
-  }
-
   public close(wsKey: WsKey) {
     this.logger.info('Closing connection', { ...loggerCategory, wsKey });
     this.setWsState(wsKey, WsConnectionStateEnum.CLOSING);
@@ -263,6 +221,12 @@ export class WebsocketClient extends EventEmitter {
           this.connect(WS_KEY_MAP.spotPrivate),
         ];
       }
+      case 'spotV3': {
+        return [
+          this.connect(WS_KEY_MAP.spotV3Public),
+          this.connect(WS_KEY_MAP.spotV3Private),
+        ];
+      }
       default: {
         throw neverGuard(this.options.market, `connectAll(): Unhandled market`);
       }
@@ -279,6 +243,9 @@ export class WebsocketClient extends EventEmitter {
       }
       case 'spot': {
         return this.connect(WS_KEY_MAP.spotPublic);
+      }
+      case 'spotV3': {
+        return this.connect(WS_KEY_MAP.spotV3Public);
       }
       default: {
         throw neverGuard(
@@ -299,6 +266,9 @@ export class WebsocketClient extends EventEmitter {
       }
       case 'spot': {
         return this.connect(WS_KEY_MAP.spotPrivate);
+      }
+      case 'spotV3': {
+        return this.connect(WS_KEY_MAP.spotV3Private);
       }
       default: {
         throw neverGuard(
@@ -503,7 +473,7 @@ export class WebsocketClient extends EventEmitter {
     this.tryWsSend(wsKey, wsMessage);
   }
 
-  private tryWsSend(wsKey: WsKey, wsMessage: string) {
+  public tryWsSend(wsKey: WsKey, wsMessage: string) {
     try {
       this.logger.silly(`Sending upstream ws message: `, {
         ...loggerCategory,
@@ -666,7 +636,13 @@ export class WebsocketClient extends EventEmitter {
         return WS_BASE_URL_MAP.spot.public[networkKey];
       }
       case WS_KEY_MAP.spotPrivate: {
-        return WS_BASE_URL_MAP.linear.private[networkKey];
+        return WS_BASE_URL_MAP.spot.private[networkKey];
+      }
+      case WS_KEY_MAP.spotV3Public: {
+        return WS_BASE_URL_MAP.spot.public[networkKey];
+      }
+      case WS_KEY_MAP.spotV3Private: {
+        return WS_BASE_URL_MAP.spot.private[networkKey];
       }
       case WS_KEY_MAP.inverse: {
         // private and public are on the same WS connection
@@ -691,7 +667,10 @@ export class WebsocketClient extends EventEmitter {
         return getLinearWsKeyForTopic(topic);
       }
       case 'spot': {
-        return getSpotWsKeyForTopic(topic);
+        return getSpotWsKeyForTopic(topic, 'v1');
+      }
+      case 'spotV3': {
+        return getSpotWsKeyForTopic(topic, 'v3');
       }
       default: {
         throw neverGuard(
@@ -706,6 +685,59 @@ export class WebsocketClient extends EventEmitter {
     return new Error(
       `This WS client was instanced for the ${this.options.market} market. Make another WebsocketClient instance with "market: '${market}' to listen to spot topics`
     );
+  }
+
+  /**
+   * Add topic/topics to WS subscription list
+   */
+  public subscribe(wsTopics: WsTopic[] | WsTopic) {
+    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
+    topics.forEach((topic) =>
+      this.wsStore.addTopic(this.getWsKeyForTopic(topic), topic)
+    );
+
+    // attempt to send subscription topic per websocket
+    this.wsStore.getKeys().forEach((wsKey: WsKey) => {
+      // if connected, send subscription request
+      if (
+        this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
+      ) {
+        return this.requestSubscribeTopics(wsKey, topics);
+      }
+
+      // start connection process if it hasn't yet begun. Topics are automatically subscribed to on-connect
+      if (
+        !this.wsStore.isConnectionState(
+          wsKey,
+          WsConnectionStateEnum.CONNECTING
+        ) &&
+        !this.wsStore.isConnectionState(
+          wsKey,
+          WsConnectionStateEnum.RECONNECTING
+        )
+      ) {
+        return this.connect(wsKey);
+      }
+    });
+  }
+
+  /**
+   * Remove topic/topics from WS subscription list
+   */
+  public unsubscribe(wsTopics: WsTopic[] | WsTopic) {
+    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
+    topics.forEach((topic) =>
+      this.wsStore.deleteTopic(this.getWsKeyForTopic(topic), topic)
+    );
+
+    this.wsStore.getKeys().forEach((wsKey: WsKey) => {
+      // unsubscribe request only necessary if active connection exists
+      if (
+        this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
+      ) {
+        this.requestUnsubscribeTopics(wsKey, topics);
+      }
+    });
   }
 
   // TODO: persistance for subbed topics. Look at ftx-api implementation.

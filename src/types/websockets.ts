@@ -1,6 +1,6 @@
 import { RestClientOptions, WS_KEY_MAP } from '../util';
 
-export type APIMarket = 'inverse' | 'linear' | 'spot'; //| 'v3';
+export type APIMarket = 'inverse' | 'linear' | 'spot' | 'spotV3'; //| 'v3';
 
 // Same as inverse futures
 export type WsPublicInverseTopic =

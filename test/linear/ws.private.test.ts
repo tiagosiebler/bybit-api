@@ -9,7 +9,7 @@ import {
   WS_OPEN_EVENT_PARTIAL,
 } from '../ws.util';
 
-describe('Private Linear Websocket Client', () => {
+describe('Private Linear Perps Websocket Client', () => {
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
 
