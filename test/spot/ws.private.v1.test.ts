@@ -6,7 +6,7 @@ import {
 import {
   logAllEvents,
   promiseSleep,
-  silentLogger,
+  getSilentLogger,
   waitForSocketEvent,
   WS_OPEN_EVENT_PARTIAL,
 } from '../ws.util';
@@ -28,7 +28,10 @@ describe('Private Spot V1 Websocket Client', () => {
   };
 
   beforeAll(() => {
-    wsClient = new WebsocketClient(wsClientOptions, silentLogger);
+    wsClient = new WebsocketClient(
+      wsClientOptions,
+      getSilentLogger('expectSuccess')
+    );
     logAllEvents(wsClient);
   });
 

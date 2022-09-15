@@ -5,7 +5,7 @@ import {
 } from '../../src';
 import {
   logAllEvents,
-  silentLogger,
+  getSilentLogger,
   fullLogger,
   waitForSocketEvent,
   WS_OPEN_EVENT_PARTIAL,
@@ -19,7 +19,10 @@ describe('Public Spot V1 Websocket Client', () => {
   };
 
   beforeAll(() => {
-    wsClient = new WebsocketClient(wsClientOptions, silentLogger);
+    wsClient = new WebsocketClient(
+      wsClientOptions,
+      getSilentLogger('expectSuccess')
+    );
     wsClient.connectPublic();
     // logAllEvents(wsClient);
   });

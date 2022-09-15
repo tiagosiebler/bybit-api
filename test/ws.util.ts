@@ -1,13 +1,15 @@
 import { WebsocketClient, WsClientEvent } from '../src';
 
-export const silentLogger = {
-  silly: () => {},
-  debug: () => {},
-  notice: () => {},
-  info: () => {},
-  warning: (...params) => console.warn('warning', ...params),
-  error: (...params) => console.error('error', ...params),
-};
+export function getSilentLogger(logHint?: string) {
+  return {
+    silly: () => {},
+    debug: () => {},
+    notice: () => {},
+    info: () => {},
+    warning: (...params) => console.warn('warning', logHint, ...params),
+    error: (...params) => console.error('error', logHint, ...params),
+  };
+}
 
 export const fullLogger = {
   silly: (...params) => console.log('silly', ...params),
