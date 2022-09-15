@@ -1,4 +1,5 @@
 import WebSocket from 'isomorphic-ws';
+import { WsKey } from '../types';
 
 import { DefaultLogger } from './logger';
 
@@ -44,9 +45,9 @@ export default class WsStore {
   }
 
   /** Get WS stored state for key, optionally create if missing */
-  get(key: string, createIfMissing?: true): WsStoredState;
-  get(key: string, createIfMissing?: false): WsStoredState | undefined;
-  get(key: string, createIfMissing?: boolean): WsStoredState | undefined {
+  get(key: WsKey, createIfMissing?: true): WsStoredState;
+  get(key: WsKey, createIfMissing?: false): WsStoredState | undefined;
+  get(key: WsKey, createIfMissing?: boolean): WsStoredState | undefined {
     if (this.wsState[key]) {
       return this.wsState[key];
     }
@@ -56,11 +57,11 @@ export default class WsStore {
     }
   }
 
-  getKeys(): string[] {
-    return Object.keys(this.wsState);
+  getKeys(): WsKey[] {
+    return Object.keys(this.wsState) as WsKey[];
   }
 
-  create(key: string): WsStoredState | undefined {
+  create(key: WsKey): WsStoredState | undefined {
     if (this.hasExistingActiveConnection(key)) {
       this.logger.warning(
         'WsStore setConnection() overwriting existing open connection: ',
@@ -74,7 +75,7 @@ export default class WsStore {
     return this.get(key);
   }
 
-  delete(key: string) {
+  delete(key: WsKey) {
     if (this.hasExistingActiveConnection(key)) {
       const ws = this.getWs(key);
       this.logger.warning(
@@ -88,15 +89,15 @@ export default class WsStore {
 
   /* connection websocket */
 
-  hasExistingActiveConnection(key: string) {
+  hasExistingActiveConnection(key: WsKey) {
     return this.get(key) && this.isWsOpen(key);
   }
 
-  getWs(key: string): WebSocket | undefined {
+  getWs(key: WsKey): WebSocket | undefined {
     return this.get(key)?.ws;
   }
 
-  setWs(key: string, wsConnection: WebSocket): WebSocket {
+  setWs(key: WsKey, wsConnection: WebSocket): WebSocket {
     if (this.isWsOpen(key)) {
       this.logger.warning(
         'WsStore setConnection() overwriting existing open connection: ',
@@ -109,7 +110,7 @@ export default class WsStore {
 
   /* connection state */
 
-  isWsOpen(key: string): boolean {
+  isWsOpen(key: WsKey): boolean {
     const existingConnection = this.getWs(key);
     return (
       !!existingConnection &&
@@ -117,37 +118,37 @@ export default class WsStore {
     );
   }
 
-  getConnectionState(key: string): WsConnectionStateEnum {
+  getConnectionState(key: WsKey): WsConnectionStateEnum {
     return this.get(key, true)!.connectionState!;
   }
 
-  setConnectionState(key: string, state: WsConnectionStateEnum) {
+  setConnectionState(key: WsKey, state: WsConnectionStateEnum) {
     this.get(key, true)!.connectionState = state;
   }
 
-  isConnectionState(key: string, state: WsConnectionStateEnum): boolean {
+  isConnectionState(key: WsKey, state: WsConnectionStateEnum): boolean {
     return this.getConnectionState(key) === state;
   }
 
   /* subscribed topics */
 
-  getTopics(key: string): WsTopicList {
+  getTopics(key: WsKey): WsTopicList {
     return this.get(key, true).subscribedTopics;
   }
 
   getTopicsByKey(): Record<string, WsTopicList> {
     const result = {};
     for (const refKey in this.wsState) {
-      result[refKey] = this.getTopics(refKey);
+      result[refKey] = this.getTopics(refKey as WsKey);
     }
     return result;
   }
 
-  addTopic(key: string, topic: WsTopic) {
+  addTopic(key: WsKey, topic: WsTopic) {
     return this.getTopics(key).add(topic);
   }
 
-  deleteTopic(key: string, topic: WsTopic) {
+  deleteTopic(key: WsKey, topic: WsTopic) {
     return this.getTopics(key).delete(topic);
   }
 }

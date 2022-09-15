@@ -10,6 +10,6 @@ export * from './usdc-perpetual-client';
 export * from './unified-margin-client';
 export * from './websocket-client';
 export * from './util/logger';
+export * from './util';
 export * from './types';
-export * from './util/WsStore';
 export * from './constants/enum';

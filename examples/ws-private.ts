@@ -1,5 +1,5 @@
 import { DefaultLogger } from '../src';
-import { WebsocketClient, wsKeySpotPublic } from '../src/websocket-client';
+import { WebsocketClient } from '../src/websocket-client';
 
 // or
 // import { DefaultLogger, WebsocketClient } from 'bybit-api';
@@ -32,6 +32,8 @@ import { WebsocketClient, wsKeySpotPublic } from '../src/websocket-client';
     },
     logger
   );
+
+  // wsClient.subscribePublicSpotOrderbook('test', 'full');
 
   wsClient.on('update', (data) => {
     console.log('raw message received ', JSON.stringify(data, null, 2));

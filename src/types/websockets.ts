@@ -1,4 +1,4 @@
-import { RestClientOptions } from '../util';
+import { RestClientOptions, WS_KEY_MAP } from '../util';
 
 export type APIMarket = 'inverse' | 'linear' | 'spot'; //| 'v3';
 
@@ -69,12 +69,7 @@ export type WsPrivateTopic =
 export type WsTopic = WsPublicTopics | WsPrivateTopic;
 
 /** This is used to differentiate between each of the available websocket streams (as bybit has multiple websockets) */
-export type WsKey =
-  | 'inverse'
-  | 'linearPrivate'
-  | 'linearPublic'
-  | 'spotPrivate'
-  | 'spotPublic';
+export type WsKey = typeof WS_KEY_MAP[keyof typeof WS_KEY_MAP];
 
 export interface WSClientConfigurableOptions {
   key?: string;

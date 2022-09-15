@@ -6,7 +6,9 @@ import { LinearClient } from './linear-client';
 import { SpotClientV3 } from './spot-client-v3';
 import { SpotClient } from './spot-client';
 
-import { DefaultLogger } from './util/logger';
+import { signMessage } from './util/node-support';
+import WsStore from './util/WsStore';
+
 import {
   APIMarket,
   KlineInterval,
@@ -17,81 +19,21 @@ import {
   WsTopic,
 } from './types';
 
-import { signMessage } from './util/node-support';
-
-import WsStore from './util/WsStore';
 import {
   serializeParams,
   isWsPong,
   getLinearWsKeyForTopic,
   getSpotWsKeyForTopic,
-  wsKeyInverse,
-  wsKeyLinearPrivate,
-  wsKeyLinearPublic,
-  wsKeySpotPrivate,
-  wsKeySpotPublic,
   WsConnectionStateEnum,
   PUBLIC_WS_KEYS,
+  WS_KEY_MAP,
+  DefaultLogger,
+  WS_BASE_URL_MAP,
 } from './util';
-
-const inverseEndpoints = {
-  livenet: 'wss://stream.bybit.com/realtime',
-  testnet: 'wss://stream-testnet.bybit.com/realtime',
-};
-
-interface NetworkMapV3 {
-  livenet: string;
-  livenet2?: string;
-  testnet: string;
-  testnet2?: string;
-}
-
-type NetworkType = 'public' | 'private';
 
 function neverGuard(x: never, msg: string): Error {
   return new Error(`Unhandled value exception "x", ${msg}`);
 }
-
-const WS_BASE_URL_MAP: Record<string, Record<NetworkType, NetworkMapV3>> = {
-  linear: {
-    private: {
-      livenet: 'wss://stream.bybit.com/realtime_private',
-      livenet2: 'wss://stream.bytick.com/realtime_private',
-      testnet: 'wss://stream-testnet.bybit.com/realtime_private',
-    },
-    public: {
-      livenet: 'wss://stream.bybit.com/realtime_public',
-      livenet2: 'wss://stream.bytick.com/realtime_public',
-      testnet: 'wss://stream-testnet.bybit.com/realtime_public',
-    },
-  },
-};
-
-const linearEndpoints: Record<NetworkType, NetworkMapV3> = {
-  private: {
-    livenet: 'wss://stream.bybit.com/realtime_private',
-    livenet2: 'wss://stream.bytick.com/realtime_private',
-    testnet: 'wss://stream-testnet.bybit.com/realtime_private',
-  },
-  public: {
-    livenet: 'wss://stream.bybit.com/realtime_public',
-    livenet2: 'wss://stream.bytick.com/realtime_public',
-    testnet: 'wss://stream-testnet.bybit.com/realtime_public',
-  },
-};
-
-const spotEndpoints: Record<NetworkType, NetworkMapV3> = {
-  private: {
-    livenet: 'wss://stream.bybit.com/spot/ws',
-    testnet: 'wss://stream-testnet.bybit.com/spot/ws',
-  },
-  public: {
-    livenet: 'wss://stream.bybit.com/spot/quote/ws/v1',
-    livenet2: 'wss://stream.bybit.com/spot/quote/ws/v2',
-    testnet: 'wss://stream-testnet.bybit.com/spot/quote/ws/v1',
-    testnet2: 'wss://stream-testnet.bybit.com/spot/quote/ws/v2',
-  },
-};
 
 const loggerCategory = { category: 'bybit-ws' };
 
@@ -280,16 +222,19 @@ export class WebsocketClient extends EventEmitter {
   public connectAll(): Promise<WebSocket | undefined>[] {
     switch (this.options.market) {
       case 'inverse': {
-        return [this.connect(wsKeyInverse)];
+        return [this.connect(WS_KEY_MAP.inverse)];
       }
       case 'linear': {
         return [
-          this.connect(wsKeyLinearPublic),
-          this.connect(wsKeyLinearPrivate),
+          this.connect(WS_KEY_MAP.linearPublic),
+          this.connect(WS_KEY_MAP.linearPrivate),
         ];
       }
       case 'spot': {
-        return [this.connect(wsKeySpotPublic), this.connect(wsKeySpotPrivate)];
+        return [
+          this.connect(WS_KEY_MAP.spotPublic),
+          this.connect(WS_KEY_MAP.spotPrivate),
+        ];
       }
       default: {
         throw neverGuard(this.options.market, `connectAll(): Unhandled market`);
@@ -300,13 +245,13 @@ export class WebsocketClient extends EventEmitter {
   public connectPublic(): Promise<WebSocket | undefined> {
     switch (this.options.market) {
       case 'inverse': {
-        return this.connect(wsKeyInverse);
+        return this.connect(WS_KEY_MAP.inverse);
       }
       case 'linear': {
-        return this.connect(wsKeyLinearPublic);
+        return this.connect(WS_KEY_MAP.linearPublic);
       }
       case 'spot': {
-        return this.connect(wsKeySpotPublic);
+        return this.connect(WS_KEY_MAP.spotPublic);
       }
       default: {
         throw neverGuard(
@@ -320,13 +265,13 @@ export class WebsocketClient extends EventEmitter {
   public connectPrivate(): Promise<WebSocket | undefined> | undefined {
     switch (this.options.market) {
       case 'inverse': {
-        return this.connect(wsKeyInverse);
+        return this.connect(WS_KEY_MAP.inverse);
       }
       case 'linear': {
-        return this.connect(wsKeyLinearPrivate);
+        return this.connect(WS_KEY_MAP.linearPrivate);
       }
       case 'spot': {
-        return this.connect(wsKeySpotPrivate);
+        return this.connect(WS_KEY_MAP.spotPrivate);
       }
       default: {
         throw neverGuard(
@@ -672,7 +617,7 @@ export class WebsocketClient extends EventEmitter {
     }
   }
 
-  private getWs(wsKey: string) {
+  private getWs(wsKey: WsKey) {
     return this.wsStore.getWs(wsKey);
   }
 
@@ -688,20 +633,21 @@ export class WebsocketClient extends EventEmitter {
     const networkKey = this.isLivenet() ? 'livenet' : 'testnet';
 
     switch (wsKey) {
-      case wsKeyLinearPublic: {
-        return linearEndpoints.public[networkKey];
+      case WS_KEY_MAP.linearPublic: {
+        return WS_BASE_URL_MAP.linear.public[networkKey];
       }
-      case wsKeyLinearPrivate: {
-        return linearEndpoints.private[networkKey];
+      case WS_KEY_MAP.linearPrivate: {
+        return WS_BASE_URL_MAP.linear.private[networkKey];
       }
-      case wsKeySpotPublic: {
-        return spotEndpoints.public[networkKey];
+      case WS_KEY_MAP.spotPublic: {
+        return WS_BASE_URL_MAP.spot.public[networkKey];
       }
-      case wsKeySpotPrivate: {
-        return spotEndpoints.private[networkKey];
+      case WS_KEY_MAP.spotPrivate: {
+        return WS_BASE_URL_MAP.linear.private[networkKey];
       }
-      case wsKeyInverse: {
-        return inverseEndpoints[networkKey];
+      case WS_KEY_MAP.inverse: {
+        // private and public are on the same WS connection
+        return WS_BASE_URL_MAP.inverse.public[networkKey];
       }
       default: {
         this.logger.error('getWsUrl(): Unhandled wsKey: ', {
@@ -713,14 +659,24 @@ export class WebsocketClient extends EventEmitter {
     }
   }
 
-  private getWsKeyForTopic(topic: string) {
-    if (this.isInverse()) {
-      return wsKeyInverse;
+  private getWsKeyForTopic(topic: string): WsKey {
+    switch (this.options.market) {
+      case 'inverse': {
+        return WS_KEY_MAP.inverse;
+      }
+      case 'linear': {
+        return getLinearWsKeyForTopic(topic);
+      }
+      case 'spot': {
+        return getSpotWsKeyForTopic(topic);
+      }
+      default: {
+        throw neverGuard(
+          this.options.market,
+          `connectPublic(): Unhandled market`
+        );
+      }
     }
-    if (this.isLinear()) {
-      return getLinearWsKeyForTopic(topic);
-    }
-    return getSpotWsKeyForTopic(topic);
   }
 
   private wrongMarketError(market: APIMarket) {
@@ -736,7 +692,7 @@ export class WebsocketClient extends EventEmitter {
     }
 
     return this.tryWsSend(
-      wsKeySpotPublic,
+      WS_KEY_MAP.spotPublic,
       JSON.stringify({
         topic: 'trade',
         event: 'sub',
@@ -754,7 +710,7 @@ export class WebsocketClient extends EventEmitter {
     }
 
     return this.tryWsSend(
-      wsKeySpotPublic,
+      WS_KEY_MAP.spotPublic,
       JSON.stringify({
         symbol,
         topic: 'realtimes',
@@ -776,7 +732,7 @@ export class WebsocketClient extends EventEmitter {
     }
 
     return this.tryWsSend(
-      wsKeySpotPublic,
+      WS_KEY_MAP.spotPublic,
       JSON.stringify({
         symbol,
         topic: 'kline_' + candleSize,
@@ -791,6 +747,7 @@ export class WebsocketClient extends EventEmitter {
   //ws.send('{"symbol":"BTCUSDT","topic":"depth","event":"sub","params":{"binary":false}}');
   //ws.send('{"symbol":"BTCUSDT","topic":"mergedDepth","event":"sub","params":{"binary":false,"dumpScale":1}}');
   //ws.send('{"symbol":"BTCUSDT","topic":"diffDepth","event":"sub","params":{"binary":false}}');
+
   public subscribePublicSpotOrderbook(
     symbol: string,
     depth: 'full' | 'merge' | 'delta',
@@ -831,6 +788,6 @@ export class WebsocketClient extends EventEmitter {
     if (dumpScale) {
       msg.params.dumpScale = dumpScale;
     }
-    return this.tryWsSend(wsKeySpotPublic, JSON.stringify(msg));
+    return this.tryWsSend(WS_KEY_MAP.spotPublic, JSON.stringify(msg));
   }
 }

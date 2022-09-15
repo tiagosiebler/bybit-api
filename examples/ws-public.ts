@@ -1,8 +1,7 @@
-import { DefaultLogger } from '../src';
-import { WebsocketClient, wsKeySpotPublic } from '../src/websocket-client';
+import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../src';
 
 // or
-// import { DefaultLogger, WebsocketClient } from 'bybit-api';
+// import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from 'bybit-api';
 
 (async () => {
   const logger = {
@@ -10,13 +9,16 @@ import { WebsocketClient, wsKeySpotPublic } from '../src/websocket-client';
     // silly: () => {},
   };
 
-  const wsClient = new WebsocketClient({
-    // key: key,
-    // secret: secret,
-    // market: 'inverse',
-    // market: 'linear',
-    market: 'spot',
-  }, logger);
+  const wsClient = new WebsocketClient(
+    {
+      // key: key,
+      // secret: secret,
+      market: 'linear',
+      // market: 'inverse',
+      // market: 'spot',
+    },
+    logger
+  );
 
   wsClient.on('update', (data) => {
     console.log('raw message received ', JSON.stringify(data, null, 2));
@@ -25,7 +27,7 @@ import { WebsocketClient, wsKeySpotPublic } from '../src/websocket-client';
   wsClient.on('open', (data) => {
     console.log('connection opened open:', data.wsKey);
 
-    if (data.wsKey === wsKeySpotPublic) {
+    if (data.wsKey === WS_KEY_MAP.spotPublic) {
       // Spot public.
       // wsClient.subscribePublicSpotTrades('BTCUSDT');
       // wsClient.subscribePublicSpotTradingPair('BTCUSDT');
@@ -40,16 +42,20 @@ import { WebsocketClient, wsKeySpotPublic } from '../src/websocket-client';
     console.log('ws automatically reconnecting.... ', wsKey);
   });
   wsClient.on('reconnected', (data) => {
-    console.log('ws has reconnected ', data?.wsKey );
+    console.log('ws has reconnected ', data?.wsKey);
   });
 
   // Inverse
   // wsClient.subscribe('trade');
 
   // Linear
-  // wsClient.subscribe('trade.BTCUSDT');
+  wsClient.subscribe('trade.BTCUSDT');
+
+  setTimeout(() => {
+    console.log('unsubscribing');
+    wsClient.unsubscribe('trade.BTCUSDT');
+  }, 5 * 1000);
 
   // For spot, request public connection first then send required topics on 'open'
   // wsClient.connectPublic();
-
 })();
