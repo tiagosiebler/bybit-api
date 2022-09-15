@@ -6,7 +6,7 @@ import {
 } from '../../src';
 import {
   promiseSleep,
-  silentLogger,
+  getSilentLogger,
   waitForSocketEvent,
   WS_OPEN_EVENT_PARTIAL,
 } from '../ws.util';
@@ -19,7 +19,7 @@ describe('Public Inverse Perps Websocket Client', () => {
   };
 
   beforeAll(() => {
-    wsClient = new WebsocketClient(wsClientOptions, silentLogger);
+    wsClient = new WebsocketClient(wsClientOptions, getSilentLogger('public'));
     wsClient.connectPublic();
   });
 

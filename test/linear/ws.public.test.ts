@@ -4,7 +4,7 @@ import {
   WS_KEY_MAP,
 } from '../../src';
 import {
-  silentLogger,
+  getSilentLogger,
   waitForSocketEvent,
   WS_OPEN_EVENT_PARTIAL,
 } from '../ws.util';
@@ -17,7 +17,7 @@ describe('Public Linear Perps Websocket Client', () => {
   };
 
   beforeAll(() => {
-    wsClient = new WebsocketClient(wsClientOptions, silentLogger);
+    wsClient = new WebsocketClient(wsClientOptions, getSilentLogger('public'));
     wsClient.connectPublic();
   });
 
