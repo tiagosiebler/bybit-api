@@ -11,8 +11,8 @@
 Node.js connector for the Bybit APIs and WebSockets:
 - Complete integration with all bybit APIs.
 - TypeScript support (with type declarations for most API requests & responses).
-- Over 200 integration tests making real API calls, validating any changes before they reach npm.
-- Robust WebSocket integration with connection heartbeats & automatic reconnection.
+- Over 300 integration tests making real API calls & WebSocket connections, validating any changes before they reach npm.
+- Robust WebSocket integration with configurable connection heartbeats & automatic reconnect then resubscribe workflows.
 - Browser support (via webpack bundle - see "Browser Usage" below).
 
 ## Installation
@@ -45,7 +45,7 @@ This connector is fully compatible with both TypeScript and pure JavaScript proj
 
 - [src](./src) - the whole connector written in TypeScript
 - [lib](./lib) - the JavaScript version of the project (built from TypeScript). This should not be edited directly, as it will be overwritten with each release.
-- [dist](./dist) - the packed bundle of the project for use in browser environments.
+- [dist](./dist) - the web-packed bundle of the project for use in browser environments.
 - [examples](./examples) - some implementation examples & demonstrations. Contributions are welcome!
 
 ---
