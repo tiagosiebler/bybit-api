@@ -105,7 +105,7 @@ export function listenToSocketEvents(wsClient: WebsocketClient) {
 
 export function logAllEvents(wsClient: WebsocketClient) {
   wsClient.on('update', (data) => {
-    console.log('wsUpdate: ', JSON.stringify(data, null, 2));
+    // console.log('wsUpdate: ', JSON.stringify(data, null, 2));
   });
 
   wsClient.on('open', (data) => {

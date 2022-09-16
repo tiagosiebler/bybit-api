@@ -508,6 +508,7 @@ export class WebsocketClient extends EventEmitter {
     if (!topics.length) {
       return;
     }
+
     const wsMessage = JSON.stringify({
       req_id: topics.join(','),
       op: 'subscribe',
@@ -631,16 +632,16 @@ export class WebsocketClient extends EventEmitter {
         if (isWsPong(msg)) {
           this.logger.silly('Received pong', { ...loggerCategory, wsKey });
         } else {
-          this.emit('response', msg);
+          this.emit('response', { ...msg, wsKey });
         }
         return;
       }
 
       if (msg['finalFragment']) {
-        return this.emit('response', msg);
+        return this.emit('response', { ...msg, wsKey });
       }
       if (msg?.topic) {
-        return this.emit('update', msg);
+        return this.emit('update', { ...msg, wsKey });
       }
 
       if (
@@ -651,7 +652,7 @@ export class WebsocketClient extends EventEmitter {
         // usdc options
         msg?.success === false
       ) {
-        return this.emit('errorEvent', msg);
+        return this.emit('errorEvent', { ...msg, wsKey });
       }
 
       this.logger.warning('Unhandled/unrecognised ws event message', {
@@ -781,6 +782,7 @@ export class WebsocketClient extends EventEmitter {
    */
   public subscribe(wsTopics: WsTopic[] | WsTopic, isPrivateTopic?: boolean) {
     const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
+
     topics.forEach((topic) =>
       this.wsStore.addTopic(
         getWsKeyForTopic(this.options.market, topic, isPrivateTopic),
@@ -794,7 +796,9 @@ export class WebsocketClient extends EventEmitter {
       if (
         this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
       ) {
-        return this.requestSubscribeTopics(wsKey, topics);
+        return this.requestSubscribeTopics(wsKey, [
+          ...this.wsStore.getTopics(wsKey),
+        ]);
       }
 
       // start connection process if it hasn't yet begun. Topics are automatically subscribed to on-connect
@@ -832,7 +836,9 @@ export class WebsocketClient extends EventEmitter {
       if (
         this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
       ) {
-        this.requestUnsubscribeTopics(wsKey, topics);
+        this.requestUnsubscribeTopics(wsKey, [
+          ...this.wsStore.getTopics(wsKey),
+        ]);
       }
     });
   }
