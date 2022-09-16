@@ -144,17 +144,6 @@ export class WebsocketClient extends EventEmitter {
         this.connectPublic();
         break;
       }
-      case 'spotv3': {
-        this.restClient = new SpotClientV3(
-          undefined,
-          undefined,
-          !this.isTestnet(),
-          this.options.restOptions,
-          this.options.requestOptions
-        );
-        this.connectPublic();
-        break;
-      }
       case 'usdcOption': {
         this.restClient = new USDCOptionClient(
           undefined,

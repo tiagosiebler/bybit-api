@@ -37,14 +37,14 @@ export function waitForSocketEvent(
       );
     }, timeoutMs);
 
+    let resolvedOnce = false;
+
     function cleanup() {
       clearTimeout(timeout);
       resolvedOnce = true;
       wsClient.removeListener(event, (e) => resolver(e));
       wsClient.removeListener('error', (e) => rejector(e));
     }
-
-    let resolvedOnce = false;
 
     function resolver(event) {
       resolve(event);
