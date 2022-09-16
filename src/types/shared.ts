@@ -2,6 +2,7 @@ import { InverseClient } from '../inverse-client';
 import { LinearClient } from '../linear-client';
 import { SpotClient } from '../spot-client';
 import { SpotClientV3 } from '../spot-client-v3';
+import { UnifiedMarginClient } from '../unified-margin-client';
 import { USDCOptionClient } from '../usdc-option-client';
 import { USDCPerpetualClient } from '../usdc-perpetual-client';
 
@@ -11,7 +12,8 @@ export type RESTClient =
   | SpotClient
   | SpotClientV3
   | USDCOptionClient
-  | USDCPerpetualClient;
+  | USDCPerpetualClient
+  | UnifiedMarginClient;
 
 export type numberInString = string;
 

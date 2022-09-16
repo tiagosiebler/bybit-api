@@ -10,7 +10,7 @@ interface NetworkMapV3 {
 type PublicPrivateNetwork = 'public' | 'private';
 
 export const WS_BASE_URL_MAP: Record<
-  APIMarket,
+  APIMarket | 'unifiedPerpUSDT' | 'unifiedPerpUSDC',
   Record<PublicPrivateNetwork, NetworkMapV3>
 > = {
   inverse: {
@@ -81,6 +81,46 @@ export const WS_BASE_URL_MAP: Record<
       testnet: 'wss://stream-testnet.bybit.com/trade/option/usdc/private/v1',
     },
   },
+  unifiedOption: {
+    public: {
+      livenet: 'wss://stream.bybit.com/option/usdc/public/v3',
+      testnet: 'wss://stream-testnet.bybit.com/option/usdc/public/v3',
+    },
+    private: {
+      livenet: 'wss://stream.bybit.com/unified/private/v3',
+      testnet: 'wss://stream-testnet.bybit.com/unified/private/v3',
+    },
+  },
+  unifiedPerp: {
+    public: {
+      livenet: 'useBaseSpecificEndpoint',
+      testnet: 'useBaseSpecificEndpoint',
+    },
+    private: {
+      livenet: 'wss://stream.bybit.com/unified/private/v3',
+      testnet: 'wss://stream-testnet.bybit.com/unified/private/v3',
+    },
+  },
+  unifiedPerpUSDT: {
+    public: {
+      livenet: 'wss://stream.bybit.com/contract/usdt/public/v3',
+      testnet: 'wss://stream-testnet.bybit.com/contract/usdt/public/v3',
+    },
+    private: {
+      livenet: 'useUnifiedEndpoint',
+      testnet: 'useUnifiedEndpoint',
+    },
+  },
+  unifiedPerpUSDC: {
+    public: {
+      livenet: 'wss://stream.bybit.com/contract/usdc/public/v3',
+      testnet: 'wss://stream-testnet.bybit.com/contract/usdc/public/v3',
+    },
+    private: {
+      livenet: 'useUnifiedEndpoint',
+      testnet: 'useUnifiedEndpoint',
+    },
+  },
 };
 
 export const WS_KEY_MAP = {
@@ -95,6 +135,10 @@ export const WS_KEY_MAP = {
   usdcOptionPublic: 'usdcOptionPublic',
   usdcPerpPrivate: 'usdcPerpPrivate',
   usdcPerpPublic: 'usdcPerpPublic',
+  unifiedPrivate: 'unifiedPrivate',
+  unifiedOptionPublic: 'unifiedOptionPublic',
+  unifiedPerpUSDTPublic: 'unifiedPerpUSDTPublic',
+  unifiedPerpUSDCPublic: 'unifiedPerpUSDCPublic',
 } as const;
 
 export const WS_AUTH_ON_CONNECT_KEYS: WsKey[] = [
@@ -179,6 +223,29 @@ export function getWsKeyForTopic(
       return isPrivateTopic
         ? WS_KEY_MAP.usdcPerpPrivate
         : WS_KEY_MAP.usdcPerpPublic;
+    }
+    case 'unifiedOption': {
+      return isPrivateTopic
+        ? WS_KEY_MAP.unifiedPrivate
+        : WS_KEY_MAP.unifiedOptionPublic;
+    }
+    case 'unifiedPerp': {
+      if (isPrivateTopic) {
+        return WS_KEY_MAP.unifiedPrivate;
+      }
+
+      const upperTopic = topic.toUpperCase();
+      if (upperTopic.indexOf('USDT') !== -1) {
+        return WS_KEY_MAP.unifiedPerpUSDTPublic;
+      }
+
+      if (upperTopic.indexOf('USDC') !== -1) {
+        return WS_KEY_MAP.unifiedPerpUSDCPublic;
+      }
+
+      throw new Error(
+        `Failed to determine wskey for unified perps topic: "${topic}`
+      );
     }
     default: {
       throw neverGuard(market, `getWsKeyForTopic(): Unhandled market`);

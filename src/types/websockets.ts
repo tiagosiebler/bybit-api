@@ -7,7 +7,9 @@ export type APIMarket =
   | 'spot'
   | 'spotv3'
   | 'usdcOption'
-  | 'usdcPerp';
+  | 'usdcPerp'
+  | 'unifiedPerp'
+  | 'unifiedOption';
 
 // Same as inverse futures
 export type WsPublicInverseTopic =

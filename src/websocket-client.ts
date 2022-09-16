@@ -33,6 +33,7 @@ import {
 } from './util';
 import { USDCOptionClient } from './usdc-option-client';
 import { USDCPerpetualClient } from './usdc-perpetual-client';
+import { UnifiedMarginClient } from './unified-margin-client';
 
 const loggerCategory = { category: 'bybit-ws' };
 
@@ -163,6 +164,17 @@ export class WebsocketClient extends EventEmitter {
         );
         break;
       }
+      case 'unifiedOption':
+      case 'unifiedPerp': {
+        this.restClient = new UnifiedMarginClient(
+          undefined,
+          undefined,
+          !this.isTestnet(),
+          this.options.restOptions,
+          this.options.requestOptions
+        );
+        break;
+      }
       default: {
         throw neverGuard(
           this.options.market,
@@ -198,15 +210,17 @@ export class WebsocketClient extends EventEmitter {
     switch (this.options.market) {
       case 'inverse': {
         // only one for inverse
-        return [this.connectPublic()];
+        return [...this.connectPublic()];
       }
       // these all have separate public & private ws endpoints
       case 'linear':
       case 'spot':
       case 'spotv3':
       case 'usdcOption':
-      case 'usdcPerp': {
-        return [this.connectPublic(), this.connectPrivate()];
+      case 'usdcPerp':
+      case 'unifiedPerp':
+      case 'unifiedOption': {
+        return [...this.connectPublic(), this.connectPrivate()];
       }
       default: {
         throw neverGuard(this.options.market, `connectAll(): Unhandled market`);
@@ -214,25 +228,34 @@ export class WebsocketClient extends EventEmitter {
     }
   }
 
-  public connectPublic(): Promise<WebSocket | undefined> {
+  public connectPublic(): Promise<WebSocket | undefined>[] {
     switch (this.options.market) {
       case 'inverse': {
-        return this.connect(WS_KEY_MAP.inverse);
+        return [this.connect(WS_KEY_MAP.inverse)];
       }
       case 'linear': {
-        return this.connect(WS_KEY_MAP.linearPublic);
+        return [this.connect(WS_KEY_MAP.linearPublic)];
       }
       case 'spot': {
-        return this.connect(WS_KEY_MAP.spotPublic);
+        return [this.connect(WS_KEY_MAP.spotPublic)];
       }
       case 'spotv3': {
-        return this.connect(WS_KEY_MAP.spotV3Public);
+        return [this.connect(WS_KEY_MAP.spotV3Public)];
       }
       case 'usdcOption': {
-        return this.connect(WS_KEY_MAP.usdcOptionPublic);
+        return [this.connect(WS_KEY_MAP.usdcOptionPublic)];
       }
       case 'usdcPerp': {
-        return this.connect(WS_KEY_MAP.usdcPerpPublic);
+        return [this.connect(WS_KEY_MAP.usdcPerpPublic)];
+      }
+      case 'unifiedOption': {
+        return [this.connect(WS_KEY_MAP.unifiedOptionPublic)];
+      }
+      case 'unifiedPerp': {
+        return [
+          this.connect(WS_KEY_MAP.unifiedPerpUSDTPublic),
+          this.connect(WS_KEY_MAP.unifiedPerpUSDCPublic),
+        ];
       }
       default: {
         throw neverGuard(
@@ -262,6 +285,10 @@ export class WebsocketClient extends EventEmitter {
       }
       case 'usdcPerp': {
         return this.connect(WS_KEY_MAP.usdcPerpPrivate);
+      }
+      case 'unifiedPerp':
+      case 'unifiedOption': {
+        return this.connect(WS_KEY_MAP.unifiedPrivate);
       }
       default: {
         throw neverGuard(
@@ -718,6 +745,18 @@ export class WebsocketClient extends EventEmitter {
       }
       case WS_KEY_MAP.usdcPerpPrivate: {
         return WS_BASE_URL_MAP.usdcPerp.private[networkKey];
+      }
+      case WS_KEY_MAP.unifiedOptionPublic: {
+        return WS_BASE_URL_MAP.unifiedOption.public[networkKey];
+      }
+      case WS_KEY_MAP.unifiedPerpUSDTPublic: {
+        return WS_BASE_URL_MAP.unifiedPerpUSDT.public[networkKey];
+      }
+      case WS_KEY_MAP.unifiedPerpUSDCPublic: {
+        return WS_BASE_URL_MAP.unifiedPerpUSDC.public[networkKey];
+      }
+      case WS_KEY_MAP.unifiedPrivate: {
+        return WS_BASE_URL_MAP.unifiedPerp.private[networkKey];
       }
       default: {
         this.logger.error('getWsUrl(): Unhandled wsKey: ', {
