@@ -67,7 +67,7 @@ describe('Public USDC Perp Websocket Client', () => {
     }
 
     try {
-      expect(await wsUpdatePromise).toMatchSnapshot({
+      expect(await wsUpdatePromise).toMatchObject({
         crossSeq: expect.any(String),
         data: { orderBook: expect.any(Array) },
         timestampE6: expect.any(String),
