@@ -90,16 +90,11 @@ describe('Private Spot V3 Websocket Client', () => {
         expect(e).toBeFalsy();
       }
 
-      try {
-        expect(await wsResponsePromise).toMatchObject({
-          op: 'auth',
-          success: true,
-          req_id: `${WS_KEY_MAP.spotV3Private}-auth`,
-        });
-      } catch (e) {
-        console.error(`Wait for "${wsTopic}" event exception: `, e);
-        expect(e).toBeFalsy();
-      }
+      expect(await wsResponsePromise).toMatchObject({
+        op: 'auth',
+        success: true,
+        req_id: `${WS_KEY_MAP.spotV3Private}-auth`,
+      });
     });
 
     it('should subscribe to private outboundAccountInfo events', async () => {
@@ -108,20 +103,12 @@ describe('Private Spot V3 Websocket Client', () => {
       // expect(wsUpdatePromise).resolves.toStrictEqual('');
       wsClient.subscribe(wsTopic);
 
-      try {
-        expect(await wsResponsePromise).toMatchObject({
-          op: 'subscribe',
-          success: true,
-          ret_msg: '',
-          req_id: wsTopic,
-        });
-      } catch (e) {
-        console.error(
-          `Wait for "${wsTopic}" subscription response exception: `,
-          e
-        );
-        expect(e).toBeFalsy();
-      }
+      expect(await wsResponsePromise).toMatchObject({
+        op: 'subscribe',
+        success: true,
+        ret_msg: '',
+        req_id: wsTopic,
+      });
     });
   });
 });

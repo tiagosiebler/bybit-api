@@ -22,11 +22,7 @@ describe('Public USDC Perp Websocket Client', () => {
       wsClientOptions,
       getSilentLogger('expectSuccessNoAuth')
     );
-    // logAllEvents(wsClient);
-  });
-
-  beforeEach(() => {
-    wsClient.removeAllListeners();
+    wsClient.connectPublic();
     // logAllEvents(wsClient);
   });
 

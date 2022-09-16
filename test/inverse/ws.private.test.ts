@@ -81,14 +81,6 @@ describe('Private Inverse Perps Websocket Client', () => {
       // const wsUpdatePromise = waitForSocketEvent(wsClient, 'update');
 
       const wsTopic = 'wallet';
-      expect(wsResponsePromise).resolves.toMatchObject({
-        request: {
-          args: [wsTopic],
-          op: 'subscribe',
-        },
-        success: true,
-      });
-
       // No easy way to trigger a private event (other than executing trades)
       // expect(wsUpdatePromise).resolves.toMatchObject({
       //   topic: wsTopic,
@@ -97,7 +89,13 @@ describe('Private Inverse Perps Websocket Client', () => {
 
       wsClient.subscribe(wsTopic);
 
-      await Promise.all([wsResponsePromise]);
+      expect(await wsResponsePromise).toMatchObject({
+        request: {
+          args: [wsTopic],
+          op: 'subscribe',
+        },
+        success: true,
+      });
     });
   });
 });

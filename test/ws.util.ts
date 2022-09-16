@@ -6,8 +6,8 @@ export function getSilentLogger(logHint?: string) {
     debug: () => {},
     notice: () => {},
     info: () => {},
-    warning: (...params) => console.warn('warning', logHint, ...params),
-    error: (...params) => console.error('error', logHint, ...params),
+    warning: () => {},
+    error: () => {},
   };
 }
 

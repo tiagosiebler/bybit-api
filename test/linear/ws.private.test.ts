@@ -31,7 +31,6 @@ describe('Private Linear Perps Websocket Client', () => {
       );
 
       const wsOpenPromise = waitForSocketEvent(badClient, 'open', 2500);
-
       badClient.connectPrivate();
 
       try {

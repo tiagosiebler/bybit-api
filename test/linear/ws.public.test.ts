@@ -94,6 +94,10 @@ describe('Public Linear Perps Websocket Client', () => {
 
     wsClient.subscribe(wsTopic);
 
-    await Promise.all([wsResponsePromise]);
+    try {
+      await Promise.all([wsResponsePromise]);
+    } catch (e) {
+      //
+    }
   });
 });
