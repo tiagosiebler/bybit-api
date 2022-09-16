@@ -3,23 +3,26 @@ import {
   WSClientConfigurableOptions,
   WS_ERROR_ENUM,
   WS_KEY_MAP,
-} from '../../src';
+} from '../../../src';
 import {
+  fullLogger,
   getSilentLogger,
+  logAllEvents,
   waitForSocketEvent,
   WS_OPEN_EVENT_PARTIAL,
-} from '../ws.util';
+} from '../../ws.util';
 
-describe('Private Spot V3 Websocket Client', () => {
+describe('Private USDC Option Websocket Client', () => {
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
 
   const wsClientOptions: WSClientConfigurableOptions = {
-    market: 'spotv3',
+    market: 'usdcOption',
     key: API_KEY,
     secret: API_SECRET,
   };
-  const wsTopic = `outboundAccountInfo`;
+
+  const wsTopic = `user.openapi.option.position`;
 
   describe('with invalid credentials', () => {
     it('should reject private subscribe if keys/signature are incorrect', async () => {
@@ -28,28 +31,35 @@ describe('Private Spot V3 Websocket Client', () => {
           ...wsClientOptions,
           key: 'bad',
           secret: 'bad',
+          reconnectTimeout: 10000,
         },
+        // fullLogger
         getSilentLogger('expect401')
       );
+      // logAllEvents(badClient);
 
       // const wsOpenPromise = waitForSocketEvent(badClient, 'open');
       const wsResponsePromise = waitForSocketEvent(badClient, 'response');
       // const wsUpdatePromise = waitForSocketEvent(wsClient, 'update');
 
       badClient.connectPrivate();
-      badClient.subscribe(wsTopic);
 
-      expect(wsResponsePromise).rejects.toMatchObject({
-        ret_code: WS_ERROR_ENUM.API_SIGN_AUTH_FAILED,
-        ret_msg: expect.any(String),
-        type: 'error',
-      });
+      const responsePartial = {
+        ret_msg: WS_ERROR_ENUM.USDC_OPTION_AUTH_FAILED,
+        success: false,
+        type: 'AUTH_RESP',
+      };
+      expect(wsResponsePromise).rejects.toMatchObject(responsePartial);
 
       try {
         await Promise.all([wsResponsePromise]);
       } catch (e) {
         // console.error()
+        expect(e).toMatchObject(responsePartial);
       }
+
+      // badClient.subscribe(wsTopic);
+      badClient.removeAllListeners();
       badClient.closeAll();
     });
   });
@@ -81,7 +91,7 @@ describe('Private Spot V3 Websocket Client', () => {
 
       expect(wsOpenPromise).resolves.toMatchObject({
         event: WS_OPEN_EVENT_PARTIAL,
-        wsKey: WS_KEY_MAP.spotV3Private,
+        wsKey: WS_KEY_MAP.usdcOptionPrivate,
       });
 
       try {
@@ -92,9 +102,9 @@ describe('Private Spot V3 Websocket Client', () => {
 
       try {
         expect(await wsResponsePromise).toMatchObject({
-          op: 'auth',
+          ret_msg: '0',
           success: true,
-          req_id: `${WS_KEY_MAP.spotV3Private}-auth`,
+          type: 'AUTH_RESP',
         });
       } catch (e) {
         console.error(`Wait for "${wsTopic}" event exception: `, e);
@@ -102,18 +112,21 @@ describe('Private Spot V3 Websocket Client', () => {
       }
     });
 
-    it('should subscribe to private outboundAccountInfo events', async () => {
+    it(`should subscribe to private "${wsTopic}" events`, async () => {
       const wsResponsePromise = waitForSocketEvent(wsClient, 'response');
+      const wsUpdatePromise = waitForSocketEvent(wsClient, 'update');
 
       // expect(wsUpdatePromise).resolves.toStrictEqual('');
       wsClient.subscribe(wsTopic);
 
       try {
         expect(await wsResponsePromise).toMatchObject({
-          op: 'subscribe',
+          data: {
+            failTopics: [],
+            successTopics: [wsTopic],
+          },
           success: true,
-          ret_msg: '',
-          req_id: wsTopic,
+          type: 'COMMAND_RESP',
         });
       } catch (e) {
         console.error(
@@ -122,6 +135,16 @@ describe('Private Spot V3 Websocket Client', () => {
         );
         expect(e).toBeFalsy();
       }
+      expect(await wsUpdatePromise).toMatchObject({
+        creationTime: expect.any(Number),
+        data: {
+          baseLine: expect.any(Number),
+          dataType: expect.any(String),
+          result: expect.any(Array),
+          version: expect.any(Number),
+        },
+        topic: wsTopic,
+      });
     });
   });
 });

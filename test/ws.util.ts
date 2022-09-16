@@ -59,7 +59,7 @@ export function waitForSocketEvent(
     }
 
     wsClient.on(event, (e) => resolver(e));
-    wsClient.on('error', (e) => rejector(e));
+    wsClient.on('errorEvent', (e) => rejector(e));
 
     // if (event !== 'close') {
     //   wsClient.on('close', (event) => {
@@ -89,7 +89,7 @@ export function listenToSocketEvents(wsClient: WebsocketClient) {
   wsClient.on('response', retVal.response);
   wsClient.on('update', retVal.update);
   wsClient.on('close', retVal.close);
-  wsClient.on('error', retVal.error);
+  wsClient.on('errorEvent', retVal.error);
 
   return {
     ...retVal,
@@ -98,7 +98,7 @@ export function listenToSocketEvents(wsClient: WebsocketClient) {
       wsClient.removeListener('response', retVal.response);
       wsClient.removeListener('update', retVal.update);
       wsClient.removeListener('close', retVal.close);
-      wsClient.removeListener('error', retVal.error);
+      wsClient.removeListener('errorEvent', retVal.error);
     },
   };
 }

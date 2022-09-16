@@ -40,7 +40,7 @@ export type WsClientEvent =
   | 'open'
   | 'update'
   | 'close'
-  | 'error'
+  | 'errorEvent'
   | 'reconnect'
   | 'reconnected'
   | 'response';
@@ -52,7 +52,7 @@ interface WebsocketClientEvents {
   close: (evt: { wsKey: WsKey; event: any }) => void;
   response: (response: any) => void;
   update: (response: any) => void;
-  error: (response: any) => void;
+  errorEvent: (response: any) => void;
 }
 
 // Type safety for on and emit handlers: https://stackoverflow.com/a/61609010/880837
@@ -141,7 +141,6 @@ export class WebsocketClient extends EventEmitter {
           this.options.restOptions,
           this.options.requestOptions
         );
-        this.connectPublic();
         break;
       }
       case 'usdcOption': {
@@ -152,7 +151,6 @@ export class WebsocketClient extends EventEmitter {
           this.options.restOptions,
           this.options.requestOptions
         );
-        this.connectPublic();
         break;
       }
       case 'usdcPerp': {
@@ -163,7 +161,6 @@ export class WebsocketClient extends EventEmitter {
           this.options.restOptions,
           this.options.requestOptions
         );
-        this.connectPublic();
         break;
       }
       default: {
@@ -178,23 +175,6 @@ export class WebsocketClient extends EventEmitter {
   public isTestnet(): boolean {
     return this.options.testnet === true;
   }
-
-  public isLinear(): boolean {
-    return this.options.market === 'linear';
-  }
-
-  public isSpot(): boolean {
-    return this.options.market === 'spot';
-  }
-
-  public isInverse(): boolean {
-    return this.options.market === 'inverse';
-  }
-
-  /** USDC, spot v3, unified margin, account asset */
-  // public isV3(): boolean {
-  //   return this.options.market === 'v3';
-  // }
 
   public close(wsKey: WsKey) {
     this.logger.info('Closing connection', { ...loggerCategory, wsKey });
@@ -333,7 +313,7 @@ export class WebsocketClient extends EventEmitter {
   private parseWsError(context: string, error: any, wsKey: WsKey) {
     if (!error.message) {
       this.logger.error(`${context} due to unexpected error: `, error);
-      this.emit('error', error);
+      this.emit('errorEvent', error);
       return;
     }
 
@@ -352,7 +332,7 @@ export class WebsocketClient extends EventEmitter {
         );
         break;
     }
-    this.emit('error', error);
+    this.emit('errorEvent', error);
   }
 
   /**
@@ -443,7 +423,7 @@ export class WebsocketClient extends EventEmitter {
       this.setWsState(wsKey, WsConnectionStateEnum.RECONNECTING);
     }
 
-    setTimeout(() => {
+    this.wsStore.get(wsKey, true).activeReconnectTimer = setTimeout(() => {
       this.logger.info('Reconnecting to websocket', {
         ...loggerCategory,
         wsKey,
@@ -458,7 +438,7 @@ export class WebsocketClient extends EventEmitter {
     this.logger.silly('Sending ping', { ...loggerCategory, wsKey });
     this.tryWsSend(wsKey, JSON.stringify({ op: 'ping' }));
 
-    this.wsStore.get(wsKey, true)!.activePongTimer = setTimeout(() => {
+    this.wsStore.get(wsKey, true).activePongTimer = setTimeout(() => {
       this.logger.info('Pong timeout - closing socket to reconnect', {
         ...loggerCategory,
         wsKey,
@@ -470,6 +450,10 @@ export class WebsocketClient extends EventEmitter {
   private clearTimers(wsKey: WsKey) {
     this.clearPingTimer(wsKey);
     this.clearPongTimer(wsKey);
+    const wsState = this.wsStore.get(wsKey);
+    if (wsState?.activeReconnectTimer) {
+      clearTimeout(wsState.activeReconnectTimer);
+    }
   }
 
   // Send a ping at intervals
@@ -636,9 +620,11 @@ export class WebsocketClient extends EventEmitter {
         // spot v1
         msg?.code ||
         // spot v3
-        msg?.type === 'error'
+        msg?.type === 'error' ||
+        // usdc options
+        msg?.success === false
       ) {
-        return this.emit('error', msg);
+        return this.emit('errorEvent', msg);
       }
 
       this.logger.warning('Unhandled/unrecognised ws event message', {
@@ -662,7 +648,7 @@ export class WebsocketClient extends EventEmitter {
     if (
       this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
     ) {
-      this.emit('error', error);
+      this.emit('errorEvent', error);
     }
   }
 
@@ -814,7 +800,7 @@ export class WebsocketClient extends EventEmitter {
 
   /** @deprecated use "market: 'spotv3" client */
   public subscribePublicSpotTrades(symbol: string, binary?: boolean) {
-    if (!this.isSpot()) {
+    if (this.options.market !== 'spot') {
       throw this.wrongMarketError('spot');
     }
 
@@ -833,7 +819,7 @@ export class WebsocketClient extends EventEmitter {
 
   /** @deprecated use "market: 'spotv3" client */
   public subscribePublicSpotTradingPair(symbol: string, binary?: boolean) {
-    if (!this.isSpot()) {
+    if (this.options.market !== 'spot') {
       throw this.wrongMarketError('spot');
     }
 
@@ -856,7 +842,7 @@ export class WebsocketClient extends EventEmitter {
     candleSize: KlineInterval,
     binary?: boolean
   ) {
-    if (!this.isSpot()) {
+    if (this.options.market !== 'spot') {
       throw this.wrongMarketError('spot');
     }
 
@@ -884,7 +870,7 @@ export class WebsocketClient extends EventEmitter {
     dumpScale?: number,
     binary?: boolean
   ) {
-    if (!this.isSpot()) {
+    if (this.options.market !== 'spot') {
       throw this.wrongMarketError('spot');
     }
 

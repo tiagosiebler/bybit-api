@@ -97,7 +97,11 @@ export const WS_KEY_MAP = {
   usdcPerpPublic: 'usdcPerpPublic',
 } as const;
 
-export const WS_AUTH_ON_CONNECT_KEYS: WsKey[] = [WS_KEY_MAP.spotV3Private];
+export const WS_AUTH_ON_CONNECT_KEYS: WsKey[] = [
+  WS_KEY_MAP.spotV3Private,
+  WS_KEY_MAP.usdcOptionPrivate,
+  WS_KEY_MAP.usdcPerpPrivate,
+];
 
 export const PUBLIC_WS_KEYS = [
   WS_KEY_MAP.linearPublic,
@@ -202,7 +206,9 @@ export function getUsdcWsKeyForTopic(
 
 export const WS_ERROR_ENUM = {
   NOT_AUTHENTICATED_SPOT_V3: '-1004',
-  BAD_API_KEY_SPOT_V3: '10003',
+  API_ERROR_GENERIC: '10001',
+  API_SIGN_AUTH_FAILED: '10003',
+  USDC_OPTION_AUTH_FAILED: '3303006',
 };
 
 export function neverGuard(x: never, msg: string): Error {

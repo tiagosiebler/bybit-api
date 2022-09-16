@@ -29,6 +29,8 @@ interface WsStoredState {
   activePingTimer?: ReturnType<typeof setTimeout> | undefined;
   /** A timer tracking that an upstream heartbeat was sent, expecting a reply before it expires */
   activePongTimer?: ReturnType<typeof setTimeout> | undefined;
+  /** If a reconnection is in progress, this will have the timer for the delayed reconnect */
+  activeReconnectTimer?: ReturnType<typeof setTimeout> | undefined;
   /**
    * All the topics we are expected to be subscribed to (and we automatically resubscribe to if the connection drops)
    */
