@@ -69,6 +69,18 @@ export const WS_BASE_URL_MAP: Record<
       testnet: 'wss://stream-testnet.bybit.com/trade/option/usdc/private/v1',
     },
   },
+  usdcPerp: {
+    public: {
+      livenet: 'wss://stream.bybit.com/perpetual/ws/v1/realtime_public',
+      livenet2: 'wss://stream.bytick.com/perpetual/ws/v1/realtime_public',
+      testnet: 'wss://stream-testnet.bybit.com/perpetual/ws/v1/realtime_public',
+    },
+    private: {
+      livenet: 'wss://stream.bybit.com/trade/option/usdc/private/v1',
+      livenet2: 'wss://stream.bytick.com/trade/option/usdc/private/v1',
+      testnet: 'wss://stream-testnet.bybit.com/trade/option/usdc/private/v1',
+    },
+  },
 };
 
 export const WS_KEY_MAP = {
@@ -81,8 +93,8 @@ export const WS_KEY_MAP = {
   spotV3Public: 'spotV3Public',
   usdcOptionPrivate: 'usdcOptionPrivate',
   usdcOptionPublic: 'usdcOptionPublic',
-  // usdcPerpPrivate: 'usdcPerpPrivate',
-  // usdcPerpPublic: 'usdcPerpPublic',
+  usdcPerpPrivate: 'usdcPerpPrivate',
+  usdcPerpPublic: 'usdcPerpPublic',
 } as const;
 
 export const WS_AUTH_ON_CONNECT_KEYS: WsKey[] = [WS_KEY_MAP.spotV3Private];
@@ -92,6 +104,7 @@ export const PUBLIC_WS_KEYS = [
   WS_KEY_MAP.spotPublic,
   WS_KEY_MAP.spotV3Public,
   WS_KEY_MAP.usdcOptionPublic,
+  WS_KEY_MAP.usdcPerpPublic,
 ] as string[];
 
 /** Used to automatically determine if a sub request should be to the public or private ws (when there's two) */
@@ -157,6 +170,11 @@ export function getWsKeyForTopic(
       return isPrivateTopic
         ? WS_KEY_MAP.usdcOptionPrivate
         : WS_KEY_MAP.usdcOptionPublic;
+    }
+    case 'usdcPerp': {
+      return isPrivateTopic
+        ? WS_KEY_MAP.usdcPerpPrivate
+        : WS_KEY_MAP.usdcPerpPublic;
     }
     default: {
       throw neverGuard(market, `getWsKeyForTopic(): Unhandled market`);

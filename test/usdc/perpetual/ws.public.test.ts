@@ -10,11 +10,11 @@ import {
   WS_OPEN_EVENT_PARTIAL,
 } from '../../ws.util';
 
-describe('Public USDC Option Websocket Client', () => {
+describe('Public USDC Perp Websocket Client', () => {
   let wsClient: WebsocketClient;
 
   const wsClientOptions: WSClientConfigurableOptions = {
-    market: 'usdcOption',
+    market: 'usdcPerp',
   };
 
   beforeAll(() => {
@@ -22,6 +22,7 @@ describe('Public USDC Option Websocket Client', () => {
       wsClientOptions,
       getSilentLogger('expectSuccessNoAuth')
     );
+    // logAllEvents(wsClient);
   });
 
   beforeEach(() => {
@@ -38,7 +39,7 @@ describe('Public USDC Option Websocket Client', () => {
 
     expect(wsOpenPromise).resolves.toMatchObject({
       event: WS_OPEN_EVENT_PARTIAL,
-      wsKey: WS_KEY_MAP.usdcOptionPublic,
+      wsKey: WS_KEY_MAP.usdcPerpPublic,
     });
 
     await Promise.all([wsOpenPromise]);
@@ -46,34 +47,36 @@ describe('Public USDC Option Websocket Client', () => {
 
   it('should subscribe to public trade events', async () => {
     const wsResponsePromise = waitForSocketEvent(wsClient, 'response');
-    // const wsUpdatePromise = waitForSocketEvent(wsClient, 'update');
+    const wsUpdatePromise = waitForSocketEvent(wsClient, 'update');
 
-    wsClient.subscribe([
-      'recenttrades.BTC',
-      'recenttrades.ETH',
-      'recenttrades.SOL',
-    ]);
+    const topic = 'orderBook_200.100ms.BTCPERP';
+    wsClient.subscribe(topic);
 
     try {
       expect(await wsResponsePromise).toMatchObject({
         success: true,
-        data: {
-          failTopics: [],
-          successTopics: expect.any(Array),
+        ret_msg: '',
+        request: {
+          op: 'subscribe',
+          args: [topic],
         },
-        type: 'COMMAND_RESP',
       });
     } catch (e) {
       // sub failed
       expect(e).toBeFalsy();
     }
 
-    // Takes a while to get an event from USDC options - testing this manually for now
-    // try {
-    //   expect(await wsUpdatePromise).toStrictEqual('asdfasdf');
-    // } catch (e) {
-    //   // no data
-    //   expect(e).toBeFalsy();
-    // }
+    try {
+      expect(await wsUpdatePromise).toMatchSnapshot({
+        crossSeq: expect.any(String),
+        data: { orderBook: expect.any(Array) },
+        timestampE6: expect.any(String),
+        topic: topic,
+        type: 'snapshot',
+      });
+    } catch (e) {
+      // no data
+      expect(e).toBeFalsy();
+    }
   });
 });

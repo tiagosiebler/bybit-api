@@ -3,13 +3,15 @@ import { LinearClient } from '../linear-client';
 import { SpotClient } from '../spot-client';
 import { SpotClientV3 } from '../spot-client-v3';
 import { USDCOptionClient } from '../usdc-option-client';
+import { USDCPerpetualClient } from '../usdc-perpetual-client';
 
 export type RESTClient =
   | InverseClient
   | LinearClient
   | SpotClient
   | SpotClientV3
-  | USDCOptionClient;
+  | USDCOptionClient
+  | USDCPerpetualClient;
 
 export type numberInString = string;
 

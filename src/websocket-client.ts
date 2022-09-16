@@ -32,6 +32,7 @@ import {
   neverGuard,
 } from './util';
 import { USDCOptionClient } from './usdc-option-client';
+import { USDCPerpetualClient } from './usdc-perpetual-client';
 
 const loggerCategory = { category: 'bybit-ws' };
 
@@ -165,6 +166,17 @@ export class WebsocketClient extends EventEmitter {
         this.connectPublic();
         break;
       }
+      case 'usdcPerp': {
+        this.restClient = new USDCPerpetualClient(
+          undefined,
+          undefined,
+          !this.isTestnet(),
+          this.options.restOptions,
+          this.options.requestOptions
+        );
+        this.connectPublic();
+        break;
+      }
       default: {
         throw neverGuard(
           this.options.market,
@@ -223,7 +235,8 @@ export class WebsocketClient extends EventEmitter {
       case 'linear':
       case 'spot':
       case 'spotv3':
-      case 'usdcOption': {
+      case 'usdcOption':
+      case 'usdcPerp': {
         return [this.connectPublic(), this.connectPrivate()];
       }
       default: {
@@ -248,6 +261,9 @@ export class WebsocketClient extends EventEmitter {
       }
       case 'usdcOption': {
         return this.connect(WS_KEY_MAP.usdcOptionPublic);
+      }
+      case 'usdcPerp': {
+        return this.connect(WS_KEY_MAP.usdcPerpPublic);
       }
       default: {
         throw neverGuard(
@@ -274,6 +290,9 @@ export class WebsocketClient extends EventEmitter {
       }
       case 'usdcOption': {
         return this.connect(WS_KEY_MAP.usdcOptionPrivate);
+      }
+      case 'usdcPerp': {
+        return this.connect(WS_KEY_MAP.usdcPerpPrivate);
       }
       default: {
         throw neverGuard(
@@ -719,12 +738,12 @@ export class WebsocketClient extends EventEmitter {
       case WS_KEY_MAP.usdcOptionPrivate: {
         return WS_BASE_URL_MAP.usdcOption.private[networkKey];
       }
-      // case WS_KEY_MAP.usdcPerpPublic: {
-      //   return WS_BASE_URL_MAP.usdcOption.public[networkKey];
-      // }
-      // case WS_KEY_MAP.usdcPerpPrivate: {
-      //   return WS_BASE_URL_MAP.usdcOption.private[networkKey];
-      // }
+      case WS_KEY_MAP.usdcPerpPublic: {
+        return WS_BASE_URL_MAP.usdcPerp.public[networkKey];
+      }
+      case WS_KEY_MAP.usdcPerpPrivate: {
+        return WS_BASE_URL_MAP.usdcPerp.private[networkKey];
+      }
       default: {
         this.logger.error('getWsUrl(): Unhandled wsKey: ', {
           ...loggerCategory,
