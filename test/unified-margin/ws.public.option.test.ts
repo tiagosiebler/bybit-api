@@ -41,7 +41,7 @@ describe('Public Unified Margin Websocket Client (Options)', () => {
     }
   });
 
-  it('should subscribe to public trade events', async () => {
+  it('should subscribe to public orderbook events', async () => {
     const wsResponsePromise = waitForSocketEvent(wsClient, 'response');
     // const wsUpdatePromise = waitForSocketEvent(wsClient, 'update');
 

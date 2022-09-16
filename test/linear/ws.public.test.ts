@@ -23,7 +23,6 @@ describe('Public Linear Perps Websocket Client', () => {
 
   afterAll(() => {
     wsClient.closeAll();
-    wsClient.removeAllListeners();
   });
 
   it('should open a public ws connection', async () => {
@@ -63,33 +62,6 @@ describe('Public Linear Perps Websocket Client', () => {
       });
     } catch (e) {
       console.error(`Wait for "${wsTopic}" event exception: `, e);
-    }
-  });
-
-  it('should fail to subscribe to private events (no keys)', async () => {
-    const wsResponsePromise = waitForSocketEvent(wsClient, 'response');
-    // const wsUpdatePromise = waitForSocketEvent(wsClient, 'update');
-
-    const wsTopic = 'wallet';
-
-    // No easy way to trigger a private event (other than executing trades)
-    // expect(wsUpdatePromise).resolves.toMatchObject({
-    //   topic: wsTopic,
-    //   data: expect.any(Array),
-    // });
-
-    wsClient.subscribe(wsTopic);
-
-    try {
-      expect(await wsResponsePromise).toBeFalsy();
-    } catch (e) {
-      expect(e).toMatchObject({
-        request: {
-          args: [wsTopic],
-          op: 'subscribe',
-        },
-        success: false,
-      });
     }
   });
 });

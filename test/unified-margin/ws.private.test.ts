@@ -11,7 +11,7 @@ import {
   fullLogger,
 } from '../ws.util';
 
-describe('Public Unified Margin Websocket Client (Perps - USDT)', () => {
+describe('Private Unified Margin Websocket Client', () => {
   let wsClient: WebsocketClient;
 
   const wsClientOptions: WSClientConfigurableOptions = {
@@ -25,7 +25,7 @@ describe('Public Unified Margin Websocket Client (Perps - USDT)', () => {
       // fullLogger
     );
     // logAllEvents(wsClient);
-    wsClient.connectPublic();
+    wsClient.connectPrivate();
   });
 
   afterAll(() => {
@@ -37,19 +37,22 @@ describe('Public Unified Margin Websocket Client (Perps - USDT)', () => {
     try {
       expect(await wsOpenPromise).toMatchObject({
         event: WS_OPEN_EVENT_PARTIAL,
-        wsKey: expect.stringContaining('unifiedPerpUSD'),
+        wsKey: WS_KEY_MAP.unifiedPrivate,
       });
     } catch (e) {
       expect(e).toBeFalsy();
     }
   });
 
-  it('should subscribe to public orderbook events through USDT connection', async () => {
+  // Should work, but don't have unified margin activated - needs extra testing
+  // {"conn_id": "064443fffef10442-0000798d-0000a9f6-ba32aeee49712540-1752c4f4", "ret_msg": "3303001", "success": false, "type": "COMMAND_RESP", "wsKey": "unifiedPrivate"}
+
+  it.skip('should subscribe to public private unified account events', async () => {
     const wsResponsePromise = waitForSocketEvent(wsClient, 'response');
     const wsUpdatePromise = waitForSocketEvent(wsClient, 'update');
 
     // USDT should be detected and automatically routed through the USDT connection
-    const topic = 'orderbook.25.BTCUSDT';
+    const topic = 'user.position.unifiedAccount';
     wsClient.subscribe(topic);
 
     try {
@@ -57,7 +60,7 @@ describe('Public Unified Margin Websocket Client (Perps - USDT)', () => {
         op: 'subscribe',
         req_id: topic,
         success: true,
-        wsKey: WS_KEY_MAP.unifiedPerpUSDTPublic,
+        wsKey: WS_KEY_MAP.unifiedPrivate,
       });
     } catch (e) {
       // sub failed
@@ -65,18 +68,7 @@ describe('Public Unified Margin Websocket Client (Perps - USDT)', () => {
     }
 
     try {
-      expect(await wsUpdatePromise).toMatchObject({
-        data: {
-          a: expect.any(Array),
-          b: expect.any(Array),
-          s: 'BTCUSDT',
-          u: expect.any(Number),
-        },
-        topic: topic,
-        ts: expect.any(Number),
-        type: 'snapshot',
-        wsKey: WS_KEY_MAP.unifiedPerpUSDTPublic,
-      });
+      expect(await wsUpdatePromise).toStrictEqual('');
     } catch (e) {
       // no data
       expect(e).toBeFalsy();
