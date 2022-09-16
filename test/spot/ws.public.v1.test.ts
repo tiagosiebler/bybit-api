@@ -34,12 +34,14 @@ describe('Public Spot V1 Websocket Client', () => {
   it('should open a public ws connection', async () => {
     const wsOpenPromise = waitForSocketEvent(wsClient, 'open');
 
-    expect(wsOpenPromise).resolves.toMatchObject({
-      event: WS_OPEN_EVENT_PARTIAL,
-      wsKey: WS_KEY_MAP.spotPublic,
-    });
-
-    await Promise.all([wsOpenPromise]);
+    try {
+      expect(await wsOpenPromise).toMatchObject({
+        event: WS_OPEN_EVENT_PARTIAL,
+        wsKey: WS_KEY_MAP.spotPublic,
+      });
+    } catch (e) {
+      expect(e).toBeFalsy();
+    }
   });
 
   it('should subscribe to public orderbook events', async () => {

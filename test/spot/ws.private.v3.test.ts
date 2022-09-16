@@ -79,13 +79,11 @@ describe('Private Spot V3 Websocket Client', () => {
       const wsOpenPromise = waitForSocketEvent(wsClient, 'open');
       const wsResponsePromise = waitForSocketEvent(wsClient, 'response');
 
-      expect(wsOpenPromise).resolves.toMatchObject({
-        event: WS_OPEN_EVENT_PARTIAL,
-        wsKey: WS_KEY_MAP.spotV3Private,
-      });
-
       try {
-        await Promise.all([wsOpenPromise]);
+        expect(await wsOpenPromise).toMatchObject({
+          event: WS_OPEN_EVENT_PARTIAL,
+          wsKey: WS_KEY_MAP.spotV3Private,
+        });
       } catch (e) {
         expect(e).toBeFalsy();
       }

@@ -46,15 +46,20 @@ describe('Private Spot V1 Websocket Client', () => {
 
     wsClient.connectPrivate();
 
-    expect(wsOpenPromise).resolves.toMatchObject({
-      event: WS_OPEN_EVENT_PARTIAL,
-      wsKey: WS_KEY_MAP.spotPrivate,
-    });
+    try {
+      expect(await wsOpenPromise).toMatchObject({
+        event: WS_OPEN_EVENT_PARTIAL,
+        // wsKey: WS_KEY_MAP.spotPrivate,
+        // also opens public conn automatically, which can confuse the test
+      });
+    } catch (e) {
+      expect(e).toBeFalsy();
+    }
     // expect(wsUpdatePromise).resolves.toMatchObject({
     //   topic: 'wsTopic',
     //   data: expect.any(Array),
     // });
-    await Promise.all([wsOpenPromise]);
+
     // await Promise.all([wsUpdatePromise]);
     // await promiseSleep(4000);
   });

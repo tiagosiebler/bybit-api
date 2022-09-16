@@ -68,12 +68,10 @@ describe('Private Inverse Perps Websocket Client', () => {
     it('should open a ws connection', async () => {
       const wsOpenPromise = waitForSocketEvent(wsClient, 'open');
 
-      expect(wsOpenPromise).resolves.toMatchObject({
+      expect(await wsOpenPromise).toMatchObject({
         event: WS_OPEN_EVENT_PARTIAL,
         wsKey: WS_KEY_MAP.inverse,
       });
-
-      await Promise.all([wsOpenPromise]);
     });
 
     it('should subscribe to private wallet events', async () => {

@@ -77,7 +77,6 @@ describe('Private USDC Option Websocket Client', () => {
         wsClientOptions,
         getSilentLogger('expectSuccess')
       );
-      wsClient.connectPrivate();
       // logAllEvents(wsClient);
     });
 
@@ -86,16 +85,15 @@ describe('Private USDC Option Websocket Client', () => {
     });
 
     it('should open a private ws connection', async () => {
+      wsClient.connectPrivate();
       const wsOpenPromise = waitForSocketEvent(wsClient, 'open');
       const wsResponsePromise = waitForSocketEvent(wsClient, 'response');
 
-      expect(wsOpenPromise).resolves.toMatchObject({
-        event: WS_OPEN_EVENT_PARTIAL,
-        wsKey: WS_KEY_MAP.usdcOptionPrivate,
-      });
-
       try {
-        await Promise.all([wsOpenPromise]);
+        expect(await wsOpenPromise).toMatchObject({
+          event: WS_OPEN_EVENT_PARTIAL,
+          wsKey: WS_KEY_MAP.usdcOptionPrivate,
+        });
       } catch (e) {
         expect(e).toBeFalsy();
       }
@@ -113,6 +111,7 @@ describe('Private USDC Option Websocket Client', () => {
     });
 
     it(`should subscribe to private "${wsTopic}" events`, async () => {
+      wsClient.connectPrivate();
       const wsResponsePromise = waitForSocketEvent(wsClient, 'response');
       const wsUpdatePromise = waitForSocketEvent(wsClient, 'update');
 

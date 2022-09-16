@@ -89,13 +89,11 @@ describe('Private USDC Perp Websocket Client', () => {
       const wsOpenPromise = waitForSocketEvent(wsClient, 'open');
       const wsResponsePromise = waitForSocketEvent(wsClient, 'response');
 
-      expect(wsOpenPromise).resolves.toMatchObject({
-        event: WS_OPEN_EVENT_PARTIAL,
-        wsKey: WS_KEY_MAP.usdcPerpPrivate,
-      });
-
       try {
-        await Promise.all([wsOpenPromise]);
+        expect(await wsOpenPromise).toMatchObject({
+          event: WS_OPEN_EVENT_PARTIAL,
+          wsKey: WS_KEY_MAP.usdcPerpPrivate,
+        });
       } catch (e) {
         expect(e).toBeFalsy();
       }

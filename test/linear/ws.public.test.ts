@@ -23,17 +23,16 @@ describe('Public Linear Perps Websocket Client', () => {
 
   afterAll(() => {
     wsClient.closeAll();
+    wsClient.removeAllListeners();
   });
 
   it('should open a public ws connection', async () => {
     const wsOpenPromise = waitForSocketEvent(wsClient, 'open');
 
-    expect(wsOpenPromise).resolves.toMatchObject({
+    expect(await wsOpenPromise).toMatchObject({
       event: WS_OPEN_EVENT_PARTIAL,
       wsKey: WS_KEY_MAP.linearPublic,
     });
-
-    await Promise.all([wsOpenPromise]);
   });
 
   it('should subscribe to public orderBookL2_25 events', async () => {
@@ -41,33 +40,27 @@ describe('Public Linear Perps Websocket Client', () => {
     const wsUpdatePromise = waitForSocketEvent(wsClient, 'update');
 
     const wsTopic = 'orderBookL2_25.BTCUSDT';
-    expect(wsResponsePromise).resolves.toMatchObject({
-      request: {
-        args: [wsTopic],
-        op: 'subscribe',
-      },
-      success: true,
-    });
-    expect(wsUpdatePromise).resolves.toMatchObject({
-      topic: wsTopic,
-      data: {
-        order_book: expect.any(Array),
-      },
-    });
-
     wsClient.subscribe(wsTopic);
 
     try {
-      await wsResponsePromise;
+      expect(await wsResponsePromise).toMatchObject({
+        request: {
+          args: [wsTopic],
+          op: 'subscribe',
+        },
+        success: true,
+      });
     } catch (e) {
-      console.error(
-        `Wait for "${wsTopic}" subscription response exception: `,
-        e
-      );
+      expect(e).toBeFalsy();
     }
 
     try {
-      await wsUpdatePromise;
+      expect(await wsUpdatePromise).toMatchObject({
+        topic: wsTopic,
+        data: {
+          order_book: expect.any(Array),
+        },
+      });
     } catch (e) {
       console.error(`Wait for "${wsTopic}" event exception: `, e);
     }
@@ -78,13 +71,6 @@ describe('Public Linear Perps Websocket Client', () => {
     // const wsUpdatePromise = waitForSocketEvent(wsClient, 'update');
 
     const wsTopic = 'wallet';
-    expect(wsResponsePromise).resolves.toMatchObject({
-      request: {
-        args: [wsTopic],
-        op: 'subscribe',
-      },
-      success: true,
-    });
 
     // No easy way to trigger a private event (other than executing trades)
     // expect(wsUpdatePromise).resolves.toMatchObject({
@@ -95,9 +81,15 @@ describe('Public Linear Perps Websocket Client', () => {
     wsClient.subscribe(wsTopic);
 
     try {
-      await Promise.all([wsResponsePromise]);
+      expect(await wsResponsePromise).toBeFalsy();
     } catch (e) {
-      //
+      expect(e).toMatchObject({
+        request: {
+          args: [wsTopic],
+          op: 'subscribe',
+        },
+        success: false,
+      });
     }
   });
 });
