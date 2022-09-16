@@ -2,12 +2,14 @@ import { InverseClient } from '../inverse-client';
 import { LinearClient } from '../linear-client';
 import { SpotClient } from '../spot-client';
 import { SpotClientV3 } from '../spot-client-v3';
+import { USDCOptionClient } from '../usdc-option-client';
 
 export type RESTClient =
   | InverseClient
   | LinearClient
   | SpotClient
-  | SpotClientV3;
+  | SpotClientV3
+  | USDCOptionClient;
 
 export type numberInString = string;
 

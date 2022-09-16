@@ -22,19 +22,16 @@ import {
 import {
   serializeParams,
   isWsPong,
-  getLinearWsKeyForTopic,
-  getSpotWsKeyForTopic,
   WsConnectionStateEnum,
   PUBLIC_WS_KEYS,
   WS_AUTH_ON_CONNECT_KEYS,
   WS_KEY_MAP,
   DefaultLogger,
   WS_BASE_URL_MAP,
+  getWsKeyForTopic,
+  neverGuard,
 } from './util';
-
-function neverGuard(x: never, msg: string): Error {
-  return new Error(`Unhandled value exception "x", ${msg}`);
-}
+import { USDCOptionClient } from './usdc-option-client';
 
 const loggerCategory = { category: 'bybit-ws' };
 
@@ -94,9 +91,7 @@ export class WebsocketClient extends EventEmitter {
       ...options,
     };
 
-    if (this.options.fetchTimeOffsetBeforeAuth) {
-      this.prepareRESTClient();
-    }
+    this.prepareRESTClient();
   }
 
   /**
@@ -148,15 +143,28 @@ export class WebsocketClient extends EventEmitter {
         this.connectPublic();
         break;
       }
-      // if (this.isV3()) {
-      //   this.restClient = new SpotClientV3(
-      //     undefined,
-      //     undefined,
-      //     this.isLivenet(),
-      //     this.options.restOptions,
-      //     this.options.requestOptions
-      //   );
-      // }
+      case 'spotv3': {
+        this.restClient = new SpotClientV3(
+          undefined,
+          undefined,
+          !this.isTestnet(),
+          this.options.restOptions,
+          this.options.requestOptions
+        );
+        this.connectPublic();
+        break;
+      }
+      case 'usdcOption': {
+        this.restClient = new USDCOptionClient(
+          undefined,
+          undefined,
+          !this.isTestnet(),
+          this.options.restOptions,
+          this.options.requestOptions
+        );
+        this.connectPublic();
+        break;
+      }
       default: {
         throw neverGuard(
           this.options.market,
@@ -208,25 +216,15 @@ export class WebsocketClient extends EventEmitter {
   public connectAll(): Promise<WebSocket | undefined>[] {
     switch (this.options.market) {
       case 'inverse': {
-        return [this.connect(WS_KEY_MAP.inverse)];
+        // only one for inverse
+        return [this.connectPublic()];
       }
-      case 'linear': {
-        return [
-          this.connect(WS_KEY_MAP.linearPublic),
-          this.connect(WS_KEY_MAP.linearPrivate),
-        ];
-      }
-      case 'spot': {
-        return [
-          this.connect(WS_KEY_MAP.spotPublic),
-          this.connect(WS_KEY_MAP.spotPrivate),
-        ];
-      }
-      case 'spotv3': {
-        return [
-          this.connect(WS_KEY_MAP.spotV3Public),
-          this.connect(WS_KEY_MAP.spotV3Private),
-        ];
+      // these all have separate public & private ws endpoints
+      case 'linear':
+      case 'spot':
+      case 'spotv3':
+      case 'usdcOption': {
+        return [this.connectPublic(), this.connectPrivate()];
       }
       default: {
         throw neverGuard(this.options.market, `connectAll(): Unhandled market`);
@@ -248,6 +246,9 @@ export class WebsocketClient extends EventEmitter {
       case 'spotv3': {
         return this.connect(WS_KEY_MAP.spotV3Public);
       }
+      case 'usdcOption': {
+        return this.connect(WS_KEY_MAP.usdcOptionPublic);
+      }
       default: {
         throw neverGuard(
           this.options.market,
@@ -257,7 +258,7 @@ export class WebsocketClient extends EventEmitter {
     }
   }
 
-  public connectPrivate(): Promise<WebSocket | undefined> | undefined {
+  public connectPrivate(): Promise<WebSocket | undefined> {
     switch (this.options.market) {
       case 'inverse': {
         return this.connect(WS_KEY_MAP.inverse);
@@ -270,6 +271,9 @@ export class WebsocketClient extends EventEmitter {
       }
       case 'spotv3': {
         return this.connect(WS_KEY_MAP.spotV3Private);
+      }
+      case 'usdcOption': {
+        return this.connect(WS_KEY_MAP.usdcOptionPrivate);
       }
       default: {
         throw neverGuard(
@@ -596,10 +600,15 @@ export class WebsocketClient extends EventEmitter {
       // any message can clear the pong timer - wouldn't get a message if the ws dropped
       this.clearPongTimer(wsKey);
 
-      // this.logger.silly('Received event', { ...this.logger, wsKey, event });
-
       const msg = JSON.parse((event && event.data) || event);
-      if (msg['success'] || msg?.pong) {
+      this.logger.silly('Received event', {
+        ...this.logger,
+        wsKey,
+        msg: JSON.stringify(msg, null, 2),
+      });
+
+      // TODO: cleanme
+      if (msg['success'] || msg?.pong || isWsPong(msg)) {
         if (isWsPong(msg)) {
           this.logger.silly('Received pong', { ...loggerCategory, wsKey });
         } else {
@@ -608,6 +617,9 @@ export class WebsocketClient extends EventEmitter {
         return;
       }
 
+      if (msg['finalFragment']) {
+        return this.emit('response', msg);
+      }
       if (msg?.topic) {
         return this.emit('update', msg);
       }
@@ -701,35 +713,24 @@ export class WebsocketClient extends EventEmitter {
         // private and public are on the same WS connection
         return WS_BASE_URL_MAP.inverse.public[networkKey];
       }
+      case WS_KEY_MAP.usdcOptionPublic: {
+        return WS_BASE_URL_MAP.usdcOption.public[networkKey];
+      }
+      case WS_KEY_MAP.usdcOptionPrivate: {
+        return WS_BASE_URL_MAP.usdcOption.private[networkKey];
+      }
+      // case WS_KEY_MAP.usdcPerpPublic: {
+      //   return WS_BASE_URL_MAP.usdcOption.public[networkKey];
+      // }
+      // case WS_KEY_MAP.usdcPerpPrivate: {
+      //   return WS_BASE_URL_MAP.usdcOption.private[networkKey];
+      // }
       default: {
         this.logger.error('getWsUrl(): Unhandled wsKey: ', {
           ...loggerCategory,
           wsKey,
         });
         throw neverGuard(wsKey, `getWsUrl(): Unhandled wsKey`);
-      }
-    }
-  }
-
-  private getWsKeyForTopic(topic: string): WsKey {
-    switch (this.options.market) {
-      case 'inverse': {
-        return WS_KEY_MAP.inverse;
-      }
-      case 'linear': {
-        return getLinearWsKeyForTopic(topic);
-      }
-      case 'spot': {
-        return getSpotWsKeyForTopic(topic, 'v1');
-      }
-      case 'spotv3': {
-        return getSpotWsKeyForTopic(topic, 'v3');
-      }
-      default: {
-        throw neverGuard(
-          this.options.market,
-          `connectPublic(): Unhandled market`
-        );
       }
     }
   }
@@ -742,11 +743,16 @@ export class WebsocketClient extends EventEmitter {
 
   /**
    * Add topic/topics to WS subscription list
+   * @param wsTopics topic or list of topics
+   * @param isPrivateTopic optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
    */
-  public subscribe(wsTopics: WsTopic[] | WsTopic) {
+  public subscribe(wsTopics: WsTopic[] | WsTopic, isPrivateTopic?: boolean) {
     const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
     topics.forEach((topic) =>
-      this.wsStore.addTopic(this.getWsKeyForTopic(topic), topic)
+      this.wsStore.addTopic(
+        getWsKeyForTopic(this.options.market, topic, isPrivateTopic),
+        topic
+      )
     );
 
     // attempt to send subscription topic per websocket
@@ -776,11 +782,16 @@ export class WebsocketClient extends EventEmitter {
 
   /**
    * Remove topic/topics from WS subscription list
+   * @param wsTopics topic or list of topics
+   * @param isPrivateTopic optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
    */
-  public unsubscribe(wsTopics: WsTopic[] | WsTopic) {
+  public unsubscribe(wsTopics: WsTopic[] | WsTopic, isPrivateTopic?: boolean) {
     const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
     topics.forEach((topic) =>
-      this.wsStore.deleteTopic(this.getWsKeyForTopic(topic), topic)
+      this.wsStore.deleteTopic(
+        getWsKeyForTopic(this.options.market, topic, isPrivateTopic),
+        topic
+      )
     );
 
     this.wsStore.getKeys().forEach((wsKey: WsKey) => {

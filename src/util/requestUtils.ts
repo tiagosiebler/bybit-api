@@ -61,15 +61,23 @@ export function getRestBaseUrl(
   return exchangeBaseUrls.testnet;
 }
 
-export function isWsPong(response: any) {
-  if (response.pong || response.ping) {
+export function isWsPong(msg: any): boolean {
+  if (!msg) {
+    return false;
+  }
+  if (msg.pong || msg.ping) {
     return true;
   }
+
+  if (msg['op'] === 'pong') {
+    return true;
+  }
+
   return (
-    response.request &&
-    response.request.op === 'ping' &&
-    response.ret_msg === 'pong' &&
-    response.success === true
+    msg.request &&
+    msg.request.op === 'ping' &&
+    msg.ret_msg === 'pong' &&
+    msg.success === true
   );
 }
 

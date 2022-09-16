@@ -13,9 +13,10 @@ import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../src';
     {
       // key: key,
       // secret: secret,
-      market: 'linear',
+      // market: 'linear',
       // market: 'inverse',
       // market: 'spot',
+      market: 'usdcOption',
     },
     logger
   );
@@ -51,10 +52,15 @@ import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../src';
   // Linear
   wsClient.subscribe('trade.BTCUSDT');
 
-  setTimeout(() => {
-    console.log('unsubscribing');
-    wsClient.unsubscribe('trade.BTCUSDT');
-  }, 5 * 1000);
+  // usdc options
+  wsClient.subscribe(`recenttrades.BTC`);
+  wsClient.subscribe(`recenttrades.ETH`);
+  wsClient.subscribe(`recenttrades.SOL`);
+
+  // setTimeout(() => {
+  //   console.log('unsubscribing');
+  //   wsClient.unsubscribe('trade.BTCUSDT');
+  // }, 5 * 1000);
 
   // For spot, request public connection first then send required topics on 'open'
   // wsClient.connectPublic();

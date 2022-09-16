@@ -73,6 +73,36 @@ export function waitForSocketEvent(
   });
 }
 
+export function listenToSocketEvents(wsClient: WebsocketClient) {
+  const retVal: Record<
+    'update' | 'open' | 'response' | 'close' | 'error',
+    typeof jest.fn
+  > = {
+    open: jest.fn(),
+    response: jest.fn(),
+    update: jest.fn(),
+    close: jest.fn(),
+    error: jest.fn(),
+  };
+
+  wsClient.on('open', retVal.open);
+  wsClient.on('response', retVal.response);
+  wsClient.on('update', retVal.update);
+  wsClient.on('close', retVal.close);
+  wsClient.on('error', retVal.error);
+
+  return {
+    ...retVal,
+    cleanup: () => {
+      wsClient.removeListener('open', retVal.open);
+      wsClient.removeListener('response', retVal.response);
+      wsClient.removeListener('update', retVal.update);
+      wsClient.removeListener('close', retVal.close);
+      wsClient.removeListener('error', retVal.error);
+    },
+  };
+}
+
 export function logAllEvents(wsClient: WebsocketClient) {
   wsClient.on('update', (data) => {
     console.log('wsUpdate: ', JSON.stringify(data, null, 2));

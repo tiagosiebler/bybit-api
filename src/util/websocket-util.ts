@@ -57,6 +57,18 @@ export const WS_BASE_URL_MAP: Record<
       testnet: 'wss://stream-testnet.bybit.com/spot/private/v3',
     },
   },
+  usdcOption: {
+    public: {
+      livenet: 'wss://stream.bybit.com/trade/option/usdc/public/v1',
+      livenet2: 'wss://stream.bytick.com/trade/option/usdc/public/v1',
+      testnet: 'wss://stream-testnet.bybit.com/trade/option/usdc/public/v1',
+    },
+    private: {
+      livenet: 'wss://stream.bybit.com/trade/option/usdc/private/v1',
+      livenet2: 'wss://stream.bytick.com/trade/option/usdc/private/v1',
+      testnet: 'wss://stream-testnet.bybit.com/trade/option/usdc/private/v1',
+    },
+  },
 };
 
 export const WS_KEY_MAP = {
@@ -67,6 +79,10 @@ export const WS_KEY_MAP = {
   spotPublic: 'spotPublic',
   spotV3Private: 'spotV3Private',
   spotV3Public: 'spotV3Public',
+  usdcOptionPrivate: 'usdcOptionPrivate',
+  usdcOptionPublic: 'usdcOptionPublic',
+  // usdcPerpPrivate: 'usdcPerpPrivate',
+  // usdcPerpPublic: 'usdcPerpPublic',
 } as const;
 
 export const WS_AUTH_ON_CONNECT_KEYS: WsKey[] = [WS_KEY_MAP.spotV3Private];
@@ -74,51 +90,103 @@ export const WS_AUTH_ON_CONNECT_KEYS: WsKey[] = [WS_KEY_MAP.spotV3Private];
 export const PUBLIC_WS_KEYS = [
   WS_KEY_MAP.linearPublic,
   WS_KEY_MAP.spotPublic,
+  WS_KEY_MAP.spotV3Public,
+  WS_KEY_MAP.usdcOptionPublic,
 ] as string[];
 
-export function getLinearWsKeyForTopic(topic: string): WsKey {
-  const privateTopics = [
-    'position',
-    'execution',
-    'order',
-    'stop_order',
-    'wallet',
-  ];
-  if (privateTopics.includes(topic)) {
-    return WS_KEY_MAP.linearPrivate;
-  }
+/** Used to automatically determine if a sub request should be to the public or private ws (when there's two) */
+const PRIVATE_TOPICS = [
+  'position',
+  'execution',
+  'order',
+  'stop_order',
+  'wallet',
+  'outboundAccountInfo',
+  'executionReport',
+  'ticketInfo',
+  // copy trading apis
+  'copyTradePosition',
+  'copyTradeOrder',
+  'copyTradeExecution',
+  'copyTradeWallet',
+  // usdc options
+  'user.openapi.option.position',
+  'user.openapi.option.trade',
+  'user.order',
+  'user.openapi.option.order',
+  'user.service',
+  'user.openapi.greeks',
+  'user.mmp.event',
+  // usdc perps
+  'user.openapi.perp.position',
+  'user.openapi.perp.trade',
+  'user.openapi.perp.order',
+  'user.service',
+  // unified margin
+  'user.position.unifiedAccount',
+  'user.execution.unifiedAccount',
+  'user.order.unifiedAccount',
+  'user.wallet.unifiedAccount',
+  'user.greeks.unifiedAccount',
+];
 
-  return WS_KEY_MAP.linearPublic;
+export function getWsKeyForTopic(
+  market: APIMarket,
+  topic: string,
+  isPrivate?: boolean
+): WsKey {
+  const isPrivateTopic = isPrivate === true || PRIVATE_TOPICS.includes(topic);
+  switch (market) {
+    case 'inverse': {
+      return WS_KEY_MAP.inverse;
+    }
+    case 'linear': {
+      return isPrivateTopic
+        ? WS_KEY_MAP.linearPrivate
+        : WS_KEY_MAP.linearPublic;
+    }
+    case 'spot': {
+      return isPrivateTopic ? WS_KEY_MAP.spotPrivate : WS_KEY_MAP.spotPublic;
+    }
+    case 'spotv3': {
+      return isPrivateTopic
+        ? WS_KEY_MAP.spotV3Private
+        : WS_KEY_MAP.spotV3Public;
+    }
+    case 'usdcOption': {
+      return isPrivateTopic
+        ? WS_KEY_MAP.usdcOptionPrivate
+        : WS_KEY_MAP.usdcOptionPublic;
+    }
+    default: {
+      throw neverGuard(market, `getWsKeyForTopic(): Unhandled market`);
+    }
+  }
 }
 
-export function getSpotWsKeyForTopic(
+export function getUsdcWsKeyForTopic(
   topic: string,
-  apiVersion: 'v1' | 'v3'
+  subGroup: 'option' | 'perp'
 ): WsKey {
-  const privateTopics = [
-    'position',
-    'execution',
-    'order',
-    'stop_order',
-    'outboundAccountInfo',
-    'executionReport',
-    'ticketInfo',
-  ];
-
-  if (apiVersion === 'v3') {
-    if (privateTopics.includes(topic)) {
-      return WS_KEY_MAP.spotV3Private;
-    }
-    return WS_KEY_MAP.spotV3Public;
+  const isPrivateTopic = PRIVATE_TOPICS.includes(topic);
+  if (subGroup === 'option') {
+    return isPrivateTopic
+      ? WS_KEY_MAP.usdcOptionPrivate
+      : WS_KEY_MAP.usdcOptionPublic;
   }
-
-  if (privateTopics.includes(topic)) {
-    return WS_KEY_MAP.spotPrivate;
-  }
-  return WS_KEY_MAP.spotPublic;
+  return isPrivateTopic
+    ? WS_KEY_MAP.usdcOptionPrivate
+    : WS_KEY_MAP.usdcOptionPublic;
+  // return isPrivateTopic
+  //   ? WS_KEY_MAP.usdcPerpPrivate
+  //   : WS_KEY_MAP.usdcPerpPublic;
 }
 
 export const WS_ERROR_ENUM = {
   NOT_AUTHENTICATED_SPOT_V3: '-1004',
   BAD_API_KEY_SPOT_V3: '10003',
 };
+
+export function neverGuard(x: never, msg: string): Error {
+  return new Error(`Unhandled value exception "x", ${msg}`);
+}
