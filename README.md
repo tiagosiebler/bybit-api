@@ -57,8 +57,8 @@ Each REST API group has a dedicated REST client. To avoid confusion, here are th
 | [LinearClient](src/linear-client.ts)                  	              | [USDT Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-introduction)                    |
 | [InverseFuturesClient](src/inverse-futures-client.ts) 	              | [Inverse Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-introduction)                  |
 | [USDCPerpetualClient](src/usdc-perpetual-client.ts)                   | [USDC Perpetual APIs](https://bybit-exchange.github.io/docs/usdc/option/?console#t-querydeliverylog)                          |
-| [UnifiedMarginClient](src/unified-margin-client.ts)                   | [Derivatives (v3) unified margin APIs](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-introduction)    |
 | [USDCOptionClient](src/usdc-option-client.ts)                         | [USDC Option APIs](https://bybit-exchange.github.io/docs/usdc/option/#t-introduction)                                         |
+| [UnifiedMarginClient](src/unified-margin-client.ts)                   | [Derivatives (v3) unified margin APIs](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-introduction)    |
 | [SpotClientV3](src/spot-client-v3.ts)                                 | [Spot Market (v3) APIs](https://bybit-exchange.github.io/docs/spot/v3/#t-introduction)                   	                    |
 | [~SpotClient~](src/spot-client.ts) (deprecated, v3 client recommended)| [Spot Market (v1) APIs](https://bybit-exchange.github.io/docs/spot/v1/#t-introduction)                   	                    |
 | [AccountAssetClient](src/account-asset-client.ts)                     | [Account Asset APIs](https://bybit-exchange.github.io/docs/account_asset/#t-introduction)                                     |
@@ -86,25 +86,23 @@ const {
   LinearClient,
   InverseFuturesClient,
   SpotClient,
-  SpotClient3,
+  SpotClientV3,
+  UnifiedMarginClient,
   USDCOptionClient,
   USDCPerpetualClient,
-  CopyTradingClient,
   AccountAssetClient,
+  CopyTradingClient,
 } = require('bybit-api');
 
 const restClientOptions = {
   // override the max size of the request window (in ms)
   recv_window?: number;
 
-  // how often to sync time drift with bybit servers
-  sync_interval_ms?: number;
-
-  // Default: false. Disable above sync mechanism if true.
+  // Disabled by default, not recommended unless you know what you're doing
   enable_time_sync?: boolean;
 
-  // Default: false. If true, we'll throw errors if any params are undefined
-  strict_param_validation?: boolean;
+  // how often to sync time drift with bybit servers
+  sync_interval_ms?: number;
 
   // Optionally override API protocol + domain
   // e.g 'https://api.bytick.com'
@@ -119,15 +117,19 @@ const PRIVATE_KEY = 'yyy';
 const useLivenet = false;
 
 const client = new InverseClient(
+  // Optional, unless you plan on making private API calls
   API_KEY,
   PRIVATE_KEY,
 
-  // optional, uses testnet by default. Set to 'true' to use livenet.
+  // Optional, uses testnet by default. Set to 'true' to use livenet.
   useLivenet,
 
   // restClientOptions,
   // requestLibraryOptions
 );
+
+// For public-only API calls, simply set key and secret to "undefined":
+// const client = new InverseClient(undefined, undefined, useLivenet);
 
 client.getApiKeyInfo()
   .then(result => {
@@ -152,8 +154,8 @@ All API groups can be used via a shared `WebsocketClient`. However, to listen to
 The WebsocketClient can be configured to a specific API group using the market parameter. These are the currently available API groups:
 |         API Category         	|        Market       	| Description                                                                                                                                                                                            	|
 |:----------------------------:	|:-------------------:	|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
-| Unified Margin - Options   | `market: 'unifiedOption'`| The [derivatives v3](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket) category for unified margin. Note: public topics only support options topics. If you need USDC/USDT perps, use `unifiedPerp` instead. |
-| Unified Margin - Perps    	| `market: 'unifiedPerp'` | The [derivatives v3](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket) category for unified margin. Note: public topics only USDT/USDC perps topics - use `unifiedOption` if you need public options topics. |
+| Unified Margin - Options   | `market: 'unifiedOption'`| The [derivatives v3](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket) category for unified margin. \nNote: public topics only support options topics. If you need USDC/USDT perps, use `unifiedPerp` instead. |
+| Unified Margin - Perps    	| `market: 'unifiedPerp'` | The [derivatives v3](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket) category for unified margin. \nNote: public topics only USDT/USDC perps topics - use `unifiedOption` if you need public options topics. |
 | Futures v2 - Inverse Perps   	| `market: 'inverse'` 	| The [inverse v2 perps](https://bybit-exchange.github.io/docs/futuresV2/inverse/#t-websocket) category.                                                                                                 	|
 | Futures v2 - USDT Perps      	| `market: 'linear'`  	| The [USDT/linear v2 perps](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-websocket) category.                                                                                              	|
 | Futures v2 - Inverse Futures 	| `market: 'inverse'` 	| The [inverse futures v2](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-websocket) category uses the same market as inverse perps.                                                 	|
