@@ -1,13 +1,12 @@
-import { DefaultLogger } from '../src';
-import { WebsocketClient } from '../src/websocket-client';
+import { WebsocketClient, WS_KEY_MAP, DefaultLogger } from '../src';
 
 // or
-// import { DefaultLogger, WebsocketClient } from 'bybit-api';
+// import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from 'bybit-api';
 
 (async () => {
   const logger = {
     ...DefaultLogger,
-    // silly: () => {},
+    silly: () => {},
   };
 
   const key = process.env.API_KEY;
@@ -25,15 +24,13 @@ import { WebsocketClient } from '../src/websocket-client';
       key: key,
       secret: secret,
       market: market,
-      livenet: true,
+      // testnet: true,
       restOptions: {
         // enable_time_sync: true,
       },
     },
     logger
   );
-
-  // wsClient.subscribePublicSpotOrderbook('test', 'full');
 
   wsClient.on('update', (data) => {
     console.log('raw message received ', JSON.stringify(data, null, 2));
