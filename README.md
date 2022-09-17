@@ -147,7 +147,7 @@ client.getOrderBook({ symbol: 'BTCUSD' })
 ```
 
 ## WebSockets
-All API groups can be used via a shared `WebsocketClient`. However, make sure to make one instance of the WebsocketClient per API group (spot vs inverse vs linear vs linearfutures etc):
+All API groups can be used via a shared `WebsocketClient`. However, to listen to multiple API groups at once, you will need to make one WebsocketClient instance per API group.
 
 The WebsocketClient can be configured to a specific API group using the market parameter. These are the currently available API groups:
 |         API Category         	|        Market       	| Description                                                                                                                                                                                            	|
@@ -182,9 +182,14 @@ const wsConfig = {
 
   // NOTE: to listen to multiple markets (spot vs inverse vs linear vs linearfutures) at once, make one WebsocketClient instance per market
 
-  // market: 'inverse'
-  // market: 'linear'
-  // market: 'spot'
+  market: 'linear',
+  // market: 'inverse',
+  // market: 'spot',
+  // market: 'spotv3',
+  // market: 'usdcOption',
+  // market: 'usdcPerp',
+  // market: 'unifiedPerp',
+  // market: 'unifiedOption',
 
   // how long to wait (in ms) before deciding the connection should be terminated & reconnected
   // pongTimeout: 1000,

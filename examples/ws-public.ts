@@ -18,8 +18,8 @@ import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../src';
       // market: 'spot',
       // market: 'spotv3',
       // market: 'usdcOption',
-      market: 'usdcPerp',
-      // market: 'unifiedPerp',
+      // market: 'usdcPerp',
+      market: 'unifiedPerp',
       // market: 'unifiedOption',
     },
     logger
@@ -69,9 +69,10 @@ import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../src';
   // ]);
 
   // usdc perps
-  wsClient.subscribe('trade.BTCPERP');
+  // wsClient.subscribe('trade.BTCPERP');
 
   // unified perps
+  wsClient.subscribe('publicTrade.BTCUSDT');
 
   // setTimeout(() => {
   //   console.log('unsubscribing');

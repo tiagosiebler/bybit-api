@@ -73,6 +73,10 @@ export function isWsPong(msg: any): boolean {
     return true;
   }
 
+  if (msg['ret_msg'] === 'pong') {
+    return true;
+  }
+
   return (
     msg.request &&
     msg.request.op === 'ping' &&

@@ -153,6 +153,9 @@ export const PUBLIC_WS_KEYS = [
   WS_KEY_MAP.spotV3Public,
   WS_KEY_MAP.usdcOptionPublic,
   WS_KEY_MAP.usdcPerpPublic,
+  WS_KEY_MAP.unifiedOptionPublic,
+  WS_KEY_MAP.unifiedPerpUSDTPublic,
+  WS_KEY_MAP.unifiedPerpUSDCPublic,
 ] as string[];
 
 /** Used to automatically determine if a sub request should be to the public or private ws (when there's two) */
