@@ -13,12 +13,12 @@ import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../src';
     {
       // key: key,
       // secret: secret,
+      // market: 'linear',
       // market: 'inverse',
-      market: 'linear',
       // market: 'spot',
       // market: 'spotv3',
       // market: 'usdcOption',
-      // market: 'usdcPerp',
+      market: 'usdcPerp',
       // market: 'unifiedPerp',
       // market: 'unifiedOption',
     },
@@ -56,16 +56,20 @@ import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../src';
   // wsClient.subscribe('trade');
 
   // Linear
-  wsClient.subscribe('trade.BTCUSDT');
+  // wsClient.subscribe('trade.BTCUSDT');
 
   // Spot V3
+  // wsClient.subscribe('trade.BTCUSDT');
 
   // usdc options
-  // wsClient.subscribe(`recenttrades.BTC`);
-  // wsClient.subscribe(`recenttrades.ETH`);
-  // wsClient.subscribe(`recenttrades.SOL`);
+  // wsClient.subscribe([
+  //   `recenttrades.BTC`,
+  //   `recenttrades.ETH`,
+  //   `recenttrades.SOL`,
+  // ]);
 
   // usdc perps
+  wsClient.subscribe('trade.BTCPERP');
 
   // unified perps
 
