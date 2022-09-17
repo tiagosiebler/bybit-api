@@ -45,7 +45,7 @@ The version on npm is the output from the `build` command and can be used in pro
 
 - [src](./src) - the whole connector written in TypeScript
 - [lib](./lib) - the JavaScript version of the project (built from TypeScript). This should not be edited directly, as it will be overwritten with each release.
-- [dist](./dist) - the web-packed bundle of the project for use in browser environments.
+- [dist](./dist) - the webpack bundle of the project for use in browser environments (see guidance on webpack below).
 - [examples](./examples) - some implementation examples & demonstrations. Contributions are welcome!
 
 ---
