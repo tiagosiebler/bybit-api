@@ -188,18 +188,22 @@ export class WebsocketClient extends EventEmitter {
     return this.options.testnet === true;
   }
 
-  public close(wsKey: WsKey) {
+  public close(wsKey: WsKey, force?: boolean) {
     this.logger.info('Closing connection', { ...loggerCategory, wsKey });
     this.setWsState(wsKey, WsConnectionStateEnum.CLOSING);
     this.clearTimers(wsKey);
 
-    this.getWs(wsKey)?.close();
+    const ws = this.getWs(wsKey);
+    ws?.close();
+    if (force) {
+      ws?.terminate();
+    }
   }
 
-  public closeAll() {
+  public closeAll(force?: boolean) {
     const keys = this.wsStore.getKeys();
     keys.forEach((key) => {
-      this.close(key);
+      this.close(key, force);
     });
   }
 
@@ -460,6 +464,10 @@ export class WebsocketClient extends EventEmitter {
   }
 
   private ping(wsKey: WsKey) {
+    if (this.wsStore.get(wsKey, true).activePongTimer) {
+      return;
+    }
+
     this.clearPongTimer(wsKey);
 
     this.logger.silly('Sending ping', { ...loggerCategory, wsKey });
@@ -470,7 +478,8 @@ export class WebsocketClient extends EventEmitter {
         ...loggerCategory,
         wsKey,
       });
-      this.getWs(wsKey)?.close();
+      this.getWs(wsKey)?.terminate();
+      delete this.wsStore.get(wsKey, true).activePongTimer;
     }, this.options.pongTimeout);
   }
 
@@ -622,9 +631,9 @@ export class WebsocketClient extends EventEmitter {
 
       const msg = JSON.parse((event && event.data) || event);
       this.logger.silly('Received event', {
-        ...this.logger,
+        ...loggerCategory,
         wsKey,
-        msg: JSON.stringify(msg, null, 2),
+        msg: JSON.stringify(msg),
       });
 
       // TODO: cleanme
