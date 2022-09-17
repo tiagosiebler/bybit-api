@@ -25,6 +25,12 @@ export interface NewSpotOrderV3 {
   triggerPrice?: string;
 }
 
+export interface SpotCancelOrderBatchRequest {
+  symbol: string;
+  side?: OrderSide;
+  orderTypes: OrderTypeSpot[];
+}
+
 export interface SpotOrderQueryById {
   orderId?: string;
   orderLinkId?: string;

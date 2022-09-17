@@ -6,7 +6,7 @@ import {
   serializeParams,
   RestClientType,
   REST_CLIENT_TYPE_ENUM,
-  agentSource,
+  APIID,
   getRestBaseUrl,
 } from './requestUtils';
 
@@ -98,7 +98,7 @@ export default abstract class BaseRestClient {
       // custom request options based on axios specs - see: https://github.com/axios/axios#request-config
       ...requestOptions,
       headers: {
-        'x-referer': agentSource,
+        'x-referer': APIID,
       },
     };
 

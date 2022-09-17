@@ -11,6 +11,7 @@ import {
   SpotLeveragedTokenPRHistoryRequest,
   SpotCrossMarginBorrowingInfoRequest,
   SpotCrossMarginRepaymentHistoryRequest,
+  SpotCancelOrderBatchRequest,
 } from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
@@ -119,11 +120,9 @@ export class SpotClientV3 extends BaseRestClient {
   }
 
   /** Batch cancel orders */
-  cancelOrderBatch(params: {
-    symbol: string;
-    side?: OrderSide;
-    orderTypes: OrderTypeSpot[];
-  }): Promise<APIResponseV3<any>> {
+  cancelOrderBatch(
+    params: SpotCancelOrderBatchRequest
+  ): Promise<APIResponseV3<any>> {
     const orderTypes = params.orderTypes
       ? params.orderTypes.join(',')
       : undefined;
