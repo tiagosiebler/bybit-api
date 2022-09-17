@@ -155,7 +155,7 @@ The WebsocketClient can be configured to a specific API group using the market p
 |         API Category         	|        Market       	| Description                                                                                                                                                                                            	|
 |:----------------------------:	|:-------------------:	|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
 | Unified Margin - Options   | `market: 'unifiedOption'`| The [derivatives v3](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket) category for unified margin. Note: public topics only support options topics. If you need USDC/USDT perps, use `unifiedPerp` instead. |
-| Unified Margin - Perps    	| `market: 'unifiedPerp'` | The [derivatives v3](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket) category for unified margin. Note: public topics only USDT/USDC perps topics - use `unifiedOption` if you need public options topics. |
+| Unified Margin - Perps    	| `market: 'unifiedPerp'` | The [derivatives v3](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket) category for unified margin. Note: public topics only support USDT/USDC perpetual topics - use `unifiedOption` if you need public options topics. |
 | Futures v2 - Inverse Perps   	| `market: 'inverse'` 	| The [inverse v2 perps](https://bybit-exchange.github.io/docs/futuresV2/inverse/#t-websocket) category.                                                                                                 	|
 | Futures v2 - USDT Perps      	| `market: 'linear'`  	| The [USDT/linear v2 perps](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-websocket) category.                                                                                              	|
 | Futures v2 - Inverse Futures 	| `market: 'inverse'` 	| The [inverse futures v2](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-websocket) category uses the same market as inverse perps.                                                 	|
@@ -258,11 +258,14 @@ Pass a custom logger which supports the log methods `silly`, `debug`, `notice`, 
 const { WebsocketClient, DefaultLogger } = require('bybit-api');
 
 // Disable all logging on the silly level
-DefaultLogger.silly = () => {};
+const customLogger = {
+  ...DefaultLogger,
+  silly: () => {},
+};
 
 const ws = new WebsocketClient(
   { key: 'xxx', secret: 'yyy' },
-  DefaultLogger
+  customLogger
 );
 ```
 
