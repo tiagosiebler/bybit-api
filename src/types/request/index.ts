@@ -1,5 +1,6 @@
 export * from './account-asset';
 export * from './copy-trading';
+export * from './inverse';
 export * from './spot';
 export * from './usdt-perp';
 export * from './usdc-perp';
