@@ -10,7 +10,7 @@ import {
   SpotSymbolInfo,
 } from './types';
 import BaseRestClient from './util/BaseRestClient';
-import { agentSource, REST_CLIENT_TYPE_ENUM } from './util/requestUtils';
+import { REST_CLIENT_TYPE_ENUM } from './util/requestUtils';
 
 /**
  * @deprecated Use SpotV3Client instead, which leverages the newer v3 APIs
@@ -103,10 +103,7 @@ export class SpotClient extends BaseRestClient {
    */
 
   submitOrder(params: NewSpotOrder): Promise<APIResponse<any>> {
-    return this.postPrivate('/spot/v1/order', {
-      ...params,
-      agentSource,
-    });
+    return this.postPrivate('/spot/v1/order', params);
   }
 
   getOrder(params: SpotOrderQueryById): Promise<APIResponse<any>> {
