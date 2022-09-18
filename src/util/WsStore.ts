@@ -16,7 +16,7 @@ type WsTopic = string;
 
 /**
  * A "Set" is used to ensure we only subscribe to a topic once (tracking a list of unique topics we're expected to be connected to)
- * TODO: do any WS topics allow parameters? If so, we need a way to track those (see FTX implementation)
+ * Note: Accurate duplicate tracking only works for plaintext topics. E.g. JSON objects may not be seen as duplicates if keys are in different orders. If that's needed, check the FTX implementation.
  */
 type WsTopicList = Set<WsTopic>;
 
