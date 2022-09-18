@@ -41,7 +41,7 @@ export type WsClientEvent =
   | 'open'
   | 'update'
   | 'close'
-  | 'errorEvent'
+  | 'error'
   | 'reconnect'
   | 'reconnected'
   | 'response';
@@ -53,7 +53,7 @@ interface WebsocketClientEvents {
   close: (evt: { wsKey: WsKey; event: any }) => void;
   response: (response: any) => void;
   update: (response: any) => void;
-  errorEvent: (response: any) => void;
+  error: (response: any) => void;
 }
 
 // Type safety for on and emit handlers: https://stackoverflow.com/a/61609010/880837
@@ -344,7 +344,7 @@ export class WebsocketClient extends EventEmitter {
   private parseWsError(context: string, error: any, wsKey: WsKey) {
     if (!error.message) {
       this.logger.error(`${context} due to unexpected error: `, error);
-      this.emit('errorEvent', error);
+      this.emit('error', error);
       return;
     }
 
@@ -365,7 +365,7 @@ export class WebsocketClient extends EventEmitter {
         );
         break;
     }
-    this.emit('errorEvent', error);
+    this.emit('error', error);
   }
 
   /**
@@ -663,7 +663,7 @@ export class WebsocketClient extends EventEmitter {
         // usdc options
         msg?.success === false
       ) {
-        return this.emit('errorEvent', { ...msg, wsKey });
+        return this.emit('error', { ...msg, wsKey });
       }
 
       this.logger.warning('Unhandled/unrecognised ws event message', {
@@ -684,11 +684,6 @@ export class WebsocketClient extends EventEmitter {
 
   private onWsError(error: any, wsKey: WsKey) {
     this.parseWsError('Websocket error', error, wsKey);
-    if (
-      this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
-    ) {
-      this.emit('errorEvent', error);
-    }
   }
 
   private onWsClose(event, wsKey: WsKey) {
