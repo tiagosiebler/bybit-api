@@ -2,8 +2,7 @@ import { API_ERROR_CODE } from '../../src';
 import { InverseClient } from '../../src/inverse-client';
 import { successResponseObject } from '../response.util';
 
-describe('Private Inverse REST API Endpoints', () => {
-  const useLivenet = true;
+describe('Private Inverse REST API POST Endpoints', () => {
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
 
@@ -12,7 +11,11 @@ describe('Private Inverse REST API Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new InverseClient(API_KEY, API_SECRET, useLivenet);
+  const api = new InverseClient({
+    key: API_KEY,
+    secret: API_SECRET,
+    testnet: false,
+  });
 
   const symbol = 'BTCUSD';
 
@@ -40,7 +43,6 @@ describe('Private Inverse REST API Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
-      ret_msg: 'order not exists or too late to cancel',
     });
   });
 
@@ -62,7 +64,6 @@ describe('Private Inverse REST API Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
-      ret_msg: 'order not exists or too late to replace',
     });
   });
 
@@ -81,7 +82,6 @@ describe('Private Inverse REST API Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.INSUFFICIENT_BALANCE,
-      ret_msg: 'Insufficient wallet balance',
     });
   });
 
@@ -93,7 +93,6 @@ describe('Private Inverse REST API Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
-      ret_msg: expect.any(String),
     });
   });
 
@@ -114,7 +113,6 @@ describe('Private Inverse REST API Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
-      ret_msg: 'order not exists or too late to replace',
     });
   });
 
@@ -126,7 +124,6 @@ describe('Private Inverse REST API Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.POSITION_IS_CROSS_MARGIN,
-      ret_msg: expect.any(String),
     });
   });
 
@@ -138,7 +135,6 @@ describe('Private Inverse REST API Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.CANNOT_SET_TRADING_STOP_FOR_ZERO_POS,
-      ret_msg: 'can not set tp/sl/ts for zero position',
     });
   });
 
@@ -162,7 +158,6 @@ describe('Private Inverse REST API Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.SAME_SLTP_MODE,
-      ret_msg: 'same tp sl mode2',
     });
   });
 

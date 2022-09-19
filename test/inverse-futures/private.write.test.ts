@@ -2,7 +2,6 @@ import { API_ERROR_CODE, InverseFuturesClient } from '../../src';
 import { successResponseObject } from '../response.util';
 
 describe('Private Inverse-Futures REST API POST Endpoints', () => {
-  const useLivenet = true;
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
 
@@ -11,7 +10,11 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new InverseFuturesClient(API_KEY, API_SECRET, useLivenet);
+  const api = new InverseFuturesClient({
+    key: API_KEY,
+    secret: API_SECRET,
+    testnet: false,
+  });
 
   // Warning: if some of these start to fail with 10001 params error, it's probably that this future expired and a newer one exists with a different symbol!
   const symbol = 'BTCUSDU22';
@@ -30,7 +33,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.POSITION_IDX_NOT_MATCH_POSITION_MODE,
-      ret_msg: 'position idx not match position mode',
     });
   });
 
@@ -41,7 +43,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
-      ret_msg: 'order not exists or too late to cancel',
     });
   });
 
@@ -63,7 +64,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
-      ret_msg: 'order not exists or too late to replace',
     });
   });
 
@@ -82,7 +82,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.POSITION_IDX_NOT_MATCH_POSITION_MODE,
-      ret_msg: 'position idx not match position mode',
     });
   });
 
@@ -94,7 +93,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
-      ret_msg: 'Order not exists',
     });
   });
 
@@ -115,7 +113,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
-      ret_msg: 'order not exists or too late to replace',
     });
   });
 
@@ -127,7 +124,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.POSITION_IDX_NOT_MATCH_POSITION_MODE,
-      ret_msg: 'position idx not match position mode',
     });
   });
 
@@ -139,7 +135,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.POSITION_IDX_NOT_MATCH_POSITION_MODE,
-      ret_msg: 'position idx not match position mode',
     });
   });
 
@@ -152,7 +147,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.LEVERAGE_NOT_MODIFIED,
-      ret_msg: 'leverage not modified',
     });
   });
 
@@ -164,7 +158,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.POSITION_MODE_NOT_MODIFIED,
-      ret_msg: 'position mode not modified',
     });
   });
 
@@ -178,7 +171,6 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ISOLATED_NOT_MODIFIED,
-      ret_msg: 'Isolated not modified',
     });
   });
 });

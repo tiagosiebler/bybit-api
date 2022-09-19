@@ -1,9 +1,15 @@
 export interface RestClientOptions {
+  /** Your API key */
+  key?: string;
+
+  /** Your API secret */
+  secret?: string;
+
+  /** Set to `true` to connect to testnet. Uses the live environment by default. */
+  testnet?: boolean;
+
   /** Override the max size of the request window (in ms) */
   recv_window?: number;
-
-  /** @deprecated Time sync is now disabled by default. To re-enable it, use enable_time_sync instead. */
-  disable_time_sync?: boolean;
 
   /** Disabled by default. This can help on machines with consistent latency problems. */
   enable_time_sync?: boolean;
@@ -43,10 +49,10 @@ export function serializeParams(
 }
 
 export function getRestBaseUrl(
-  useLivenet: boolean,
+  useTestnet: boolean,
   restInverseOptions: RestClientOptions
-) {
-  const baseUrlsInverse = {
+): string {
+  const exchangeBaseUrls = {
     livenet: 'https://api.bybit.com',
     testnet: 'https://api-testnet.bybit.com',
   };
@@ -55,48 +61,49 @@ export function getRestBaseUrl(
     return restInverseOptions.baseUrl;
   }
 
-  if (useLivenet === true) {
-    return baseUrlsInverse.livenet;
+  if (useTestnet) {
+    return exchangeBaseUrls.testnet;
   }
-  return baseUrlsInverse.testnet;
+
+  return exchangeBaseUrls.livenet;
 }
 
-export function isPublicEndpoint(endpoint: string): boolean {
-  const publicPrefixes = [
-    'v2/public',
-    'public/linear',
-    'spot/quote/v1',
-    'spot/v1/symbols',
-    'spot/v1/time',
-  ];
-
-  for (const prefix of publicPrefixes) {
-    if (endpoint.startsWith(prefix)) {
-      return true;
-    }
+export function isWsPong(msg: any): boolean {
+  if (!msg) {
+    return false;
   }
-  return false;
-}
-
-export function isWsPong(response: any) {
-  if (response.pong || response.ping) {
+  if (msg.pong || msg.ping) {
     return true;
   }
+
+  if (msg['op'] === 'pong') {
+    return true;
+  }
+
+  if (msg['ret_msg'] === 'pong') {
+    return true;
+  }
+
   return (
-    response.request &&
-    response.request.op === 'ping' &&
-    response.ret_msg === 'pong' &&
-    response.success === true
+    msg.request &&
+    msg.request.op === 'ping' &&
+    msg.ret_msg === 'pong' &&
+    msg.success === true
   );
 }
 
-export const agentSource = 'bybitapinode';
+export const APIID = 'bybitapinode';
 
+/**
+ * Used to switch how authentication/requests work under the hood (primarily for SPOT since it's different there)
+ */
 export const REST_CLIENT_TYPE_ENUM = {
+  accountAsset: 'accountAsset',
   inverse: 'inverse',
   inverseFutures: 'inverseFutures',
   linear: 'linear',
   spot: 'spot',
+  v3: 'v3',
 } as const;
 
 export type RestClientType =

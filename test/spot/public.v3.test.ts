@@ -1,13 +1,11 @@
-import { SpotClient } from '../../src';
+import { SpotClientV3 } from '../../src';
 import {
   notAuthenticatedError,
-  successResponseList,
-  successResponseObject,
+  successResponseObjectV3,
 } from '../response.util';
 
 describe('Public Spot REST API Endpoints', () => {
-  const useLivenet = true;
-  const api = new SpotClient(undefined, undefined, useLivenet);
+  const api = new SpotClientV3();
 
   const symbol = 'BTCUSDT';
   const interval = '15m';
@@ -24,53 +22,47 @@ describe('Public Spot REST API Endpoints', () => {
   });
 
   it('getSymbols()', async () => {
-    expect(await api.getSymbols()).toMatchObject(successResponseList());
+    expect(await api.getSymbols()).toMatchObject(successResponseObjectV3());
   });
 
   it('getOrderBook()', async () => {
     expect(await api.getOrderBook(symbol)).toMatchObject(
-      successResponseObject(null)
+      successResponseObjectV3()
     );
   });
 
   it('getMergedOrderBook()', async () => {
     expect(await api.getMergedOrderBook(symbol)).toMatchObject(
-      successResponseObject(null)
+      successResponseObjectV3()
     );
   });
 
   it('getTrades()', async () => {
     expect(await api.getTrades(symbol)).toMatchObject(
-      successResponseObject(null)
+      successResponseObjectV3()
     );
   });
 
   it('getCandles()', async () => {
     expect(await api.getCandles(symbol, interval)).toMatchObject(
-      successResponseObject(null)
+      successResponseObjectV3()
     );
   });
 
   it('get24hrTicker()', async () => {
-    expect(await api.get24hrTicker()).toMatchObject(
-      successResponseObject(null)
-    );
+    expect(await api.get24hrTicker()).toMatchObject(successResponseObjectV3());
   });
 
   it('getLastTradedPrice()', async () => {
     expect(await api.getLastTradedPrice()).toMatchObject(
-      successResponseObject(null)
+      successResponseObjectV3()
     );
   });
 
   it('getBestBidAskPrice()', async () => {
     expect(await api.getBestBidAskPrice()).toMatchObject(
-      successResponseObject(null)
+      successResponseObjectV3()
     );
-  });
-
-  it('getServerTime()', async () => {
-    expect(await api.getServerTime()).toStrictEqual(expect.any(Number));
   });
 
   it('fetchServertime() returns number', async () => {

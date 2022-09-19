@@ -1,3 +1,20 @@
+import { InverseClient } from '../inverse-client';
+import { LinearClient } from '../linear-client';
+import { SpotClient } from '../spot-client';
+import { SpotClientV3 } from '../spot-client-v3';
+import { UnifiedMarginClient } from '../unified-margin-client';
+import { USDCOptionClient } from '../usdc-option-client';
+import { USDCPerpetualClient } from '../usdc-perpetual-client';
+
+export type RESTClient =
+  | InverseClient
+  | LinearClient
+  | SpotClient
+  | SpotClientV3
+  | USDCOptionClient
+  | USDCPerpetualClient
+  | UnifiedMarginClient;
+
 export type numberInString = string;
 
 export type OrderSide = 'Buy' | 'Sell';
@@ -17,6 +34,21 @@ export type KlineInterval =
   | '1w'
   | '1M';
 
+export type KlineIntervalV3 =
+  | '1'
+  | '3'
+  | '5'
+  | '15'
+  | '30'
+  | '60'
+  | '120'
+  | '240'
+  | '360'
+  | '720'
+  | 'D'
+  | 'W'
+  | 'M';
+
 export interface APIResponse<T> {
   ret_code: number;
   ret_msg: 'OK' | string;
@@ -25,7 +57,13 @@ export interface APIResponse<T> {
   result: T;
 }
 
-export interface APIResponseWithTime<T> extends APIResponse<T> {
+export interface APIResponseV3<T> {
+  retCode: number;
+  retMsg: 'OK' | string;
+  result: T;
+}
+
+export interface APIResponseWithTime<T = {}> extends APIResponse<T> {
   /** UTC timestamp */
   time_now: numberInString;
 }
@@ -37,15 +75,15 @@ export interface SymbolParam {
   symbol: string;
 }
 
-export interface SymbolLimitParam {
+export interface SymbolLimitParam<TLimit = number> {
   symbol: string;
-  limit?: number;
+  limit?: TLimit;
 }
 
-export interface SymbolPeriodLimitParam {
+export interface SymbolPeriodLimitParam<TLimit = number> {
   symbol: string;
   period: string;
-  limit?: number;
+  limit?: TLimit;
 }
 
 export interface SymbolFromLimitParam {

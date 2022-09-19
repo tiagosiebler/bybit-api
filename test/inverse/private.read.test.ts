@@ -1,8 +1,7 @@
-import { InverseClient } from '../../src/inverse-client';
+import { InverseClient } from '../../src/';
 import { successResponseList, successResponseObject } from '../response.util';
 
-describe('Private Inverse REST API Endpoints', () => {
-  const useLivenet = true;
+describe('Private Inverse REST API GET Endpoints', () => {
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
 
@@ -11,7 +10,11 @@ describe('Private Inverse REST API Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new InverseClient(API_KEY, API_SECRET, useLivenet);
+  const api = new InverseClient({
+    key: API_KEY,
+    secret: API_SECRET,
+    testnet: false,
+  });
 
   const symbol = 'BTCUSD';
 

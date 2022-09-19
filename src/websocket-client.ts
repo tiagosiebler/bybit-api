@@ -3,236 +3,82 @@ import WebSocket from 'isomorphic-ws';
 
 import { InverseClient } from './inverse-client';
 import { LinearClient } from './linear-client';
-import { DefaultLogger } from './logger';
+import { SpotClientV3 } from './spot-client-v3';
 import { SpotClient } from './spot-client';
-import { KlineInterval } from './types/shared';
+
 import { signMessage } from './util/node-support';
+import WsStore from './util/WsStore';
+
+import {
+  APIMarket,
+  KlineInterval,
+  RESTClient,
+  WebsocketClientOptions,
+  WSClientConfigurableOptions,
+  WsKey,
+  WsTopic,
+} from './types';
+
 import {
   serializeParams,
   isWsPong,
-  RestClientOptions,
-} from './util/requestUtils';
-
-import WsStore from './util/WsStore';
-
-const inverseEndpoints = {
-  livenet: 'wss://stream.bybit.com/realtime',
-  testnet: 'wss://stream-testnet.bybit.com/realtime',
-};
-
-const linearEndpoints = {
-  private: {
-    livenet: 'wss://stream.bybit.com/realtime_private',
-    livenet2: 'wss://stream.bytick.com/realtime_private',
-    testnet: 'wss://stream-testnet.bybit.com/realtime_private',
-  },
-  public: {
-    livenet: 'wss://stream.bybit.com/realtime_public',
-    livenet2: 'wss://stream.bytick.com/realtime_public',
-    testnet: 'wss://stream-testnet.bybit.com/realtime_public',
-  },
-};
-
-const spotEndpoints = {
-  private: {
-    livenet: 'wss://stream.bybit.com/spot/ws',
-    testnet: 'wss://stream-testnet.bybit.com/spot/ws',
-  },
-  public: {
-    livenet: 'wss://stream.bybit.com/spot/quote/ws/v1',
-    livenet2: 'wss://stream.bybit.com/spot/quote/ws/v2',
-    testnet: 'wss://stream-testnet.bybit.com/spot/quote/ws/v1',
-    testnet2: 'wss://stream-testnet.bybit.com/spot/quote/ws/v2',
-  },
-};
+  WsConnectionStateEnum,
+  PUBLIC_WS_KEYS,
+  WS_AUTH_ON_CONNECT_KEYS,
+  WS_KEY_MAP,
+  DefaultLogger,
+  WS_BASE_URL_MAP,
+  getWsKeyForTopic,
+  neverGuard,
+} from './util';
+import { USDCOptionClient } from './usdc-option-client';
+import { USDCPerpetualClient } from './usdc-perpetual-client';
+import { UnifiedMarginClient } from './unified-margin-client';
 
 const loggerCategory = { category: 'bybit-ws' };
 
-const READY_STATE_INITIAL = 0;
-const READY_STATE_CONNECTING = 1;
-const READY_STATE_CONNECTED = 2;
-const READY_STATE_CLOSING = 3;
-const READY_STATE_RECONNECTING = 4;
+export type WsClientEvent =
+  | 'open'
+  | 'update'
+  | 'close'
+  | 'error'
+  | 'reconnect'
+  | 'reconnected'
+  | 'response';
 
-export enum WsConnectionState {
-  READY_STATE_INITIAL,
-  READY_STATE_CONNECTING,
-  READY_STATE_CONNECTED,
-  READY_STATE_CLOSING,
-  READY_STATE_RECONNECTING,
+interface WebsocketClientEvents {
+  /** Connection opened. If this connection was previously opened and reconnected, expect the reconnected event instead */
+  open: (evt: { wsKey: WsKey; event: any }) => void;
+  /** Reconnecting a dropped connection */
+  reconnect: (evt: { wsKey: WsKey; event: any }) => void;
+  /** Successfully reconnected a connection that dropped */
+  reconnected: (evt: { wsKey: WsKey; event: any }) => void;
+  /** Connection closed */
+  close: (evt: { wsKey: WsKey; event: any }) => void;
+  /** Received reply to websocket command (e.g. after subscribing to topics) */
+  response: (response: any) => void;
+  /** Received data for topic */
+  update: (response: any) => void;
+  /** Exception from ws client OR custom listeners */
+  error: (response: any) => void;
 }
 
-export type APIMarket = 'inverse' | 'linear' | 'spot';
-
-// Same as inverse futures
-export type WsPublicInverseTopic =
-  | 'orderBookL2_25'
-  | 'orderBookL2_200'
-  | 'trade'
-  | 'insurance'
-  | 'instrument_info'
-  | 'klineV2';
-
-export type WsPublicUSDTPerpTopic =
-  | 'orderBookL2_25'
-  | 'orderBookL2_200'
-  | 'trade'
-  | 'insurance'
-  | 'instrument_info'
-  | 'kline';
-
-export type WsPublicSpotV1Topic =
-  | 'trade'
-  | 'realtimes'
-  | 'kline'
-  | 'depth'
-  | 'mergedDepth'
-  | 'diffDepth';
-
-export type WsPublicSpotV2Topic =
-  | 'depth'
-  | 'kline'
-  | 'trade'
-  | 'bookTicker'
-  | 'realtimes';
-
-export type WsPublicTopics =
-  | WsPublicInverseTopic
-  | WsPublicUSDTPerpTopic
-  | WsPublicSpotV1Topic
-  | WsPublicSpotV2Topic
-  | string;
-
-// Same as inverse futures
-export type WsPrivateInverseTopic =
-  | 'position'
-  | 'execution'
-  | 'order'
-  | 'stop_order';
-
-export type WsPrivateUSDTPerpTopic =
-  | 'position'
-  | 'execution'
-  | 'order'
-  | 'stop_order'
-  | 'wallet';
-
-export type WsPrivateSpotTopic =
-  | 'outboundAccountInfo'
-  | 'executionReport'
-  | 'ticketInfo';
-
-export type WsPrivateTopic =
-  | WsPrivateInverseTopic
-  | WsPrivateUSDTPerpTopic
-  | WsPrivateSpotTopic
-  | string;
-
-export type WsTopic = WsPublicTopics | WsPrivateTopic;
-
-export interface WSClientConfigurableOptions {
-  key?: string;
-  secret?: string;
-  livenet?: boolean;
-
-  // defaults to inverse.
-  /**
-   * @deprecated Use the property { market: 'linear' } instead
-   */
-  linear?: boolean;
-
-  market?: APIMarket;
-
-  pongTimeout?: number;
-  pingInterval?: number;
-  reconnectTimeout?: number;
-  restOptions?: RestClientOptions;
-  requestOptions?: any;
-  wsUrl?: string;
-  /** If true, fetch server time before trying to authenticate (disabled by default) */
-  fetchTimeOffsetBeforeAuth?: boolean;
-}
-
-export interface WebsocketClientOptions extends WSClientConfigurableOptions {
-  livenet: boolean;
-  /**
-   * @deprecated Use the property { market: 'linear' } instead
-   */
-  linear?: boolean;
-  market?: APIMarket;
-  pongTimeout: number;
-  pingInterval: number;
-  reconnectTimeout: number;
-}
-
-export const wsKeyInverse = 'inverse';
-export const wsKeyLinearPrivate = 'linearPrivate';
-export const wsKeyLinearPublic = 'linearPublic';
-export const wsKeySpotPrivate = 'spotPrivate';
-export const wsKeySpotPublic = 'spotPublic';
-
-// This is used to differentiate between each of the available websocket streams (as bybit has multiple websockets)
-export type WsKey =
-  | 'inverse'
-  | 'linearPrivate'
-  | 'linearPublic'
-  | 'spotPrivate'
-  | 'spotPublic';
-
-const getLinearWsKeyForTopic = (topic: string): WsKey => {
-  const privateLinearTopics = [
-    'position',
-    'execution',
-    'order',
-    'stop_order',
-    'wallet',
-  ];
-  if (privateLinearTopics.includes(topic)) {
-    return wsKeyLinearPrivate;
-  }
-
-  return wsKeyLinearPublic;
-};
-const getSpotWsKeyForTopic = (topic: string): WsKey => {
-  const privateLinearTopics = [
-    'position',
-    'execution',
-    'order',
-    'stop_order',
-    'outboundAccountInfo',
-    'executionReport',
-    'ticketInfo',
-  ];
-
-  if (privateLinearTopics.includes(topic)) {
-    return wsKeySpotPrivate;
-  }
-
-  return wsKeySpotPublic;
-};
-
+// Type safety for on and emit handlers: https://stackoverflow.com/a/61609010/880837
 export declare interface WebsocketClient {
-  on(
-    event: 'open' | 'reconnected',
-    listener: ({ wsKey: WsKey, event: any }) => void
+  on<U extends keyof WebsocketClientEvents>(
+    event: U,
+    listener: WebsocketClientEvents[U]
   ): this;
-  on(
-    event: 'response' | 'update' | 'error',
-    listener: (response: any) => void
-  ): this;
-  on(event: 'reconnect' | 'close', listener: ({ wsKey: WsKey }) => void): this;
-}
 
-function resolveMarket(options: WSClientConfigurableOptions): APIMarket {
-  if (options.linear) {
-    return 'linear';
-  }
-  return 'inverse';
+  emit<U extends keyof WebsocketClientEvents>(
+    event: U,
+    ...args: Parameters<WebsocketClientEvents[U]>
+  ): boolean;
 }
 
 export class WebsocketClient extends EventEmitter {
   private logger: typeof DefaultLogger;
-  private restClient: InverseClient | LinearClient | SpotClient;
+  private restClient?: RESTClient;
   private options: WebsocketClientOptions;
   private wsStore: WsStore;
 
@@ -246,158 +92,204 @@ export class WebsocketClient extends EventEmitter {
     this.wsStore = new WsStore(this.logger);
 
     this.options = {
-      livenet: false,
+      testnet: false,
       pongTimeout: 1000,
       pingInterval: 10000,
       reconnectTimeout: 500,
       fetchTimeOffsetBeforeAuth: false,
       ...options,
     };
+    this.options.restOptions = {
+      ...this.options.restOptions,
+      testnet: this.options.testnet,
+    };
 
-    if (!this.options.market) {
-      this.options.market = resolveMarket(this.options);
-    }
-
-    if (this.isLinear()) {
-      this.restClient = new LinearClient(
-        undefined,
-        undefined,
-        this.isLivenet(),
-        this.options.restOptions,
-        this.options.requestOptions
-      );
-    } else if (this.isSpot()) {
-      this.restClient = new SpotClient(
-        undefined,
-        undefined,
-        this.isLivenet(),
-        this.options.restOptions,
-        this.options.requestOptions
-      );
-      this.connectPublic();
-    } else {
-      this.restClient = new InverseClient(
-        undefined,
-        undefined,
-        this.isLivenet(),
-        this.options.restOptions,
-        this.options.requestOptions
-      );
-    }
-  }
-
-  public isLivenet(): boolean {
-    return this.options.livenet === true;
-  }
-
-  public isLinear(): boolean {
-    return this.options.market === 'linear';
-  }
-
-  public isSpot(): boolean {
-    return this.options.market === 'spot';
-  }
-
-  public isInverse(): boolean {
-    return !this.isLinear() && !this.isSpot();
+    this.prepareRESTClient();
   }
 
   /**
-   * Add topic/topics to WS subscription list
+   * Only used if we fetch exchange time before attempting auth.
+   * Disabled by default.
+   * I've removed this for ftx and it's working great, tempted to remove this here
    */
-  public subscribe(wsTopics: WsTopic[] | WsTopic) {
-    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
-    topics.forEach((topic) =>
-      this.wsStore.addTopic(this.getWsKeyForTopic(topic), topic)
-    );
-
-    // attempt to send subscription topic per websocket
-    this.wsStore.getKeys().forEach((wsKey: WsKey) => {
-      // if connected, send subscription request
-      if (this.wsStore.isConnectionState(wsKey, READY_STATE_CONNECTED)) {
-        return this.requestSubscribeTopics(wsKey, topics);
+  prepareRESTClient(): void {
+    switch (this.options.market) {
+      case 'inverse': {
+        this.restClient = new InverseClient(
+          this.options.restOptions,
+          this.options.requestOptions
+        );
+        break;
       }
-
-      // start connection process if it hasn't yet begun. Topics are automatically subscribed to on-connect
-      if (
-        !this.wsStore.isConnectionState(wsKey, READY_STATE_CONNECTING) &&
-        !this.wsStore.isConnectionState(wsKey, READY_STATE_RECONNECTING)
-      ) {
-        return this.connect(wsKey);
+      case 'linear': {
+        this.restClient = new LinearClient(
+          this.options.restOptions,
+          this.options.requestOptions
+        );
+        break;
       }
-    });
+      case 'spot': {
+        this.restClient = new SpotClient(
+          this.options.restOptions,
+          this.options.requestOptions
+        );
+        this.connectPublic();
+        break;
+      }
+      case 'spotv3': {
+        this.restClient = new SpotClientV3(
+          this.options.restOptions,
+          this.options.requestOptions
+        );
+        break;
+      }
+      case 'usdcOption': {
+        this.restClient = new USDCOptionClient(
+          this.options.restOptions,
+          this.options.requestOptions
+        );
+        break;
+      }
+      case 'usdcPerp': {
+        this.restClient = new USDCPerpetualClient(
+          this.options.restOptions,
+          this.options.requestOptions
+        );
+        break;
+      }
+      case 'unifiedOption':
+      case 'unifiedPerp': {
+        this.restClient = new UnifiedMarginClient(
+          this.options.restOptions,
+          this.options.requestOptions
+        );
+        break;
+      }
+      default: {
+        throw neverGuard(
+          this.options.market,
+          `prepareRESTClient(): Unhandled market`
+        );
+      }
+    }
   }
 
-  /**
-   * Remove topic/topics from WS subscription list
-   */
-  public unsubscribe(wsTopics: WsTopic[] | WsTopic) {
-    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
-    topics.forEach((topic) =>
-      this.wsStore.deleteTopic(this.getWsKeyForTopic(topic), topic)
-    );
-
-    this.wsStore.getKeys().forEach((wsKey: WsKey) => {
-      // unsubscribe request only necessary if active connection exists
-      if (this.wsStore.isConnectionState(wsKey, READY_STATE_CONNECTED)) {
-        this.requestUnsubscribeTopics(wsKey, topics);
-      }
-    });
+  public isTestnet(): boolean {
+    return this.options.testnet === true;
   }
 
-  public close(wsKey: WsKey) {
+  public close(wsKey: WsKey, force?: boolean) {
     this.logger.info('Closing connection', { ...loggerCategory, wsKey });
-    this.setWsState(wsKey, READY_STATE_CLOSING);
+    this.setWsState(wsKey, WsConnectionStateEnum.CLOSING);
     this.clearTimers(wsKey);
 
-    this.getWs(wsKey)?.close();
+    const ws = this.getWs(wsKey);
+    ws?.close();
+    if (force) {
+      ws?.terminate();
+    }
+  }
+
+  public closeAll(force?: boolean) {
+    const keys = this.wsStore.getKeys();
+    keys.forEach((key) => {
+      this.close(key, force);
+    });
   }
 
   /**
-   * Request connection of all dependent websockets, instead of waiting for automatic connection by library
+   * Request connection of all dependent (public & private) websockets, instead of waiting for automatic connection by library
    */
-  public connectAll(): Promise<WebSocket | undefined>[] | undefined {
-    if (this.isInverse()) {
-      return [this.connect(wsKeyInverse)];
-    }
-
-    if (this.isLinear()) {
-      return [
-        this.connect(wsKeyLinearPublic),
-        this.connect(wsKeyLinearPrivate),
-      ];
-    }
-
-    if (this.isSpot()) {
-      return [this.connect(wsKeySpotPublic), this.connect(wsKeySpotPrivate)];
-    }
-  }
-
-  public connectPublic(): Promise<WebSocket | undefined> | undefined {
-    if (this.isInverse()) {
-      return this.connect(wsKeyInverse);
-    }
-
-    if (this.isLinear()) {
-      return this.connect(wsKeyLinearPublic);
-    }
-
-    if (this.isSpot()) {
-      return this.connect(wsKeySpotPublic);
+  public connectAll(): Promise<WebSocket | undefined>[] {
+    switch (this.options.market) {
+      case 'inverse': {
+        // only one for inverse
+        return [...this.connectPublic()];
+      }
+      // these all have separate public & private ws endpoints
+      case 'linear':
+      case 'spot':
+      case 'spotv3':
+      case 'usdcOption':
+      case 'usdcPerp':
+      case 'unifiedPerp':
+      case 'unifiedOption': {
+        return [...this.connectPublic(), this.connectPrivate()];
+      }
+      default: {
+        throw neverGuard(this.options.market, `connectAll(): Unhandled market`);
+      }
     }
   }
 
-  public connectPrivate(): Promise<WebSocket | undefined> | undefined {
-    if (this.isInverse()) {
-      return this.connect(wsKeyInverse);
+  public connectPublic(): Promise<WebSocket | undefined>[] {
+    switch (this.options.market) {
+      case 'inverse': {
+        return [this.connect(WS_KEY_MAP.inverse)];
+      }
+      case 'linear': {
+        return [this.connect(WS_KEY_MAP.linearPublic)];
+      }
+      case 'spot': {
+        return [this.connect(WS_KEY_MAP.spotPublic)];
+      }
+      case 'spotv3': {
+        return [this.connect(WS_KEY_MAP.spotV3Public)];
+      }
+      case 'usdcOption': {
+        return [this.connect(WS_KEY_MAP.usdcOptionPublic)];
+      }
+      case 'usdcPerp': {
+        return [this.connect(WS_KEY_MAP.usdcPerpPublic)];
+      }
+      case 'unifiedOption': {
+        return [this.connect(WS_KEY_MAP.unifiedOptionPublic)];
+      }
+      case 'unifiedPerp': {
+        return [
+          this.connect(WS_KEY_MAP.unifiedPerpUSDTPublic),
+          this.connect(WS_KEY_MAP.unifiedPerpUSDCPublic),
+        ];
+      }
+      default: {
+        throw neverGuard(
+          this.options.market,
+          `connectPublic(): Unhandled market`
+        );
+      }
     }
+  }
 
-    if (this.isLinear()) {
-      return this.connect(wsKeyLinearPrivate);
-    }
-
-    if (this.isSpot()) {
-      return this.connect(wsKeySpotPrivate);
+  public connectPrivate(): Promise<WebSocket | undefined> {
+    switch (this.options.market) {
+      case 'inverse': {
+        return this.connect(WS_KEY_MAP.inverse);
+      }
+      case 'linear': {
+        return this.connect(WS_KEY_MAP.linearPrivate);
+      }
+      case 'spot': {
+        return this.connect(WS_KEY_MAP.spotPrivate);
+      }
+      case 'spotv3': {
+        return this.connect(WS_KEY_MAP.spotV3Private);
+      }
+      case 'usdcOption': {
+        return this.connect(WS_KEY_MAP.usdcOptionPrivate);
+      }
+      case 'usdcPerp': {
+        return this.connect(WS_KEY_MAP.usdcPerpPrivate);
+      }
+      case 'unifiedPerp':
+      case 'unifiedOption': {
+        return this.connect(WS_KEY_MAP.unifiedPrivate);
+      }
+      default: {
+        throw neverGuard(
+          this.options.market,
+          `connectPrivate(): Unhandled market`
+        );
+      }
     }
   }
 
@@ -411,7 +303,9 @@ export class WebsocketClient extends EventEmitter {
         return this.wsStore.getWs(wsKey);
       }
 
-      if (this.wsStore.isConnectionState(wsKey, READY_STATE_CONNECTING)) {
+      if (
+        this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTING)
+      ) {
         this.logger.error(
           'Refused to connect to ws, connection attempt already active',
           { ...loggerCategory, wsKey }
@@ -421,9 +315,9 @@ export class WebsocketClient extends EventEmitter {
 
       if (
         !this.wsStore.getConnectionState(wsKey) ||
-        this.wsStore.isConnectionState(wsKey, READY_STATE_INITIAL)
+        this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.INITIAL)
       ) {
-        this.setWsState(wsKey, READY_STATE_CONNECTING);
+        this.setWsState(wsKey, WsConnectionStateEnum.CONNECTING);
       }
 
       const authParams = await this.getAuthParams(wsKey);
@@ -440,6 +334,7 @@ export class WebsocketClient extends EventEmitter {
   private parseWsError(context: string, error: any, wsKey: WsKey) {
     if (!error.message) {
       this.logger.error(`${context} due to unexpected error: `, error);
+      this.emit('error', error);
       return;
     }
 
@@ -453,66 +348,105 @@ export class WebsocketClient extends EventEmitter {
 
       default:
         this.logger.error(
-          `{context} due to unexpected response error: ${error.msg}`,
-          { ...loggerCategory, wsKey }
+          `${context} due to unexpected response error: "${
+            error?.msg || error?.message || error
+          }"`,
+          { ...loggerCategory, wsKey, error }
         );
         break;
     }
+    this.emit('error', error);
   }
 
   /**
    * Return params required to make authorized request
    */
   private async getAuthParams(wsKey: WsKey): Promise<string> {
-    const { key, secret } = this.options;
-
-    if (
-      key &&
-      secret &&
-      wsKey !== wsKeyLinearPublic &&
-      wsKey !== wsKeySpotPublic
-    ) {
-      this.logger.debug("Getting auth'd request params", {
-        ...loggerCategory,
-        wsKey,
-      });
-
-      const timeOffset = this.options.fetchTimeOffsetBeforeAuth
-        ? await this.restClient.fetchTimeOffset()
-        : 0;
-
-      const params: any = {
-        api_key: this.options.key,
-        expires: Date.now() + timeOffset + 5000,
-      };
-
-      params.signature = await signMessage(
-        'GET/realtime' + params.expires,
-        secret
-      );
-      return '?' + serializeParams(params);
-    } else if (!key || !secret) {
-      this.logger.warning(
-        'Connot authenticate websocket, either api or private keys missing.',
-        { ...loggerCategory, wsKey }
-      );
-    } else {
+    if (PUBLIC_WS_KEYS.includes(wsKey)) {
       this.logger.debug('Starting public only websocket client.', {
         ...loggerCategory,
         wsKey,
       });
+      return '';
     }
 
-    return '';
+    try {
+      const { signature, expiresAt } = await this.getWsAuthSignature(wsKey);
+
+      const authParams = {
+        api_key: this.options.key,
+        expires: expiresAt,
+        signature,
+      };
+
+      return '?' + serializeParams(authParams);
+    } catch (e) {
+      this.logger.error(e, { ...loggerCategory, wsKey });
+      return '';
+    }
+  }
+
+  private async sendAuthRequest(wsKey: WsKey): Promise<void> {
+    try {
+      const { signature, expiresAt } = await this.getWsAuthSignature(wsKey);
+
+      const request = {
+        op: 'auth',
+        args: [this.options.key, expiresAt, signature],
+        req_id: `${wsKey}-auth`,
+      };
+
+      return this.tryWsSend(wsKey, JSON.stringify(request));
+    } catch (e) {
+      this.logger.error(e, { ...loggerCategory, wsKey });
+    }
+  }
+
+  private async getWsAuthSignature(
+    wsKey: WsKey
+  ): Promise<{ expiresAt: number; signature: string }> {
+    const { key, secret } = this.options;
+
+    if (!key || !secret) {
+      this.logger.warning(
+        'Cannot authenticate websocket, either api or private keys missing.',
+        { ...loggerCategory, wsKey }
+      );
+      throw new Error(`Cannot auth - missing api or secret in config`);
+    }
+
+    this.logger.debug("Getting auth'd request params", {
+      ...loggerCategory,
+      wsKey,
+    });
+
+    const timeOffset = this.options.fetchTimeOffsetBeforeAuth
+      ? (await this.restClient?.fetchTimeOffset()) || 0
+      : 0;
+
+    const signatureExpiresAt = Date.now() + timeOffset + 5000;
+
+    const signature = await signMessage(
+      'GET/realtime' + signatureExpiresAt,
+      secret
+    );
+
+    return {
+      expiresAt: signatureExpiresAt,
+      signature,
+    };
   }
 
   private reconnectWithDelay(wsKey: WsKey, connectionDelayMs: number) {
     this.clearTimers(wsKey);
-    if (this.wsStore.getConnectionState(wsKey) !== READY_STATE_CONNECTING) {
-      this.setWsState(wsKey, READY_STATE_RECONNECTING);
+    if (
+      this.wsStore.getConnectionState(wsKey) !==
+      WsConnectionStateEnum.CONNECTING
+    ) {
+      this.setWsState(wsKey, WsConnectionStateEnum.RECONNECTING);
     }
 
-    setTimeout(() => {
+    this.wsStore.get(wsKey, true).activeReconnectTimer = setTimeout(() => {
       this.logger.info('Reconnecting to websocket', {
         ...loggerCategory,
         wsKey,
@@ -522,23 +456,32 @@ export class WebsocketClient extends EventEmitter {
   }
 
   private ping(wsKey: WsKey) {
+    if (this.wsStore.get(wsKey, true).activePongTimer) {
+      return;
+    }
+
     this.clearPongTimer(wsKey);
 
     this.logger.silly('Sending ping', { ...loggerCategory, wsKey });
     this.tryWsSend(wsKey, JSON.stringify({ op: 'ping' }));
 
-    this.wsStore.get(wsKey, true)!.activePongTimer = setTimeout(() => {
+    this.wsStore.get(wsKey, true).activePongTimer = setTimeout(() => {
       this.logger.info('Pong timeout - closing socket to reconnect', {
         ...loggerCategory,
         wsKey,
       });
-      this.getWs(wsKey)?.close();
+      this.getWs(wsKey)?.terminate();
+      delete this.wsStore.get(wsKey, true).activePongTimer;
     }, this.options.pongTimeout);
   }
 
   private clearTimers(wsKey: WsKey) {
     this.clearPingTimer(wsKey);
     this.clearPongTimer(wsKey);
+    const wsState = this.wsStore.get(wsKey);
+    if (wsState?.activeReconnectTimer) {
+      clearTimeout(wsState.activeReconnectTimer);
+    }
   }
 
   // Send a ping at intervals
@@ -566,7 +509,9 @@ export class WebsocketClient extends EventEmitter {
     if (!topics.length) {
       return;
     }
+
     const wsMessage = JSON.stringify({
+      req_id: topics.join(','),
       op: 'subscribe',
       args: topics,
     });
@@ -589,7 +534,7 @@ export class WebsocketClient extends EventEmitter {
     this.tryWsSend(wsKey, wsMessage);
   }
 
-  private tryWsSend(wsKey: WsKey, wsMessage: string) {
+  public tryWsSend(wsKey: WsKey, wsMessage: string) {
     try {
       this.logger.silly(`Sending upstream ws message: `, {
         ...loggerCategory,
@@ -634,27 +579,34 @@ export class WebsocketClient extends EventEmitter {
     return ws;
   }
 
-  private onWsOpen(event, wsKey: WsKey) {
-    if (this.wsStore.isConnectionState(wsKey, READY_STATE_CONNECTING)) {
+  private async onWsOpen(event, wsKey: WsKey) {
+    if (
+      this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTING)
+    ) {
       this.logger.info('Websocket connected', {
         ...loggerCategory,
         wsKey,
-        livenet: this.isLivenet(),
-        linear: this.isLinear(),
-        spot: this.isSpot(),
+        testnet: this.isTestnet(),
+        market: this.options.market,
       });
       this.emit('open', { wsKey, event });
     } else if (
-      this.wsStore.isConnectionState(wsKey, READY_STATE_RECONNECTING)
+      this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.RECONNECTING)
     ) {
       this.logger.info('Websocket reconnected', { ...loggerCategory, wsKey });
       this.emit('reconnected', { wsKey, event });
     }
 
-    this.setWsState(wsKey, READY_STATE_CONNECTED);
+    this.setWsState(wsKey, WsConnectionStateEnum.CONNECTED);
 
-    // TODO: persistence not working yet for spot topics
-    if (wsKey !== 'spotPublic' && wsKey !== 'spotPrivate') {
+    // Some websockets require an auth packet to be sent after opening the connection
+    if (WS_AUTH_ON_CONNECT_KEYS.includes(wsKey)) {
+      this.logger.info(`Sending auth request...`);
+      await this.sendAuthRequest(wsKey);
+    }
+
+    // TODO: persistence not working yet for spot v1 topics
+    if (wsKey !== WS_KEY_MAP.spotPublic && wsKey !== WS_KEY_MAP.spotPrivate) {
       this.requestSubscribeTopics(wsKey, [...this.wsStore.getTopics(wsKey)]);
     }
 
@@ -670,18 +622,46 @@ export class WebsocketClient extends EventEmitter {
       this.clearPongTimer(wsKey);
 
       const msg = JSON.parse((event && event.data) || event);
-      if ('success' in msg || msg?.pong) {
-        this.onWsMessageResponse(msg, wsKey);
-      } else if (msg.topic) {
-        this.onWsMessageUpdate(msg);
-      } else {
-        this.logger.warning('Got unhandled ws message', {
-          ...loggerCategory,
-          message: msg,
-          event,
-          wsKey,
-        });
+      this.logger.silly('Received event', {
+        ...loggerCategory,
+        wsKey,
+        msg: JSON.stringify(msg),
+      });
+
+      // TODO: cleanme
+      if (msg['success'] || msg?.pong || isWsPong(msg)) {
+        if (isWsPong(msg)) {
+          this.logger.silly('Received pong', { ...loggerCategory, wsKey });
+        } else {
+          this.emit('response', { ...msg, wsKey });
+        }
+        return;
       }
+
+      if (msg['finalFragment']) {
+        return this.emit('response', { ...msg, wsKey });
+      }
+      if (msg?.topic) {
+        return this.emit('update', { ...msg, wsKey });
+      }
+
+      if (
+        // spot v1
+        msg?.code ||
+        // spot v3
+        msg?.type === 'error' ||
+        // usdc options
+        msg?.success === false
+      ) {
+        return this.emit('error', { ...msg, wsKey });
+      }
+
+      this.logger.warning('Unhandled/unrecognised ws event message', {
+        ...loggerCategory,
+        message: msg,
+        event,
+        wsKey,
+      });
     } catch (e) {
       this.logger.error('Failed to parse ws event message', {
         ...loggerCategory,
@@ -694,9 +674,6 @@ export class WebsocketClient extends EventEmitter {
 
   private onWsError(error: any, wsKey: WsKey) {
     this.parseWsError('Websocket error', error, wsKey);
-    if (this.wsStore.isConnectionState(wsKey, READY_STATE_CONNECTED)) {
-      this.emit('error', error);
-    }
   }
 
   private onWsClose(event, wsKey: WsKey) {
@@ -705,32 +682,22 @@ export class WebsocketClient extends EventEmitter {
       wsKey,
     });
 
-    if (this.wsStore.getConnectionState(wsKey) !== READY_STATE_CLOSING) {
+    if (
+      this.wsStore.getConnectionState(wsKey) !== WsConnectionStateEnum.CLOSING
+    ) {
       this.reconnectWithDelay(wsKey, this.options.reconnectTimeout!);
-      this.emit('reconnect', { wsKey });
+      this.emit('reconnect', { wsKey, event });
     } else {
-      this.setWsState(wsKey, READY_STATE_INITIAL);
-      this.emit('close', { wsKey });
+      this.setWsState(wsKey, WsConnectionStateEnum.INITIAL);
+      this.emit('close', { wsKey, event });
     }
   }
 
-  private onWsMessageResponse(response: any, wsKey: WsKey) {
-    if (isWsPong(response)) {
-      this.logger.silly('Received pong', { ...loggerCategory, wsKey });
-    } else {
-      this.emit('response', response);
-    }
-  }
-
-  private onWsMessageUpdate(message: any) {
-    this.emit('update', message);
-  }
-
-  private getWs(wsKey: string) {
+  private getWs(wsKey: WsKey) {
     return this.wsStore.getWs(wsKey);
   }
 
-  private setWsState(wsKey: WsKey, state: WsConnectionState) {
+  private setWsState(wsKey: WsKey, state: WsConnectionStateEnum) {
     this.wsStore.setConnectionState(wsKey, state);
   }
 
@@ -739,49 +706,63 @@ export class WebsocketClient extends EventEmitter {
       return this.options.wsUrl;
     }
 
-    const networkKey = this.isLivenet() ? 'livenet' : 'testnet';
-    // TODO: reptitive
-    if (this.isLinear() || wsKey.startsWith('linear')) {
-      if (wsKey === wsKeyLinearPublic) {
-        return linearEndpoints.public[networkKey];
+    const networkKey = this.isTestnet() ? 'testnet' : 'livenet';
+
+    switch (wsKey) {
+      case WS_KEY_MAP.linearPublic: {
+        return WS_BASE_URL_MAP.linear.public[networkKey];
       }
-
-      if (wsKey === wsKeyLinearPrivate) {
-        return linearEndpoints.private[networkKey];
+      case WS_KEY_MAP.linearPrivate: {
+        return WS_BASE_URL_MAP.linear.private[networkKey];
       }
-
-      this.logger.error('Unhandled linear wsKey: ', {
-        ...loggerCategory,
-        wsKey,
-      });
-      return linearEndpoints[networkKey];
-    }
-
-    if (this.isSpot() || wsKey.startsWith('spot')) {
-      if (wsKey === wsKeySpotPublic) {
-        return spotEndpoints.public[networkKey];
+      case WS_KEY_MAP.spotPublic: {
+        return WS_BASE_URL_MAP.spot.public[networkKey];
       }
-
-      if (wsKey === wsKeySpotPrivate) {
-        return spotEndpoints.private[networkKey];
+      case WS_KEY_MAP.spotPrivate: {
+        return WS_BASE_URL_MAP.spot.private[networkKey];
       }
-
-      this.logger.error('Unhandled spot wsKey: ', { ...loggerCategory, wsKey });
-      return spotEndpoints[networkKey];
+      case WS_KEY_MAP.spotV3Public: {
+        return WS_BASE_URL_MAP.spotv3.public[networkKey];
+      }
+      case WS_KEY_MAP.spotV3Private: {
+        return WS_BASE_URL_MAP.spotv3.private[networkKey];
+      }
+      case WS_KEY_MAP.inverse: {
+        // private and public are on the same WS connection
+        return WS_BASE_URL_MAP.inverse.public[networkKey];
+      }
+      case WS_KEY_MAP.usdcOptionPublic: {
+        return WS_BASE_URL_MAP.usdcOption.public[networkKey];
+      }
+      case WS_KEY_MAP.usdcOptionPrivate: {
+        return WS_BASE_URL_MAP.usdcOption.private[networkKey];
+      }
+      case WS_KEY_MAP.usdcPerpPublic: {
+        return WS_BASE_URL_MAP.usdcPerp.public[networkKey];
+      }
+      case WS_KEY_MAP.usdcPerpPrivate: {
+        return WS_BASE_URL_MAP.usdcPerp.private[networkKey];
+      }
+      case WS_KEY_MAP.unifiedOptionPublic: {
+        return WS_BASE_URL_MAP.unifiedOption.public[networkKey];
+      }
+      case WS_KEY_MAP.unifiedPerpUSDTPublic: {
+        return WS_BASE_URL_MAP.unifiedPerpUSDT.public[networkKey];
+      }
+      case WS_KEY_MAP.unifiedPerpUSDCPublic: {
+        return WS_BASE_URL_MAP.unifiedPerpUSDC.public[networkKey];
+      }
+      case WS_KEY_MAP.unifiedPrivate: {
+        return WS_BASE_URL_MAP.unifiedPerp.private[networkKey];
+      }
+      default: {
+        this.logger.error('getWsUrl(): Unhandled wsKey: ', {
+          ...loggerCategory,
+          wsKey,
+        });
+        throw neverGuard(wsKey, `getWsUrl(): Unhandled wsKey`);
+      }
     }
-
-    // fallback to inverse
-    return inverseEndpoints[networkKey];
-  }
-
-  private getWsKeyForTopic(topic: string) {
-    if (this.isInverse()) {
-      return wsKeyInverse;
-    }
-    if (this.isLinear()) {
-      return getLinearWsKeyForTopic(topic);
-    }
-    return getSpotWsKeyForTopic(topic);
   }
 
   private wrongMarketError(market: APIMarket) {
@@ -790,14 +771,82 @@ export class WebsocketClient extends EventEmitter {
     );
   }
 
-  // TODO: persistance for subbed topics. Look at ftx-api implementation.
+  /**
+   * Add topic/topics to WS subscription list
+   * @param wsTopics topic or list of topics
+   * @param isPrivateTopic optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
+   */
+  public subscribe(wsTopics: WsTopic[] | WsTopic, isPrivateTopic?: boolean) {
+    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
+
+    topics.forEach((topic) =>
+      this.wsStore.addTopic(
+        getWsKeyForTopic(this.options.market, topic, isPrivateTopic),
+        topic
+      )
+    );
+
+    // attempt to send subscription topic per websocket
+    this.wsStore.getKeys().forEach((wsKey: WsKey) => {
+      // if connected, send subscription request
+      if (
+        this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
+      ) {
+        return this.requestSubscribeTopics(wsKey, [
+          ...this.wsStore.getTopics(wsKey),
+        ]);
+      }
+
+      // start connection process if it hasn't yet begun. Topics are automatically subscribed to on-connect
+      if (
+        !this.wsStore.isConnectionState(
+          wsKey,
+          WsConnectionStateEnum.CONNECTING
+        ) &&
+        !this.wsStore.isConnectionState(
+          wsKey,
+          WsConnectionStateEnum.RECONNECTING
+        )
+      ) {
+        return this.connect(wsKey);
+      }
+    });
+  }
+
+  /**
+   * Remove topic/topics from WS subscription list
+   * @param wsTopics topic or list of topics
+   * @param isPrivateTopic optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
+   */
+  public unsubscribe(wsTopics: WsTopic[] | WsTopic, isPrivateTopic?: boolean) {
+    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
+    topics.forEach((topic) =>
+      this.wsStore.deleteTopic(
+        getWsKeyForTopic(this.options.market, topic, isPrivateTopic),
+        topic
+      )
+    );
+
+    this.wsStore.getKeys().forEach((wsKey: WsKey) => {
+      // unsubscribe request only necessary if active connection exists
+      if (
+        this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
+      ) {
+        this.requestUnsubscribeTopics(wsKey, [
+          ...this.wsStore.getTopics(wsKey),
+        ]);
+      }
+    });
+  }
+
+  /** @deprecated use "market: 'spotv3" client */
   public subscribePublicSpotTrades(symbol: string, binary?: boolean) {
-    if (!this.isSpot()) {
+    if (this.options.market !== 'spot') {
       throw this.wrongMarketError('spot');
     }
 
     return this.tryWsSend(
-      wsKeySpotPublic,
+      WS_KEY_MAP.spotPublic,
       JSON.stringify({
         topic: 'trade',
         event: 'sub',
@@ -809,13 +858,14 @@ export class WebsocketClient extends EventEmitter {
     );
   }
 
+  /** @deprecated use "market: 'spotv3" client */
   public subscribePublicSpotTradingPair(symbol: string, binary?: boolean) {
-    if (!this.isSpot()) {
+    if (this.options.market !== 'spot') {
       throw this.wrongMarketError('spot');
     }
 
     return this.tryWsSend(
-      wsKeySpotPublic,
+      WS_KEY_MAP.spotPublic,
       JSON.stringify({
         symbol,
         topic: 'realtimes',
@@ -827,17 +877,18 @@ export class WebsocketClient extends EventEmitter {
     );
   }
 
+  /** @deprecated use "market: 'spotv3" client */
   public subscribePublicSpotV1Kline(
     symbol: string,
     candleSize: KlineInterval,
     binary?: boolean
   ) {
-    if (!this.isSpot()) {
+    if (this.options.market !== 'spot') {
       throw this.wrongMarketError('spot');
     }
 
     return this.tryWsSend(
-      wsKeySpotPublic,
+      WS_KEY_MAP.spotPublic,
       JSON.stringify({
         symbol,
         topic: 'kline_' + candleSize,
@@ -852,13 +903,15 @@ export class WebsocketClient extends EventEmitter {
   //ws.send('{"symbol":"BTCUSDT","topic":"depth","event":"sub","params":{"binary":false}}');
   //ws.send('{"symbol":"BTCUSDT","topic":"mergedDepth","event":"sub","params":{"binary":false,"dumpScale":1}}');
   //ws.send('{"symbol":"BTCUSDT","topic":"diffDepth","event":"sub","params":{"binary":false}}');
+
+  /** @deprecated use "market: 'spotv3" client */
   public subscribePublicSpotOrderbook(
     symbol: string,
     depth: 'full' | 'merge' | 'delta',
     dumpScale?: number,
     binary?: boolean
   ) {
-    if (!this.isSpot()) {
+    if (this.options.market !== 'spot') {
       throw this.wrongMarketError('spot');
     }
 
@@ -892,6 +945,6 @@ export class WebsocketClient extends EventEmitter {
     if (dumpScale) {
       msg.params.dumpScale = dumpScale;
     }
-    return this.tryWsSend(wsKeySpotPublic, JSON.stringify(msg));
+    return this.tryWsSend(WS_KEY_MAP.spotPublic, JSON.stringify(msg));
   }
 }

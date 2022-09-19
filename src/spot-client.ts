@@ -1,4 +1,3 @@
-import { AxiosRequestConfig } from 'axios';
 import {
   NewSpotOrder,
   APIResponse,
@@ -11,40 +10,15 @@ import {
   SpotSymbolInfo,
 } from './types';
 import BaseRestClient from './util/BaseRestClient';
-import {
-  agentSource,
-  getRestBaseUrl,
-  RestClientOptions,
-  REST_CLIENT_TYPE_ENUM,
-} from './util/requestUtils';
+import { REST_CLIENT_TYPE_ENUM } from './util/requestUtils';
 
+/**
+ * @deprecated Use SpotV3Client instead, which leverages the newer v3 APIs
+ * REST API client for Spot APIs (v1)
+ */
 export class SpotClient extends BaseRestClient {
-  /**
-   * @public Creates an instance of the Spot REST API client.
-   *
-   * @param {string} key - your API key
-   * @param {string} secret - your API secret
-   * @param {boolean} [useLivenet=false]
-   * @param {RestClientOptions} [restClientOptions={}] options to configure REST API connectivity
-   * @param {AxiosRequestConfig} [requestOptions={}] HTTP networking options for axios
-   */
-  constructor(
-    key?: string | undefined,
-    secret?: string | undefined,
-    useLivenet: boolean = false,
-    restClientOptions: RestClientOptions = {},
-    requestOptions: AxiosRequestConfig = {}
-  ) {
-    super(
-      key,
-      secret,
-      getRestBaseUrl(useLivenet, restClientOptions),
-      restClientOptions,
-      requestOptions,
-      REST_CLIENT_TYPE_ENUM.spot
-    );
-
-    return this;
+  getClientType() {
+    return REST_CLIENT_TYPE_ENUM.spot;
   }
 
   fetchServerTime(): Promise<number> {
@@ -129,10 +103,7 @@ export class SpotClient extends BaseRestClient {
    */
 
   submitOrder(params: NewSpotOrder): Promise<APIResponse<any>> {
-    return this.postPrivate('/spot/v1/order', {
-      ...params,
-      agentSource,
-    });
+    return this.postPrivate('/spot/v1/order', params);
   }
 
   getOrder(params: SpotOrderQueryById): Promise<APIResponse<any>> {
@@ -151,6 +122,7 @@ export class SpotClient extends BaseRestClient {
     const orderTypes = params.orderTypes
       ? params.orderTypes.join(',')
       : undefined;
+
     return this.deletePrivate('/spot/order/batch-cancel', {
       ...params,
       orderTypes,

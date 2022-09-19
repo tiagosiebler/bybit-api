@@ -1,13 +1,24 @@
-import { AxiosRequestConfig } from 'axios';
-import {
-  getRestBaseUrl,
-  RestClientOptions,
-  REST_CLIENT_TYPE_ENUM,
-} from './util/requestUtils';
+import { REST_CLIENT_TYPE_ENUM } from './util';
 import {
   APIResponseWithTime,
   AssetExchangeRecordsReq,
   CoinParam,
+  InverseActiveConditionalOrderRequest,
+  InverseActiveOrdersRequest,
+  InverseCancelConditionalOrderRequest,
+  InverseCancelOrderRequest,
+  InverseChangePositionMarginRequest,
+  InverseConditionalOrderRequest,
+  InverseGetClosedPnlRequest,
+  InverseGetOrderRequest,
+  InverseGetTradeRecordsRequest,
+  InverseOrderRequest,
+  InverseReplaceConditionalOrderRequest,
+  InverseReplaceOrderRequest,
+  InverseSetLeverageRequest,
+  InverseSetMarginTypeRequest,
+  InverseSetSlTpPositionModeRequest,
+  InverseSetTradingStopRequest,
   SymbolInfo,
   SymbolIntervalFromLimitParam,
   SymbolLimitParam,
@@ -15,35 +26,15 @@ import {
   SymbolPeriodLimitParam,
   WalletFundRecordsReq,
   WithdrawRecordsReq,
-} from './types/shared';
+} from './types';
 import BaseRestClient from './util/BaseRestClient';
 
+/**
+ * REST API client for Inverse Perpetual Futures APIs (v2)
+ */
 export class InverseClient extends BaseRestClient {
-  /**
-   * @public Creates an instance of the inverse REST API client.
-   *
-   * @param {string} key - your API key
-   * @param {string} secret - your API secret
-   * @param {boolean} [useLivenet=false]
-   * @param {RestClientOptions} [restClientOptions={}] options to configure REST API connectivity
-   * @param {AxiosRequestConfig} [requestOptions={}] HTTP networking options for axios
-   */
-  constructor(
-    key?: string | undefined,
-    secret?: string | undefined,
-    useLivenet: boolean = false,
-    restClientOptions: RestClientOptions = {},
-    requestOptions: AxiosRequestConfig = {}
-  ) {
-    super(
-      key,
-      secret,
-      getRestBaseUrl(useLivenet, restClientOptions),
-      restClientOptions,
-      requestOptions,
-      REST_CLIENT_TYPE_ENUM.inverse
-    );
-    return this;
+  getClientType() {
+    return REST_CLIENT_TYPE_ENUM.inverse;
   }
 
   async fetchServerTime(): Promise<number> {
@@ -190,39 +181,21 @@ export class InverseClient extends BaseRestClient {
    * Active orders
    */
 
-  placeActiveOrder(orderRequest: {
-    side: string;
-    symbol: string;
-    order_type: string;
-    qty: number;
-    price?: number;
-    time_in_force: string;
-    take_profit?: number;
-    stop_loss?: number;
-    reduce_only?: boolean;
-    tp_trigger_by?: 'LastPrice' | 'MarkPrice' | 'IndexPrice';
-    sl_trigger_by?: 'LastPrice' | 'MarkPrice' | 'IndexPrice';
-    close_on_trigger?: boolean;
-    order_link_id?: string;
-  }): Promise<APIResponseWithTime<any>> {
+  placeActiveOrder(
+    orderRequest: InverseOrderRequest
+  ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/order/create', orderRequest);
   }
 
-  getActiveOrderList(params: {
-    symbol: string;
-    order_status?: string;
-    direction?: string;
-    limit?: number;
-    cursor?: string;
-  }): Promise<APIResponseWithTime<any>> {
+  getActiveOrderList(
+    params: InverseActiveOrdersRequest
+  ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/order/list', params);
   }
 
-  cancelActiveOrder(params: {
-    symbol: string;
-    order_id?: string;
-    order_link_id?: string;
-  }): Promise<APIResponseWithTime<any>> {
+  cancelActiveOrder(
+    params: InverseCancelOrderRequest
+  ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/order/cancel', params);
   }
 
@@ -232,25 +205,15 @@ export class InverseClient extends BaseRestClient {
     return this.postPrivate('v2/private/order/cancelAll', params);
   }
 
-  replaceActiveOrder(params: {
-    order_id?: string;
-    order_link_id?: string;
-    symbol: string;
-    p_r_qty?: number;
-    p_r_price?: string;
-    take_profit?: number;
-    stop_loss?: number;
-    tp_trigger_by?: string;
-    sl_trigger_by?: string;
-  }): Promise<APIResponseWithTime<any>> {
+  replaceActiveOrder(
+    params: InverseReplaceOrderRequest
+  ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/order/replace', params);
   }
 
-  queryActiveOrder(params: {
-    order_id?: string;
-    order_link_id?: string;
-    symbol: string;
-  }): Promise<APIResponseWithTime<any>> {
+  queryActiveOrder(
+    params: InverseGetOrderRequest
+  ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/order', params);
   }
 
@@ -258,38 +221,22 @@ export class InverseClient extends BaseRestClient {
    * Conditional orders
    */
 
-  placeConditionalOrder(params: {
-    side: string;
-    symbol: string;
-    order_type: string;
-    qty: string;
-    price?: string;
-    base_price: string;
-    stop_px: string;
-    time_in_force: string;
-    trigger_by?: string;
-    close_on_trigger?: boolean;
-    order_link_id?: string;
-  }): Promise<APIResponseWithTime<any>> {
+  placeConditionalOrder(
+    params: InverseConditionalOrderRequest
+  ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/stop-order/create', params);
   }
 
   /** get conditional order list. This may see delays, use queryConditionalOrder() for real-time queries */
-  getConditionalOrder(params: {
-    symbol: string;
-    stop_order_status?: string;
-    direction?: string;
-    limit?: number;
-    cursor?: string;
-  }): Promise<APIResponseWithTime<any>> {
+  getConditionalOrder(
+    params: InverseActiveConditionalOrderRequest
+  ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/stop-order/list', params);
   }
 
-  cancelConditionalOrder(params: {
-    symbol: string;
-    stop_order_id?: string;
-    order_link_id?: string;
-  }): Promise<APIResponseWithTime<any>> {
+  cancelConditionalOrder(
+    params: InverseCancelConditionalOrderRequest
+  ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/stop-order/cancel', params);
   }
 
@@ -299,22 +246,15 @@ export class InverseClient extends BaseRestClient {
     return this.postPrivate('v2/private/stop-order/cancelAll', params);
   }
 
-  replaceConditionalOrder(params: {
-    stop_order_id?: string;
-    order_link_id?: string;
-    symbol: string;
-    p_r_qty?: number;
-    p_r_price?: string;
-    p_r_trigger_price?: string;
-  }): Promise<APIResponseWithTime<any>> {
+  replaceConditionalOrder(
+    params: InverseReplaceConditionalOrderRequest
+  ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/stop-order/replace', params);
   }
 
-  queryConditionalOrder(params: {
-    symbol: string;
-    stop_order_id?: string;
-    order_link_id?: string;
-  }): Promise<APIResponseWithTime<any>> {
+  queryConditionalOrder(
+    params: InverseGetOrderRequest
+  ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/stop-order', params);
   }
 
@@ -328,68 +268,45 @@ export class InverseClient extends BaseRestClient {
     return this.getPrivate('v2/private/position/list', params);
   }
 
-  changePositionMargin(params: {
-    symbol: string;
-    margin: string;
-  }): Promise<APIResponseWithTime<any>> {
+  changePositionMargin(
+    params: InverseChangePositionMarginRequest
+  ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('position/change-position-margin', params);
   }
 
-  setTradingStop(params: {
-    symbol: string;
-    take_profit?: number;
-    stop_loss?: number;
-    trailing_stop?: number;
-    tp_trigger_by?: string;
-    sl_trigger_by?: string;
-    new_trailing_active?: number;
-  }): Promise<APIResponseWithTime<any>> {
+  setTradingStop(
+    params: InverseSetTradingStopRequest
+  ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/position/trading-stop', params);
   }
 
-  setUserLeverage(params: {
-    symbol: string;
-    leverage: number;
-    leverage_only?: boolean;
-  }): Promise<APIResponseWithTime<any>> {
+  setUserLeverage(
+    params: InverseSetLeverageRequest
+  ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/position/leverage/save', params);
   }
 
-  getTradeRecords(params: {
-    order_id?: string;
-    symbol: string;
-    start_time?: number;
-    page?: number;
-    limit?: number;
-    order?: string;
-  }): Promise<APIResponseWithTime<any>> {
+  getTradeRecords(
+    params: InverseGetTradeRecordsRequest
+  ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/execution/list', params);
   }
 
-  getClosedPnl(params: {
-    symbol: string;
-    start_time?: number;
-    end_time?: number;
-    exec_type?: string;
-    page?: number;
-    limit?: number;
-  }): Promise<APIResponseWithTime<any>> {
+  getClosedPnl(
+    params: InverseGetClosedPnlRequest
+  ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/trade/closed-pnl/list', params);
   }
 
-  setSlTpPositionMode(params: {
-    symbol: string;
-    tp_sl_mode: 'Full' | 'Partial';
-  }): Promise<APIResponseWithTime<any>> {
+  setSlTpPositionMode(
+    params: InverseSetSlTpPositionModeRequest
+  ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/tpsl/switch-mode', params);
   }
 
-  setMarginType(params: {
-    symbol: string;
-    is_isolated: boolean;
-    buy_leverage: number;
-    sell_leverage: number;
-  }): Promise<APIResponseWithTime<any>> {
+  setMarginType(
+    params: InverseSetMarginTypeRequest
+  ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/position/switch-isolated', params);
   }
 

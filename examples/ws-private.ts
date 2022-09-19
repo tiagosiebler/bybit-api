@@ -1,13 +1,12 @@
-import { DefaultLogger } from '../src';
-import { WebsocketClient, wsKeySpotPublic } from '../src/websocket-client';
+import { WebsocketClient, WS_KEY_MAP, DefaultLogger } from '../src';
 
 // or
-// import { DefaultLogger, WebsocketClient } from 'bybit-api';
+// import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from 'bybit-api';
 
 (async () => {
   const logger = {
     ...DefaultLogger,
-    // silly: () => {},
+    silly: () => {},
   };
 
   const key = process.env.API_KEY;
@@ -25,7 +24,7 @@ import { WebsocketClient, wsKeySpotPublic } from '../src/websocket-client';
       key: key,
       secret: secret,
       market: market,
-      livenet: true,
+      // testnet: true,
       restOptions: {
         // enable_time_sync: true,
       },
