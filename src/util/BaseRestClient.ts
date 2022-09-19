@@ -61,10 +61,7 @@ export default abstract class BaseRestClient {
   abstract getClientType(): RestClientType;
 
   /**
-   * Create an instance of the REST client
-   * @param {string} key - your API key
-   * @param {string} secret - your API secret
-   * @param {boolean} [useLivenet=false]
+   * Create an instance of the REST client. Pass API credentials in the object in the first parameter.
    * @param {RestClientOptions} [restClientOptions={}] options to configure REST API connectivity
    * @param {AxiosRequestConfig} [networkOptions={}] HTTP networking options for axios
    */

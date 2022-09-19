@@ -6,8 +6,7 @@ import {
 } from '../response.util';
 
 describe('Public Linear REST API Endpoints', () => {
-  const useLivenet = true;
-  const api = new LinearClient(undefined, undefined, useLivenet);
+  const api = new LinearClient();
 
   const symbol = 'BTCUSDT';
   const interval = '15';

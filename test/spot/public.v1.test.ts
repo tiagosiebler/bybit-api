@@ -6,8 +6,7 @@ import {
 } from '../response.util';
 
 describe('Public Spot REST API Endpoints', () => {
-  const useLivenet = true;
-  const api = new SpotClient(undefined, undefined, useLivenet);
+  const api = new SpotClient();
 
   const symbol = 'BTCUSDT';
   const interval = '15m';
