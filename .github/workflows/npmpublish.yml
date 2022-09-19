@@ -10,7 +10,6 @@ on:
 
 jobs:
   publish-npm:
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Package Version Updated
