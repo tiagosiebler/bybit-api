@@ -240,10 +240,9 @@ ws.on('close', () => {
   console.log('connection closed');
 });
 
-// Optional: Listen to raw error events.
-// Note: responses to invalid topics are currently only sent in the "response" event.
+// Optional: Listen to raw error events. Recommended.
 ws.on('error', err => {
-  console.error('ERR', err);
+  console.error('error', err);
 });
 ```
 

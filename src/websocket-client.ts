@@ -47,12 +47,19 @@ export type WsClientEvent =
   | 'response';
 
 interface WebsocketClientEvents {
+  /** Connection opened. If this connection was previously opened and reconnected, expect the reconnected event instead */
   open: (evt: { wsKey: WsKey; event: any }) => void;
+  /** Reconnecting a dropped connection */
   reconnect: (evt: { wsKey: WsKey; event: any }) => void;
+  /** Successfully reconnected a connection that dropped */
   reconnected: (evt: { wsKey: WsKey; event: any }) => void;
+  /** Connection closed */
   close: (evt: { wsKey: WsKey; event: any }) => void;
+  /** Received reply to websocket command (e.g. after subscribing to topics) */
   response: (response: any) => void;
+  /** Received data for topic */
   update: (response: any) => void;
+  /** Exception from ws client OR custom listeners */
   error: (response: any) => void;
 }
 
@@ -92,6 +99,10 @@ export class WebsocketClient extends EventEmitter {
       fetchTimeOffsetBeforeAuth: false,
       ...options,
     };
+    this.options.restOptions = {
+      ...this.options.restOptions,
+      testnet: this.options.testnet,
+    };
 
     this.prepareRESTClient();
   }
@@ -105,9 +116,6 @@ export class WebsocketClient extends EventEmitter {
     switch (this.options.market) {
       case 'inverse': {
         this.restClient = new InverseClient(
-          undefined,
-          undefined,
-          !this.isTestnet(),
           this.options.restOptions,
           this.options.requestOptions
         );
@@ -115,9 +123,6 @@ export class WebsocketClient extends EventEmitter {
       }
       case 'linear': {
         this.restClient = new LinearClient(
-          undefined,
-          undefined,
-          !this.isTestnet(),
           this.options.restOptions,
           this.options.requestOptions
         );
@@ -125,9 +130,6 @@ export class WebsocketClient extends EventEmitter {
       }
       case 'spot': {
         this.restClient = new SpotClient(
-          undefined,
-          undefined,
-          !this.isTestnet(),
           this.options.restOptions,
           this.options.requestOptions
         );
@@ -136,9 +138,6 @@ export class WebsocketClient extends EventEmitter {
       }
       case 'spotv3': {
         this.restClient = new SpotClientV3(
-          undefined,
-          undefined,
-          !this.isTestnet(),
           this.options.restOptions,
           this.options.requestOptions
         );
@@ -146,9 +145,6 @@ export class WebsocketClient extends EventEmitter {
       }
       case 'usdcOption': {
         this.restClient = new USDCOptionClient(
-          undefined,
-          undefined,
-          !this.isTestnet(),
           this.options.restOptions,
           this.options.requestOptions
         );
@@ -156,9 +152,6 @@ export class WebsocketClient extends EventEmitter {
       }
       case 'usdcPerp': {
         this.restClient = new USDCPerpetualClient(
-          undefined,
-          undefined,
-          !this.isTestnet(),
           this.options.restOptions,
           this.options.requestOptions
         );
@@ -167,9 +160,6 @@ export class WebsocketClient extends EventEmitter {
       case 'unifiedOption':
       case 'unifiedPerp': {
         this.restClient = new UnifiedMarginClient(
-          undefined,
-          undefined,
-          !this.isTestnet(),
           this.options.restOptions,
           this.options.requestOptions
         );

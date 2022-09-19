@@ -5,11 +5,14 @@ import {
 } from '../../response.util';
 
 describe('Public USDC Options REST API Endpoints', () => {
-  const useLivenet = true;
   const API_KEY = undefined;
   const API_SECRET = undefined;
 
-  const api = new USDCOptionClient(API_KEY, API_SECRET, useLivenet);
+  const api = new USDCOptionClient({
+    key: API_KEY,
+    secret: API_SECRET,
+    testnet: false,
+  });
   const symbol = 'BTC-30SEP22-400000-C';
 
   it('getOrderBook()', async () => {

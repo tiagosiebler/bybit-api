@@ -2,7 +2,6 @@ import { SpotClient } from '../../src';
 import { errorResponseObject, successResponseList } from '../response.util';
 
 describe('Private Spot REST API GET Endpoints', () => {
-  const useLivenet = true;
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
 
@@ -11,7 +10,11 @@ describe('Private Spot REST API GET Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new SpotClient(API_KEY, API_SECRET, useLivenet);
+  const api = new SpotClient({
+    key: API_KEY,
+    secret: API_SECRET,
+    testnet: false,
+  });
 
   it('getOrder()', async () => {
     // No auth error == test pass

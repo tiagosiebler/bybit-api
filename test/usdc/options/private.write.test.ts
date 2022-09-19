@@ -2,7 +2,6 @@ import { API_ERROR_CODE, USDCOptionClient } from '../../../src';
 import { successResponseObjectV3 } from '../../response.util';
 
 describe('Private USDC Options REST API POST Endpoints', () => {
-  const useLivenet = true;
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
 
@@ -11,7 +10,11 @@ describe('Private USDC Options REST API POST Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new USDCOptionClient(API_KEY, API_SECRET, useLivenet);
+  const api = new USDCOptionClient({
+    key: API_KEY,
+    secret: API_SECRET,
+    testnet: false,
+  });
 
   const currency = 'USDC';
   const symbol = 'BTC-30SEP22-400000-C';

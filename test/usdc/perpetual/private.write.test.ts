@@ -5,7 +5,6 @@ import {
 } from '../../response.util';
 
 describe('Private USDC Perp REST API POST Endpoints', () => {
-  const useLivenet = true;
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
 
@@ -14,7 +13,11 @@ describe('Private USDC Perp REST API POST Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new USDCPerpetualClient(API_KEY, API_SECRET, useLivenet);
+  const api = new USDCPerpetualClient({
+    key: API_KEY,
+    secret: API_SECRET,
+    testnet: false,
+  });
 
   const symbol = 'BTCPERP';
 

@@ -1,9 +1,9 @@
-import { SpotClient } from '../src/index';
+import { SpotClientV3 } from '../src/index';
 
 // or
-// import { SpotClient } from 'bybit-api';
+// import { SpotClientV3 } from 'bybit-api';
 
-const client = new SpotClient();
+const client = new SpotClientV3();
 
 const symbol = 'BTCUSDT';
 

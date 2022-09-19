@@ -2,11 +2,14 @@ import { CopyTradingClient } from '../../src';
 import { successResponseObject } from '../response.util';
 
 describe('Public Copy Trading REST API Endpoints', () => {
-  const useLivenet = true;
   const API_KEY = undefined;
   const API_SECRET = undefined;
 
-  const api = new CopyTradingClient(API_KEY, API_SECRET, useLivenet);
+  const api = new CopyTradingClient({
+    key: API_KEY,
+    secret: API_SECRET,
+    testnet: false,
+  });
 
   it('getSymbols()', async () => {
     expect(await api.getSymbols()).toMatchObject({

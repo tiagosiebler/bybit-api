@@ -6,8 +6,7 @@ import {
 } from '../response.util';
 
 describe('Public Inverse REST API Endpoints', () => {
-  const useLivenet = true;
-  const api = new InverseClient(undefined, undefined, useLivenet);
+  const api = new InverseClient();
 
   const symbol = 'BTCUSD';
   const interval = '15';

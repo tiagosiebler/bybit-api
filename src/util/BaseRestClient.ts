@@ -24,7 +24,7 @@ interface SignedRequestContext {
   timestamp?: number;
   api_key?: string;
   recv_window?: number;
-  // spot is diff from the rest...
+  // spot v1 is diff from the rest...
   recvWindow?: number;
 }
 
@@ -45,8 +45,8 @@ interface UnsignedRequest<T> {
 type SignMethod = 'keyInBody' | 'usdc';
 
 export default abstract class BaseRestClient {
-  private timeOffset: number | null;
-  private syncTimePromise: null | Promise<any>;
+  private timeOffset: number | null = null;
+  private syncTimePromise: null | Promise<any> = null;
   private options: RestClientOptions;
   private baseUrl: string;
   private globalRequestOptions: AxiosRequestConfig;
@@ -66,19 +66,12 @@ export default abstract class BaseRestClient {
    * @param {string} secret - your API secret
    * @param {boolean} [useLivenet=false]
    * @param {RestClientOptions} [restClientOptions={}] options to configure REST API connectivity
-   * @param {AxiosRequestConfig} [requestOptions={}] HTTP networking options for axios
+   * @param {AxiosRequestConfig} [networkOptions={}] HTTP networking options for axios
    */
   constructor(
-    key?: string | undefined,
-    secret?: string | undefined,
-    useLivenet: boolean = false,
-    options: RestClientOptions = {},
-    requestOptions: AxiosRequestConfig = {}
+    restOptions: RestClientOptions = {},
+    networkOptions: AxiosRequestConfig = {}
   ) {
-    const baseUrl = getRestBaseUrl(useLivenet, options);
-    this.timeOffset = null;
-    this.syncTimePromise = null;
-
     this.clientType = this.getClientType();
 
     this.options = {
@@ -89,24 +82,26 @@ export default abstract class BaseRestClient {
       enable_time_sync: false,
       /** How often to sync time drift with bybit servers (if time sync is enabled) */
       sync_interval_ms: 3600000,
-      ...options,
+      ...restOptions,
     };
 
     this.globalRequestOptions = {
       // in ms == 5 minutes by default
       timeout: 1000 * 60 * 5,
       // custom request options based on axios specs - see: https://github.com/axios/axios#request-config
-      ...requestOptions,
+      ...networkOptions,
       headers: {
         'x-referer': APIID,
       },
     };
 
-    this.baseUrl = baseUrl;
+    this.baseUrl = getRestBaseUrl(!!this.options.testnet, restOptions);
+    this.key = this.options.key;
+    this.secret = this.options.secret;
 
-    if (key && !secret) {
+    if (this.key && !this.secret) {
       throw new Error(
-        'API Key & Secret are both required for private enpoints'
+        'API Key & Secret are both required for private endpoints'
       );
     }
 
@@ -114,9 +109,6 @@ export default abstract class BaseRestClient {
       this.syncTime();
       setInterval(this.syncTime.bind(this), +this.options.sync_interval_ms!);
     }
-
-    this.key = key;
-    this.secret = secret;
   }
 
   private isSpotClient() {

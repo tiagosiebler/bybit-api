@@ -5,11 +5,14 @@ import {
 } from '../../response.util';
 
 describe('Public USDC Perp REST API Endpoints', () => {
-  const useLivenet = true;
   const API_KEY = undefined;
   const API_SECRET = undefined;
 
-  const api = new USDCPerpetualClient(API_KEY, API_SECRET, useLivenet);
+  const api = new USDCPerpetualClient({
+    key: API_KEY,
+    secret: API_SECRET,
+    testnet: false,
+  });
 
   const symbol = 'BTCPERP';
   const category = 'PERPETUAL';

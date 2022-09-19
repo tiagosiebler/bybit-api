@@ -1,4 +1,13 @@
 export interface RestClientOptions {
+  /** Your API key */
+  key?: string;
+
+  /** Your API secret */
+  secret?: string;
+
+  /** Set to `true` to connect to testnet. Uses the live environment by default. */
+  testnet?: boolean;
+
   /** Override the max size of the request window (in ms) */
   recv_window?: number;
 
@@ -43,7 +52,7 @@ export function serializeParams(
 }
 
 export function getRestBaseUrl(
-  useLivenet: boolean,
+  useTestnet: boolean,
   restInverseOptions: RestClientOptions
 ): string {
   const exchangeBaseUrls = {
@@ -55,10 +64,11 @@ export function getRestBaseUrl(
     return restInverseOptions.baseUrl;
   }
 
-  if (useLivenet === true) {
-    return exchangeBaseUrls.livenet;
+  if (useTestnet) {
+    return exchangeBaseUrls.testnet;
   }
-  return exchangeBaseUrls.testnet;
+
+  return exchangeBaseUrls.livenet;
 }
 
 export function isWsPong(msg: any): boolean {
