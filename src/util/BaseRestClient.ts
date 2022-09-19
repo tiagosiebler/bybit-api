@@ -115,20 +115,16 @@ export default abstract class BaseRestClient {
     return this.clientType === REST_CLIENT_TYPE_ENUM.spot;
   }
 
-  private isUSDCClient() {
-    return this.clientType === REST_CLIENT_TYPE_ENUM.v3;
-  }
-
   get(endpoint: string, params?: any) {
     return this._call('GET', endpoint, params, true);
   }
 
-  post(endpoint: string, params?: any) {
-    return this._call('POST', endpoint, params, true);
-  }
-
   getPrivate(endpoint: string, params?: any) {
     return this._call('GET', endpoint, params, false);
+  }
+
+  post(endpoint: string, params?: any) {
+    return this._call('POST', endpoint, params, true);
   }
 
   postPrivate(endpoint: string, params?: any) {
@@ -201,8 +197,8 @@ export default abstract class BaseRestClient {
       };
     }
 
-    // USDC Options uses a different way of authenticating requests (headers instead of params)
-    if (this.isUSDCClient()) {
+    // USDC endpoints, unified margin and a few others use a different way of authenticating requests (headers instead of params)
+    if (this.clientType === REST_CLIENT_TYPE_ENUM.v3) {
       if (!options.headers) {
         options.headers = {};
       }
