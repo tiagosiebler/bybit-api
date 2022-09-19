@@ -80,7 +80,7 @@ All REST clients have can be used in a similar way. However, method names, param
 
 Not sure which function to call or which parameters to use? Click the class name in the table above to look at all the function names (they are in the same order as the official API docs), and check the API docs for a list of endpoints/paramters/responses.
 
-```javascript
+```typescript
 const {
   InverseClient,
   LinearClient,
@@ -95,41 +95,51 @@ const {
 } = require('bybit-api');
 
 const restClientOptions = {
-  // override the max size of the request window (in ms)
+  /** Your API key. Optional, if you plan on making private api calls */
+  key?: string;
+
+  /** Your API secret. Optional, if you plan on making private api calls */
+  secret?: string;
+
+  /** Set to `true` to connect to testnet. Uses the live environment by default. */
+  testnet?: boolean;
+
+  /** Override the max size of the request window (in ms) */
   recv_window?: number;
 
-  // Disabled by default, not recommended unless you know what you're doing
+  /** Disabled by default. This can help on machines with consistent latency problems. */
   enable_time_sync?: boolean;
 
-  // how often to sync time drift with bybit servers
-  sync_interval_ms?: number;
+  /** How often to sync time drift with bybit servers */
+  sync_interval_ms?: number | string;
 
-  // Optionally override API protocol + domain
-  // e.g 'https://api.bytick.com'
+  /** Default: false. If true, we'll throw errors if any params are undefined */
+  strict_param_validation?: boolean;
+
+  /**
+   * Optionally override API protocol + domain
+   * e.g baseUrl: 'https://api.bytick.com'
+   **/
   baseUrl?: string;
 
-  // Default: true. whether to try and post-process request exceptions.
+  /** Default: true. whether to try and post-process request exceptions. */
   parse_exceptions?: boolean;
 };
 
 const API_KEY = 'xxx';
-const PRIVATE_KEY = 'yyy';
-const useLivenet = false;
+const API_SECRET = 'yyy';
+const useTestnet = false;
 
-const client = new InverseClient(
-  // Optional, unless you plan on making private API calls
-  API_KEY,
-  PRIVATE_KEY,
-
-  // Optional, uses testnet by default. Set to 'true' to use livenet.
-  useLivenet,
-
-  // restClientOptions,
+const client = new InverseClient({
+  key: API_KEY,
+  secret: API_SECRET,
+  testnet: useTestnet
+},
   // requestLibraryOptions
 );
 
-// For public-only API calls, simply set key and secret to "undefined":
-// const client = new InverseClient(undefined, undefined, useLivenet);
+// For public-only API calls, simply don't provide a key & secret or set them to undefined
+// const client = new InverseClient({});
 
 client.getApiKeyInfo()
   .then(result => {
@@ -179,8 +189,8 @@ const wsConfig = {
     The following parameters are optional:
   */
 
-  // defaults to false == testnet. Set to true for livenet.
-  // livenet: true
+  // defaults to true == livenet
+  // testnet: false
 
   // NOTE: to listen to multiple markets (spot vs inverse vs linear vs linearfutures) at once, make one WebsocketClient instance per market
 

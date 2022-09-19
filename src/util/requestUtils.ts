@@ -11,9 +11,6 @@ export interface RestClientOptions {
   /** Override the max size of the request window (in ms) */
   recv_window?: number;
 
-  /** @deprecated Time sync is now disabled by default. To re-enable it, use enable_time_sync instead. */
-  disable_time_sync?: boolean;
-
   /** Disabled by default. This can help on machines with consistent latency problems. */
   enable_time_sync?: boolean;
 
