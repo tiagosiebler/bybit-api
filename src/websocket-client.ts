@@ -174,6 +174,11 @@ export class WebsocketClient extends EventEmitter {
     }
   }
 
+  /** Get the WsStore that tracks websockets & topics */
+  public getWsStore(): WsStore {
+    return this.wsStore;
+  }
+
   public isTestnet(): boolean {
     return this.options.testnet === true;
   }

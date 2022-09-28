@@ -60,6 +60,8 @@ import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../src';
 
   // Spot V3
   // wsClient.subscribe('trade.BTCUSDT');
+  // Or an array of topics
+  // wsClient.subscribe(['trade.BTCUSDT', 'trade.LTCUSDT']);
 
   // usdc options
   // wsClient.subscribe([
@@ -74,11 +76,26 @@ import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../src';
   // unified perps
   wsClient.subscribe('publicTrade.BTCUSDT');
 
+  // For spot v1 (the old, deprecated client), request public connection first then send required topics on 'open'
+  // Not necessary for spot v3
+  // wsClient.connectPublic();
+
+  // To unsubscribe from topics:
   // setTimeout(() => {
   //   console.log('unsubscribing');
   //   wsClient.unsubscribe('trade.BTCUSDT');
   // }, 5 * 1000);
 
-  // For spot, request public connection first then send required topics on 'open'
-  // wsClient.connectPublic();
+  // Topics are tracked per websocket type
+  // Get a list of subscribed topics (e.g. for public v3 spot topics)
+  const publicSpotTopics = wsClient
+    .getWsStore()
+    .getTopics(WS_KEY_MAP.spotV3Public);
+
+  console.log('public spot topics: ', publicSpotTopics);
+
+  const privateSpotTopics = wsClient
+    .getWsStore()
+    .getTopics(WS_KEY_MAP.spotV3Private);
+  console.log('private spot topics: ', publicSpotTopics);
 })();
