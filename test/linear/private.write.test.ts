@@ -45,7 +45,6 @@ describe('Private Linear REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
-      ret_msg: 'order not exists or too late to cancel',
     });
   });
 
@@ -67,7 +66,6 @@ describe('Private Linear REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
-      ret_msg: 'order not exists or too late to replace',
     });
   });
 
@@ -88,7 +86,6 @@ describe('Private Linear REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.INSUFFICIENT_BALANCE_FOR_ORDER_COST_LINEAR,
-      ret_msg: 'Insufficient wallet balance',
     });
   });
 
@@ -100,7 +97,6 @@ describe('Private Linear REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE_LINEAR,
-      ret_msg: 'order not exists or too late to cancel',
     });
   });
 
@@ -122,7 +118,6 @@ describe('Private Linear REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE_LINEAR,
-      ret_msg: 'order not exists or too late to replace',
     });
   });
 
@@ -135,7 +130,6 @@ describe('Private Linear REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.AUTO_ADD_MARGIN_NOT_MODIFIED,
-      ret_msg: 'autoAddMargin not modified',
     });
   });
 
@@ -149,7 +143,6 @@ describe('Private Linear REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ISOLATED_NOT_MODIFIED_LINEAR,
-      ret_msg: 'Isolated not modified',
     });
   });
 
@@ -161,7 +154,6 @@ describe('Private Linear REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.POSITION_MODE_NOT_MODIFIED,
-      ret_msg: 'position mode not modified',
     });
   });
 
@@ -173,7 +165,6 @@ describe('Private Linear REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.SAME_SLTP_MODE_LINEAR,
-      ret_msg: 'same tp sl mode2',
     });
   });
 
@@ -186,7 +177,6 @@ describe('Private Linear REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.POSITION_SIZE_IS_ZERO,
-      ret_msg: 'position size is zero',
     });
   });
 
@@ -199,7 +189,6 @@ describe('Private Linear REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.LEVERAGE_NOT_MODIFIED,
-      ret_msg: 'leverage not modified',
     });
   });
 
@@ -212,7 +201,6 @@ describe('Private Linear REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.CANNOT_SET_LINEAR_TRADING_STOP_FOR_ZERO_POS,
-      ret_msg: 'can not set tp/sl/ts for zero position',
     });
   });
 
@@ -225,7 +213,6 @@ describe('Private Linear REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.RISK_ID_NOT_MODIFIED,
-      ret_msg: 'risk id not modified',
     });
   });
 });
