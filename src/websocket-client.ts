@@ -30,6 +30,7 @@ import {
   WS_BASE_URL_MAP,
   getWsKeyForTopic,
   neverGuard,
+  getMaxTopicsPerSubscribeEvent,
 } from './util';
 import { USDCOptionClient } from './usdc-option-client';
 import { USDCPerpetualClient } from './usdc-perpetual-client';
@@ -108,11 +109,78 @@ export class WebsocketClient extends EventEmitter {
   }
 
   /**
-   * Only used if we fetch exchange time before attempting auth.
-   * Disabled by default.
+   * Subscribe to topics & track/persist them. They will be automatically resubscribed to if the connection drops/reconnects.
+   * @param wsTopics topic or list of topics
+   * @param isPrivateTopic optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
+   */
+  public subscribe(wsTopics: WsTopic[] | WsTopic, isPrivateTopic?: boolean) {
+    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
+
+    topics.forEach((topic) =>
+      this.wsStore.addTopic(
+        getWsKeyForTopic(this.options.market, topic, isPrivateTopic),
+        topic
+      )
+    );
+
+    // attempt to send subscription topic per websocket
+    this.wsStore.getKeys().forEach((wsKey: WsKey) => {
+      // if connected, send subscription request
+      if (
+        this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
+      ) {
+        return this.requestSubscribeTopics(wsKey, [
+          ...this.wsStore.getTopics(wsKey),
+        ]);
+      }
+
+      // start connection process if it hasn't yet begun. Topics are automatically subscribed to on-connect
+      if (
+        !this.wsStore.isConnectionState(
+          wsKey,
+          WsConnectionStateEnum.CONNECTING
+        ) &&
+        !this.wsStore.isConnectionState(
+          wsKey,
+          WsConnectionStateEnum.RECONNECTING
+        )
+      ) {
+        return this.connect(wsKey);
+      }
+    });
+  }
+
+  /**
+   * Unsubscribe from topics & remove them from memory. They won't be re-subscribed to if the connection reconnects.
+   * @param wsTopics topic or list of topics
+   * @param isPrivateTopic optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
+   */
+  public unsubscribe(wsTopics: WsTopic[] | WsTopic, isPrivateTopic?: boolean) {
+    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
+    topics.forEach((topic) =>
+      this.wsStore.deleteTopic(
+        getWsKeyForTopic(this.options.market, topic, isPrivateTopic),
+        topic
+      )
+    );
+
+    this.wsStore.getKeys().forEach((wsKey: WsKey) => {
+      // unsubscribe request only necessary if active connection exists
+      if (
+        this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
+      ) {
+        this.requestUnsubscribeTopics(wsKey, [
+          ...this.wsStore.getTopics(wsKey),
+        ]);
+      }
+    });
+  }
+
+  /**
+   * @private Only used if we fetch exchange time before attempting auth. Disabled by default.
    * I've removed this for ftx and it's working great, tempted to remove this here
    */
-  prepareRESTClient(): void {
+  private prepareRESTClient(): void {
     switch (this.options.market) {
       case 'inverse': {
         this.restClient = new InverseClient(
@@ -172,6 +240,11 @@ export class WebsocketClient extends EventEmitter {
         );
       }
     }
+  }
+
+  /** Get the WsStore that tracks websockets & topics */
+  public getWsStore(): WsStore {
+    return this.wsStore;
   }
 
   public isTestnet(): boolean {
@@ -503,10 +576,28 @@ export class WebsocketClient extends EventEmitter {
   }
 
   /**
-   * Send WS message to subscribe to topics.
+   * @private Use the `subscribe(topics)` method to subscribe to topics. Send WS message to subscribe to topics.
    */
   private requestSubscribeTopics(wsKey: WsKey, topics: string[]) {
     if (!topics.length) {
+      return;
+    }
+
+    const maxTopicsPerEvent = getMaxTopicsPerSubscribeEvent(
+      this.options.market
+    );
+    if (maxTopicsPerEvent && topics.length > maxTopicsPerEvent) {
+      this.logger.silly(
+        `Subscribing to topics in batches of ${maxTopicsPerEvent}`
+      );
+      for (var i = 0; i < topics.length; i += maxTopicsPerEvent) {
+        const batch = topics.slice(i, i + maxTopicsPerEvent);
+        this.logger.silly(`Subscribing to batch of ${batch.length}`);
+        this.requestSubscribeTopics(wsKey, batch);
+      }
+      this.logger.silly(
+        `Finished batch subscribing to ${topics.length} topics`
+      );
       return;
     }
 
@@ -520,12 +611,31 @@ export class WebsocketClient extends EventEmitter {
   }
 
   /**
-   * Send WS message to unsubscribe from topics.
+   * @private Use the `unsubscribe(topics)` method to unsubscribe from topics. Send WS message to unsubscribe from topics.
    */
   private requestUnsubscribeTopics(wsKey: WsKey, topics: string[]) {
     if (!topics.length) {
       return;
     }
+
+    const maxTopicsPerEvent = getMaxTopicsPerSubscribeEvent(
+      this.options.market
+    );
+    if (maxTopicsPerEvent && topics.length > maxTopicsPerEvent) {
+      this.logger.silly(
+        `Unsubscribing to topics in batches of ${maxTopicsPerEvent}`
+      );
+      for (var i = 0; i < topics.length; i += maxTopicsPerEvent) {
+        const batch = topics.slice(i, i + maxTopicsPerEvent);
+        this.logger.silly(`Unsubscribing to batch of ${batch.length}`);
+        this.requestUnsubscribeTopics(wsKey, batch);
+      }
+      this.logger.silly(
+        `Finished batch unsubscribing to ${topics.length} topics`
+      );
+      return;
+    }
+
     const wsMessage = JSON.stringify({
       op: 'unsubscribe',
       args: topics,
@@ -622,11 +732,11 @@ export class WebsocketClient extends EventEmitter {
       this.clearPongTimer(wsKey);
 
       const msg = JSON.parse((event && event.data) || event);
-      this.logger.silly('Received event', {
-        ...loggerCategory,
-        wsKey,
-        msg: JSON.stringify(msg),
-      });
+      // this.logger.silly('Received event', {
+      //   ...loggerCategory,
+      //   wsKey,
+      //   msg: JSON.stringify(msg),
+      // });
 
       // TODO: cleanme
       if (msg['success'] || msg?.pong || isWsPong(msg)) {
@@ -769,74 +879,6 @@ export class WebsocketClient extends EventEmitter {
     return new Error(
       `This WS client was instanced for the ${this.options.market} market. Make another WebsocketClient instance with "market: '${market}' to listen to spot topics`
     );
-  }
-
-  /**
-   * Add topic/topics to WS subscription list
-   * @param wsTopics topic or list of topics
-   * @param isPrivateTopic optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
-   */
-  public subscribe(wsTopics: WsTopic[] | WsTopic, isPrivateTopic?: boolean) {
-    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
-
-    topics.forEach((topic) =>
-      this.wsStore.addTopic(
-        getWsKeyForTopic(this.options.market, topic, isPrivateTopic),
-        topic
-      )
-    );
-
-    // attempt to send subscription topic per websocket
-    this.wsStore.getKeys().forEach((wsKey: WsKey) => {
-      // if connected, send subscription request
-      if (
-        this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
-      ) {
-        return this.requestSubscribeTopics(wsKey, [
-          ...this.wsStore.getTopics(wsKey),
-        ]);
-      }
-
-      // start connection process if it hasn't yet begun. Topics are automatically subscribed to on-connect
-      if (
-        !this.wsStore.isConnectionState(
-          wsKey,
-          WsConnectionStateEnum.CONNECTING
-        ) &&
-        !this.wsStore.isConnectionState(
-          wsKey,
-          WsConnectionStateEnum.RECONNECTING
-        )
-      ) {
-        return this.connect(wsKey);
-      }
-    });
-  }
-
-  /**
-   * Remove topic/topics from WS subscription list
-   * @param wsTopics topic or list of topics
-   * @param isPrivateTopic optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
-   */
-  public unsubscribe(wsTopics: WsTopic[] | WsTopic, isPrivateTopic?: boolean) {
-    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
-    topics.forEach((topic) =>
-      this.wsStore.deleteTopic(
-        getWsKeyForTopic(this.options.market, topic, isPrivateTopic),
-        topic
-      )
-    );
-
-    this.wsStore.getKeys().forEach((wsKey: WsKey) => {
-      // unsubscribe request only necessary if active connection exists
-      if (
-        this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
-      ) {
-        this.requestUnsubscribeTopics(wsKey, [
-          ...this.wsStore.getTopics(wsKey),
-        ]);
-      }
-    });
   }
 
   /** @deprecated use "market: 'spotv3" client */
