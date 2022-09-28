@@ -256,6 +256,28 @@ export function getWsKeyForTopic(
   }
 }
 
+export function getMaxTopicsPerSubscribeEvent(
+  market: APIMarket
+): number | null {
+  switch (market) {
+    case 'inverse':
+    case 'linear':
+    case 'usdcOption':
+    case 'usdcPerp':
+    case 'unifiedOption':
+    case 'unifiedPerp':
+    case 'spot': {
+      return null;
+    }
+    case 'spotv3': {
+      return 10;
+    }
+    default: {
+      throw neverGuard(market, `getWsKeyForTopic(): Unhandled market`);
+    }
+  }
+}
+
 export function getUsdcWsKeyForTopic(
   topic: string,
   subGroup: 'option' | 'perp'

@@ -30,6 +30,7 @@ import {
   WS_BASE_URL_MAP,
   getWsKeyForTopic,
   neverGuard,
+  getMaxTopicsPerSubscribeEvent,
 } from './util';
 import { USDCOptionClient } from './usdc-option-client';
 import { USDCPerpetualClient } from './usdc-perpetual-client';
@@ -515,6 +516,24 @@ export class WebsocketClient extends EventEmitter {
       return;
     }
 
+    const maxTopicsPerEvent = getMaxTopicsPerSubscribeEvent(
+      this.options.market
+    );
+    if (maxTopicsPerEvent && topics.length > maxTopicsPerEvent) {
+      this.logger.silly(
+        `Subscribing to topics in batches of ${maxTopicsPerEvent}`
+      );
+      for (var i = 0; i < topics.length; i += maxTopicsPerEvent) {
+        const batch = topics.slice(i, i + maxTopicsPerEvent);
+        this.logger.silly(`Subscribing to batch of ${batch.length}`);
+        this.requestSubscribeTopics(wsKey, batch);
+      }
+      this.logger.silly(
+        `Finished batch subscribing to ${topics.length} topics`
+      );
+      return;
+    }
+
     const wsMessage = JSON.stringify({
       req_id: topics.join(','),
       op: 'subscribe',
@@ -531,6 +550,25 @@ export class WebsocketClient extends EventEmitter {
     if (!topics.length) {
       return;
     }
+
+    const maxTopicsPerEvent = getMaxTopicsPerSubscribeEvent(
+      this.options.market
+    );
+    if (maxTopicsPerEvent && topics.length > maxTopicsPerEvent) {
+      this.logger.silly(
+        `Unsubscribing to topics in batches of ${maxTopicsPerEvent}`
+      );
+      for (var i = 0; i < topics.length; i += maxTopicsPerEvent) {
+        const batch = topics.slice(i, i + maxTopicsPerEvent);
+        this.logger.silly(`Unsubscribing to batch of ${batch.length}`);
+        this.requestUnsubscribeTopics(wsKey, batch);
+      }
+      this.logger.silly(
+        `Finished batch unsubscribing to ${topics.length} topics`
+      );
+      return;
+    }
+
     const wsMessage = JSON.stringify({
       op: 'unsubscribe',
       args: topics,
@@ -627,11 +665,11 @@ export class WebsocketClient extends EventEmitter {
       this.clearPongTimer(wsKey);
 
       const msg = JSON.parse((event && event.data) || event);
-      this.logger.silly('Received event', {
-        ...loggerCategory,
-        wsKey,
-        msg: JSON.stringify(msg),
-      });
+      // this.logger.silly('Received event', {
+      //   ...loggerCategory,
+      //   wsKey,
+      //   msg: JSON.stringify(msg),
+      // });
 
       // TODO: cleanme
       if (msg['success'] || msg?.pong || isWsPong(msg)) {
