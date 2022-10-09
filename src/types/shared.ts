@@ -134,7 +134,7 @@ export interface AssetExchangeRecordsReq {
 
 export interface LeverageFilter {
   min_leverage: numberInString;
-  max_leveage: numberInString;
+  max_leverage: numberInString;
   leverage_step: numberInString;
 }
 export interface PriceFilter {
