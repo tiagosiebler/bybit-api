@@ -31,7 +31,7 @@ describe('Private USDC Options REST API POST Endpoints', () => {
         timeInForce: 'GoodTillCancel',
       })
     ).toMatchObject({
-      retCode: API_ERROR_CODE.ACCOUNT_NOT_EXIST,
+      retCode: API_ERROR_CODE.CONTRACT_NAME_NOT_EXIST,
     });
   });
 
@@ -59,8 +59,8 @@ describe('Private USDC Options REST API POST Endpoints', () => {
       ])
     ).toMatchObject({
       result: [
-        { errorCode: API_ERROR_CODE.ACCOUNT_NOT_EXIST },
-        { errorCode: API_ERROR_CODE.ACCOUNT_NOT_EXIST },
+        { errorCode: API_ERROR_CODE.CONTRACT_NAME_NOT_EXIST },
+        { errorCode: API_ERROR_CODE.CONTRACT_NAME_NOT_EXIST },
       ],
     });
   });
@@ -72,7 +72,7 @@ describe('Private USDC Options REST API POST Endpoints', () => {
         orderId: 'somethingFake',
       })
     ).toMatchObject({
-      retCode: API_ERROR_CODE.ORDER_NOT_EXIST,
+      retCode: API_ERROR_CODE.CONTRACT_NAME_NOT_EXIST,
     });
   });
 
@@ -90,8 +90,8 @@ describe('Private USDC Options REST API POST Endpoints', () => {
       ])
     ).toMatchObject({
       result: [
-        { errorCode: API_ERROR_CODE.ORDER_NOT_EXIST },
-        { errorCode: API_ERROR_CODE.ORDER_NOT_EXIST },
+        { errorCode: API_ERROR_CODE.CONTRACT_NAME_NOT_EXIST },
+        { errorCode: API_ERROR_CODE.CONTRACT_NAME_NOT_EXIST },
       ],
     });
   });
@@ -103,7 +103,7 @@ describe('Private USDC Options REST API POST Endpoints', () => {
         orderId: 'somethingFake1',
       })
     ).toMatchObject({
-      retCode: API_ERROR_CODE.ORDER_NOT_EXIST,
+      retCode: API_ERROR_CODE.CONTRACT_NAME_NOT_EXIST,
     });
   });
 
@@ -121,8 +121,8 @@ describe('Private USDC Options REST API POST Endpoints', () => {
       ])
     ).toMatchObject({
       result: [
-        { errorCode: API_ERROR_CODE.ORDER_NOT_EXIST },
-        { errorCode: API_ERROR_CODE.ORDER_NOT_EXIST },
+        { errorCode: API_ERROR_CODE.CONTRACT_NAME_NOT_EXIST },
+        { errorCode: API_ERROR_CODE.CONTRACT_NAME_NOT_EXIST },
       ],
     });
   });

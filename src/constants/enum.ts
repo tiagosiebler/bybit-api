@@ -51,6 +51,8 @@ export const API_ERROR_CODE = {
   INSUFFICIENT_BALANCE_FOR_ORDER_COST_LINEAR: 130080,
   SAME_SLTP_MODE_LINEAR: 130150,
   RISK_ID_NOT_MODIFIED: 134026,
+  /** E.g. USDC Options trading, trying to access a symbol that is no longer active */
+  CONTRACT_NAME_NOT_EXIST: 3100111,
   ORDER_NOT_EXIST: 3100136,
   NO_ACTIVE_ORDER: 3100205,
   /** E.g. USDC Options trading when the account hasn't been opened for USDC Options yet */
