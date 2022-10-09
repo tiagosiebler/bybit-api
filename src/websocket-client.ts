@@ -116,22 +116,21 @@ export class WebsocketClient extends EventEmitter {
   public subscribe(wsTopics: WsTopic[] | WsTopic, isPrivateTopic?: boolean) {
     const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
 
-    topics.forEach((topic) =>
-      this.wsStore.addTopic(
-        getWsKeyForTopic(this.options.market, topic, isPrivateTopic),
-        topic
-      )
-    );
+    topics.forEach((topic) => {
+      const wsKey = getWsKeyForTopic(
+        this.options.market,
+        topic,
+        isPrivateTopic
+      );
 
-    // attempt to send subscription topic per websocket
-    this.wsStore.getKeys().forEach((wsKey: WsKey) => {
+      // Persist topic for reconnects
+      this.wsStore.addTopic(wsKey, topic);
+
       // if connected, send subscription request
       if (
         this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
       ) {
-        return this.requestSubscribeTopics(wsKey, [
-          ...this.wsStore.getTopics(wsKey),
-        ]);
+        return this.requestSubscribeTopics(wsKey, [topic]);
       }
 
       // start connection process if it hasn't yet begun. Topics are automatically subscribed to on-connect
@@ -157,21 +156,21 @@ export class WebsocketClient extends EventEmitter {
    */
   public unsubscribe(wsTopics: WsTopic[] | WsTopic, isPrivateTopic?: boolean) {
     const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
-    topics.forEach((topic) =>
-      this.wsStore.deleteTopic(
-        getWsKeyForTopic(this.options.market, topic, isPrivateTopic),
-        topic
-      )
-    );
+    topics.forEach((topic) => {
+      const wsKey = getWsKeyForTopic(
+        this.options.market,
+        topic,
+        isPrivateTopic
+      );
 
-    this.wsStore.getKeys().forEach((wsKey: WsKey) => {
+      // Remove topic from persistence for reconnects
+      this.wsStore.deleteTopic(wsKey, topic);
+
       // unsubscribe request only necessary if active connection exists
       if (
         this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
       ) {
-        this.requestUnsubscribeTopics(wsKey, [
-          ...this.wsStore.getTopics(wsKey),
-        ]);
+        this.requestUnsubscribeTopics(wsKey, [topic]);
       }
     });
   }

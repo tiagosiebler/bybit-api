@@ -12,7 +12,27 @@ describe('Private Inverse-Futures REST API GET Endpoints', () => {
   });
 
   // Warning: if some of these start to fail with 10001 params error, it's probably that this future expired and a newer one exists with a different symbol!
-  const symbol = 'BTCUSDU22';
+  let symbol = '';
+
+  beforeAll(async () => {
+    const symbolsResponse = await api.getSymbols();
+
+    const prefix = 'BTCUSD';
+
+    const futuresAsset = symbolsResponse.result
+      .filter((row) => row.name.startsWith(prefix))
+      .find((row) => {
+        const splitSymbol = row.name.split(prefix);
+        return splitSymbol[1] && splitSymbol[1] !== 'T';
+      });
+
+    if (!futuresAsset?.name) {
+      throw new Error('No symbol');
+    }
+
+    symbol = futuresAsset?.name;
+    console.log('Symbol: ', symbol);
+  });
 
   it('getApiKeyInfo()', async () => {
     expect(await api.getApiKeyInfo()).toMatchObject(successResponseObject());
