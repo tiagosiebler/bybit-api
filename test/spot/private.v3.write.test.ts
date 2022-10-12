@@ -73,7 +73,9 @@ describe('Private Spot REST API POST Endpoints', () => {
 
   it('repayCrossMarginLoan()', async () => {
     expect(await api.repayCrossMarginLoan('USDT', '1')).toMatchObject({
-      retCode: API_ERROR_CODE.CROSS_MARGIN_REPAYMENT_NOT_REQUIRED,
+      retCode: API_ERROR_CODE.UNKNOWN_ERROR,
+      // previously:
+      // retCode: API_ERROR_CODE.CROSS_MARGIN_REPAYMENT_NOT_REQUIRED,
     });
   });
 });
