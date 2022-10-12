@@ -145,6 +145,7 @@ export const WS_AUTH_ON_CONNECT_KEYS: WsKey[] = [
   WS_KEY_MAP.spotV3Private,
   WS_KEY_MAP.usdcOptionPrivate,
   WS_KEY_MAP.usdcPerpPrivate,
+  WS_KEY_MAP.unifiedPrivate,
 ];
 
 export const PUBLIC_WS_KEYS = [
