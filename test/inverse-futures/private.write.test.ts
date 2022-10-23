@@ -154,7 +154,8 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
         take_profit: 50000,
       })
     ).toMatchObject({
-      ret_code: API_ERROR_CODE.POSITION_STATUS_NOT_NORMAL,
+      // seems to fluctuate between POSITION_STATUS_NOT_NORMAL and POSITION_IDX_NOT_MATCH_POSITION_MODE
+      ret_code: /^30013|30041$/,
     });
   });
 
