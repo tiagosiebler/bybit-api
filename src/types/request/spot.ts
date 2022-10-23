@@ -29,11 +29,13 @@ export interface SpotCancelOrderBatchRequest {
   symbol: string;
   side?: OrderSide;
   orderTypes: OrderTypeSpot[];
+  orderCategory?: 0 | 1;
 }
 
 export interface SpotOrderQueryById {
   orderId?: string;
   orderLinkId?: string;
+  orderCategory?: 0 | 1;
 }
 
 export interface SpotSymbolInfo {
