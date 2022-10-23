@@ -60,7 +60,7 @@ export interface UMOrderRequest {
   category: UMCategory;
   symbol: string;
   side: OrderSide;
-  positionIdx?: '0';
+  positionIdx?: '0' | '1' | '2';
   orderType: UMOrderType;
   qty: string;
   price?: string;

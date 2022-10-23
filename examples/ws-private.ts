@@ -16,7 +16,7 @@ import { WebsocketClient, WS_KEY_MAP, DefaultLogger } from '../src';
   const market = 'linear';
   // Inverse Perp
   // const market = 'inverse';
-  // const market = 'spot';
+  // const market = 'spotv3';
 
   // Note: the WebsocketClient defaults to testnet. Set `livenet: true` to use live markets.
   const wsClient = new WebsocketClient(
@@ -50,5 +50,6 @@ import { WebsocketClient, WS_KEY_MAP, DefaultLogger } from '../src';
   });
 
   // subscribe to private endpoints
+  // check the api docs in your api category to see the available topics
   wsClient.subscribe(['position', 'execution', 'order', 'wallet']);
 })();

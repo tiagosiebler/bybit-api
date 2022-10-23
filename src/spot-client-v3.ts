@@ -145,12 +145,14 @@ export class SpotClientV3 extends BaseRestClient {
   getOpenOrders(
     symbol?: string,
     orderId?: string,
-    limit?: number
+    limit?: number,
+    orderCategory?: 0 | 1
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate('/spot/v3/private/open-orders', {
       symbol,
       orderId,
       limit,
+      orderCategory,
     });
   }
 
@@ -158,7 +160,8 @@ export class SpotClientV3 extends BaseRestClient {
   getPastOrders(
     symbol?: string,
     orderId?: string,
-    limit?: number
+    limit?: number,
+    orderCategory?: 0 | 1
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate('/spot/v3/private/history-orders', {
       symbol,
