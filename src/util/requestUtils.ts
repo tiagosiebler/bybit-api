@@ -30,12 +30,23 @@ export interface RestClientOptions {
   parse_exceptions?: boolean;
 }
 
+/**
+ * Serialise a (flat) object into a query string
+ * @param params the object to serialise
+ * @param strict_validation throw if any properties are undefined
+ * @param sortProperties sort properties alphabetically before building a query string
+ * @returns the params object as a serialised string key1=value1&key2=value2&etc
+ */
 export function serializeParams(
   params: object = {},
-  strict_validation = false
+  strict_validation = false,
+  sortProperties = true
 ): string {
-  return Object.keys(params)
-    .sort()
+  const properties = sortProperties
+    ? Object.keys(params).sort()
+    : Object.keys(params);
+
+  return properties
     .map((key) => {
       const value = params[key];
       if (strict_validation === true && typeof value === 'undefined') {

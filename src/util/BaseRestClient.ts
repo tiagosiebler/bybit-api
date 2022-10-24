@@ -108,7 +108,7 @@ export default abstract class BaseRestClient {
     }
   }
 
-  private isSpotClient() {
+  private isSpotV1Client() {
     return this.clientType === REST_CLIENT_TYPE_ENUM.spot;
   }
 
@@ -233,7 +233,7 @@ export default abstract class BaseRestClient {
       isPublicApi
     );
 
-    if (method === 'GET' || this.isSpotClient()) {
+    if (method === 'GET' || this.isSpotV1Client()) {
       return {
         ...options,
         params: signResult.paramsWithSign,
@@ -343,13 +343,20 @@ export default abstract class BaseRestClient {
 
     // usdc is different for some reason
     if (signMethod === 'usdc') {
+      const sortProperties = false;
       const signRequestParams =
         method === 'GET'
-          ? serializeParams(res.originalParams, strictParamValidation)
+          ? serializeParams(
+              res.originalParams,
+              strictParamValidation,
+              sortProperties
+            )
           : JSON.stringify(res.originalParams);
 
       const paramsStr = timestamp + key + recvWindow + signRequestParams;
       res.sign = await signMessage(paramsStr, this.secret);
+
+      // console.log('sign req: ', paramsStr);
       return res;
     }
 
@@ -360,16 +367,18 @@ export default abstract class BaseRestClient {
 
       // Optional, set to 5000 by default. Increase if timestamp/recv_window errors are seen.
       if (recvWindow) {
-        if (this.isSpotClient()) {
+        if (this.isSpotV1Client()) {
           res.originalParams.recvWindow = recvWindow;
         } else {
           res.originalParams.recv_window = recvWindow;
         }
       }
+      const sortProperties = true;
 
       res.serializedParams = serializeParams(
         res.originalParams,
-        strictParamValidation
+        strictParamValidation,
+        sortProperties
       );
       res.sign = await signMessage(res.serializedParams, this.secret);
       res.paramsWithSign = {

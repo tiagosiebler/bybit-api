@@ -17,6 +17,7 @@ export const API_ERROR_CODE = {
   /** This could mean bad request, incorrect value types or even incorrect/missing values */
   PARAMS_MISSING_OR_WRONG: 10001,
   INVALID_API_KEY_OR_PERMISSIONS: 10003,
+  SIGNATURE_NOT_VALID: 10004,
   INCORRECT_API_KEY_PERMISSIONS: 10005,
   INCORRECT_PRIVATE_OPERATIONS: 3303001,
   /** Account not unified margin, update required */

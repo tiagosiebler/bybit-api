@@ -35,6 +35,28 @@ describe('Private Spot REST API GET Endpoints', () => {
     expect(await api.getOpenOrders()).toMatchObject(successResponseListV3());
   });
 
+  it('getOpenOrders() with symbol', async () => {
+    expect(await api.getOpenOrders(symbol)).toMatchObject(
+      successResponseListV3()
+    );
+  });
+
+  it('getOpenOrders() with order category', async () => {
+    const orderId = undefined;
+    const ordersPerPage = undefined;
+
+    // all these should succeed
+    expect(
+      await api.getOpenOrders(symbol, orderId, ordersPerPage)
+    ).toMatchObject(successResponseListV3());
+    expect(
+      await api.getOpenOrders(symbol, orderId, ordersPerPage, 0)
+    ).toMatchObject(successResponseListV3());
+    expect(
+      await api.getOpenOrders(symbol, orderId, ordersPerPage, 1)
+    ).toMatchObject(successResponseListV3());
+  });
+
   it('getPastOrders()', async () => {
     expect(await api.getPastOrders()).toMatchObject(successResponseListV3());
   });

@@ -12,10 +12,10 @@ export function successResponseList(successMsg: string | null = 'OK') {
 
 export function successResponseListV3() {
   return {
+    ...successEmptyResponseObjectV3(),
     result: {
       list: expect.any(Array),
     },
-    ...successEmptyResponseObjectV3(),
   };
 }
 
@@ -36,8 +36,8 @@ export function successResponseObjectV3() {
 
 export function successEmptyResponseObjectV3() {
   return {
-    retCode: API_ERROR_CODE.SUCCESS,
     retMsg: expect.stringMatching(SUCCESS_MSG_REGEX),
+    retCode: API_ERROR_CODE.SUCCESS,
   };
 }
 
