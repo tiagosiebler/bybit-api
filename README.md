@@ -53,7 +53,7 @@ The version on npm is the output from the `build` command and can be used in pro
 Each REST API group has a dedicated REST client. To avoid confusion, here are the available REST clients and the corresponding API groups:
 |                         Class                               	        |                                                                 Description                                       	          |
 |:------------------------------------------------------------------:   |:----------------------------------------------------------------------------------------------------------------------------: |
-| [ **Derivatives v3** ]              	                                | The Derivatves v3 APIs (successor to the Futures V2 APIs)                                                                     |
+| [ **Derivatives v3** ]              	                                | The Derivatives v3 APIs (successor to the Futures V2 APIs)                                                                     |
 | [UnifiedMarginClient](src/unified-margin-client.ts)                   | [Derivatives (v3) Unified Margin APIs](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-introduction)    |
 | [ContractClient](src/contract-client.ts)                              | [Derivatives (v3) Contract APIs](https://bybit-exchange.github.io/docs/derivativesV3/contract).                               |
 | [ **Futures v2** ]              	                                    | The Futures v2 APIs                                                                                                           |
