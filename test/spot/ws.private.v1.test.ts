@@ -36,7 +36,7 @@ describe('Private Spot V1 Websocket Client', () => {
   });
 
   afterAll(() => {
-    wsClient.closeAll();
+    wsClient.closeAll(true);
   });
 
   // TODO: how to detect if auth failed for the v1 spot ws

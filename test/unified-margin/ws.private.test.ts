@@ -29,7 +29,7 @@ describe('Private Unified Margin Websocket Client', () => {
   });
 
   afterAll(() => {
-    wsClient.closeAll();
+    wsClient.closeAll(true);
   });
 
   it('should open a public ws connection', async () => {
