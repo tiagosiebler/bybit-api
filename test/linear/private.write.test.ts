@@ -176,7 +176,7 @@ describe('Private Linear REST API POST Endpoints', () => {
         margin: 5,
       })
     ).toMatchObject({
-      ret_code: API_ERROR_CODE.POSITION_SIZE_IS_ZERO,
+      ret_code: API_ERROR_CODE.ISOLATED_NOT_MODIFIED_LINEAR,
     });
   });
 

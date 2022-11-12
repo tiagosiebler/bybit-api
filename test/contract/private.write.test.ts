@@ -33,8 +33,10 @@ describe('Private Contract REST API POST Endpoints', () => {
         price: '20000',
         orderLinkId: Date.now().toString(),
         timeInForce: 'GoodTillCancel',
+        positionIdx: '2',
       })
     ).toMatchObject({
+      // retMsg: '',
       retCode: API_ERROR_CODE.CONTRACT_INSUFFICIENT_BALANCE,
     });
   });
@@ -74,6 +76,7 @@ describe('Private Contract REST API POST Endpoints', () => {
         autoAddMargin: 0,
         side: 'Buy',
         symbol,
+        positionIdx: 1,
       })
     ).toMatchObject({
       retMsg: expect.stringMatching(/not modified/gim),
@@ -98,7 +101,7 @@ describe('Private Contract REST API POST Endpoints', () => {
     expect(
       await api.setPositionMode({
         symbol,
-        mode: 0,
+        mode: 3,
       })
     ).toMatchObject({
       retCode: API_ERROR_CODE.CONTRACT_POSITION_MODE_NOT_MODIFIED,
@@ -120,7 +123,7 @@ describe('Private Contract REST API POST Endpoints', () => {
 
   it('setTPSL()', async () => {
     expect(
-      await api.setTPSL({ symbol, positionIdx: 0, stopLoss: '100' })
+      await api.setTPSL({ symbol, positionIdx: 1, stopLoss: '100' })
     ).toMatchObject({
       retMsg: expect.stringMatching(/zero position/gim),
       retCode: API_ERROR_CODE.PARAMS_MISSING_OR_WRONG,
@@ -128,7 +131,8 @@ describe('Private Contract REST API POST Endpoints', () => {
   });
 
   it('setRiskLimit()', async () => {
-    expect(await api.setRiskLimit(symbol, 43, 0)).toMatchObject({
+    expect(await api.setRiskLimit(symbol, 43, 2)).toMatchObject({
+      // retMsg: '',
       retCode: API_ERROR_CODE.CONTRACT_RISK_LIMIT_INFO_NOT_EXISTS,
     });
   });

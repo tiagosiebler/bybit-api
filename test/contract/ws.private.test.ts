@@ -23,7 +23,7 @@ describe('Private Contract Websocket Client', () => {
     secret: API_SECRET,
   };
 
-  beforeAll(async () => {
+  beforeAll(() => {
     wsClient = new WebsocketClient(
       wsClientOptions,
       getSilentLogger('expectSuccessNoAuth')
