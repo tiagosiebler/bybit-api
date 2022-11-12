@@ -276,6 +276,7 @@ export class WebsocketClient extends EventEmitter {
 
   public closeAll(force?: boolean) {
     const keys = this.wsStore.getKeys();
+    this.logger.info(`Closing all ws connections: ${keys}`);
     keys.forEach((key) => {
       this.close(key, force);
     });
@@ -441,13 +442,22 @@ export class WebsocketClient extends EventEmitter {
         break;
 
       default:
-        this.logger.error(
-          `${context} due to unexpected response error: "${
-            error?.msg || error?.message || error
-          }"`,
-          { ...loggerCategory, wsKey, error }
-        );
-        this.executeReconnectableClose(wsKey, 'unhandled onWsError');
+        if (
+          this.wsStore.getConnectionState(wsKey) !==
+          WsConnectionStateEnum.CLOSING
+        ) {
+          this.logger.error(
+            `${context} due to unexpected response error: "${
+              error?.msg || error?.message || error
+            }"`,
+            { ...loggerCategory, wsKey, error }
+          );
+          this.executeReconnectableClose(wsKey, 'unhandled onWsError');
+        } else {
+          this.logger.info(
+            `${wsKey} socket forcefully closed. Will not reconnect.`
+          );
+        }
         break;
     }
     this.emit('error', error);

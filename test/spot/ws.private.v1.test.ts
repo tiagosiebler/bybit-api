@@ -9,6 +9,7 @@ import {
   getSilentLogger,
   waitForSocketEvent,
   WS_OPEN_EVENT_PARTIAL,
+  fullLogger,
 } from '../ws.util';
 
 describe('Private Spot V1 Websocket Client', () => {
@@ -30,6 +31,7 @@ describe('Private Spot V1 Websocket Client', () => {
   beforeAll(() => {
     wsClient = new WebsocketClient(
       wsClientOptions,
+      // fullLogger
       getSilentLogger('expectSuccess')
     );
     logAllEvents(wsClient);

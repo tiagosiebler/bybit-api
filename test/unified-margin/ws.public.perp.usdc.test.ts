@@ -28,10 +28,6 @@ describe('Public Unified Margin Websocket Client (Perps - USDC)', () => {
     wsClient.connectPublic();
   });
 
-  afterAll(() => {
-    wsClient.closeAll(true);
-  });
-
   it('should open a public ws connection', async () => {
     const wsOpenPromise = waitForSocketEvent(wsClient, 'open');
     try {
@@ -42,6 +38,8 @@ describe('Public Unified Margin Websocket Client (Perps - USDC)', () => {
     } catch (e) {
       expect(e).toBeFalsy();
     }
+
+    wsClient.closeAll(true);
   });
 
   // TODO: are there USDC topics? This doesn't seem to work
