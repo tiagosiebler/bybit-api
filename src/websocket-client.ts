@@ -5,6 +5,10 @@ import { InverseClient } from './inverse-client';
 import { LinearClient } from './linear-client';
 import { SpotClientV3 } from './spot-client-v3';
 import { SpotClient } from './spot-client';
+import { USDCOptionClient } from './usdc-option-client';
+import { USDCPerpetualClient } from './usdc-perpetual-client';
+import { UnifiedMarginClient } from './unified-margin-client';
+import { ContractClient } from './contract-client';
 
 import { signMessage } from './util/node-support';
 import WsStore from './util/WsStore';
@@ -32,10 +36,6 @@ import {
   neverGuard,
   getMaxTopicsPerSubscribeEvent,
 } from './util';
-import { USDCOptionClient } from './usdc-option-client';
-import { USDCPerpetualClient } from './usdc-perpetual-client';
-import { UnifiedMarginClient } from './unified-margin-client';
-import { ContractClient } from './contract-client';
 
 const loggerCategory = { category: 'bybit-ws' };
 
@@ -107,6 +107,9 @@ export class WebsocketClient extends EventEmitter {
     };
 
     this.prepareRESTClient();
+
+    // add default error handling so this doesn't crash node (if the user didn't set a handler)
+    this.on('error', () => {});
   }
 
   /**
