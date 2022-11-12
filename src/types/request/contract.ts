@@ -68,7 +68,7 @@ export interface ContractPositionsRequest {
 
 export interface ContractSetAutoAddMarginRequest {
   symbol: string;
-  side: string;
+  side: 'Buy' | 'Sell';
   autoAddMargin: 1 | 0;
   positionIdx?: 0 | 1 | 2;
 }
