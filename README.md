@@ -180,6 +180,8 @@ The WebsocketClient can be configured to a specific API group using the market p
 | Copy Trading                 	| `market: 'linear'`  	| The [copy trading](https://bybit-exchange.github.io/docs/copy_trading/#t-websocket) category. Use the linear market to listen to all copy trading topics.                                               |
 | USDC Perps                   	| `market: 'usdcPerp`   | The [USDC perps](https://bybit-exchange.github.io/docs/usdc/perpetual/#t-websocket) category.                                   	                                                                      |
 | USDC Options                 	| `market: 'usdcOption'`| The [USDC options](https://bybit-exchange.github.io/docs/usdc/option/#t-websocket) category.                            	                                                                              |
+| Contract v3 USDT              | `market: 'contractUSDT'`| The [Contract V3](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket) category (USDT perps)    |
+| Contract v3 Inverse           | `market: 'contractInverse'`| The [Contract V3](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket) category (inverse perps)    |
 
 ```javascript
 const { WebsocketClient } = require('bybit-api');
