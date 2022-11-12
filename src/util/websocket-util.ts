@@ -121,6 +121,26 @@ export const WS_BASE_URL_MAP: Record<
       testnet: 'useUnifiedEndpoint',
     },
   },
+  contractUSDT: {
+    public: {
+      livenet: 'wss://stream.bybit.com/contract/usdt/public/v3',
+      testnet: 'wss://stream-testnet.bybit.com/contract/usdt/public/v3',
+    },
+    private: {
+      livenet: 'wss://stream.bybit.com/contract/private/v3',
+      testnet: 'wss://stream-testnet.bybit.com/contract/private/v3',
+    },
+  },
+  contractInverse: {
+    public: {
+      livenet: 'wss://stream.bybit.com/contract/inverse/public/v3',
+      testnet: 'wss://stream-testnet.bybit.com/contract/inverse/public/v3',
+    },
+    private: {
+      livenet: 'wss://stream.bybit.com/contract/private/v3',
+      testnet: 'wss://stream-testnet.bybit.com/contract/private/v3',
+    },
+  },
 };
 
 export const WS_KEY_MAP = {
@@ -139,6 +159,10 @@ export const WS_KEY_MAP = {
   unifiedOptionPublic: 'unifiedOptionPublic',
   unifiedPerpUSDTPublic: 'unifiedPerpUSDTPublic',
   unifiedPerpUSDCPublic: 'unifiedPerpUSDCPublic',
+  contractUSDTPublic: 'contractUSDTPublic',
+  contractUSDTPrivate: 'contractUSDTPrivate',
+  contractInversePublic: 'contractInversePublic',
+  contractInversePrivate: 'contractInversePrivate',
 } as const;
 
 export const WS_AUTH_ON_CONNECT_KEYS: WsKey[] = [
@@ -146,6 +170,8 @@ export const WS_AUTH_ON_CONNECT_KEYS: WsKey[] = [
   WS_KEY_MAP.usdcOptionPrivate,
   WS_KEY_MAP.usdcPerpPrivate,
   WS_KEY_MAP.unifiedPrivate,
+  WS_KEY_MAP.contractUSDTPrivate,
+  WS_KEY_MAP.contractInversePrivate,
 ];
 
 export const PUBLIC_WS_KEYS = [
@@ -157,6 +183,8 @@ export const PUBLIC_WS_KEYS = [
   WS_KEY_MAP.unifiedOptionPublic,
   WS_KEY_MAP.unifiedPerpUSDTPublic,
   WS_KEY_MAP.unifiedPerpUSDCPublic,
+  WS_KEY_MAP.contractUSDTPublic,
+  WS_KEY_MAP.contractInversePublic,
 ] as string[];
 
 /** Used to automatically determine if a sub request should be to the public or private ws (when there's two) */
@@ -251,6 +279,16 @@ export function getWsKeyForTopic(
         `Failed to determine wskey for unified perps topic: "${topic}`
       );
     }
+    case 'contractInverse': {
+      return isPrivateTopic
+        ? WS_KEY_MAP.contractInversePrivate
+        : WS_KEY_MAP.contractInversePublic;
+    }
+    case 'contractUSDT': {
+      return isPrivateTopic
+        ? WS_KEY_MAP.contractUSDTPrivate
+        : WS_KEY_MAP.contractUSDTPublic;
+    }
     default: {
       throw neverGuard(market, `getWsKeyForTopic(): Unhandled market`);
     }
@@ -267,7 +305,9 @@ export function getMaxTopicsPerSubscribeEvent(
     case 'usdcPerp':
     case 'unifiedOption':
     case 'unifiedPerp':
-    case 'spot': {
+    case 'spot':
+    case 'contractInverse':
+    case 'contractUSDT': {
       return null;
     }
     case 'spotv3': {

@@ -35,6 +35,7 @@ import {
 import { USDCOptionClient } from './usdc-option-client';
 import { USDCPerpetualClient } from './usdc-perpetual-client';
 import { UnifiedMarginClient } from './unified-margin-client';
+import { ContractClient } from './contract-client';
 
 const loggerCategory = { category: 'bybit-ws' };
 
@@ -232,6 +233,14 @@ export class WebsocketClient extends EventEmitter {
         );
         break;
       }
+      case 'contractInverse':
+      case 'contractUSDT': {
+        this.restClient = new ContractClient(
+          this.options.restOptions,
+          this.options.requestOptions
+        );
+        break;
+      }
       default: {
         throw neverGuard(
           this.options.market,
@@ -285,7 +294,9 @@ export class WebsocketClient extends EventEmitter {
       case 'usdcOption':
       case 'usdcPerp':
       case 'unifiedPerp':
-      case 'unifiedOption': {
+      case 'unifiedOption':
+      case 'contractUSDT':
+      case 'contractInverse': {
         return [...this.connectPublic(), this.connectPrivate()];
       }
       default: {
@@ -323,6 +334,10 @@ export class WebsocketClient extends EventEmitter {
           this.connect(WS_KEY_MAP.unifiedPerpUSDCPublic),
         ];
       }
+      case 'contractUSDT':
+        return [this.connect(WS_KEY_MAP.contractUSDTPublic)];
+      case 'contractInverse':
+        return [this.connect(WS_KEY_MAP.contractInversePublic)];
       default: {
         throw neverGuard(
           this.options.market,
@@ -356,6 +371,10 @@ export class WebsocketClient extends EventEmitter {
       case 'unifiedOption': {
         return this.connect(WS_KEY_MAP.unifiedPrivate);
       }
+      case 'contractUSDT':
+        return this.connect(WS_KEY_MAP.contractUSDTPrivate);
+      case 'contractInverse':
+        return this.connect(WS_KEY_MAP.contractInversePrivate);
       default: {
         throw neverGuard(
           this.options.market,
@@ -898,6 +917,18 @@ export class WebsocketClient extends EventEmitter {
       }
       case WS_KEY_MAP.unifiedPrivate: {
         return WS_BASE_URL_MAP.unifiedPerp.private[networkKey];
+      }
+      case WS_KEY_MAP.contractInversePrivate: {
+        return WS_BASE_URL_MAP.contractInverse.private[networkKey];
+      }
+      case WS_KEY_MAP.contractInversePublic: {
+        return WS_BASE_URL_MAP.contractInverse.public[networkKey];
+      }
+      case WS_KEY_MAP.contractUSDTPrivate: {
+        return WS_BASE_URL_MAP.contractUSDT.private[networkKey];
+      }
+      case WS_KEY_MAP.contractUSDTPublic: {
+        return WS_BASE_URL_MAP.contractUSDT.public[networkKey];
       }
       default: {
         this.logger.error('getWsUrl(): Unhandled wsKey: ', {
