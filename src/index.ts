@@ -8,6 +8,7 @@ export * from './spot-client-v3';
 export * from './usdc-option-client';
 export * from './usdc-perpetual-client';
 export * from './unified-margin-client';
+export * from './contract-client';
 export * from './websocket-client';
 export * from './util/logger';
 export * from './util';
