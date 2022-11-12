@@ -60,7 +60,7 @@ describe('Private USDC Option Websocket Client', () => {
 
       // badClient.subscribe(wsTopic);
       badClient.removeAllListeners();
-      badClient.closeAll();
+      badClient.closeAll(true);
     });
   });
 
@@ -81,7 +81,7 @@ describe('Private USDC Option Websocket Client', () => {
     });
 
     afterAll(() => {
-      wsClient.closeAll();
+      wsClient.closeAll(true);
     });
 
     it('should open a private ws connection', async () => {

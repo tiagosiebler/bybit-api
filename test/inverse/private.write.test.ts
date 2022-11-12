@@ -110,6 +110,7 @@ describe('Private Inverse REST API POST Endpoints', () => {
         symbol,
         p_r_price: '50000',
         p_r_qty: 1,
+        order_link_id: 'fakeorderid',
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,

@@ -25,6 +25,7 @@ import BaseRestClient from './util/BaseRestClient';
  */
 export class USDCPerpetualClient extends BaseRestClient {
   getClientType() {
+    // Follows the same authentication mechanism as other v3 APIs (e.g. USDC)
     return REST_CLIENT_TYPE_ENUM.v3;
   }
 

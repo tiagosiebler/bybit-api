@@ -29,7 +29,7 @@ describe('Public Unified Margin Websocket Client (Perps - USDT)', () => {
   });
 
   afterAll(() => {
-    wsClient.closeAll();
+    wsClient.closeAll(true);
   });
 
   it('should open a public ws connection', async () => {

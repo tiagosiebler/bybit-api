@@ -40,7 +40,7 @@ describe('Private Inverse Perps Websocket Client', () => {
         // console.error()
         expect(e?.message).toStrictEqual('Unexpected server response: 401');
       }
-      badClient.closeAll();
+      badClient.closeAll(true);
     });
   });
 
@@ -62,7 +62,7 @@ describe('Private Inverse Perps Websocket Client', () => {
 
     afterAll(() => {
       // await promiseSleep(2000);
-      wsClient.closeAll();
+      wsClient.closeAll(true);
     });
 
     it('should open a ws connection', async () => {

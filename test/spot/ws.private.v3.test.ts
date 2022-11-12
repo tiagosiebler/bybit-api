@@ -50,7 +50,7 @@ describe('Private Spot V3 Websocket Client', () => {
       } catch (e) {
         // console.error()
       }
-      badClient.closeAll();
+      badClient.closeAll(true);
     });
   });
 
@@ -72,7 +72,7 @@ describe('Private Spot V3 Websocket Client', () => {
     });
 
     afterAll(() => {
-      wsClient.closeAll();
+      wsClient.closeAll(true);
     });
 
     it('should open a private ws connection', async () => {

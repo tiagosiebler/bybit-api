@@ -11,7 +11,7 @@
 Node.js connector for the Bybit APIs and WebSockets:
 - Complete integration with all bybit APIs.
 - TypeScript support (with type declarations for most API requests & responses).
-- Over 300 integration tests making real API calls & WebSocket connections, validating any changes before they reach npm.
+- Over 300 end-to-end tests making real API calls & WebSocket connections, validating any changes before they reach npm.
 - Robust WebSocket integration with configurable connection heartbeats & automatic reconnect then resubscribe workflows.
 - Browser support (via webpack bundle - see "Browser Usage" below).
 
@@ -25,10 +25,10 @@ Node.js connector for the Bybit APIs and WebSockets:
 ## Related projects
 Check out my related projects:
 - Try my connectors:
-  - [ftx-api](https://www.npmjs.com/package/ftx-api)
-  - [bybit-api](https://www.npmjs.com/package/bybit-api)
   - [binance](https://www.npmjs.com/package/binance)
+  - [bybit-api](https://www.npmjs.com/package/bybit-api)
   - [okx-api](https://www.npmjs.com/package/okx-api)
+  - [ftx-api](https://www.npmjs.com/package/ftx-api)
 - Try my misc utilities:
   - [orderbooks](https://www.npmjs.com/package/orderbooks)
 - Check out my examples:
@@ -180,6 +180,8 @@ The WebsocketClient can be configured to a specific API group using the market p
 | Copy Trading                 	| `market: 'linear'`  	| The [copy trading](https://bybit-exchange.github.io/docs/copy_trading/#t-websocket) category. Use the linear market to listen to all copy trading topics.                                               |
 | USDC Perps                   	| `market: 'usdcPerp`   | The [USDC perps](https://bybit-exchange.github.io/docs/usdc/perpetual/#t-websocket) category.                                   	                                                                      |
 | USDC Options                 	| `market: 'usdcOption'`| The [USDC options](https://bybit-exchange.github.io/docs/usdc/option/#t-websocket) category.                            	                                                                              |
+| Contract v3 USDT              | `market: 'contractUSDT'`| The [Contract V3](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket) category (USDT perps)    |
+| Contract v3 Inverse           | `market: 'contractInverse'`| The [Contract V3](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket) category (inverse perps)    |
 
 ```javascript
 const { WebsocketClient } = require('bybit-api');

@@ -8,49 +8,56 @@ import {
   getSilentLogger,
   waitForSocketEvent,
   WS_OPEN_EVENT_PARTIAL,
+  fullLogger,
 } from '../ws.util';
 
-describe('Public Unified Margin Websocket Client (Options)', () => {
+describe('Private Contract Websocket Client', () => {
+  const API_KEY = process.env.API_KEY_COM;
+  const API_SECRET = process.env.API_SECRET_COM;
+
   let wsClient: WebsocketClient;
 
   const wsClientOptions: WSClientConfigurableOptions = {
-    market: 'unifiedOption',
+    market: 'contractUSDT',
+    key: API_KEY,
+    secret: API_SECRET,
   };
 
   beforeAll(() => {
     wsClient = new WebsocketClient(
       wsClientOptions,
       getSilentLogger('expectSuccessNoAuth')
+      // fullLogger
     );
-    wsClient.connectPublic();
+    // logAllEvents(wsClient);
+    wsClient.connectPrivate();
   });
 
   afterAll(() => {
     wsClient.closeAll(true);
   });
 
-  it('should open a public ws connection', async () => {
+  it('should open a private ws connection', async () => {
     const wsOpenPromise = waitForSocketEvent(wsClient, 'open');
     try {
       expect(await wsOpenPromise).toMatchObject({
         event: WS_OPEN_EVENT_PARTIAL,
-        wsKey: WS_KEY_MAP.unifiedOptionPublic,
+        wsKey: WS_KEY_MAP.contractUSDTPrivate,
       });
     } catch (e) {
       expect(e).toBeFalsy();
     }
   });
-
-  it('should subscribe to public orderbook events', async () => {
+  it('should authenticate successfully', async () => {
     const wsResponsePromise = waitForSocketEvent(wsClient, 'response');
     // const wsUpdatePromise = waitForSocketEvent(wsClient, 'update');
 
-    wsClient.subscribe('orderbook.25.BTCUSDT');
-
     try {
       expect(await wsResponsePromise).toMatchObject({
+        op: 'auth',
+        req_id: 'contractUSDTPrivate-auth',
         success: true,
-        type: 'COMMAND_RESP',
+        wsKey: WS_KEY_MAP.contractUSDTPrivate,
       });
     } catch (e) {
       // sub failed
@@ -58,7 +65,7 @@ describe('Public Unified Margin Websocket Client (Options)', () => {
     }
 
     // try {
-    //   expect(await wsUpdatePromise).toStrictEqual('asdfasdf');
+    //   expect(await wsUpdatePromise).toStrictEqual('');
     // } catch (e) {
     //   // no data
     //   expect(e).toBeFalsy();

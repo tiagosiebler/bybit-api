@@ -10,11 +10,11 @@ import {
   WS_OPEN_EVENT_PARTIAL,
 } from '../ws.util';
 
-describe('Public Unified Margin Websocket Client (Options)', () => {
+describe('Public Contract Inverse Websocket Client', () => {
   let wsClient: WebsocketClient;
 
   const wsClientOptions: WSClientConfigurableOptions = {
-    market: 'unifiedOption',
+    market: 'contractInverse',
   };
 
   beforeAll(() => {
@@ -34,34 +34,41 @@ describe('Public Unified Margin Websocket Client (Options)', () => {
     try {
       expect(await wsOpenPromise).toMatchObject({
         event: WS_OPEN_EVENT_PARTIAL,
-        wsKey: WS_KEY_MAP.unifiedOptionPublic,
+        wsKey: WS_KEY_MAP.contractInversePublic,
       });
     } catch (e) {
+      console.error('open: ', e);
       expect(e).toBeFalsy();
     }
   });
 
   it('should subscribe to public orderbook events', async () => {
     const wsResponsePromise = waitForSocketEvent(wsClient, 'response');
-    // const wsUpdatePromise = waitForSocketEvent(wsClient, 'update');
+    const wsUpdatePromise = waitForSocketEvent(wsClient, 'update');
 
-    wsClient.subscribe('orderbook.25.BTCUSDT');
+    const wsTopic = 'orderbook.25.BTCUSD';
+    wsClient.subscribe(wsTopic);
 
     try {
       expect(await wsResponsePromise).toMatchObject({
         success: true,
-        type: 'COMMAND_RESP',
+        op: 'subscribe',
       });
     } catch (e) {
-      // sub failed
+      console.error('response: ', e);
+      // sub failed (or jest expect threw)
       expect(e).toBeFalsy();
     }
 
-    // try {
-    //   expect(await wsUpdatePromise).toStrictEqual('asdfasdf');
-    // } catch (e) {
-    //   // no data
-    //   expect(e).toBeFalsy();
-    // }
+    try {
+      expect(await wsUpdatePromise).toMatchObject({
+        topic: wsTopic,
+        data: {
+          a: expect.any(Array),
+        },
+      });
+    } catch (e) {
+      console.error(`Wait for "${wsTopic}" event exception: `, e);
+    }
   });
 });

@@ -12,10 +12,15 @@ import {
 } from '../ws.util';
 
 describe('Private Unified Margin Websocket Client', () => {
+  const API_KEY = process.env.API_KEY_COM;
+  const API_SECRET = process.env.API_SECRET_COM;
+
   let wsClient: WebsocketClient;
 
   const wsClientOptions: WSClientConfigurableOptions = {
     market: 'unifiedPerp',
+    key: API_KEY,
+    secret: API_SECRET,
   };
 
   beforeAll(() => {
@@ -29,7 +34,7 @@ describe('Private Unified Margin Websocket Client', () => {
   });
 
   afterAll(() => {
-    wsClient.closeAll();
+    wsClient.closeAll(true);
   });
 
   it('should open a public ws connection', async () => {

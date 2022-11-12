@@ -38,7 +38,7 @@ describe('Private Linear Perps Websocket Client', () => {
       } catch (e) {
         expect(e?.message).toStrictEqual('Unexpected server response: 401');
       }
-      badClient.closeAll();
+      badClient.closeAll(true);
     });
   });
 
@@ -65,7 +65,7 @@ describe('Private Linear Perps Websocket Client', () => {
     });
 
     afterAll(() => {
-      wsClient.closeAll();
+      wsClient.closeAll(true);
     });
 
     it('should open a ws connection', async () => {
