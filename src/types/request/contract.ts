@@ -65,3 +65,64 @@ export interface ContractPositionsRequest {
   settleCoin?: string;
   dataFilter?: string;
 }
+
+export interface ContractSetAutoAddMarginRequest {
+  symbol: string;
+  side: string;
+  autoAddMargin: 1 | 0;
+  positionIdx?: 0 | 1 | 2;
+}
+
+export interface ContractSetMarginSwitchRequest {
+  symbol: string;
+  tradeMode: 0 | 1;
+  buyLeverage: string;
+  sellLeverage: string;
+}
+
+export interface ContractSetPositionModeRequest {
+  symbol?: string;
+  coin?: string;
+  mode: 0 | 3;
+}
+
+export interface ContractSetTPSLRequest {
+  symbol: string;
+  takeProfit?: string;
+  stopLoss?: string;
+  activePrice?: string;
+  trailingStop?: string;
+  tpTriggerBy?: string;
+  slTriggerBy?: string;
+  slSize?: string;
+  tpSize?: string;
+  /** 0-one-way, 1-buy side, 2-sell side */
+  positionIdx?: 0 | 1 | 2;
+}
+
+export interface ContractUserExecutionHistoryRequest {
+  symbol: string;
+  orderId?: string;
+  startTime?: number;
+  endTime?: number;
+  execType?: 'Trade' | 'AdlTrade' | 'Funding' | 'BustTrade';
+  limit?: number;
+  cursor?: string;
+}
+
+export interface ContractClosedPNLRequest {
+  symbol: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+
+export interface ContractWalletFundRecordRequest {
+  startTime?: string;
+  endTime?: string;
+  coin?: string;
+  walletFundType?: string;
+  limit?: string;
+  cursor?: string;
+}

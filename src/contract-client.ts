@@ -1,27 +1,26 @@
 import {
   APIResponseWithTime,
   APIResponseV3,
-  InternalTransferRequest,
-  UM7DayTradingHistoryRequest,
-  UMBorrowHistoryRequest,
   UMCandlesRequest,
   UMCategory,
-  UMExchangeCoinsRequest,
   UMFundingRateHistoryRequest,
   UMInstrumentInfoRequest,
   UMOpenInterestRequest,
   UMOptionDeliveryPriceRequest,
-  UMOptionsSettlementHistoryRequest,
-  UMPerpSettlementHistoryRequest,
   UMPublicTradesRequest,
-  UMSetTPSLRequest,
-  UMTransactionLogRequest,
   ContractOrderRequest,
   ContractHistoricOrdersRequest,
   ContractCancelOrderRequest,
   ContractModifyOrderRequest,
   ContractActiveOrdersRequest,
   ContractPositionsRequest,
+  ContractSetAutoAddMarginRequest,
+  ContractSetMarginSwitchRequest,
+  ContractSetPositionModeRequest,
+  ContractSetTPSLRequest,
+  ContractUserExecutionHistoryRequest,
+  ContractClosedPNLRequest,
+  ContractWalletFundRecordRequest,
 } from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
@@ -192,12 +191,9 @@ export class ContractClient extends BaseRestClient {
   }
 
   /** Set auto add margin, or Auto-Margin Replenishment. */
-  setAuthAddMargin(params: {
-    symbol: string;
-    side: string;
-    autoAddMargin: 1 | 0;
-    positionIdx?: 0 | 1 | 2;
-  }): Promise<APIResponseV3<any>> {
+  setAutoAddMargin(
+    params: ContractSetAutoAddMarginRequest
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/contract/v3/private/position/set-auto-add-margin',
       params
@@ -205,12 +201,9 @@ export class ContractClient extends BaseRestClient {
   }
 
   /** Switch cross margin mode/isolated margin mode */
-  setMarginSwitch(params: {
-    symbol: string;
-    tradeMode: 0 | 1;
-    buyLeverage: string;
-    sellLeverage: string;
-  }): Promise<APIResponseV3<any>> {
+  setMarginSwitch(
+    params: ContractSetMarginSwitchRequest
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/contract/v3/private/position/switch-isolated',
       params
@@ -218,11 +211,9 @@ export class ContractClient extends BaseRestClient {
   }
 
   /** Supports switching between One-Way Mode and Hedge Mode at the coin level. */
-  setPositionMode(params: {
-    symbol?: string;
-    coin?: string;
-    mode: 0 | 3;
-  }): Promise<APIResponseV3<any>> {
+  setPositionMode(
+    params: ContractSetPositionModeRequest
+  ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/contract/v3/private/position/switch-mode',
       params
@@ -259,19 +250,7 @@ export class ContractClient extends BaseRestClient {
    * Set take profit, stop loss, and trailing stop for your open position.
    * If using partial mode, TP/SL/TS orders will not close your entire position.
    */
-  setTPSL(params: {
-    symbol: string;
-    takeProfit?: string;
-    stopLoss?: string;
-    activePrice?: string;
-    trailingStop?: string;
-    tpTriggerBy?: string;
-    slTriggerBy?: string;
-    slSize?: string;
-    tpSize?: string;
-    /** 0-one-way, 1-buy side, 2-sell side */
-    positionIdx?: 0 | 1 | 2;
-  }): Promise<APIResponseV3<any>> {
+  setTPSL(params: ContractSetTPSLRequest): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/contract/v3/private/position/trading-stop',
       params
@@ -296,15 +275,9 @@ export class ContractClient extends BaseRestClient {
    * Get user's trading records.
    * The results are ordered in descending order (the first item is the latest). Returns records up to 2 years old.
    */
-  getUserExecutionHistory(params: {
-    symbol: string;
-    orderId?: string;
-    startTime?: number;
-    endTime?: number;
-    execType?: 'Trade' | 'AdlTrade' | 'Funding' | 'BustTrade';
-    limit?: number;
-    cursor?: string;
-  }): Promise<APIResponseV3<any>> {
+  getUserExecutionHistory(
+    params: ContractUserExecutionHistoryRequest
+  ): Promise<APIResponseV3<any>> {
     return this.getPrivate('/contract/v3/private/execution/list', params);
   }
 
@@ -312,13 +285,9 @@ export class ContractClient extends BaseRestClient {
    * Get user's closed profit and loss records.
    * The results are ordered in descending order (the first item is the latest).
    */
-  getClosedProfitAndLoss(params: {
-    symbol: string;
-    startTime?: number;
-    endTime?: number;
-    limit?: number;
-    cursor?: string;
-  }): Promise<APIResponseV3<any>> {
+  getClosedProfitAndLoss(
+    params: ContractClosedPNLRequest
+  ): Promise<APIResponseV3<any>> {
     return this.getPrivate('/contract/v3/private/position/closed-pnl', params);
   }
 
@@ -351,14 +320,9 @@ export class ContractClient extends BaseRestClient {
    * This endpoint returns incomplete information for transfers involving the derivatives wallet.
    * Use the account asset API for creating and querying internal transfers.
    */
-  getWalletFundRecords(params?: {
-    startTime?: string;
-    endTime?: string;
-    coin?: string;
-    walletFundType?: string;
-    limit?: string;
-    cursor?: string;
-  }): Promise<APIResponseV3<any>> {
+  getWalletFundRecords(
+    params?: ContractWalletFundRecordRequest
+  ): Promise<APIResponseV3<any>> {
     return this.getPrivate(
       '/contract/v3/private/account/wallet/fund-records',
       params
