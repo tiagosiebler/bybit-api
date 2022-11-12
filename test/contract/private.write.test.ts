@@ -73,7 +73,7 @@ describe('Private Contract REST API POST Endpoints', () => {
   it('setAutoAddMargin()', async () => {
     expect(
       await api.setAutoAddMargin({
-        autoAddMargin: 0,
+        autoAddMargin: 1,
         side: 'Buy',
         symbol,
         positionIdx: 1,
@@ -88,7 +88,7 @@ describe('Private Contract REST API POST Endpoints', () => {
     expect(
       await api.setMarginSwitch({
         symbol,
-        tradeMode: 0,
+        tradeMode: 1,
         buyLeverage: '5',
         sellLeverage: '5',
       })
