@@ -221,6 +221,11 @@ const PRIVATE_TOPICS = [
   'user.order.unifiedAccount',
   'user.wallet.unifiedAccount',
   'user.greeks.unifiedAccount',
+  // contract v3
+  'user.position.contractAccount',
+  'user.execution.contractAccount',
+  'user.order.contractAccount',
+  'user.wallet.contractAccount',
 ];
 
 export function getWsKeyForTopic(

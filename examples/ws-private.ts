@@ -13,10 +13,13 @@ import { WebsocketClient, WS_KEY_MAP, DefaultLogger } from '../src';
   const secret = process.env.API_SECRET;
 
   // USDT Perps:
-  const market = 'linear';
+  // const market = 'linear';
   // Inverse Perp
   // const market = 'inverse';
   // const market = 'spotv3';
+  // Contract v3
+  const market = 'contractUSDT';
+  // const market = 'contractInverse';
 
   // Note: the WebsocketClient defaults to testnet. Set `livenet: true` to use live markets.
   const wsClient = new WebsocketClient(
@@ -48,8 +51,19 @@ import { WebsocketClient, WS_KEY_MAP, DefaultLogger } from '../src';
   wsClient.on('reconnected', (data) => {
     console.log('ws has reconnected ', data?.wsKey);
   });
+  wsClient.on('error', (data) => {
+    console.error('ws exception: ', data);
+  });
 
   // subscribe to private endpoints
   // check the api docs in your api category to see the available topics
-  wsClient.subscribe(['position', 'execution', 'order', 'wallet']);
+  // wsClient.subscribe(['position', 'execution', 'order', 'wallet']);
+
+  // Contract v3
+  wsClient.subscribe([
+    'user.position.contractAccount',
+    'user.execution.contractAccount',
+    'user.order.contractAccount',
+    'user.wallet.contractAccount',
+  ]);
 })();

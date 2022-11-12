@@ -51,6 +51,9 @@ import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../src';
   wsClient.on('reconnected', (data) => {
     console.log('ws has reconnected ', data?.wsKey);
   });
+  // wsClient.on('error', (data) => {
+  //   console.error('ws exception: ', data);
+  // });
 
   // Inverse
   // wsClient.subscribe('trade');
