@@ -75,17 +75,16 @@ describe('Private Linear REST API POST Endpoints', () => {
         order_type: 'Limit',
         side: 'Buy',
         symbol,
-        qty: 1,
+        qty: 1000000,
         price: 8100,
         base_price: 8300,
         stop_px: 8150,
         time_in_force: 'GoodTillCancel',
-        order_link_id: 'cus_order_id_1',
         reduce_only: false,
         trigger_by: 'LastPrice',
       })
     ).toMatchObject({
-      ret_code: API_ERROR_CODE.INSUFFICIENT_BALANCE_FOR_ORDER_COST_LINEAR,
+      ret_code: API_ERROR_CODE.QTY_EXCEEDS_MAX_LIMIT,
     });
   });
 
