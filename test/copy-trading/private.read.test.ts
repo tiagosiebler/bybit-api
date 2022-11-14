@@ -1,4 +1,5 @@
 import { API_ERROR_CODE, CopyTradingClient } from '../../src';
+import { successResponseObjectV3 } from '../response.util';
 
 describe('Private Copy Trading REST API GET Endpoints', () => {
   const API_KEY = process.env.API_KEY_COM;
@@ -19,20 +20,22 @@ describe('Private Copy Trading REST API GET Endpoints', () => {
   // (just make sure auth works and endpoint doesn't throw)
 
   it('getActiveOrders()', async () => {
-    expect(await api.getActiveOrders()).toMatchObject({
-      retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
-    });
+    expect(await api.getActiveOrders()).toMatchObject(
+      successResponseObjectV3()
+    );
   });
 
   it('getPositions()', async () => {
-    expect(await api.getPositions()).toMatchObject({
-      retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
-    });
+    expect(await api.getPositions()).toMatchObject(successResponseObjectV3());
   });
 
   it('getBalances()', async () => {
-    expect(await api.getBalances()).toMatchObject({
-      retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
+    expect(await api.getBalances()).toMatchObject(successResponseObjectV3());
+  });
+
+  it('closePosition()', async () => {
+    expect(await api.closePosition('SOLUSDT', '1')).toMatchObject({
+      retCode: API_ERROR_CODE.COPY_TRADE_NOT_OPEN_ORDER,
     });
   });
 });
