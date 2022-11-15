@@ -26,6 +26,7 @@ import {
   InternalTransferRequest,
   UMExchangeCoinsRequest,
   UMBorrowHistoryRequest,
+  UMInstrumentInfoResult,
 } from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
@@ -78,7 +79,7 @@ export class UnifiedMarginClient extends BaseRestClient {
   /** Get trading rules per symbol/contract, incl price/amount/value/leverage filters */
   getInstrumentInfo(
     params: UMInstrumentInfoRequest
-  ): Promise<APIResponseV3<any>> {
+  ): Promise<APIResponseV3<UMInstrumentInfoResult>> {
     return this.get('/derivatives/v3/public/instruments-info', params);
   }
 
