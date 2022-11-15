@@ -79,6 +79,8 @@ export default abstract class BaseRestClient {
       enable_time_sync: false,
       /** How often to sync time drift with bybit servers (if time sync is enabled) */
       sync_interval_ms: 3600000,
+      /** Request parameter values are now URI encoded by default during signing. Set to false to override this behaviour. */
+      encodeSerialisedValues: true,
       ...restOptions,
     };
 
@@ -337,6 +339,7 @@ export default abstract class BaseRestClient {
     const recvWindow =
       res.originalParams.recv_window || this.options.recv_window || 5000;
     const strictParamValidation = this.options.strict_param_validation;
+    const encodeSerialisedValues = this.options.encodeSerialisedValues;
 
     // In case the parent function needs it (e.g. USDC uses a header)
     res.recvWindow = recvWindow;
@@ -349,7 +352,8 @@ export default abstract class BaseRestClient {
           ? serializeParams(
               res.originalParams,
               strictParamValidation,
-              sortProperties
+              sortProperties,
+              encodeSerialisedValues
             )
           : JSON.stringify(res.originalParams);
 
@@ -378,7 +382,8 @@ export default abstract class BaseRestClient {
       res.serializedParams = serializeParams(
         res.originalParams,
         strictParamValidation,
-        sortProperties
+        sortProperties,
+        encodeSerialisedValues
       );
       res.sign = await signMessage(res.serializedParams, this.secret);
       res.paramsWithSign = {
