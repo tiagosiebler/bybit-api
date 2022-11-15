@@ -21,6 +21,13 @@ export interface RestClientOptions {
   strict_param_validation?: boolean;
 
   /**
+   * Default: true.
+   * If true, request parameters will be URI encoded during the signing process.
+   * New behaviour introduced in v3.2.1 to fix rare parameter-driven sign errors with unified margin cursors containing "%".
+   */
+  encodeSerialisedValues?: boolean;
+
+  /**
    * Optionally override API protocol + domain
    * e.g baseUrl: 'https://api.bytick.com'
    **/
@@ -35,12 +42,14 @@ export interface RestClientOptions {
  * @param params the object to serialise
  * @param strict_validation throw if any properties are undefined
  * @param sortProperties sort properties alphabetically before building a query string
+ * @param encodeSerialisedValues URL encode value before serialising
  * @returns the params object as a serialised string key1=value1&key2=value2&etc
  */
 export function serializeParams(
   params: object = {},
   strict_validation = false,
-  sortProperties = true
+  sortProperties = true,
+  encodeSerialisedValues = true
 ): string {
   const properties = sortProperties
     ? Object.keys(params).sort()
@@ -48,7 +57,10 @@ export function serializeParams(
 
   return properties
     .map((key) => {
-      const value = params[key];
+      const value = encodeSerialisedValues
+        ? encodeURI(params[key])
+        : params[key];
+
       if (strict_validation === true && typeof value === 'undefined') {
         throw new Error(
           'Failed to sign API request due to undefined parameter'

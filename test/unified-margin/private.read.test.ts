@@ -31,6 +31,15 @@ describe('Private Unified Margin REST API GET Endpoints', () => {
     });
   });
 
+  it('getHistoricOrders() with cursor', async () => {
+    const cursor =
+      'fb56c285-02ac-424e-a6b1-d10413b65fab%3A1668178953132%2Cfb56c285-02ac-424e-a6b1-d10413b65fab%3A1668178953132';
+    expect(await api.getHistoricOrders({ category, cursor })).toMatchObject({
+      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+      retMsg: expect.stringMatching(/not.*unified margin/gim),
+    });
+  });
+
   it('getPositions()', async () => {
     expect(await api.getPositions({ category })).toMatchObject({
       retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,

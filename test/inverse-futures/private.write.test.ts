@@ -128,11 +128,15 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
     expect(
       await api.replaceConditionalOrder({
         symbol,
+        order_link_id: 'fakeOrderId',
         p_r_price: '50000',
         p_r_qty: 1,
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
+      ret_msg: expect.stringMatching(
+        /orderID or orderLinkID invalid|order not exists/gim
+      ),
     });
   });
 
