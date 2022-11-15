@@ -26,7 +26,9 @@ import {
   InternalTransferRequest,
   UMExchangeCoinsRequest,
   UMBorrowHistoryRequest,
-  UMInstrumentInfoResult,
+  UMPaginatedResult,
+  UMHistoricOrder,
+  UMInstrumentInfo,
 } from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
@@ -79,7 +81,7 @@ export class UnifiedMarginClient extends BaseRestClient {
   /** Get trading rules per symbol/contract, incl price/amount/value/leverage filters */
   getInstrumentInfo(
     params: UMInstrumentInfoRequest
-  ): Promise<APIResponseV3<UMInstrumentInfoResult>> {
+  ): Promise<APIResponseV3<UMPaginatedResult<UMInstrumentInfo>>> {
     return this.get('/derivatives/v3/public/instruments-info', params);
   }
 
@@ -168,7 +170,7 @@ export class UnifiedMarginClient extends BaseRestClient {
   /** Query order history. As order creation/cancellation is asynchronous, the data returned from the interface may be delayed. To access order information in real-time, call getActiveOrders() */
   getHistoricOrders(
     params: UMHistoricOrdersRequest
-  ): Promise<APIResponseV3<any>> {
+  ): Promise<APIResponseV3<UMPaginatedResult<UMHistoricOrder>>> {
     return this.getPrivate('/unified/v3/private/order/list', params);
   }
 

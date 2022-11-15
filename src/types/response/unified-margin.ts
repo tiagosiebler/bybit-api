@@ -1,3 +1,9 @@
+export interface UMPaginatedResult<List = any> {
+  nextPageCursor: string;
+  category: string;
+  list: List[];
+}
+
 export interface UMLeverageFilter {
   minLeverage: string;
   maxLeverage: string;
@@ -31,8 +37,34 @@ export interface UMInstrumentInfo {
   lotSizeFilter: UMLotSizeFilter;
 }
 
-export interface UMInstrumentInfoResult {
-  category: string;
-  list: UMInstrumentInfo[];
-  nextPageCursor: string;
+export interface UMHistoricOrder {
+  symbol: string;
+  orderType: string;
+  orderLinkId: string;
+  orderId: string;
+  stopOrderType: string;
+  orderStatus: string;
+  takeProfit: string;
+  cumExecValue: string;
+  blockTradeId: string;
+  rejectReason: string;
+  price: string;
+  createdTime: number;
+  tpTriggerBy: string;
+  timeInForce: string;
+  basePrice: string;
+  leavesValue: string;
+  updatedTime: number;
+  side: string;
+  triggerPrice: string;
+  cumExecFee: string;
+  slTriggerBy: string;
+  leavesQty: string;
+  closeOnTrigger: boolean;
+  cumExecQty: string;
+  reduceOnly: boolean;
+  qty: string;
+  stopLoss: string;
+  triggerBy: string;
+  orderIM: string;
 }

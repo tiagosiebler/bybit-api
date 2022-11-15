@@ -133,6 +133,7 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
+      // ret_msg: expect.stringMatching(/OK/gim),
     });
   });
 
