@@ -21,6 +21,8 @@ import {
   ContractUserExecutionHistoryRequest,
   ContractClosedPNLRequest,
   ContractWalletFundRecordRequest,
+  PaginatedResult,
+  ContractHistoricOrder,
 } from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
@@ -148,7 +150,7 @@ export class ContractClient extends BaseRestClient {
   /** Query order history. As order creation/cancellation is asynchronous, the data returned from the interface may be delayed. To access order information in real-time, call getActiveOrders() */
   getHistoricOrders(
     params: ContractHistoricOrdersRequest
-  ): Promise<APIResponseV3<any>> {
+  ): Promise<APIResponseV3<PaginatedResult<ContractHistoricOrder>>> {
     return this.getPrivate('/contract/v3/private/order/list', params);
   }
 

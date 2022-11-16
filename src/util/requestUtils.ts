@@ -58,7 +58,7 @@ export function serializeParams(
   return properties
     .map((key) => {
       const value = encodeSerialisedValues
-        ? encodeURI(params[key])
+        ? encodeURIComponent(params[key])
         : params[key];
 
       if (strict_validation === true && typeof value === 'undefined') {
