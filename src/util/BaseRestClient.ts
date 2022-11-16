@@ -216,9 +216,11 @@ export default abstract class BaseRestClient {
       options.headers['X-BAPI-RECV-WINDOW'] = signResult.recvWindow;
 
       if (method === 'GET') {
+        // const serialisedParams = signResult.serializedParams;
         return {
           ...options,
           params: signResult.originalParams,
+          // url: url + (serialisedParams ? '?' + serialisedParams : ''),
         };
       }
 
@@ -359,6 +361,7 @@ export default abstract class BaseRestClient {
 
       const paramsStr = timestamp + key + recvWindow + signRequestParams;
       res.sign = await signMessage(paramsStr, this.secret);
+      res.serializedParams = signRequestParams;
 
       // console.log('sign req: ', paramsStr);
       return res;
@@ -378,12 +381,13 @@ export default abstract class BaseRestClient {
         }
       }
       const sortProperties = true;
+      const encodeValues = false;
 
       res.serializedParams = serializeParams(
         res.originalParams,
         strictParamValidation,
         sortProperties,
-        encodeSerialisedValues
+        encodeValues
       );
       res.sign = await signMessage(res.serializedParams, this.secret);
       res.paramsWithSign = {

@@ -23,6 +23,30 @@ describe('Private Contract REST API GET Endpoints', () => {
     );
   });
 
+  it('getHistoricOrders() with hardcoded cursor', async () => {
+    const cursor =
+      'eyJza2lwX2xvY2FsX3N5bWJvbCI6ZmFsc2UsInBhZ2VfdG9rZW4iOiJleUpOSWpwN0luQnJJanA3SWtJaU9pSktSRmt6VG1wcmVFMXFaM2xNVkUwMFQwUlpkRTVFUlRKTmFURm9UakpPYWt4WFVUSk9lbFY1VDBSU2FrMVhXVEJOZHowOUluMHNJbDl6YTE4aU9uc2lRaUk2SWtaNFltMWFZMDV6TUROek1rNTZXVFZOVkVrMFRXa3dlazlFWnpKTVZGRjRUbXBKZEZsVVpHcFplVEZyVG1wak1VMXFaekJaZWtadFRrUk5QU0o5TENKZmRYTmZJanA3SWtJaU9pSkJLMmt2WkZGRlJ5SjlmWDA9In0=';
+
+    expect(
+      await api.getHistoricOrders({ symbol, cursor, limit: 1 })
+    ).toMatchObject({
+      retCode: API_ERROR_CODE.DB_ERROR_WRONG_CURSOR,
+    });
+  });
+
+  it('getHistoricOrders() with dynamic cursor', async () => {
+    const orders = await api.getHistoricOrders({ symbol, limit: 1 });
+
+    const cursor = orders.result.nextPageCursor;
+
+    expect(
+      await api.getHistoricOrders({ symbol, cursor, limit: 1 })
+    ).toMatchObject({
+      ...successResponseObjectV3(),
+      retMsg: 'OK',
+    });
+  });
+
   it('getActiveOrders()', async () => {
     expect(await api.getActiveOrders({ symbol })).toMatchObject(
       successResponseObjectV3()
@@ -47,10 +71,12 @@ describe('Private Contract REST API GET Endpoints', () => {
     );
   });
 
-  it('getOpenInterestLimitInfo()', async () => {
-    expect(await api.getOpenInterestLimitInfo(symbol)).toMatchObject(
-      successResponseObjectV3()
-    );
+  // Doesn't work on e2e test account, something about account state. Investigating with bybit.
+  it.skip('getOpenInterestLimitInfo()', async () => {
+    expect(await api.getOpenInterestLimitInfo('ETHUSDT')).toMatchObject({
+      ...successResponseObjectV3(),
+      retMsg: 'ok',
+    });
   });
 
   it('getBalances()', async () => {
