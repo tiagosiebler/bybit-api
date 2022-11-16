@@ -381,12 +381,13 @@ export default abstract class BaseRestClient {
         }
       }
       const sortProperties = true;
+      const encodeValues = false;
 
       res.serializedParams = serializeParams(
         res.originalParams,
         strictParamValidation,
         sortProperties,
-        encodeSerialisedValues
+        encodeValues
       );
       res.sign = await signMessage(res.serializedParams, this.secret);
       res.paramsWithSign = {
