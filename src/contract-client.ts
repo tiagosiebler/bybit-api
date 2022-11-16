@@ -293,7 +293,7 @@ export class ContractClient extends BaseRestClient {
 
   /** Get the information of open interest limit. */
   getOpenInterestLimitInfo(symbol: string): Promise<APIResponseV3<any>> {
-    return this.getPrivate('/contract/v3/private/position/closed-pnl', {
+    return this.getPrivate('/contract/v3/private/position/limit-info', {
       symbol,
     });
   }
