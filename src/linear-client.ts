@@ -346,7 +346,6 @@ export class LinearClient extends BaseRestClient {
     return this.getPrivate('/private/linear/trade/execution/history-list', params);
   }
 
-
   getClosedPnl(
     params: LinearGetClosedPnlRequest
   ): Promise<APIResponseWithTime<any>> {
