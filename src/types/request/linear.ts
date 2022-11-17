@@ -174,6 +174,16 @@ export interface LinearGetTradeRecordsRequest {
   limit?: number;
 }
 
+export interface LinearGetHistoryTradeRecordsRequest {
+  symbol: string;
+  start_time?: number;
+  end_time?: number;
+  exec_type?: string;
+  page?: number;
+  limit?: number;
+  page_token?: string;
+}
+
 export interface LinearGetClosedPnlRequest {
   symbol: string;
   start_time?: number;

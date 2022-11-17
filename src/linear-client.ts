@@ -9,6 +9,7 @@ import {
   LinearConditionalOrderRequest,
   LinearGetClosedPnlRequest,
   LinearGetConditionalOrderRequest,
+  LinearGetHistoryTradeRecordsRequest,
   LinearGetOrderRequest,
   LinearGetOrdersRequest,
   LinearGetTradeRecordsRequest,
@@ -341,7 +342,7 @@ export class LinearClient extends BaseRestClient {
   }
 
   getHistoryTradeRecords(
-    params: LinearGetTradeRecordsRequest
+    params: LinearGetHistoryTradeRecordsRequest
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('/private/linear/trade/execution/history-list', params);
   }
