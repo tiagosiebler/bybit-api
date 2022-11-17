@@ -172,7 +172,6 @@ export interface LinearGetTradeRecordsRequest {
   exec_type?: string;
   page?: number;
   limit?: number;
-  page_token?: string;
 }
 
 export interface LinearGetHistoryTradeRecordsRequest {
