@@ -1,5 +1,5 @@
 export interface PerpPosition {
-  user_id: number;
+  user_id: string;
   symbol: string;
   side: string;
   size: number;
@@ -8,7 +8,7 @@ export interface PerpPosition {
   liq_price: number;
   bust_price: number;
   leverage: number;
-  auto_add_margin: number;
+  auto_add_margin: string;
   is_isolated: boolean;
   position_margin: number;
   occ_closing_fee: number;
@@ -18,11 +18,11 @@ export interface PerpPosition {
   tp_sl_mode: string;
   unrealised_pnl: number;
   deleverage_indicator: number;
-  risk_id: number;
+  risk_id: string;
   stop_loss: number;
   take_profit: number;
   trailing_stop: number;
-  position_idx: number;
+  position_idx: string;
   mode: string;
 }
 
