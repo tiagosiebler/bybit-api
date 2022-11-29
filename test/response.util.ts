@@ -31,6 +31,7 @@ export function successResponseObjectV3() {
   return {
     result: expect.any(Object),
     ...successEmptyResponseObjectV3(),
+    // retMsg: 'ok',
   };
 }
 
