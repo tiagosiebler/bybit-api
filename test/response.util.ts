@@ -23,7 +23,7 @@ export function successResponseObject(successMsg: string | null = 'OK') {
   return {
     result: expect.any(Object),
     ret_code: API_ERROR_CODE.SUCCESS,
-    ret_msg: successMsg,
+    ret_msg: expect.stringMatching(SUCCESS_MSG_REGEX),
   };
 }
 
@@ -31,6 +31,7 @@ export function successResponseObjectV3() {
   return {
     result: expect.any(Object),
     ...successEmptyResponseObjectV3(),
+    // retMsg: 'ok',
   };
 }
 

@@ -544,6 +544,7 @@ export class WebsocketClient extends EventEmitter {
 
   private reconnectWithDelay(wsKey: WsKey, connectionDelayMs: number) {
     this.clearTimers(wsKey);
+
     if (
       this.wsStore.getConnectionState(wsKey) !==
       WsConnectionStateEnum.CONNECTING
