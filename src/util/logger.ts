@@ -1,6 +1,7 @@
 export type LogParams = null | any;
 
 export const DefaultLogger = {
+  /** Ping/pong events and other raw messages that might be noisy */
   silly: (...params: LogParams): void => {
     // console.log(params);
   },

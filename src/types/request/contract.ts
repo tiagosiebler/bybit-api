@@ -16,8 +16,8 @@ export interface ContractOrderRequest {
   slTriggerBy?: string;
   timeInForce: USDCTimeInForce;
   orderLinkId?: string;
-  takeProfit?: number;
-  stopLoss?: number;
+  takeProfit?: string;
+  stopLoss?: string;
   reduceOnly?: boolean;
   closeOnTrigger?: boolean;
 }
@@ -44,8 +44,8 @@ export interface ContractModifyOrderRequest {
   symbol: string;
   qty?: string;
   price?: string;
-  takeProfit?: number;
-  stopLoss?: number;
+  takeProfit?: string;
+  stopLoss?: string;
   tpTriggerBy?: string;
   slTriggerBy?: string;
   triggerBy?: string;
