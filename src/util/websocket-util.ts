@@ -281,7 +281,7 @@ export function getWsKeyForTopic(
       }
 
       throw new Error(
-        `Failed to determine wskey for unified perps topic: "${topic}`
+        `Failed to determine wskey for unified perps topic: "${topic}"`
       );
     }
     case 'contractInverse': {

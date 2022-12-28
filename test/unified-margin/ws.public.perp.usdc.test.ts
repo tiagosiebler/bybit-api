@@ -70,12 +70,14 @@ describe('Public Unified Margin Websocket Client (Perps - USDC)', () => {
           s: 'BTCUSDT',
           u: expect.any(Number),
         },
+        wsKey: WS_KEY_MAP.unifiedPerpUSDTPublic,
         topic: 'orderbook.25.BTCUSDC',
         ts: expect.any(Number),
         type: 'snapshot',
-        wsKey: WS_KEY_MAP.unifiedPerpUSDTPublic,
       });
     } catch (e) {
+      console.error('unified margin perp ws public error: ', e);
+
       // no data
       expect(e).toBeFalsy();
     }

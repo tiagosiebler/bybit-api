@@ -46,7 +46,7 @@ describe('Public Contract USDT Websocket Client', () => {
     const wsResponsePromise = waitForSocketEvent(wsClient, 'response');
     const wsUpdatePromise = waitForSocketEvent(wsClient, 'update');
 
-    const wsTopic = 'orderbook.25.BTCUSDT';
+    const wsTopic = 'orderbook.1.BTCUSDT';
     wsClient.subscribe(wsTopic);
 
     try {

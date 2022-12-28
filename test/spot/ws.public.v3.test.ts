@@ -58,18 +58,6 @@ describe('Public Spot V3 Websocket Client', () => {
       req_id: wsTopic,
     });
 
-    expect(wsUpdatePromise).resolves.toMatchObject({
-      data: {
-        a: expect.any(Array),
-        b: expect.any(Array),
-        s: symbol,
-        t: expect.any(Number),
-      },
-      topic: wsTopic,
-      ts: expect.any(Number),
-      type: 'delta',
-    });
-
     wsClient.subscribe(wsTopic);
 
     try {
@@ -82,9 +70,20 @@ describe('Public Spot V3 Websocket Client', () => {
     }
 
     try {
-      await wsUpdatePromise;
+      expect(await wsUpdatePromise).toMatchObject({
+        data: {
+          a: expect.any(Array),
+          b: expect.any(Array),
+          s: symbol,
+          t: expect.any(Number),
+        },
+        topic: wsTopic,
+        ts: expect.any(Number),
+        type: 'snapshot',
+      });
     } catch (e) {
       console.error(`Wait for "${wsTopic}" event exception: `, e);
+      expect(e).toBeFalsy();
     }
   });
 });

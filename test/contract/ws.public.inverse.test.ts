@@ -46,7 +46,7 @@ describe('Public Contract Inverse Websocket Client', () => {
     const wsResponsePromise = waitForSocketEvent(wsClient, 'response');
     const wsUpdatePromise = waitForSocketEvent(wsClient, 'update');
 
-    const wsTopic = 'orderbook.25.BTCUSD';
+    const wsTopic = 'orderbook.1.BTCUSD';
     wsClient.subscribe(wsTopic);
 
     try {

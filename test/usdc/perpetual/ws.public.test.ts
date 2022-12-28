@@ -69,6 +69,7 @@ describe('Public USDC Perp Websocket Client', () => {
         type: 'snapshot',
       });
     } catch (e) {
+      console.error('usdc perp ws public error: ', e);
       // no data
       expect(e).toBeFalsy();
     }
