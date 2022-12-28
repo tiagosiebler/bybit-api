@@ -69,6 +69,7 @@ export const API_ERROR_CODE = {
   NO_ACTIVE_ORDER: 3100205,
   /** E.g. USDC Options trading when the account hasn't been opened for USDC Options yet */
   ACCOUNT_NOT_EXIST: 3200200,
+  SET_MARGIN_MODE_FAILED_USDC: 3400045,
   INCORRECT_MMP_PARAMETERS: 3500712,
   INSTITION_MMP_PROFILE_NOT_FOUND: 3500713,
 } as const;
