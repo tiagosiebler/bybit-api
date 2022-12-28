@@ -2,6 +2,10 @@ export interface PaginatedResult<TList = any> {
   nextPageCursor: string;
   list: TList[];
 }
+export interface ContractListResult<TList = any> {
+  category: string;
+  list: TList[];
+}
 
 export interface ContractHistoricOrder {
   symbol: string;
