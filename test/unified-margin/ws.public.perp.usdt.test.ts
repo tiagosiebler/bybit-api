@@ -49,7 +49,7 @@ describe('Public Unified Margin Websocket Client (Perps - USDT)', () => {
     const wsUpdatePromise = waitForSocketEvent(wsClient, 'update');
 
     // USDT should be detected and automatically routed through the USDT connection
-    const topic = 'orderbook.25.BTCUSDT';
+    const topic = 'orderbook.1.BTCUSDT';
     wsClient.subscribe(topic);
 
     try {
@@ -74,10 +74,11 @@ describe('Public Unified Margin Websocket Client (Perps - USDT)', () => {
         },
         topic: topic,
         ts: expect.any(Number),
-        type: 'snapshot',
         wsKey: WS_KEY_MAP.unifiedPerpUSDTPublic,
+        type: 'snapshot',
       });
     } catch (e) {
+      console.error('unified margin perp usdt orderbook test fail', e);
       // no data
       expect(e).toBeFalsy();
     }
