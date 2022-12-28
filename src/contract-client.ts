@@ -23,6 +23,7 @@ import {
   ContractWalletFundRecordRequest,
   PaginatedResult,
   ContractHistoricOrder,
+  ContractSymbolTicker,
 } from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
@@ -67,9 +68,9 @@ export class ContractClient extends BaseRestClient {
 
   /** Get a symbol price/statistics ticker */
   getSymbolTicker(
-    category: UMCategory,
+    category: UMCategory | '',
     symbol?: string
-  ): Promise<APIResponseV3<any>> {
+  ): Promise<APIResponseV3<ContractSymbolTicker[]>> {
     return this.get('/derivatives/v3/public/tickers', { category, symbol });
   }
 
