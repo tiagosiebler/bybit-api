@@ -71,7 +71,7 @@ export class ContractClient extends BaseRestClient {
   getSymbolTicker(
     category: UMCategory | '',
     symbol?: string
-  ): Promise<APIResponseV3<ContractListResult<ContractSymbolTicker[]>>> {
+  ): Promise<APIResponseV3<ContractListResult<ContractSymbolTicker>>> {
     return this.get('/derivatives/v3/public/tickers', { category, symbol });
   }
 
