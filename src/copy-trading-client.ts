@@ -85,9 +85,10 @@ export class CopyTradingClient extends BaseRestClient {
   closeOrder(
     params: CopyTradingCloseOrderRequest
   ): Promise<APIResponseV3<any>> {
-    return this.postPrivate('/contract/v3/private/copytrading/order/close', {
-      params,
-    });
+    return this.postPrivate(
+      '/contract/v3/private/copytrading/order/close',
+      params
+    );
   }
 
   /** -> Positions API */

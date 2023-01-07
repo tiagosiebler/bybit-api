@@ -788,7 +788,13 @@ export class WebsocketClient extends EventEmitter {
 
     // TODO: persistence not working yet for spot v1 topics
     if (wsKey !== WS_KEY_MAP.spotPublic && wsKey !== WS_KEY_MAP.spotPrivate) {
-      this.requestSubscribeTopics(wsKey, [...this.wsStore.getTopics(wsKey)]);
+      const topics = [...this.wsStore.getTopics(wsKey)];
+      this.logger.info('Subscribing to topics', {
+        ...loggerCategory,
+        wsKey,
+        topics,
+      });
+      this.requestSubscribeTopics(wsKey, topics);
     }
 
     this.wsStore.get(wsKey, true)!.activePingTimer = setInterval(
