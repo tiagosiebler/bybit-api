@@ -276,7 +276,10 @@ export function getWsKeyForTopic(
         return WS_KEY_MAP.unifiedPerpUSDTPublic;
       }
 
-      if (upperTopic.indexOf('USDC') !== -1) {
+      if (
+        upperTopic.indexOf('USDC') !== -1 ||
+        upperTopic.indexOf('PERP') !== -1
+      ) {
         return WS_KEY_MAP.unifiedPerpUSDCPublic;
       }
 
