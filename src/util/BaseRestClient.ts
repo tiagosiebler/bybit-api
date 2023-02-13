@@ -15,10 +15,29 @@ import {
 //   return request;
 // });
 
-// axios.interceptors.response.use((response) => {
-//   console.log(new Date(), 'Response:', JSON.stringify(response, null, 2));
-//   return response;
-// });
+if (
+  typeof process === 'object' &&
+  typeof process.env === 'object' &&
+  process.env.BYBITTRACE
+) {
+  axios.interceptors.response.use((response) => {
+    console.log(new Date(), 'Response:', {
+      request: {
+        url: response.config.url,
+        method: response.config.method,
+        data: response.config.data,
+        headers: response.config.headers,
+      },
+      response: {
+        status: response.status,
+        statusText: response.statusText,
+        headers: response.headers,
+        data: response.data,
+      },
+    });
+    return response;
+  });
+}
 
 interface SignedRequestContext {
   timestamp?: number;

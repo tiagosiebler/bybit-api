@@ -1,4 +1,5 @@
 export * from './account-asset-client';
+export * from './account-asset-client-v3';
 export * from './copy-trading-client';
 export * from './inverse-client';
 export * from './inverse-futures-client';

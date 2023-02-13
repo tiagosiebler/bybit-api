@@ -1,3 +1,4 @@
+export * from './account-asset';
 export * from './contract';
 export * from './shared';
 export * from './spot';
