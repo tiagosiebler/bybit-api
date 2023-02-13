@@ -80,11 +80,6 @@ export interface AssetInfoResponseV3 {
   };
 }
 
-export interface SupportedDepositListResponseV3 {
-  configList: SupportedDepositV3[];
-  nextPageCursor: string;
-}
-
 interface SupportedDepositV3 {
   coin: string;
   chain: string;
@@ -94,8 +89,8 @@ interface SupportedDepositV3 {
   minDepositAmount: string;
 }
 
-export interface DepositRecordQueryResponseV3 {
-  rows: DepositRecordV3[];
+export interface SupportedDepositListResponseV3 {
+  configList: SupportedDepositV3[];
   nextPageCursor: string;
 }
 
@@ -112,6 +107,11 @@ interface DepositRecordV3 {
   confirmations: string;
   txIndex: string;
   blockHash: string;
+}
+
+export interface DepositRecordQueryResponseV3 {
+  rows: DepositRecordV3[];
+  nextPageCursor: string;
 }
 
 export interface WithdrawRecordsQueryResponseV3 {
