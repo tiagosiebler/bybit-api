@@ -65,6 +65,13 @@ export interface APIResponseV3<T> {
   result: T;
 }
 
+export interface APIResponseV3WithTime<T> {
+  retCode: number;
+  retMsg: 'OK' | string;
+  result: T;
+  time: number;
+}
+
 export interface APIResponseWithTime<T = {}> extends APIResponse<T> {
   /** UTC timestamp */
   time_now: numberInString;
