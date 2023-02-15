@@ -265,7 +265,7 @@ export class AccountAssetClientV3 extends BaseRestClient {
    * Get Sub UID List
    */
   getSubMembers(): Promise<APIResponseWithTime<SubMemberResponseV3>> {
-    return this.postPrivate('/user/v3/private/query-sub-members');
+    return this.getPrivate('/user/v3/private/query-sub-members');
   }
 
   /**
