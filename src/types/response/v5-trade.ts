@@ -49,12 +49,6 @@ export interface AccountOrderV5 {
   updatedTime: string;
 }
 
-export interface AccountOrdersResultV5 {
-  category: CategoryV5;
-  nextPageCursor?: string;
-  list: AccountOrderV5[];
-}
-
 export interface BatchOrderResult {
   category: CategoryV5;
   symbol: string;

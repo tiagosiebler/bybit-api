@@ -1,63 +1,36 @@
-import { CategoryV5 } from '../v5-shared';
-
-/**
- * Next page cursor does not exist for spot!
- */
-export interface PaginatedListV5<T> {
-  nextPageCursor: string;
-  list: T[];
-}
-
-export interface CategoryListV5<T, TCategory extends CategoryV5> {
-  category: TCategory;
-  list: T[];
-}
-
 /**
  * OHLCVT candle used by v5 APIs
-> list[0]: startTime	string	Start time of the candle (ms)
-> list[1]: openPrice	string	Open price
-> list[2]: highPrice	string	Highest price
-> list[3]: lowPrice	string	Lowest price
-> list[4]: closePrice	string	Close price. Is the last traded price when the candle is not closed
-> list[5]: volume	string	Trade volume. Unit of contract: pieces of contract. Unit of spot: quantity of coins
-> list[6]: turnover	string	Turnover. Unit of figure: quantity of quota coin
+ *
+ * > list[0]: startTime	string	Start time of the candle (ms)
+ *
+ * > list[1]: openPrice	string	Open price
+ *
+ * > list[2]: highPrice	string	Highest price
+ *
+ * > list[3]: lowPrice	string	Lowest price
+ *
+ * > list[4]: closePrice	string	Close price. Is the last traded price when the candle is not closed
+ *
+ * > list[5]: volume	string	Trade volume. Unit of contract: pieces of contract. Unit of spot: quantity of coins
+ *
+ * > list[6]: turnover	string	Turnover. Unit of figure: quantity of quota coin
  */
 export type KlineV5 = [string, string, string, string, string, string, string];
 
-export interface KlineResponseV5 {
-  category: 'spot' | 'linear' | 'inverse';
-  symbol: string;
-  list: KlineV5[];
-}
-
 /**
  * OHLC candle used by v5 APIs
-> list[0]: startTime	string	Start time of the candle (ms)
-> list[1]: openPrice	string	Open price
-> list[2]: highPrice	string	Highest price
-> list[3]: lowPrice	string	Lowest price
-> list[4]: closePrice	string	Close price. Is the last traded price when the candle is not closed
+ *
+ * > list[0]: startTime	string	Start time of the candle (ms)
+ *
+ * > list[1]: openPrice	string	Open price
+ *
+ * > list[2]: highPrice	string	Highest price
+ *
+ * > list[3]: lowPrice	string	Lowest price
+ *
+ * > list[4]: closePrice	string	Close price. Is the last traded price when the candle is not closed
  */
 export type OHLCV5 = [string, string, string, string, string];
-
-export interface MarkPriceKlineResponseV5 {
-  category: 'linear' | 'inverse';
-  symbol: string;
-  list: OHLCV5[];
-}
-
-export interface IndexPriceKlineResponseV5 {
-  category: 'linear' | 'inverse';
-  symbol: string;
-  list: OHLCV5[];
-}
-
-export interface PremiumIndexPriceKlineResponse {
-  category: 'linear';
-  symbol: string;
-  list: OHLCV5[];
-}
 
 export interface LinearInverseInstrumentInfoV5 {
   category: 'linear' | 'inverse';
@@ -208,21 +181,6 @@ export interface TickerSpotV5 {
   usdIndexPrice: string;
 }
 
-export interface TickersSpotResponseV5 {
-  category: 'spot';
-  list: TickerSpotV5[];
-}
-
-export interface TickersLinearInverseResponseV5 {
-  category: 'linear' | 'inverse';
-  list: TickerLinearInverseV5[];
-}
-
-export interface TickersOptionResponseV5 {
-  category: 'option';
-  list: TickerOptionV5[];
-}
-
 export interface FundingRateHistoryResponseV5 {
   symbol: string;
   fundingRate: string;
@@ -241,6 +199,7 @@ export interface PublicTradeV5 {
 
 /**
 > openInterest	string	Open interest
+
 > timestamp	string	The timestamp (ms)
 */
 export type OpenInterestV5 = [string, string];
@@ -280,19 +239,8 @@ export interface RiskLimitV5 {
   maxLeverage: string;
 }
 
-export interface RiskLimitResponseV5 {
-  category: CategoryV5;
-  list: RiskLimitV5[];
-}
-
 export interface OptionDeliveryPriceV5 {
   symbol: string;
   deliveryPrice: string;
   deliveryTime: string;
-}
-
-export interface OptionDeliveryPriceResponseV5 {
-  category: CategoryV5;
-  list: OptionDeliveryPriceV5[];
-  nextPageCursor?: string;
 }
