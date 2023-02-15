@@ -1,7 +1,8 @@
 import {
   APIResponseV3WithTime,
-  APIResponseWithTime,
+  CategoryListV5,
   CategoryV5,
+  FundingRateHistoryResponseV5,
   GetFundingRateHistoryParamsV5,
   GetHistoricalVolatilityParamsV5,
   GetIndexPriceKlineParamsV5,
@@ -16,19 +17,17 @@ import {
   GetPublicTradingHistoryParamsV5,
   GetRiskLimitParamsV5,
   GetTickersParamsV5,
-} from './types';
-import {
-  CategoryListV5,
-  FundingRateHistoryResponseV5,
   HistoricalVolatilityV5,
   IndexPriceKlineResponseV5,
   InstrumentInfoV5,
   InsuranceResponseV5,
   KlineResponseV5,
   MarkPriceKlineResponseV5,
+  AccountOrdersResultV5,
   OpenInterestResponseV5,
   OptionDeliveryPriceResponseV5,
   OrderbookResponseV5,
+  OrderParamsV5,
   PaginatedListV5,
   PremiumIndexPriceKlineResponse,
   PublicTradeV5,
@@ -36,7 +35,22 @@ import {
   TickersLinearInverseResponseV5,
   TickersOptionResponseV5,
   TickersSpotResponseV5,
-} from './types/response/v5-market';
+  AmendOrderParamsV5,
+  CancelOrderParamsV5,
+  GetAccountOrdersParams,
+  OrderResultV5,
+  CancelAllOrdersParamsV5,
+  BatchOrderParamsV5,
+  BatchAmendOrderParamsV5,
+  BatchOrderResult,
+  BatchOrdersResult,
+  BatchAmendOrderResult,
+  BatchCancelOrderParamsV5,
+  BatchCancelOrderResult,
+  OrderSideV5,
+  SpotBorrowCheckResult,
+  APIResponseV3,
+} from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
 
@@ -219,4 +233,139 @@ export class RestClientV5 extends BaseRestClient {
   ): Promise<APIResponseV3WithTime<OptionDeliveryPriceResponseV5>> {
     return this.get(`/v5/market/delivery-price`, params);
   }
+
+  /**
+   *
+   * Trade APIs
+   *
+   */
+
+  submitOrder(
+    params: OrderParamsV5
+  ): Promise<APIResponseV3WithTime<OrderResultV5>> {
+    return this.postPrivate(`/v5/order/create`, params);
+  }
+
+  amendOrder(
+    params: AmendOrderParamsV5
+  ): Promise<APIResponseV3WithTime<OrderResultV5>> {
+    return this.postPrivate('/v5/order/amend', params);
+  }
+
+  cancelOrder(
+    params: CancelOrderParamsV5
+  ): Promise<APIResponseV3WithTime<OrderResultV5>> {
+    return this.postPrivate('/v5/order/cancel', params);
+  }
+
+  /**
+   * Query unfilled or partially filled orders in real-time. To query older order records, please use the order history interface.
+   */
+  getActiveOrders(
+    params: GetAccountOrdersParams
+  ): Promise<APIResponseV3WithTime<AccountOrdersResultV5>> {
+    return this.getPrivate('/v5/order/realtime', params);
+  }
+
+  cancelAllOrders(
+    params: CancelAllOrdersParamsV5
+  ): Promise<APIResponseV3WithTime<{ list: OrderResultV5[] }>> {
+    return this.postPrivate('/v5/order/cancel-all', params);
+  }
+
+  /**
+   * Query order history. As order creation/cancellation is asynchronous, the data returned from this endpoint may delay.
+   * If you want to get real-time order information, you could query this endpoint or rely on the websocket stream (recommended).
+   */
+  getHistoricOrders(
+    params: GetAccountOrdersParams
+  ): Promise<APIResponseV3WithTime<AccountOrdersResultV5>> {
+    return this.getPrivate(`/v5/order/history`, params);
+  }
+
+  /**
+   * This endpoint allows you to place more than one order in a single request. Covers: option (unified account).
+   * Make sure you have sufficient funds in your account when placing an order. Once an order is placed, according to the funds required by the order, the funds in your account will be frozen by the corresponding amount during the life cycle of the order.
+   * A maximum of 20 orders can be placed per request. The returned data list is divided into two lists. The first list indicates whether or not the order creation was successful and the second list details the created order information. The structure of the two lists are completely consistent.
+   */
+  batchSubmitOrders(
+    category: 'option',
+    orders: BatchOrderParamsV5[]
+  ): Promise<APIResponseV3WithTime<BatchOrdersResult<BatchOrderResult[]>>> {
+    return this.postPrivate('/v5/order/create-batch', {
+      category,
+      request: orders,
+    });
+  }
+
+  /**
+   * This endpoint allows you to amend more than one open order in a single request. Covers: option (unified account).
+   * You can modify unfilled or partially filled orders. Conditional orders are not supported.
+   * A maximum of 20 orders can be amended per request.
+   */
+  batchAmendOrders(
+    category: 'option',
+    orders: BatchAmendOrderParamsV5[]
+  ): Promise<
+    APIResponseV3WithTime<BatchOrdersResult<BatchAmendOrderResult[]>>
+  > {
+    return this.postPrivate('/v5/order/amend-batch', {
+      category,
+      request: orders,
+    });
+  }
+
+  /**
+   * This endpoint allows you to cancel more than one open order in a single request. Covers: option (unified account).
+   * You must specify orderId or orderLinkId. If orderId and orderLinkId is not matched, the system will process orderId first.
+   * You can cancel unfilled or partially filled orders. A maximum of 20 orders can be cancelled per request.
+   */
+  batchCancelOrders(
+    category: 'option',
+    orders: BatchCancelOrderParamsV5[]
+  ): Promise<
+    APIResponseV3WithTime<BatchOrdersResult<BatchCancelOrderResult[]>>
+  > {
+    return this.postPrivate('/v5/order/cancel-batch', {
+      category,
+      request: orders,
+    });
+  }
+
+  /**
+   * Query the qty and amount of borrowable coins in spot account.
+   * Covers: Spot (Unified Account)
+   */
+  getSpotBorrowCheck(
+    symbol: string,
+    side: OrderSideV5
+  ): Promise<APIResponseV3WithTime<SpotBorrowCheckResult>> {
+    return this.getPrivate('/v5/order/spot-borrow-check', {
+      category: 'spot',
+      symbol,
+      side,
+    });
+  }
+
+  /**
+   * This endpoint allows you to set the disconnection protect time window. Covers: option (unified account).
+   * If you need to turn it on/off, you can contact your client manager for consultation and application. The default time window is 10 seconds.
+   */
+  setDisconnectCancelAllWindow(
+    category: 'option',
+    timeWindow: number
+  ): Promise<APIResponseV3<undefined>> {
+    return this.postPrivate('/v5/order/disconnected-cancel-all', {
+      category,
+      timeWindow,
+    });
+  }
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
 }

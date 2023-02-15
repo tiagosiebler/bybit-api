@@ -9,3 +9,4 @@ export * from './usdc-shared';
 export * from './unified-margin';
 export * from './v5-market';
 export * from './contract';
+export * from './v5-trade';
