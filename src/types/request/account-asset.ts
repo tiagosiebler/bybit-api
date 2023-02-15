@@ -232,7 +232,7 @@ export interface CreateSubAPIKeyRequestV3 {
   readOnly: 0 | 1;
   ips?: string[];
   permissions: {
-    ContractTrade?: [];
+    ContractTrade?: string[];
     Spot?: string[];
     Wallet?: string[];
     Options?: string[];
