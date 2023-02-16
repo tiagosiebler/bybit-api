@@ -127,3 +127,10 @@ export interface WithdrawParamsV5 {
   forceChain?: number;
   accountType?: string;
 }
+
+export interface CreateSubMemberParamsV5 {
+  username: string;
+  memberType: 1 | 6;
+  switch?: 0 | 1;
+  note?: string;
+}

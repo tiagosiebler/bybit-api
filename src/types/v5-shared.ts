@@ -34,6 +34,25 @@ export type TransactionTypeV5 =
   | 'CURRENCY_BUY'
   | 'CURRENCY_SELL';
 
+export type PermissionTypeV5 =
+  | 'ContractTrade'
+  | 'Spot'
+  | 'Wallet'
+  | 'Options'
+  | 'Derivatives'
+  | 'Exchange'
+  | 'NFT';
+
+export interface PermissionsV5 {
+  ContractTrade?: string[];
+  Spot?: string[];
+  Wallet?: string[];
+  Options?: string[];
+  Derivatives?: string[];
+  Exchange?: string[];
+  NFT?: string[];
+}
+
 export interface CategoryCursorListV5<T extends unknown[]> {
   category: CategoryV5;
   list: T;
