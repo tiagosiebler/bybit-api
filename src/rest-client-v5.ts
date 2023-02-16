@@ -79,6 +79,34 @@ import {
   AccountMarginModeV5,
   MMPModifyParamsV5,
   MMPStateV5,
+  GetCoinExchangeRecordParamsV5,
+  CoinExchangeRecordV5,
+  GetDeliveryRecordParamsV5,
+  DeliveryRecordV5,
+  GetSettlementRecordParamsV5,
+  SettlementRecordV5,
+  GetAssetInfoParamsV5,
+  AssetInfoV5,
+  GetAllCoinsBalanceParamsV5,
+  AllCoinsBalanceV5,
+  GetAccountCoinBalanceParamsV5,
+  AccountCoinBalanceV5,
+  AccountTypeV5,
+  GetInternalTransferParamsV5,
+  InternalTransferRecordV5,
+  UniversalTransferParamsV5,
+  GetUniversalTransferRecordsParamsV5,
+  UniversalTransferRecordV5,
+  GetAllowedDepositCoinInfoParamsV5,
+  AllowedDepositCoinInfoV5,
+  GetDepositRecordParamsV5,
+  DepositRecordV5,
+  GetSubAccountDepositRecordParamsV5,
+  DepositAddressResultV5,
+  CoinInfoV5,
+  GetWithdrawalRecordsParamsV5,
+  WithdrawalRecordV5,
+  WithdrawParamsV5,
 } from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
@@ -106,7 +134,7 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    *
-   * Market APIs
+   ****** Market APIs
    *
    */
 
@@ -291,7 +319,7 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    *
-   * Trade APIs
+   ****** Trade APIs
    *
    */
 
@@ -427,7 +455,7 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    *
-   * Position APIs
+   ****** Position APIs
    *
    */
 
@@ -560,7 +588,7 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    *
-   * Account APIs
+   ****** Account APIs
    *
    */
 
@@ -686,6 +714,308 @@ export class RestClientV5 extends BaseRestClient {
     return this.getPrivate('/v5/account/mmp-state', { baseCoin });
   }
 
+  /**
+   *
+   ****** Asset APIs
+   *
+   */
+
+  /**
+   * Query the coin exchange records.
+   *
+   * CAUTION: You may experience long delays with this endpoint.
+   */
+  getCoinExchangeRecords(params?: GetCoinExchangeRecordParamsV5): Promise<
+    APIResponseV3WithTime<{
+      orderBody: CoinExchangeRecordV5[];
+      nextPageCursor?: string;
+    }>
+  > {
+    return this.get('/v5/asset/exchange/order-record', params);
+  }
+
+  /**
+   * Query option delivery records, sorted by deliveryTime in descending order.
+   *
+   * Covers: Option
+   */
+  getDeliveryRecord(
+    params: GetDeliveryRecordParamsV5
+  ): Promise<APIResponseV3WithTime<CategoryCursorListV5<DeliveryRecordV5[]>>> {
+    return this.getPrivate('/v5/asset/delivery-record', params);
+  }
+
+  /**
+   * Query session settlement records of USDC perpetual
+   *
+   * Covers: Linear contract (USDC Perpetual only, Unified Account)
+   */
+  getSettlementRecords(
+    params: GetSettlementRecordParamsV5
+  ): Promise<
+    APIResponseV3WithTime<CategoryCursorListV5<SettlementRecordV5[]>>
+  > {
+    return this.getPrivate('/v5/asset/settlement-record', params);
+  }
+
+  /**
+   * Query asset information.
+   *
+   * INFO
+   * For now, it can query SPOT only.
+   */
+  getAssetInfo(
+    params: GetAssetInfoParamsV5
+  ): Promise<APIResponseV3WithTime<{ spot: AssetInfoV5 }>> {
+    return this.getPrivate('/v5/asset/transfer/query-asset-info', params);
+  }
+
+  /**
+   * Query all coin balances of all account types under the master account and sub accounts.
+   *
+   * It is not allowed to get the master account coin balance via sub account API key.
+   */
+  getAllCoinsBalance(
+    params: GetAllCoinsBalanceParamsV5
+  ): Promise<APIResponseV3WithTime<AllCoinsBalanceV5>> {
+    return this.getPrivate(
+      '/v5/asset/transfer/query-account-coins-balance',
+      params
+    );
+  }
+
+  /**
+   * Query the balance of a specific coin in a specific account type. Supports querying sub UID's balance.
+   *
+   * CAUTION: Can query by the master UID's api key only.
+   */
+  getCoinBalance(
+    params: GetAccountCoinBalanceParamsV5
+  ): Promise<APIResponseV3<AccountCoinBalanceV5>> {
+    return this.getPrivate(
+      '/v5/asset/transfer/query-account-coin-balance',
+      params
+    );
+  }
+
+  /**
+   * Query the transferable coin list between each account type.
+   */
+  getTransferableCoinList(
+    fromAccountType: AccountTypeV5,
+    toAccountType: AccountTypeV5
+  ): Promise<APIResponseV3WithTime<{ list: string[] }>> {
+    return this.getPrivate('/v5/asset/transfer/query-transfer-coin-list', {
+      fromAccountType,
+      toAccountType,
+    });
+  }
+
+  /**
+   * Create the internal transfer between different account types under the same UID.
+   * Each account type has its own acceptable coins, e.g, you cannot transfer USDC from SPOT to CONTRACT.
+   *
+   * Please refer to the getTransferableCoinList() API to find out more.
+   */
+  createInternalTransfer(
+    transferId: string,
+    coin: string,
+    amount: string,
+    fromAccountType: AccountTypeV5,
+    toAccountType: AccountTypeV5
+  ): Promise<APIResponseV3WithTime<{ transferId: string }>> {
+    return this.postPrivate('/v5/asset/transfer/inter-transfer', {
+      transferId,
+      coin,
+      amount,
+      fromAccountType,
+      toAccountType,
+    });
+  }
+
+  /**
+   * Query the internal transfer records between different account types under the same UID.
+   */
+  getInternalTransferRecords(
+    params: GetInternalTransferParamsV5
+  ): Promise<APIResponseV3WithTime<CursorListV5<InternalTransferRecordV5[]>>> {
+    return this.getPrivate(
+      '/v5/asset/transfer/query-inter-transfer-list',
+      params
+    );
+  }
+
+  /**
+   * Query the sub UIDs under a main UID
+   *
+   * CAUTION: Can query by the master UID's api key only
+   */
+  getSubUID(): Promise<
+    APIResponseV3WithTime<{
+      subMemberIds: string[];
+      transferableSubMemberIds: string[];
+    }>
+  > {
+    return this.getPrivate('/v5/asset/transfer/query-sub-member-list');
+  }
+
+  /**
+   * Enable Universal Transfer for Sub UID
+   *
+   * Use this endpoint to enable a subaccount to take part in a universal transfer. It is a one-time switch which, once thrown, enables a subaccount permanently. If not set, your subaccount cannot use universal transfers.
+   */
+  enableUniversalTransferForSubUIDs(
+    subMemberIds: string[]
+  ): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate('/v5/asset/transfer/save-transfer-sub-member', {
+      subMemberIds,
+    });
+  }
+
+  /**
+   * Transfer between sub-sub or main-sub. Please make sure you have enabled universal transfer on your sub UID in advance.
+   */
+  createUniversalTransfer(
+    params: UniversalTransferParamsV5
+  ): Promise<APIResponseV3WithTime<{ transferId: string }>> {
+    return this.postPrivate('/v5/asset/transfer/universal-transfer', params);
+  }
+
+  /**
+   * Query universal transfer records
+   *
+   * CAUTION
+   * Can query by the master UID's API key only
+   */
+  getUniversalTransferRecords(
+    params?: GetUniversalTransferRecordsParamsV5
+  ): Promise<APIResponseV3WithTime<CursorListV5<UniversalTransferRecordV5[]>>> {
+    return this.getPrivate(
+      '/v5/asset/transfer/query-universal-transfer-list',
+      params
+    );
+  }
+
+  /**
+   * Query allowed deposit coin information.
+   * To find out paired chain of coin, please refer to the coin info api.
+   */
+  getAllowedDepositCoinInfo(
+    params?: GetAllowedDepositCoinInfoParamsV5
+  ): Promise<
+    APIResponseV3WithTime<{
+      configList: AllowedDepositCoinInfoV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.get('/v5/asset/deposit/query-allowed-list', params);
+  }
+
+  /**
+   * Query deposit records.
+   *
+   * TIP
+   * endTime - startTime should be less than 30 days. Query last 30 days records by default.
+   *
+   * Can use main or sub UID api key to query deposit records respectively.
+   */
+  getDepositRecords(
+    params?: GetDepositRecordParamsV5
+  ): Promise<
+    APIResponseV3WithTime<{ rows: DepositRecordV5[]; nextPageCursor: string }>
+  > {
+    return this.getPrivate('/v5/asset/deposit/query-record', params);
+  }
+
+  /**
+   * Query subaccount's deposit records by MAIN UID's API key.
+   *
+   * TIP: Query deposit records of SPOT only
+   *      endTime - startTime should be less than 30 days.
+   *      Queries for the last 30 days worth of records by default.
+   */
+  getSubAccountDepositRecords(
+    params: GetSubAccountDepositRecordParamsV5
+  ): Promise<
+    APIResponseV3WithTime<{ rows: DepositRecordV5[]; nextPageCursor: string }>
+  > {
+    return this.getPrivate('/v5/asset/deposit/query-sub-member-record', params);
+  }
+
+  /**
+   * Query the deposit address information of MASTER account.
+   */
+  getMasterDepositAddress(
+    coin: string,
+    chainType?: string
+  ): Promise<APIResponseV3WithTime<DepositAddressResultV5>> {
+    return this.getPrivate('/v5/asset/deposit/query-address', {
+      coin,
+      chainType,
+    });
+  }
+
+  /**
+   * Query the deposit address information of SUB account.
+   *
+   * CAUTION
+   * Can use master UID's api key only
+   */
+  querySubMemberAddress(
+    coin: string,
+    chainType: string,
+    subMemberId: string
+  ): Promise<APIResponseV3<DepositAddressResultV5>> {
+    return this.getPrivate('/v5/asset/deposit/query-sub-member-address', {
+      coin,
+      chainType,
+      subMemberId,
+    });
+  }
+
+  /**
+   * Query coin information, including chain information, withdraw and deposit status.
+   */
+  getCoinInfo(
+    coin?: string
+  ): Promise<APIResponseV3WithTime<{ rows: CoinInfoV5[] }>> {
+    return this.get('/v5/asset/coin/query-info', coin ? { coin } : undefined);
+  }
+
+  /**
+   * Query withdrawal records.
+   */
+  getWithdrawalRecords(
+    params?: GetWithdrawalRecordsParamsV5
+  ): Promise<APIResponseV3<{ rows: WithdrawalRecordV5[] }>> {
+    return this.getPrivate('/v5/asset/withdraw/query-record', params);
+  }
+
+  /**
+   * Withdraw assets from the SPOT account.
+   *
+   * CAUTION: Make sure you have whitelisted your wallet address before calling this endpoint.
+   *
+   * NOTE: Currently we are upgrading the fund account, if your funding account has been upgraded, you can select the wallet to be withdrawn from. If your funding account has not been upgraded, the API will still use spot wallet to withdraw cash, but you cannot select the wallet to be withdrawn from. It is expected that in the next two weeks, all users' funding account upgrades will be completed.
+   *
+   * You can make an off-chain transfer if the target wallet address is from Bybit. This means that no blockchain fee will be charged.
+   */
+  submitWithdrawal(
+    params: WithdrawParamsV5
+  ): Promise<APIResponseV3WithTime<{ id: string }>> {
+    return this.postPrivate('/v5/asset/withdraw/create', params);
+  }
+
+  /**
+   * Cancel the withdrawal
+   *
+   * CAUTION: Can query by the master UID's api key only
+   */
+  cancelWithdrawal(
+    id: string
+  ): Promise<APIResponseV3WithTime<{ status: 0 | 1 }>> {
+    return this.postPrivate('/v5/asset/withdraw/cancel', { id });
+  }
   //
   //
   //
