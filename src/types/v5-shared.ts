@@ -11,6 +11,28 @@ export type PositionIdx = 0 | 1 | 2;
  */
 export type TradeModeV5 = 0 | 1;
 export type TPSLModeV5 = 'Full' | 'Partial';
+export type AccountMarginModeV5 = 'REGULAR_MARGIN' | 'PORTFOLIO_MARGIN';
+
+export type AccountTypeV5 =
+  | 'CONTRACT'
+  | 'SPOT'
+  | 'INVESTMENT'
+  | 'OPTION'
+  | 'UNIFIED'
+  | 'FUND';
+
+export type TransactionTypeV5 =
+  | 'TRANSFER_IN'
+  | 'TRANSFER_OUT'
+  | 'TRADE'
+  | 'SETTLEMENT'
+  | 'DELIVERY'
+  | 'LIQUIDATION'
+  | 'BONUS'
+  | 'FEE_REFUND'
+  | 'INTEREST'
+  | 'CURRENCY_BUY'
+  | 'CURRENCY_SELL';
 
 export interface CategoryCursorListV5<T extends unknown[]> {
   category: CategoryV5;

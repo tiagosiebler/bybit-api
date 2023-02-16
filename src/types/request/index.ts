@@ -8,6 +8,7 @@ export * from './usdc-perp';
 export * from './usdc-options';
 export * from './usdc-shared';
 export * from './unified-margin';
+export * from './v5-account';
 export * from './v5-market';
 export * from './v5-position';
 export * from './v5-trade';

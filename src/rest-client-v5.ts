@@ -65,6 +65,20 @@ import {
   ExecutionV5,
   GetClosedPnLParamsV5,
   ClosedPnLV5,
+  GetWalletBalanceParamsV5,
+  WalletBalanceV5,
+  UnifiedAccountUpgradeResultV5,
+  GetBorrowHistoryParamsV5,
+  BorrowHistoryRecordV5,
+  CollateralInfoV5,
+  CoinGreeksV5,
+  FeeRateV5,
+  AccountInfoV5,
+  GetTransactionLogParamsV5,
+  TransactionLogV5,
+  AccountMarginModeV5,
+  MMPModifyParamsV5,
+  MMPStateV5,
 } from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
@@ -542,6 +556,134 @@ export class RestClientV5 extends BaseRestClient {
     params: GetClosedPnLParamsV5
   ): Promise<APIResponseV3WithTime<CategoryCursorListV5<ClosedPnLV5[]>>> {
     return this.getPrivate('/v5/position/closed-pnl', params);
+  }
+
+  /**
+   *
+   * Account APIs
+   *
+   */
+
+  /**
+   * Obtain wallet balance, query asset information of each currency, and account risk rate information under unified margin mode.
+   *
+   * By default, currency information with assets or liabilities of 0 is not returned.
+   */
+  getWalletBalance(
+    params: GetWalletBalanceParamsV5
+  ): Promise<APIResponseV3WithTime<WalletBalanceV5>> {
+    return this.getPrivate('/v5/account/wallet-balance', params);
+  }
+
+  /**
+   * Upgrade to unified account.
+   *
+   * Banned/OTC loan/Net asset unsatisfying/Express path users cannot upgrade the account to Unified Account for now.
+   */
+  upgradeToUnifiedAccount(): Promise<
+    APIResponseV3WithTime<UnifiedAccountUpgradeResultV5>
+  > {
+    return this.postPrivate('/v5/account/upgrade-to-uta');
+  }
+
+  /**
+   * Get interest records, sorted in reverse order of creation time.
+   *
+   * Unified account
+   */
+  getBorrowHistory(
+    params?: GetBorrowHistoryParamsV5
+  ): Promise<APIResponseV3WithTime<CursorListV5<BorrowHistoryRecordV5[]>>> {
+    return this.getPrivate('/v5/account/borrow-history', params);
+  }
+
+  /**
+   * Get the collateral information of the current unified margin account, including loan interest rate,
+   * loanable amount, collateral conversion rate, whether it can be mortgaged as margin, etc.
+   */
+  getCollateralInfo(
+    currency?: string
+  ): Promise<APIResponseV3WithTime<{ list: CollateralInfoV5[] }>> {
+    return this.getPrivate('/v5/account/collateral-info', { currency });
+  }
+
+  /**
+   * Get current account Greeks information
+   */
+  getCoinGreeks(
+    baseCoin?: string
+  ): Promise<APIResponseV3WithTime<{ list: CoinGreeksV5[] }>> {
+    return this.getPrivate(
+      '/v5/asset/coin-greeks',
+      baseCoin ? { baseCoin } : undefined
+    );
+  }
+
+  /**
+   * Get the trading fee rate of derivatives.
+   * Covers: USDT perpetual / Inverse perpetual / Inverse futures
+   */
+  getFeeRate(
+    symbol?: string
+  ): Promise<APIResponseV3WithTime<{ list: FeeRateV5[] }>> {
+    return this.getPrivate(
+      '/v5/account/fee-rate',
+      symbol ? { symbol } : undefined
+    );
+  }
+
+  /**
+   * Query the margin mode and the upgraded status of account
+   */
+  getAccountInfo(): Promise<APIResponseV3<AccountInfoV5>> {
+    return this.getPrivate('/v5/account/info');
+  }
+
+  /**
+   * Query transaction logs in Unified account.
+   */
+  getTransactionLog(
+    params?: GetTransactionLogParamsV5
+  ): Promise<APIResponseV3WithTime<CursorListV5<TransactionLogV5[]>>> {
+    return this.getPrivate('/v5/account/transaction-log', params);
+  }
+
+  /**
+   * Default is regular margin mode.
+   *
+   * This mode is valid for USDT Perp, USDC Perp and USDC Option.
+   */
+  setMarginMode(
+    marginMode: AccountMarginModeV5
+  ): Promise<
+    APIResponseV3<{ reasons: { reasonCode: string; reasonMsg: string }[] }>
+  > {
+    return this.postPrivate('/v5/account/set-margin-mode', {
+      setMarginMode: marginMode,
+    });
+  }
+
+  /**
+   * Configure Market Maker Protection (MMP)
+   */
+  setMMP(params: MMPModifyParamsV5): Promise<APIResponseV3<undefined>> {
+    return this.postPrivate('/v5/account/mmp-modify', params);
+  }
+
+  /**
+   * Once the mmp triggered, you can unfreeze the account via this endpoint
+   */
+  resetMMP(baseCoin: string): Promise<APIResponseV3<undefined>> {
+    return this.postPrivate('/v5/account/mmp-modify', { baseCoin });
+  }
+
+  /**
+   * Get MMP State
+   */
+  getMMPState(
+    baseCoin: string
+  ): Promise<APIResponseV3WithTime<{ result: MMPStateV5[] }>> {
+    return this.getPrivate('/v5/account/mmp-state', { baseCoin });
   }
 
   //
