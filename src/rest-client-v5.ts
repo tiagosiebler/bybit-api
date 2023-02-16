@@ -52,6 +52,19 @@ import {
   TickerSpotV5,
   TickerOptionV5,
   TickerLinearInverseV5,
+  SetLeverageParamsV5,
+  SwitchIsolatedMarginParamsV5,
+  SetTPSLModeParamsV5,
+  TPSLModeV5,
+  SwitchPositionModeParamsV5,
+  SetRiskLimitParamsV5,
+  SetRiskLimitResultV5,
+  SetTradingStopParamsV5,
+  SetAutoAddMarginParamsV5,
+  GetExecutionListParamsV5,
+  ExecutionV5,
+  GetClosedPnLParamsV5,
+  ClosedPnLV5,
 } from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
@@ -410,11 +423,125 @@ export class RestClientV5 extends BaseRestClient {
    * Unified account covers: Linear contract / Options
    *
    * Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures
+   *
+   * Note: this will give a 404 error if you query the `option` category if your account is not unified
    */
   getPositionInfo(
     params: PositionInfoParamsV5
   ): Promise<APIResponseV3WithTime<CategoryCursorListV5<PositionV5[]>>> {
     return this.getPrivate('/v5/position/list', params);
+  }
+
+  /**
+   * Set the leverage
+   *
+   * Unified account covers: Linear contract
+   *
+   * Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures
+   *
+   * Note: Under one-way mode, buyLeverage must be the same as sellLeverage
+   */
+  setLeverage(params: SetLeverageParamsV5): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate('/v5/position/set-leverage', params);
+  }
+
+  /**
+   * Select cross margin mode or isolated margin mode.
+   *
+   * Covers: USDT perpetual (Normal account) / Inverse contract (Normal account).
+   *
+   * Switching margin modes will cause orders in progress to be cancelled. Please make sure that there are no open orders before you switch margin modes.
+   */
+  switchIsolatedMargin(
+    params: SwitchIsolatedMarginParamsV5
+  ): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate('/v5/position/switch-isolated', params);
+  }
+
+  /**
+   * This endpoint sets the take profit/stop loss (TP/SL) mode to full or partial.
+   *
+   * Unified account covers: Linear contract; normal account covers: USDT perpetual, inverse perpetual, inverse futures.
+   *
+   * For partial TP/SL mode, you can set the TP/SL size smaller than position size.
+   */
+  setTPSLMode(
+    params: SetTPSLModeParamsV5
+  ): Promise<APIResponseV3WithTime<{ tpSlMode: TPSLModeV5 }>> {
+    return this.postPrivate('/v5/position/set-tpsl-mode', params);
+  }
+
+  /**
+   * Switches the position mode for USDT perpetual and Inverse futures.
+   *
+   * If you are in one-way Mode, you can only open one position on Buy or Sell side.
+   *
+   * If you are in hedge mode, you can open both Buy and Sell side positions simultaneously.
+   *
+   * Position mode. 0: Merged Single. 3: Both Sides.
+   */
+  switchPositionMode(
+    params: SwitchPositionModeParamsV5
+  ): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate('/v5/position/switch-mode', params);
+  }
+
+  /**
+   * The risk limit will limit the maximum position value you can hold under different margin requirements. If you want to hold a bigger position size, you need more margin. This interface can set the risk limit of a single position. If the order exceeds the current risk limit when placing an order, it will be rejected.
+   */
+  setRiskLimit(
+    params: SetRiskLimitParamsV5
+  ): Promise<APIResponseV3WithTime<SetRiskLimitResultV5>> {
+    return this.postPrivate('/v5/position/set-risk-limit', params);
+  }
+
+  /**
+   * This endpoint allows you to set the take profit, stop loss or trailing stop for a position.
+   * Passing these parameters will create conditional orders by the system internally.
+   *
+   * The system will cancel these orders if the position is closed, and adjust the qty according to the size of the open position.
+   *
+   * Unified account covers: Linear contract.
+   * Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures.
+   */
+  setTradingStop(
+    params: SetTradingStopParamsV5
+  ): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate('/v5/position/trading-stop', params);
+  }
+  /**
+   * This endpoint allows you to turn on/off auto-add-margin for an isolated margin position.
+   *
+   * Covers: USDT perpetual (Normal Account).
+   */
+  setAutoAddMargin(
+    params: SetAutoAddMarginParamsV5
+  ): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate('/v5/position/set-auto-add-margin', params);
+  }
+
+  /**
+   * Query users' execution records, sorted by execTime in descending order
+   *
+   * Unified account covers: Spot / Linear contract / Options
+   * Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures
+   */
+  getExecutionListV5(
+    params: GetExecutionListParamsV5
+  ): Promise<APIResponseV3WithTime<CategoryCursorListV5<ExecutionV5[]>>> {
+    return this.getPrivate('/v5/execution/list', params);
+  }
+
+  /**
+   * Query user's closed profit and loss records. The results are sorted by createdTime in descending order.
+   *
+   * Unified account covers: Linear contract
+   * Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures
+   */
+  getClosedPnL(
+    params: GetClosedPnLParamsV5
+  ): Promise<APIResponseV3WithTime<CategoryCursorListV5<ClosedPnLV5[]>>> {
+    return this.getPrivate('/v5/position/closed-pnl', params);
   }
 
   //

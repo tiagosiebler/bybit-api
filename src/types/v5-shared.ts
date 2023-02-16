@@ -2,10 +2,15 @@ export type CategoryV5 = 'spot' | 'linear' | 'inverse' | 'option';
 
 export type OrderFilterV5 = 'Order' | 'tpslOrder';
 export type OrderSideV5 = 'Buy' | 'Sell';
+export type OrderTypeV5 = 'Market' | 'Limit';
 export type OrderTimeInForceV5 = 'GTC' | 'IOC' | 'FOK' | 'PostOnly';
 export type OrderTriggerByV5 = 'LastPrice' | 'IndexPrice' | 'MarkPrice';
-export type OrderTypeV5 = 'Market' | 'Limit';
 export type PositionIdx = 0 | 1 | 2;
+/**
+ * Trade mode. 0: cross-margin, 1: isolated margin
+ */
+export type TradeModeV5 = 0 | 1;
+export type TPSLModeV5 = 'Full' | 'Partial';
 
 export interface CategoryCursorListV5<T extends unknown[]> {
   category: CategoryV5;
