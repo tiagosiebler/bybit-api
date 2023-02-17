@@ -44,13 +44,7 @@
         "no-dupe-class-members": "off",
         "no-param-reassign": ["error"],
         "array-bracket-spacing": ["error", "never"],
-        "indent": [
-          "warn",
-          2,
-          {
-            "SwitchCase": 1
-          }
-        ],
+        "indent": ["off"],
         "linebreak-style": ["error", "unix"],
         "lines-between-class-members": ["warn", "always"],
         "semi": "off",

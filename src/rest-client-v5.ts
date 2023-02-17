@@ -392,9 +392,13 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * This endpoint allows you to place more than one order in a single request. Covers: option (unified account).
    *
-   * Make sure you have sufficient funds in your account when placing an order. Once an order is placed, according to the funds required by the order, the funds in your account will be frozen by the corresponding amount during the life cycle of the order.
+   * Make sure you have sufficient funds in your account when placing an order.
+   * Once an order is placed, according to the funds required by the order,
+   * the funds in your account will be frozen by the corresponding amount during the life cycle of the order.
    *
-   * A maximum of 20 orders can be placed per request. The returned data list is divided into two lists. The first list indicates whether or not the order creation was successful and the second list details the created order information. The structure of the two lists are completely consistent.
+   * A maximum of 20 orders can be placed per request. The returned data list is divided into two lists.
+   * The first list indicates whether or not the order creation was successful and the second list details the created order information.
+   * The structure of the two lists are completely consistent.
    */
   batchSubmitOrders(
     category: 'option',
@@ -463,7 +467,8 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * This endpoint allows you to set the disconnection protect time window. Covers: option (unified account).
    *
-   * If you need to turn it on/off, you can contact your client manager for consultation and application. The default time window is 10 seconds.
+   * If you need to turn it on/off, you can contact your client manager for consultation and application.
+   * The default time window is 10 seconds.
    */
   setDisconnectCancelAllWindow(
     category: 'option',
@@ -514,7 +519,8 @@ export class RestClientV5 extends BaseRestClient {
    *
    * Covers: USDT perpetual (Normal account) / Inverse contract (Normal account).
    *
-   * Switching margin modes will cause orders in progress to be cancelled. Please make sure that there are no open orders before you switch margin modes.
+   * Switching margin modes will cause orders in progress to be cancelled.
+   * Please make sure that there are no open orders before you switch margin modes.
    */
   switchIsolatedMargin(
     params: SwitchIsolatedMarginParamsV5
@@ -551,7 +557,11 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
-   * The risk limit will limit the maximum position value you can hold under different margin requirements. If you want to hold a bigger position size, you need more margin. This interface can set the risk limit of a single position. If the order exceeds the current risk limit when placing an order, it will be rejected.
+   * The risk limit will limit the maximum position value you can hold under different margin requirements.
+   * If you want to hold a bigger position size, you need more margin.
+   *
+   * This interface can set the risk limit of a single position.
+   * If the order exceeds the current risk limit when placing an order, it will be rejected.
    */
   setRiskLimit(
     params: SetRiskLimitParamsV5
@@ -885,7 +895,9 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Enable Universal Transfer for Sub UID
    *
-   * Use this endpoint to enable a subaccount to take part in a universal transfer. It is a one-time switch which, once thrown, enables a subaccount permanently. If not set, your subaccount cannot use universal transfers.
+   * Use this endpoint to enable a subaccount to take part in a universal transfer.
+   * It is a one-time switch which, once thrown, enables a subaccount permanently.
+   * If not set, your subaccount cannot use universal transfers.
    */
   enableUniversalTransferForSubUIDs(
     subMemberIds: string[]
@@ -1019,8 +1031,6 @@ export class RestClientV5 extends BaseRestClient {
    *
    * CAUTION: Make sure you have whitelisted your wallet address before calling this endpoint.
    *
-   * NOTE: Currently we are upgrading the fund account, if your funding account has been upgraded, you can select the wallet to be withdrawn from. If your funding account has not been upgraded, the API will still use spot wallet to withdraw cash, but you cannot select the wallet to be withdrawn from. It is expected that in the next two weeks, all users' funding account upgrades will be completed.
-   *
    * You can make an off-chain transfer if the target wallet address is from Bybit. This means that no blockchain fee will be charged.
    */
   submitWithdrawal(
@@ -1096,7 +1106,8 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
-   * Get the information of the api key. Use the api key pending to be checked to call the endpoint. Both master and sub user's api key are applicable.
+   * Get the information of the api key. Use the api key pending to be checked to call the endpoint.
+   * Both master and sub user's api key are applicable.
    *
    * TIP: Any permission can access this endpoint.
    */
