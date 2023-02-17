@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  APIResponseWithTime,
   APIResponseV3,
+  APIResponseWithTime,
   USDCOptionsActiveOrdersRealtimeRequest,
   USDCOptionsActiveOrdersRequest,
   USDCOptionsCancelAllOrdersRequest,
@@ -8,8 +9,8 @@ import {
   USDCOptionsContractInfoRequest,
   USDCOptionsDeliveryHistoryRequest,
   USDCOptionsDeliveryPriceRequest,
-  USDCOptionsHistoricalVolatilityRequest,
   USDCOptionsHistoricOrdersRequest,
+  USDCOptionsHistoricalVolatilityRequest,
   USDCOptionsModifyMMPRequest,
   USDCOptionsModifyOrderRequest,
   USDCOptionsOrderExecutionRequest,
@@ -203,7 +204,11 @@ export class USDCOptionClient extends BaseRestClient {
     );
   }
 
-  /** Query trade history. The endpoint only supports up to 30 days of queried records. An error will be returned if startTime is more than 30 days. */
+  /**
+   * Query trade history.
+   * The endpoint only supports up to 30 days of queried records.
+   * An error will be returned if startTime is more than 30 days.
+   */
   getOrderExecutionHistory(
     params: USDCOptionsOrderExecutionRequest
   ): Promise<APIResponseV3<any>> {
@@ -241,7 +246,9 @@ export class USDCOptionClient extends BaseRestClient {
   }
 
   /**
-   * If USDC derivatives account balance is greater than X, you can open PORTFOLIO_MARGIN, and if it is less than Y, it will automatically close PORTFOLIO_MARGIN and change back to REGULAR_MARGIN. X and Y will be adjusted according to operational requirements.
+   * If USDC derivatives account balance is greater than X, you can open PORTFOLIO_MARGIN,
+   * and if it is less than Y, it will automatically close PORTFOLIO_MARGIN and change back to REGULAR_MARGIN.
+   * X and Y will be adjusted according to operational requirements.
    * Rest API returns the result of checking prerequisites. You could get the real status of margin mode change by subscribing margin mode.
    */
   setMarginMode(

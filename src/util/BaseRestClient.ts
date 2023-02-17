@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 
-import { signMessage } from './node-support';
 import {
-  RestClientOptions,
-  serializeParams,
-  RestClientType,
-  REST_CLIENT_TYPE_ENUM,
   APIID,
+  REST_CLIENT_TYPE_ENUM,
+  RestClientOptions,
+  RestClientType,
   getRestBaseUrl,
+  serializeParams,
 } from './requestUtils';
+import { signMessage } from './node-support';
 
 // axios.interceptors.request.use((request) => {
 //   console.log(new Date(), 'Starting Request', JSON.stringify(request, null, 2));
@@ -48,7 +49,7 @@ interface SignedRequestContext {
 }
 
 interface SignedRequest<T> {
-  originalParams: T & SignedRequestContext;
+  originalParams: (T & SignedRequestContext) | SignedRequestContext;
   paramsWithSign?: T & SignedRequestContext & { sign: string };
   serializedParams: string;
   sign: string;
@@ -65,12 +66,19 @@ type SignMethod = 'keyInBody' | 'usdc';
 
 export default abstract class BaseRestClient {
   private timeOffset: number | null = null;
+
   private syncTimePromise: null | Promise<any> = null;
+
   private options: RestClientOptions;
+
   private baseUrl: string;
+
   private globalRequestOptions: AxiosRequestConfig;
+
   private key: string | undefined;
+
   private secret: string | undefined;
+
   private clientType: RestClientType;
 
   /** Function that calls exchange API to query & resolve server time, used by time sync, disabled by default */
@@ -159,13 +167,15 @@ export default abstract class BaseRestClient {
     params?: TParams,
     isPublicApi?: true
   ): Promise<UnsignedRequest<TParams>>;
+
   private async prepareSignParams<TParams = any>(
     method: Method,
     signMethod: SignMethod,
     params?: TParams,
     isPublicApi?: false | undefined
   ): Promise<SignedRequest<TParams>>;
-  private async prepareSignParams<TParams = any>(
+
+  private async prepareSignParams<TParams extends SignedRequestContext = any>(
     method: Method,
     signMethod: SignMethod,
     params?: TParams,
@@ -186,7 +196,7 @@ export default abstract class BaseRestClient {
       await this.syncTime();
     }
 
-    return this.signRequest(params, method, signMethod);
+    return this.signRequest(params || {}, method, signMethod);
   }
 
   /** Returns an axios request object. Handles signing process automatically if this is a private API call */
@@ -336,7 +346,7 @@ export default abstract class BaseRestClient {
   /**
    * @private sign request and set recv window
    */
-  private async signRequest<T = {}>(
+  private async signRequest<T extends SignedRequestContext | {} = {}>(
     data: T,
     method: Method,
     signMethod: SignMethod
@@ -409,10 +419,13 @@ export default abstract class BaseRestClient {
         encodeValues
       );
       res.sign = await signMessage(res.serializedParams, this.secret);
+
+      // @ts-ignore
       res.paramsWithSign = {
         ...res.originalParams,
         sign: res.sign,
       };
+
       return res;
     }
 

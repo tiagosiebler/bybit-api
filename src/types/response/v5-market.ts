@@ -251,6 +251,7 @@ export interface RiskLimitV5 {
   riskLimitValue: string;
   maintenanceMargin: number;
   initialMargin: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   section: any;
   isLowestRisk: 0 | 1;
   maxLeverage: string;

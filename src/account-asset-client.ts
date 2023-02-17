@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  AccountAssetInformationRequest,
   APIResponseWithTime,
+  AccountAssetInformationRequest,
   DepositRecordsRequest,
   EnableUniversalTransferRequest,
   InternalTransferRequest,

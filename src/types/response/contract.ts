@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface PaginatedResult<TList = any> {
   nextPageCursor: string;
   list: TList[];

@@ -1,13 +1,63 @@
 import {
+  APIResponseV3,
   APIResponseV3WithTime,
+  AccountCoinBalanceV5,
+  AccountInfoV5,
+  AccountMarginModeV5,
+  AccountOrderV5,
+  AccountTypeV5,
+  AllCoinsBalanceV5,
+  AllowedDepositCoinInfoV5,
+  AmendOrderParamsV5,
+  ApiKeyInfoV5,
+  AssetInfoV5,
+  BatchAmendOrderParamsV5,
+  BatchAmendOrderResult,
+  BatchCancelOrderParamsV5,
+  BatchCancelOrderResult,
+  BatchOrderParamsV5,
+  BatchOrderResult,
+  BatchOrdersResult,
+  BorrowHistoryRecordV5,
+  CancelAllOrdersParamsV5,
+  CancelOrderParamsV5,
+  CategoryCursorListV5,
   CategoryListV5,
+  CategorySymbolListV5,
   CategoryV5,
+  ClosedPnLV5,
+  CoinExchangeRecordV5,
+  CoinGreeksV5,
+  CoinInfoV5,
+  CollateralInfoV5,
+  CreateSubApiKeyParamsV5,
+  CreateSubApiKeyResultV5,
+  CreateSubMemberParamsV5,
+  CreateSubMemberResultV5,
+  CursorListV5,
+  DeliveryRecordV5,
+  DepositAddressResultV5,
+  DepositRecordV5,
+  ExecutionV5,
+  FeeRateV5,
   FundingRateHistoryResponseV5,
+  GetAccountCoinBalanceParamsV5,
+  GetAccountOrdersParams,
+  GetAllCoinsBalanceParamsV5,
+  GetAllowedDepositCoinInfoParamsV5,
+  GetAssetInfoParamsV5,
+  GetBorrowHistoryParamsV5,
+  GetClosedPnLParamsV5,
+  GetCoinExchangeRecordParamsV5,
+  GetDeliveryRecordParamsV5,
+  GetDepositRecordParamsV5,
+  GetExecutionListParamsV5,
   GetFundingRateHistoryParamsV5,
   GetHistoricalVolatilityParamsV5,
   GetIndexPriceKlineParamsV5,
   GetInstrumentsInfoParamsV5,
   GetInsuranceParamsV5,
+  GetInternalTransferParamsV5,
   GetKlineParamsV5,
   GetMarkPriceKlineParamsV5,
   GetOpenInterestParamsV5,
@@ -16,113 +66,63 @@ import {
   GetPremiumIndexPriceKlineParams,
   GetPublicTradingHistoryParamsV5,
   GetRiskLimitParamsV5,
-  GetTickersParamsV5,
-  HistoricalVolatilityV5,
-  InsuranceResponseV5,
-  OpenInterestResponseV5,
-  OrderbookResponseV5,
-  OrderParamsV5,
-  CursorListV5,
-  PublicTradeV5,
-  RiskLimitV5,
-  AmendOrderParamsV5,
-  CancelOrderParamsV5,
-  GetAccountOrdersParams,
-  OrderResultV5,
-  CancelAllOrdersParamsV5,
-  BatchOrderParamsV5,
-  BatchAmendOrderParamsV5,
-  BatchOrderResult,
-  BatchOrdersResult,
-  BatchAmendOrderResult,
-  BatchCancelOrderParamsV5,
-  BatchCancelOrderResult,
-  OrderSideV5,
-  SpotBorrowCheckResult,
-  APIResponseV3,
-  PositionInfoParamsV5,
-  CategoryCursorListV5,
-  PositionV5,
-  AccountOrderV5,
-  OptionDeliveryPriceV5,
-  CategorySymbolListV5,
-  OHLCKlineV5,
-  OHLCVKlineV5,
-  TickerSpotV5,
-  TickerOptionV5,
-  TickerLinearInverseV5,
-  SetLeverageParamsV5,
-  SwitchIsolatedMarginParamsV5,
-  SetTPSLModeParamsV5,
-  TPSLModeV5,
-  SwitchPositionModeParamsV5,
-  SetRiskLimitParamsV5,
-  SetRiskLimitResultV5,
-  SetTradingStopParamsV5,
-  SetAutoAddMarginParamsV5,
-  GetExecutionListParamsV5,
-  ExecutionV5,
-  GetClosedPnLParamsV5,
-  ClosedPnLV5,
-  GetWalletBalanceParamsV5,
-  WalletBalanceV5,
-  UnifiedAccountUpgradeResultV5,
-  GetBorrowHistoryParamsV5,
-  BorrowHistoryRecordV5,
-  CollateralInfoV5,
-  CoinGreeksV5,
-  FeeRateV5,
-  AccountInfoV5,
-  GetTransactionLogParamsV5,
-  TransactionLogV5,
-  AccountMarginModeV5,
-  MMPModifyParamsV5,
-  MMPStateV5,
-  GetCoinExchangeRecordParamsV5,
-  CoinExchangeRecordV5,
-  GetDeliveryRecordParamsV5,
-  DeliveryRecordV5,
   GetSettlementRecordParamsV5,
-  SettlementRecordV5,
-  GetAssetInfoParamsV5,
-  AssetInfoV5,
-  GetAllCoinsBalanceParamsV5,
-  AllCoinsBalanceV5,
-  GetAccountCoinBalanceParamsV5,
-  AccountCoinBalanceV5,
-  AccountTypeV5,
-  GetInternalTransferParamsV5,
-  InternalTransferRecordV5,
-  UniversalTransferParamsV5,
-  GetUniversalTransferRecordsParamsV5,
-  UniversalTransferRecordV5,
-  GetAllowedDepositCoinInfoParamsV5,
-  AllowedDepositCoinInfoV5,
-  GetDepositRecordParamsV5,
-  DepositRecordV5,
+  GetSpotLeveragedTokenOrderHistoryParamsV5,
   GetSubAccountDepositRecordParamsV5,
-  DepositAddressResultV5,
-  CoinInfoV5,
+  GetTickersParamsV5,
+  GetTransactionLogParamsV5,
+  GetUniversalTransferRecordsParamsV5,
+  GetWalletBalanceParamsV5,
   GetWithdrawalRecordsParamsV5,
-  WithdrawalRecordV5,
-  WithdrawParamsV5,
-  CreateSubMemberParamsV5,
-  CreateSubMemberResultV5,
-  CreateSubApiKeyParamsV5,
-  CreateSubApiKeyResultV5,
-  SubMemberV5,
-  ApiKeyInfoV5,
-  UpdateApiKeyResultV5,
-  UpdateApiKeyParamsV5,
+  HistoricalVolatilityV5,
+  InstrumentInfoResponseV5,
+  InsuranceResponseV5,
+  InternalTransferRecordV5,
   LeverageTokenInfoV5,
   LeveragedTokenMarketResultV5,
+  MMPModifyParamsV5,
+  MMPStateV5,
+  OHLCKlineV5,
+  OHLCVKlineV5,
+  OpenInterestResponseV5,
+  OptionDeliveryPriceV5,
+  OrderParamsV5,
+  OrderResultV5,
+  OrderSideV5,
+  OrderbookResponseV5,
+  PositionInfoParamsV5,
+  PositionV5,
+  PublicTradeV5,
   PurchaseSpotLeveragedTokenParamsV5,
   PurchaseSpotLeveragedTokenResultV5,
   RedeemSpotLeveragedTokenParamsV5,
   RedeemSpotLeveragedTokenResultV5,
-  GetSpotLeveragedTokenOrderHistoryParamsV5,
+  RiskLimitV5,
+  SetAutoAddMarginParamsV5,
+  SetLeverageParamsV5,
+  SetRiskLimitParamsV5,
+  SetRiskLimitResultV5,
+  SetTPSLModeParamsV5,
+  SetTradingStopParamsV5,
+  SettlementRecordV5,
+  SpotBorrowCheckResult,
   SpotLeveragedTokenOrderHistoryV5,
-  InstrumentInfoResponseV5,
+  SubMemberV5,
+  SwitchIsolatedMarginParamsV5,
+  SwitchPositionModeParamsV5,
+  TPSLModeV5,
+  TickerLinearInverseV5,
+  TickerOptionV5,
+  TickerSpotV5,
+  TransactionLogV5,
+  UnifiedAccountUpgradeResultV5,
+  UniversalTransferParamsV5,
+  UniversalTransferRecordV5,
+  UpdateApiKeyParamsV5,
+  UpdateApiKeyResultV5,
+  WalletBalanceV5,
+  WithdrawParamsV5,
+  WithdrawalRecordV5,
 } from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
@@ -166,7 +166,7 @@ export class RestClientV5 extends BaseRestClient {
       CategorySymbolListV5<OHLCVKlineV5[], 'spot' | 'linear' | 'inverse'>
     >
   > {
-    return this.get(`/v5/market/kline`, params);
+    return this.get('/v5/market/kline', params);
   }
 
   /**
@@ -181,7 +181,7 @@ export class RestClientV5 extends BaseRestClient {
       CategorySymbolListV5<OHLCKlineV5[], 'linear' | 'inverse'>
     >
   > {
-    return this.get(`/v5/market/mark-price-kline`, params);
+    return this.get('/v5/market/mark-price-kline', params);
   }
 
   /**
@@ -196,7 +196,7 @@ export class RestClientV5 extends BaseRestClient {
       CategorySymbolListV5<OHLCKlineV5[], 'linear' | 'inverse'>
     >
   > {
-    return this.get(`/v5/market/index-price-kline`, params);
+    return this.get('/v5/market/index-price-kline', params);
   }
 
   /**
@@ -209,7 +209,7 @@ export class RestClientV5 extends BaseRestClient {
   ): Promise<
     APIResponseV3WithTime<CategorySymbolListV5<OHLCKlineV5[], 'linear'>>
   > {
-    return this.get(`/v5/market/premium-index-price-kline`, params);
+    return this.get('/v5/market/premium-index-price-kline', params);
   }
 
   /**
@@ -222,7 +222,7 @@ export class RestClientV5 extends BaseRestClient {
   getInstrumentsInfo(
     params: GetInstrumentsInfoParamsV5
   ): Promise<APIResponseV3WithTime<InstrumentInfoResponseV5>> {
-    return this.get(`/v5/market/instruments-info`, params);
+    return this.get('/v5/market/instruments-info', params);
   }
 
   /**
@@ -233,7 +233,7 @@ export class RestClientV5 extends BaseRestClient {
   getOrderbook(
     params: GetOrderbookParamsV5
   ): Promise<APIResponseV3WithTime<OrderbookResponseV5>> {
-    return this.get(`/v5/market/orderbook`, params);
+    return this.get('/v5/market/orderbook', params);
   }
 
   /**
@@ -250,7 +250,7 @@ export class RestClientV5 extends BaseRestClient {
       | CategoryListV5<TickerSpotV5[], 'spot'>
     >
   > {
-    return this.get(`/v5/market/tickers`, params);
+    return this.get('/v5/market/tickers', params);
   }
 
   /**
@@ -265,7 +265,7 @@ export class RestClientV5 extends BaseRestClient {
       CategoryListV5<FundingRateHistoryResponseV5[], 'linear' | 'inverse'>
     >
   > {
-    return this.get(`/v5/market/funding/history`, params);
+    return this.get('/v5/market/funding/history', params);
   }
 
   /**
@@ -278,7 +278,7 @@ export class RestClientV5 extends BaseRestClient {
   ): Promise<
     APIResponseV3WithTime<CategoryListV5<PublicTradeV5[], CategoryV5>>
   > {
-    return this.get(`/v5/market/recent-trade`, params);
+    return this.get('/v5/market/recent-trade', params);
   }
 
   /**
@@ -289,7 +289,7 @@ export class RestClientV5 extends BaseRestClient {
   getOpenInterest(
     params: GetOpenInterestParamsV5
   ): Promise<APIResponseV3WithTime<OpenInterestResponseV5>> {
-    return this.get(`/v5/market/open-interest`, params);
+    return this.get('/v5/market/open-interest', params);
   }
 
   /**
@@ -301,7 +301,7 @@ export class RestClientV5 extends BaseRestClient {
   ): Promise<
     APIResponseV3WithTime<CategoryListV5<HistoricalVolatilityV5[], 'option'>>
   > {
-    return this.get(`/v5/market/historical-volatility`, params);
+    return this.get('/v5/market/historical-volatility', params);
   }
 
   /**
@@ -310,7 +310,7 @@ export class RestClientV5 extends BaseRestClient {
   getInsurance(
     params?: GetInsuranceParamsV5
   ): Promise<APIResponseV3WithTime<InsuranceResponseV5>> {
-    return this.get(`/v5/market/insurance`, params);
+    return this.get('/v5/market/insurance', params);
   }
 
   /**
@@ -323,7 +323,7 @@ export class RestClientV5 extends BaseRestClient {
   ): Promise<
     APIResponseV3WithTime<CategoryListV5<RiskLimitV5[], 'inverse' | 'linear'>>
   > {
-    return this.get(`/v5/market/risk-limit`, params);
+    return this.get('/v5/market/risk-limit', params);
   }
 
   /**
@@ -336,7 +336,7 @@ export class RestClientV5 extends BaseRestClient {
   ): Promise<
     APIResponseV3WithTime<CategoryCursorListV5<OptionDeliveryPriceV5[]>>
   > {
-    return this.get(`/v5/market/delivery-price`, params);
+    return this.get('/v5/market/delivery-price', params);
   }
 
   /**
@@ -348,7 +348,7 @@ export class RestClientV5 extends BaseRestClient {
   submitOrder(
     params: OrderParamsV5
   ): Promise<APIResponseV3WithTime<OrderResultV5>> {
-    return this.postPrivate(`/v5/order/create`, params);
+    return this.postPrivate('/v5/order/create', params);
   }
 
   amendOrder(
@@ -386,7 +386,7 @@ export class RestClientV5 extends BaseRestClient {
   getHistoricOrders(
     params: GetAccountOrdersParams
   ): Promise<APIResponseV3WithTime<CategoryCursorListV5<AccountOrderV5[]>>> {
-    return this.getPrivate(`/v5/order/history`, params);
+    return this.getPrivate('/v5/order/history', params);
   }
 
   /**
@@ -573,6 +573,7 @@ export class RestClientV5 extends BaseRestClient {
   ): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate('/v5/position/trading-stop', params);
   }
+
   /**
    * This endpoint allows you to turn on/off auto-add-margin for an isolated margin position.
    *
@@ -1175,7 +1176,7 @@ export class RestClientV5 extends BaseRestClient {
   getLeveragedTokenMarket(
     ltCoin: string
   ): Promise<APIResponseV3WithTime<LeveragedTokenMarketResultV5>> {
-    return this.get(`/v5/spot-lever-token/reference`, { ltCoin });
+    return this.get('/v5/spot-lever-token/reference', { ltCoin });
   }
 
   /**

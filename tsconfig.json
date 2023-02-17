@@ -13,14 +13,9 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "esModuleInterop": true,
-    "lib": ["es2017","dom"],
+    "lib": ["es2017", "dom"],
     "outDir": "lib"
   },
   "include": ["src/**/*"],
-  "exclude": [
-    "node_modules",
-    "**/node_modules/*",
-    "coverage",
-    "doc"
-  ]
+  "exclude": ["node_modules", "**/node_modules/*", "coverage", "doc"]
 }

@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "distExamples",
+    "allowJs": true
+  },
+  "include": [
+    "**/*.ts",
+    // if you have a mixed JS/TS codebase, don't forget to include your JS files
+    "**/*.js"
+  ]
+}

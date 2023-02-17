@@ -71,9 +71,9 @@ export type StopOrderTypeV5 =
 /**
  * Position index. Used to identify positions in different position modes.
  *
- * - 0 one-way mode position
- * - 1 Buy side of hedge-mode position
- * - 2 Sell side of hedge-mode position
+ * - 0 one-way mode position
+ * - 1 Buy side of hedge-mode position
+ * - 2 Sell side of hedge-mode position
  */
 export type PositionIdx = 0 | 1 | 2;
 
@@ -124,15 +124,11 @@ export type PermissionTypeV5 =
 /**
  * Leveraged token status:
  *
- *    1 LT can be purchased and redeemed
- *
- *    2 LT can be purchased, but not redeemed
- *
- *    3 LT can be redeemed, but not purchased
- *
- *    4 LT cannot be purchased nor redeemed
- *
- *    5 Adjusting position
+ * - '1' LT can be purchased and redeemed
+ * - '2' LT can be purchased, but not redeemed
+ * - '3' LT can be redeemed, but not purchased
+ * - '4' LT cannot be purchased nor redeemed
+ * - '5' Adjusting position
  */
 export type LeverageTokenStatusV5 = '1' | '2' | '3' | '4' | '5';
 

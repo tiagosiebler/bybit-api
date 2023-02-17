@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  APIResponseV3,
   APIResponseWithTime,
   CopyTradingCancelOrderRequest,
   CopyTradingCloseOrderRequest,
@@ -6,7 +8,6 @@ import {
   CopyTradingOrderRequest,
   CopyTradingTradingStopRequest,
   CopyTradingTransferRequest,
-  APIResponseV3,
 } from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';

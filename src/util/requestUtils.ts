@@ -91,6 +91,7 @@ export function getRestBaseUrl(
   return exchangeBaseUrls.livenet;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isWsPong(msg: any): boolean {
   if (!msg) {
     return false;

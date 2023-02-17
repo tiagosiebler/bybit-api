@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { EventEmitter } from 'events';
 import WebSocket from 'isomorphic-ws';
 
@@ -17,24 +19,24 @@ import {
   APIMarket,
   KlineInterval,
   RESTClient,
-  WebsocketClientOptions,
   WSClientConfigurableOptions,
+  WebsocketClientOptions,
   WsKey,
   WsTopic,
 } from './types';
 
 import {
-  serializeParams,
-  isWsPong,
-  WsConnectionStateEnum,
+  DefaultLogger,
   PUBLIC_WS_KEYS,
   WS_AUTH_ON_CONNECT_KEYS,
-  WS_KEY_MAP,
-  DefaultLogger,
   WS_BASE_URL_MAP,
-  getWsKeyForTopic,
-  neverGuard,
+  WS_KEY_MAP,
+  WsConnectionStateEnum,
   getMaxTopicsPerSubscribeEvent,
+  getWsKeyForTopic,
+  isWsPong,
+  neverGuard,
+  serializeParams,
 } from './util';
 
 const loggerCategory = { category: 'bybit-ws' };
@@ -78,10 +80,14 @@ export declare interface WebsocketClient {
   ): boolean;
 }
 
+// eslint-disable-next-line no-redeclare
 export class WebsocketClient extends EventEmitter {
   private logger: typeof DefaultLogger;
+
   private restClient?: RESTClient;
+
   private options: WebsocketClientOptions;
+
   private wsStore: WsStore;
 
   constructor(
@@ -109,6 +115,7 @@ export class WebsocketClient extends EventEmitter {
     this.prepareRESTClient();
 
     // add default error handling so this doesn't crash node (if the user didn't set a handler)
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     this.on('error', () => {});
   }
 
@@ -247,7 +254,7 @@ export class WebsocketClient extends EventEmitter {
       default: {
         throw neverGuard(
           this.options.market,
-          `prepareRESTClient(): Unhandled market`
+          'prepareRESTClient(): Unhandled market'
         );
       }
     }
@@ -304,7 +311,7 @@ export class WebsocketClient extends EventEmitter {
         return [...this.connectPublic(), this.connectPrivate()];
       }
       default: {
-        throw neverGuard(this.options.market, `connectAll(): Unhandled market`);
+        throw neverGuard(this.options.market, 'connectAll(): Unhandled market');
       }
     }
   }
@@ -345,7 +352,7 @@ export class WebsocketClient extends EventEmitter {
       default: {
         throw neverGuard(
           this.options.market,
-          `connectPublic(): Unhandled market`
+          'connectPublic(): Unhandled market'
         );
       }
     }
@@ -382,7 +389,7 @@ export class WebsocketClient extends EventEmitter {
       default: {
         throw neverGuard(
           this.options.market,
-          `connectPrivate(): Unhandled market`
+          'connectPrivate(): Unhandled market'
         );
       }
     }
@@ -517,7 +524,7 @@ export class WebsocketClient extends EventEmitter {
         'Cannot authenticate websocket, either api or private keys missing.',
         { ...loggerCategory, wsKey }
       );
-      throw new Error(`Cannot auth - missing api or secret in config`);
+      throw new Error('Cannot auth - missing api or secret in config');
     }
 
     this.logger.debug("Getting auth'd request params", {
@@ -660,7 +667,7 @@ export class WebsocketClient extends EventEmitter {
       this.logger.silly(
         `Subscribing to topics in batches of ${maxTopicsPerEvent}`
       );
-      for (var i = 0; i < topics.length; i += maxTopicsPerEvent) {
+      for (let i = 0; i < topics.length; i += maxTopicsPerEvent) {
         const batch = topics.slice(i, i + maxTopicsPerEvent);
         this.logger.silly(`Subscribing to batch of ${batch.length}`);
         this.requestSubscribeTopics(wsKey, batch);
@@ -695,7 +702,7 @@ export class WebsocketClient extends EventEmitter {
       this.logger.silly(
         `Unsubscribing to topics in batches of ${maxTopicsPerEvent}`
       );
-      for (var i = 0; i < topics.length; i += maxTopicsPerEvent) {
+      for (let i = 0; i < topics.length; i += maxTopicsPerEvent) {
         const batch = topics.slice(i, i + maxTopicsPerEvent);
         this.logger.silly(`Unsubscribing to batch of ${batch.length}`);
         this.requestUnsubscribeTopics(wsKey, batch);
@@ -716,7 +723,7 @@ export class WebsocketClient extends EventEmitter {
 
   public tryWsSend(wsKey: WsKey, wsMessage: string) {
     try {
-      this.logger.silly(`Sending upstream ws message: `, {
+      this.logger.silly('Sending upstream ws message: ', {
         ...loggerCategory,
         wsMessage,
         wsKey,
@@ -734,7 +741,7 @@ export class WebsocketClient extends EventEmitter {
       }
       ws.send(wsMessage);
     } catch (e) {
-      this.logger.error(`Failed to send WS message`, {
+      this.logger.error('Failed to send WS message', {
         ...loggerCategory,
         wsMessage,
         wsKey,
@@ -782,7 +789,7 @@ export class WebsocketClient extends EventEmitter {
 
     // Some websockets require an auth packet to be sent after opening the connection
     if (WS_AUTH_ON_CONNECT_KEYS.includes(wsKey)) {
-      this.logger.info(`Sending auth request...`);
+      this.logger.info('Sending auth request...');
       await this.sendAuthRequest(wsKey);
     }
 
@@ -955,7 +962,7 @@ export class WebsocketClient extends EventEmitter {
           ...loggerCategory,
           wsKey,
         });
-        throw neverGuard(wsKey, `getWsUrl(): Unhandled wsKey`);
+        throw neverGuard(wsKey, 'getWsUrl(): Unhandled wsKey');
       }
     }
   }
@@ -1051,7 +1058,7 @@ export class WebsocketClient extends EventEmitter {
       case 'merge': {
         topic = 'mergedDepth';
         if (!dumpScale) {
-          throw new Error(`Dumpscale must be provided for merged orderbooks`);
+          throw new Error('Dumpscale must be provided for merged orderbooks');
         }
         break;
       }
