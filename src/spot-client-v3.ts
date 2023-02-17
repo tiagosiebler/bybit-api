@@ -166,6 +166,7 @@ export class SpotClientV3 extends BaseRestClient {
       symbol,
       orderId,
       limit,
+      orderCategory,
     });
   }
 

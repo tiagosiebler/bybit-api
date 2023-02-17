@@ -38,7 +38,6 @@ import {
   WalletFundRecordsReq,
   WithdrawRecordsReq,
 } from './types';
-import { linearPositionModeEnum, positionTpSlModeEnum } from './constants/enum';
 import BaseRestClient from './util/BaseRestClient';
 
 /**

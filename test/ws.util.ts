@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { WebsocketClient, WsClientEvent } from '../src';
 
-export function getSilentLogger(logHint?: string) {
+export function getSilentLogger(_logHint?: string) {
   return {
     silly: () => {},
     debug: () => {},
@@ -129,7 +130,7 @@ export function logAllEvents(wsClient: WebsocketClient) {
 }
 
 export function promiseSleep(ms: number) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
 }
