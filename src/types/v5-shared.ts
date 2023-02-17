@@ -43,6 +43,31 @@ export type PermissionTypeV5 =
   | 'Exchange'
   | 'NFT';
 
+/**
+ * Leveraged token status:
+ *
+ *    1 LT can be purchased and redeemed
+ *
+ *    2 LT can be purchased, but not redeemed
+ *
+ *    3 LT can be redeemed, but not purchased
+ *
+ *    4 LT cannot be purchased nor redeemed
+ *
+ *    5 Adjusting position
+ */
+export type LeverageTokenStatusV5 = '1' | '2' | '3' | '4' | '5';
+
+/**
+ * Leveraged token order type: '1': purchase, '2': redeem
+ */
+export type LTOrderTypeV5 = '1' | '2';
+
+/**
+ * Leveraged token order status: '1': completed, '2': in progress, '3': failed
+ */
+export type LTOrderStatusV5 = '1' | '2' | '3';
+
 export interface PermissionsV5 {
   ContractTrade?: string[];
   Spot?: string[];

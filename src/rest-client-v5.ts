@@ -115,6 +115,14 @@ import {
   ApiKeyInfoV5,
   UpdateApiKeyResultV5,
   UpdateApiKeyParamsV5,
+  LeverageTokenInfoV5,
+  LeveragedTokenMarketResultV5,
+  PurchaseSpotLeveragedTokenParamsV5,
+  PurchaseSpotLeveragedTokenResultV5,
+  RedeemSpotLeveragedTokenParamsV5,
+  RedeemSpotLeveragedTokenResultV5,
+  GetSpotLeveragedTokenOrderHistoryParamsV5,
+  SpotLeveragedTokenOrderHistoryV5,
 } from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
@@ -1140,11 +1148,84 @@ export class RestClientV5 extends BaseRestClient {
     return this.postPrivate('/v5/user/delete-sub-api');
   }
 
-  //
-  //
-  //
-  //
-  //
-  //
-  //
+  /**
+   *
+   ****** Spot Leverage Token APIs
+   *
+   */
+
+  /**
+   * Query leverage token information
+   */
+  getLeveragedTokenInfo(
+    ltCoin?: string
+  ): Promise<APIResponseV3WithTime<{ list: LeverageTokenInfoV5[] }>> {
+    return this.get('/v5/spot-lever-token/info', { ltCoin });
+  }
+
+  /**
+   * Get leverage token market information.
+   */
+  getLeveragedTokenMarket(
+    ltCoin: string
+  ): Promise<APIResponseV3WithTime<LeveragedTokenMarketResultV5>> {
+    return this.get(`/v5/spot-lever-token/reference`, { ltCoin });
+  }
+
+  /**
+   * This endpoint allows you to purchase a leveraged token with a specified amount.
+   */
+  purchaseSpotLeveragedToken(
+    params: PurchaseSpotLeveragedTokenParamsV5
+  ): Promise<APIResponseV3WithTime<PurchaseSpotLeveragedTokenResultV5>> {
+    return this.postPrivate('/v5/spot-lever-token/purchase', params);
+  }
+
+  /**
+   * Redeem leveraged token.
+   */
+  redeemSpotLeveragedToken(
+    params: RedeemSpotLeveragedTokenParamsV5
+  ): Promise<APIResponseV3WithTime<RedeemSpotLeveragedTokenResultV5>> {
+    return this.postPrivate('/v5/spot-lever-token/redeem', params);
+  }
+
+  /**
+   * Get purchase or redemption history
+   */
+  getSpotLeveragedTokenOrderHistory(
+    params?: GetSpotLeveragedTokenOrderHistoryParamsV5
+  ): Promise<
+    APIResponseV3WithTime<{ list: SpotLeveragedTokenOrderHistoryV5[] }>
+  > {
+    return this.getPrivate('/v5/spot-lever-token/order-record', params);
+  }
+
+  /**
+   *
+   ****** Spot Margin Trade APIs
+   *
+   */
+
+  /**
+   * Turn spot margin trade on / off.
+   *
+   * CAUTION
+   * Your account needs to turn on spot margin first
+   */
+  toggleSpotMarginTrade(
+    spotMarginMode: '1' | '0'
+  ): Promise<APIResponseV3WithTime<{ spotMarginMode: '1' | '0' }>> {
+    return this.postPrivate('/v5/spot-margin-trade/switch-mode', {
+      spotMarginMode,
+    });
+  }
+
+  /**
+   * Set the user's maximum leverage in spot cross margin.
+   * CAUTION: Your account needs to enable spot margin first; i.e., you must have finished the quiz on web / app.
+   */
+  setSpotMarginLeverage(leverage: string): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate('/v5/spot-margin-trade/set-leverage', { leverage });
+  }
 }
