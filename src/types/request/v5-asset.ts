@@ -125,7 +125,7 @@ export interface WithdrawParamsV5 {
   amount: string;
   timestamp: number;
   forceChain?: number;
-  accountType?: string;
+  accountType?: 'SPOT' | 'FUND';
 }
 
 export interface CreateSubMemberParamsV5 {
