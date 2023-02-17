@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { WebsocketClient, WsClientEvent } from '../src';
 
 export function getSilentLogger(logHint?: string) {
@@ -33,6 +35,7 @@ export function waitForSocketEvent(
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => {
       reject(
+        // eslint-disable-next-line max-len
         `Failed to receive "${event}" event before timeout. Check that these are correct: topic, api keys (if private), signature process (if private)`
       );
     }, timeoutMs);

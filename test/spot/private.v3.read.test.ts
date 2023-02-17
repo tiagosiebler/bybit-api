@@ -21,7 +21,7 @@ describe('Private Spot REST API GET Endpoints', () => {
   });
 
   const symbol = 'BTCUSDT';
-  const interval = '15m';
+  // const interval = '15m';
   const ltCode = 'BTC3S';
 
   it('getOrder()', async () => {

@@ -16,7 +16,8 @@ describe('Private Linear REST API POST Endpoints', () => {
     testnet: false,
   });
 
-  // Warning: if some of these start to fail with 10001 params error, it's probably that this future expired and a newer one exists with a different symbol!
+  // Warning: if some of these start to fail with 10001 params error,
+  // it's probably that this future expired and a newer one exists with a different symbol!
   const symbol = 'BTCUSDT';
 
   // These tests are primarily check auth is working by expecting balance or order not found style errors

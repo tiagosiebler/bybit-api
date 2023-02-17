@@ -1,12 +1,12 @@
 import {
-  WebsocketClient,
   WSClientConfigurableOptions,
   WS_KEY_MAP,
+  WebsocketClient,
 } from '../../src';
 import {
+  WS_OPEN_EVENT_PARTIAL,
   getSilentLogger,
   waitForSocketEvent,
-  WS_OPEN_EVENT_PARTIAL,
 } from '../ws.util';
 
 describe('Private Inverse Perps Websocket Client', () => {

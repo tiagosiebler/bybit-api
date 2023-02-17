@@ -1,14 +1,16 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  WebsocketClient,
   WSClientConfigurableOptions,
   WS_KEY_MAP,
+  WebsocketClient,
 } from '../../src';
 import {
-  logAllEvents,
-  getSilentLogger,
-  waitForSocketEvent,
   WS_OPEN_EVENT_PARTIAL,
   fullLogger,
+  getSilentLogger,
+  logAllEvents,
+  waitForSocketEvent,
 } from '../ws.util';
 
 describe('Public Unified Margin Websocket Client (Perps - USDC)', () => {

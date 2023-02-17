@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { API_ERROR_CODE } from '../src';
 
 const SUCCESS_MSG_REGEX = /OK|SUCCESS|success|success\.|Request accepted|/gim;
@@ -19,7 +20,7 @@ export function successResponseListV3() {
   };
 }
 
-export function successResponseObject(successMsg: string | null = 'OK') {
+export function successResponseObject() {
   return {
     result: expect.any(Object),
     ret_code: API_ERROR_CODE.SUCCESS,

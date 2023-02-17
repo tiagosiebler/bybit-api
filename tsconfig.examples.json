@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "distExamples",
+    "allowJs": true
+  },
+  "include": ["examples/**/*.ts", "examples/**/*.js"]
+}

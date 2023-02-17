@@ -18,8 +18,8 @@ import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../src';
       // market: 'spot',
       // market: 'spotv3',
       // market: 'usdcOption',
-      // market: 'usdcPerp',
-      market: 'unifiedPerp',
+      market: 'usdcPerp',
+      // market: 'unifiedPerp',
       // market: 'unifiedOption',
     },
     logger
@@ -138,11 +138,13 @@ import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../src';
   // ]);
 
   // usdc perps (note: the syntax is different for the unified perp market)
+  // (market: 'usdcPerp')
   // wsClient.subscribe('trade.BTCUSDC');
+  wsClient.subscribe('instrument_info.100ms.BTCPERP');
 
   // unified perps
   // wsClient.subscribe('publicTrade.BTCUSDT');
-  wsClient.subscribe('publicTrade.BTCPERP');
+  // wsClient.subscribe('publicTrade.BTCPERP');
 
   // For spot v1 (the old, deprecated client), request public connection first then send required topics on 'open'
   // Not necessary for spot v3

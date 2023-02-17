@@ -1,4 +1,4 @@
-import { WebsocketClient, WS_KEY_MAP, DefaultLogger } from '../src';
+import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../src';
 
 // or
 // import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from 'bybit-api';

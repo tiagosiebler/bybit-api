@@ -16,7 +16,11 @@
       ],
       "parserOptions": {
         "projecasdft": true,
-        "project": ["./tsconfig.json", "examples/tsconfig.examples.json"]
+        "project": [
+          "./tsconfig.json",
+          "examples/tsconfig.examples.json",
+          "tsconfig.test.json"
+        ]
       },
       "rules": {
         "@typescript-eslint/await-thenable": "error",

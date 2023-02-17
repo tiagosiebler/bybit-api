@@ -1,13 +1,12 @@
 import {
-  WebsocketClient,
   WSClientConfigurableOptions,
   WS_KEY_MAP,
+  WebsocketClient,
 } from '../../../src';
 import {
-  logAllEvents,
+  WS_OPEN_EVENT_PARTIAL,
   getSilentLogger,
   waitForSocketEvent,
-  WS_OPEN_EVENT_PARTIAL,
 } from '../../ws.util';
 
 describe('Public USDC Perp Websocket Client', () => {

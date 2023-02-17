@@ -1,15 +1,17 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  WebsocketClient,
   WSClientConfigurableOptions,
   WS_KEY_MAP,
+  WebsocketClient,
 } from '../../src';
 import {
-  logAllEvents,
-  promiseSleep,
-  getSilentLogger,
-  waitForSocketEvent,
   WS_OPEN_EVENT_PARTIAL,
   fullLogger,
+  getSilentLogger,
+  logAllEvents,
+  promiseSleep,
+  waitForSocketEvent,
 } from '../ws.util';
 
 describe('Private Spot V1 Websocket Client', () => {

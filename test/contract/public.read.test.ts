@@ -1,4 +1,4 @@
-import { UMCandlesRequest, ContractClient } from '../../src';
+import { ContractClient, UMCandlesRequest } from '../../src';
 import {
   successResponseObject,
   successResponseObjectV3,

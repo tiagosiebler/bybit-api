@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { API_ERROR_CODE, ContractClient } from '../../src';
 import { successResponseObjectV3 } from '../response.util';
 
