@@ -1,104 +1,121 @@
+import {
+  CategoryCursorListV5,
+  ContractTypeV5,
+  InstrumentStatusV5,
+  OptionTypeV5,
+  OrderSideV5,
+} from '../v5-shared';
+
 /**
  * OHLCVT candle used by v5 APIs
  *
- * > list[0]: startTime	string	Start time of the candle (ms)
- *
- * > list[1]: openPrice	string	Open price
- *
- * > list[2]: highPrice	string	Highest price
- *
- * > list[3]: lowPrice	string	Lowest price
- *
- * > list[4]: closePrice	string	Close price. Is the last traded price when the candle is not closed
- *
- * > list[5]: volume	string	Trade volume. Unit of contract: pieces of contract. Unit of spot: quantity of coins
- *
- * > list[6]: turnover	string	Turnover. Unit of figure: quantity of quota coin
+ * - list[0]: startTime	string	Start time of the candle (ms)
+ * - list[1]: openPrice	string	Open price
+ * - list[2]: highPrice	string	Highest price
+ * - list[3]: lowPrice	string	Lowest price
+ * - list[4]: closePrice	string	Close price. Is the last traded price when the candle is not closed
+ * - list[5]: volume	string	Trade volume. Unit of contract: pieces of contract. Unit of spot: quantity of coins
+ * - list[6]: turnover	string	Turnover. Unit of figure: quantity of quota coin
  */
-export type KlineV5 = [string, string, string, string, string, string, string];
+export type OHLCVKlineV5 = [
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string
+];
 
 /**
  * OHLC candle used by v5 APIs
  *
- * > list[0]: startTime	string	Start time of the candle (ms)
- *
- * > list[1]: openPrice	string	Open price
- *
- * > list[2]: highPrice	string	Highest price
- *
- * > list[3]: lowPrice	string	Lowest price
- *
- * > list[4]: closePrice	string	Close price. Is the last traded price when the candle is not closed
+ * - list[0]: startTime	string	Start time of the candle (ms)
+ * - list[1]: openPrice	string	Open price
+ * - list[2]: highPrice	string	Highest price
+ * - list[3]: lowPrice	string	Lowest price
+ * - list[4]: closePrice	string	Close price. Is the last traded price when the candle is not closed
  */
-export type OHLCV5 = [string, string, string, string, string];
+export type OHLCKlineV5 = [string, string, string, string, string];
 
 export interface LinearInverseInstrumentInfoV5 {
-  category: 'linear' | 'inverse';
   symbol: string;
-  contractType: string;
-  status: string;
+  contractType: ContractTypeV5;
+  status: InstrumentStatusV5;
   baseCoin: string;
   quoteCoin: string;
   launchTime: string;
-  deliveryTime: string;
-  deliveryFeeRate: string;
+  deliveryTime?: string;
+  deliveryFeeRate?: string;
   priceScale: string;
-  maxLeverage: string;
-  minOrderValue: string;
-  minOrderVolume: string;
-  makerFeeRate: string;
-  takerFeeRate: string;
+  leverageFilter: {
+    minLeverage: string;
+    maxLeverage: string;
+    leverageStep: string;
+  };
+  priceFilter: {
+    minPrice: string;
+    maxPrice: string;
+    tickSize: string;
+  };
+  lotSizeFilter: {
+    maxOrderQty: string;
+    minOrderQty: string;
+    qtyStep: string;
+    postOnlyMaxOrderQty?: string;
+  };
+  unifiedMarginTrade: boolean;
+  fundingInterval: number;
+  settleCoin: string;
 }
 
 export interface OptionInstrumentInfoV5 {
-  category: 'option';
   symbol: string;
-  contractType: string;
-  status: string;
+  optionsType: OptionTypeV5;
+  status: InstrumentStatusV5;
   baseCoin: string;
   quoteCoin: string;
+  settleCoin: boolean;
   launchTime: string;
   deliveryTime: string;
   deliveryFeeRate: string;
-  priceScale: string;
-  maxLeverage: string;
-  minOrderValue: string;
-  minOrderVolume: string;
-  makerFeeRate: string;
-  takerFeeRate: string;
-  settlementCurrency: string;
-  settlementPrice: string;
-  deliveryMethod: string;
-  optionType: string;
-  exercisePrice: string;
-  expirationTime: string;
-  blockMarginRatio: string;
-  marginType: string;
-  strike: string;
+  priceFilter: {
+    minPrice: string;
+    maxPrice: string;
+    tickSize: string;
+  };
+  lotSizeFilter: {
+    maxOrderQty: string;
+    minOrderQty: string;
+    qtyStep: string;
+  };
 }
 
 export interface SpotInstrumentInfoV5 {
-  category: 'spot';
   symbol: string;
-  contractType: string;
-  status: string;
   baseCoin: string;
   quoteCoin: string;
-  launchTime: string;
-  priceScale: string;
-  maxLeverage: string;
-  minOrderValue: string;
-  minOrderVolume: string;
-  makerFeeRate: string;
-  takerFeeRate: string;
+  innovation: '0' | '1';
+  status: InstrumentStatusV5;
+  lotSizeFilter: {
+    basePrecision: string;
+    quotePrecision: string;
+    minOrderQty: string;
+    maxOrderQty: string;
+    minOrderAmt: string;
+    maxOrderAmt: string;
+  };
+  priceFilter: {
+    tickSize: string;
+  };
 }
 
-export type InstrumentInfoV5 =
-  | LinearInverseInstrumentInfoV5
-  | OptionInstrumentInfoV5
-  | SpotInstrumentInfoV5;
+export type InstrumentInfoResponseV5 =
+  | CategoryCursorListV5<LinearInverseInstrumentInfoV5[], 'linear' | 'inverse'>
+  | CategoryCursorListV5<OptionInstrumentInfoV5[], 'option'>
+  | CategoryCursorListV5<SpotInstrumentInfoV5[], 'spot'>;
 
-export interface OrderbookLevelV5 {
+export default interface OrderbookLevelV5 {
   price: string;
   size: string;
 }
@@ -192,16 +209,16 @@ export interface PublicTradeV5 {
   symbol: string;
   price: string;
   size: string;
-  side: 'Buy' | 'Sell';
+  side: OrderSideV5;
   time: string;
   isBlockTrade: boolean;
 }
 
 /**
-> openInterest	string	Open interest
-
-> timestamp	string	The timestamp (ms)
-*/
+ *
+ * - openInterest	string	Open interest
+ * - timestamp	string	The timestamp (ms)
+ */
 export type OpenInterestV5 = [string, string];
 
 export interface OpenInterestResponseV5 {

@@ -1,17 +1,95 @@
 export type CategoryV5 = 'spot' | 'linear' | 'inverse' | 'option';
+export type ContractTypeV5 =
+  | 'InversePerpetual'
+  | 'LinearPerpetual'
+  | 'InverseFutures';
+
+export type InstrumentStatusV5 = 'Pending' | 'Trading' | 'Settling' | 'Closed';
 
 export type OrderFilterV5 = 'Order' | 'tpslOrder';
 export type OrderSideV5 = 'Buy' | 'Sell';
 export type OrderTypeV5 = 'Market' | 'Limit';
 export type OrderTimeInForceV5 = 'GTC' | 'IOC' | 'FOK' | 'PostOnly';
 export type OrderTriggerByV5 = 'LastPrice' | 'IndexPrice' | 'MarkPrice';
-export type PositionIdx = 0 | 1 | 2;
+export type OrderStatusV5 =
+  | 'Created'
+  | 'New'
+  | 'Rejected'
+  | 'PartiallyFilled'
+  | 'PartiallyFilledCanceled'
+  | 'Filled'
+  | 'Cancelled'
+  | 'Untriggered'
+  | 'Triggered'
+  | 'Deactivated'
+  | 'Active';
+
+export type OrderCancelTypeV5 =
+  | 'CancelByUser'
+  | 'CancelByReduceOnly'
+  | 'CancelByPrepareLiq'
+  | 'CancelAllBeforeLiq'
+  | 'CancelByPrepareAdl'
+  | 'CancelAllBeforeAdl'
+  | 'CancelByAdmin'
+  | 'CancelByTpSlTsClear'
+  | 'CancelByPzSideCh';
+
+export type OrderRejectReasonV5 =
+  | 'EC_NoError'
+  | 'EC_Others'
+  | 'EC_UnknownMessageType'
+  | 'EC_MissingClOrdID'
+  | 'EC_MissingOrigClOrdID'
+  | 'EC_ClOrdIDOrigClOrdIDAreTheSame'
+  | 'EC_DuplicatedClOrdID'
+  | 'EC_OrigClOrdIDDoesNotExist'
+  | 'EC_TooLateToCancel'
+  | 'EC_UnknownOrderType'
+  | 'EC_UnknownSide'
+  | 'EC_UnknownTimeInForce'
+  | 'EC_WronglyRouted'
+  | 'EC_MarketOrderPriceIsNotZero'
+  | 'EC_LimitOrderInvalidPrice'
+  | 'EC_NoEnoughQtyToFill'
+  | 'EC_NoImmediateQtyToFill'
+  | 'EC_PerCancelRequest'
+  | 'EC_MarketOrderCannotBePostOnly'
+  | 'EC_PostOnlyWillTakeLiquidity'
+  | 'EC_CancelReplaceOrder'
+  | 'EC_InvalidSymbolStatus';
+
+export type StopOrderTypeV5 =
+  | 'TakeProfit'
+  | 'StopLoss'
+  | 'TrailingStop'
+  | 'Stop'
+  | 'PartialTakeProfit'
+  | 'PartialStopLoss'
+  | 'tpslOrder';
+
 /**
- * Trade mode. 0: cross-margin, 1: isolated margin
+ * Position index. Used to identify positions in different position modes.
+ *
+ * - 0 one-way mode position
+ * - 1 Buy side of hedge-mode position
+ * - 2 Sell side of hedge-mode position
+ */
+export type PositionIdx = 0 | 1 | 2;
+
+export type OptionTypeV5 = 'Call' | 'Put';
+
+/**
+ * Trade mode.
+ *
+ * - 0 cross-margin,
+ * - 1 isolated margin
  */
 export type TradeModeV5 = 0 | 1;
+
 export type TPSLModeV5 = 'Full' | 'Partial';
 export type AccountMarginModeV5 = 'REGULAR_MARGIN' | 'PORTFOLIO_MARGIN';
+export type UnifiedUpdateStatusV5 = 'FAIL' | 'PROCESS' | 'SUCCESS';
 
 export type AccountTypeV5 =
   | 'CONTRACT'
@@ -68,6 +146,18 @@ export type LTOrderTypeV5 = '1' | '2';
  */
 export type LTOrderStatusV5 = '1' | '2' | '3';
 
+export type ExecTypeV5 =
+  | 'Trade'
+  | 'AdlTrade'
+  | 'Funding'
+  | 'BustTrade'
+  | 'Settle';
+
+/**
+ * Withdraw type. 0(default): on chain. 1: off chain. 2: all.
+ */
+export type WithdrawalTypeV5 = '0' | '1' | '2';
+
 export interface PermissionsV5 {
   ContractTrade?: string[];
   Spot?: string[];
@@ -78,8 +168,11 @@ export interface PermissionsV5 {
   NFT?: string[];
 }
 
-export interface CategoryCursorListV5<T extends unknown[]> {
-  category: CategoryV5;
+export interface CategoryCursorListV5<
+  T extends unknown[],
+  TCategory extends CategoryV5 = CategoryV5
+> {
+  category: TCategory;
   list: T;
   nextPageCursor?: string;
 }

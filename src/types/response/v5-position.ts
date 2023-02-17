@@ -1,8 +1,10 @@
 import {
   CategoryV5,
+  ExecTypeV5,
   OrderSideV5,
   OrderTypeV5,
   PositionIdx,
+  StopOrderTypeV5,
   TPSLModeV5,
   TradeModeV5,
 } from '../v5-shared';
@@ -50,12 +52,12 @@ export interface ExecutionV5 {
   orderQty: string;
   leavesQty: string;
   orderType: OrderTypeV5;
-  stopOrderType?: string;
+  stopOrderType?: StopOrderTypeV5;
   execFee: string;
   execId: string;
   execPrice: string;
   execQty: string;
-  execType: string;
+  execType: ExecTypeV5;
   execValue: string;
   execTime: string;
   isMaker: boolean;
@@ -74,8 +76,8 @@ export interface ClosedPnLV5 {
   side: string;
   qty: string;
   orderPrice: string;
-  orderType: string;
-  execType: string;
+  orderType: OrderTypeV5;
+  execType: ExecTypeV5;
   closedSize: string;
   cumEntryValue: string;
   avgEntryPrice: string;

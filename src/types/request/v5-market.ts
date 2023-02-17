@@ -1,5 +1,5 @@
 import { KlineIntervalV3 } from '../shared';
-import { CategoryV5 } from '../v5-shared';
+import { CategoryV5, OptionTypeV5 } from '../v5-shared';
 
 export interface GetKlineParamsV5 {
   category: 'spot' | 'linear' | 'inverse';
@@ -66,13 +66,11 @@ export interface GetFundingRateHistoryParamsV5 {
   limit?: number;
 }
 
-export type OptionType = 'Call' | 'Put';
-
 export interface GetPublicTradingHistoryParamsV5 {
   category: CategoryV5;
   symbol: string;
   baseCoin?: string;
-  optionType?: OptionType;
+  optionType?: OptionTypeV5;
   limit?: number;
 }
 

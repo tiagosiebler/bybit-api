@@ -1,10 +1,14 @@
 import {
   CategoryV5,
+  OrderCancelTypeV5,
+  OrderRejectReasonV5,
   OrderSideV5,
+  OrderStatusV5,
   OrderTimeInForceV5,
   OrderTriggerByV5,
   OrderTypeV5,
   PositionIdx,
+  StopOrderTypeV5,
 } from '../v5-shared';
 
 export interface OrderResultV5 {
@@ -22,9 +26,9 @@ export interface AccountOrderV5 {
   side: OrderSideV5;
   isLeverage?: string;
   positionIdx?: PositionIdx;
-  orderStatus: string;
-  cancelType?: string;
-  rejectReason?: string;
+  orderStatus: OrderStatusV5;
+  cancelType?: OrderCancelTypeV5;
+  rejectReason?: OrderRejectReasonV5;
   avgPrice: string;
   leavesQty: string;
   leavesValue: string;
@@ -33,7 +37,7 @@ export interface AccountOrderV5 {
   cumExecFee: string;
   timeInForce?: OrderTimeInForceV5;
   orderType?: OrderTypeV5;
-  stopOrderType?: string;
+  stopOrderType?: StopOrderTypeV5;
   orderIv?: string;
   triggerPrice?: string;
   takeProfit?: string;

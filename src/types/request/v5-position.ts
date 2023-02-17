@@ -1,4 +1,4 @@
-import { CategoryV5, TPSLModeV5 } from '../v5-shared';
+import { CategoryV5, ExecTypeV5, PositionIdx, TPSLModeV5 } from '../v5-shared';
 
 export interface PositionInfoParamsV5 {
   category: CategoryV5;
@@ -41,7 +41,7 @@ export interface SetRiskLimitParamsV5 {
   category: 'linear' | 'inverse';
   symbol: string;
   riskId: number;
-  positionIdx?: number;
+  positionIdx?: PositionIdx;
 }
 
 export interface SetTradingStopParamsV5 {
@@ -55,14 +55,14 @@ export interface SetTradingStopParamsV5 {
   activePrice?: string;
   tpSize?: string;
   slSize?: string;
-  positionIdx: number;
+  positionIdx: PositionIdx;
 }
 
 export interface SetAutoAddMarginParamsV5 {
   category: 'linear';
   symbol: string;
   autoAddMargin: 0 | 1;
-  positionIdx?: number;
+  positionIdx?: PositionIdx;
 }
 
 export interface GetExecutionListParamsV5 {
@@ -73,7 +73,7 @@ export interface GetExecutionListParamsV5 {
   baseCoin?: string;
   startTime?: number;
   endTime?: number;
-  execType?: string;
+  execType?: ExecTypeV5;
   limit?: number;
   cursor?: string;
 }

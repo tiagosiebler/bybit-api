@@ -1,4 +1,4 @@
-import { AccountTypeV5, OrderSideV5 } from '../v5-shared';
+import { AccountTypeV5, OrderSideV5, WithdrawalTypeV5 } from '../v5-shared';
 
 export interface CoinExchangeRecordV5 {
   fromCoin: string;
@@ -135,7 +135,7 @@ export interface CoinInfoV5 {
 export interface WithdrawalRecordV5 {
   withdrawId: string;
   txID: string;
-  withdrawType: string;
+  withdrawType: WithdrawalTypeV5;
   coin: string;
   chain: string;
   amount: string;

@@ -1,4 +1,10 @@
-import { AccountTypeV5, CategoryV5, TransactionTypeV5 } from '../v5-shared';
+import {
+  AccountMarginModeV5,
+  AccountTypeV5,
+  CategoryV5,
+  TransactionTypeV5,
+  UnifiedUpdateStatusV5,
+} from '../v5-shared';
 
 export interface WalletBalanceV5Coin {
   coin: string;
@@ -29,8 +35,6 @@ export interface WalletBalanceV5 {
   totalMaintenanceMargin: string;
   coin: WalletBalanceV5Coin[];
 }
-
-export type UnifiedUpdateStatusV5 = 'FAIL' | 'PROCESS' | 'SUCCESS';
 
 export interface UnifiedAccountUpgradeResultV5 {
   unifiedUpdateStatus: UnifiedUpdateStatusV5;
@@ -76,7 +80,7 @@ export interface FeeRateV5 {
 
 export interface AccountInfoV5 {
   unifiedMarginStatus: number;
-  marginMode: 'REGULAR_MARGIN' | 'PORTFOLIO_MARGIN';
+  marginMode: AccountMarginModeV5;
   updatedTime: string;
 }
 

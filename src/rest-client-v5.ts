@@ -18,7 +18,6 @@ import {
   GetRiskLimitParamsV5,
   GetTickersParamsV5,
   HistoricalVolatilityV5,
-  InstrumentInfoV5,
   InsuranceResponseV5,
   OpenInterestResponseV5,
   OrderbookResponseV5,
@@ -47,8 +46,8 @@ import {
   AccountOrderV5,
   OptionDeliveryPriceV5,
   CategorySymbolListV5,
-  OHLCV5,
-  KlineV5,
+  OHLCKlineV5,
+  OHLCVKlineV5,
   TickerSpotV5,
   TickerOptionV5,
   TickerLinearInverseV5,
@@ -123,6 +122,7 @@ import {
   RedeemSpotLeveragedTokenResultV5,
   GetSpotLeveragedTokenOrderHistoryParamsV5,
   SpotLeveragedTokenOrderHistoryV5,
+  InstrumentInfoResponseV5,
 } from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
@@ -163,7 +163,7 @@ export class RestClientV5 extends BaseRestClient {
     params: GetKlineParamsV5
   ): Promise<
     APIResponseV3WithTime<
-      CategorySymbolListV5<KlineV5[], 'spot' | 'linear' | 'inverse'>
+      CategorySymbolListV5<OHLCVKlineV5[], 'spot' | 'linear' | 'inverse'>
     >
   > {
     return this.get(`/v5/market/kline`, params);
@@ -177,7 +177,9 @@ export class RestClientV5 extends BaseRestClient {
   getMarkPriceKline(
     params: GetMarkPriceKlineParamsV5
   ): Promise<
-    APIResponseV3WithTime<CategorySymbolListV5<OHLCV5[], 'linear' | 'inverse'>>
+    APIResponseV3WithTime<
+      CategorySymbolListV5<OHLCKlineV5[], 'linear' | 'inverse'>
+    >
   > {
     return this.get(`/v5/market/mark-price-kline`, params);
   }
@@ -190,7 +192,9 @@ export class RestClientV5 extends BaseRestClient {
   getIndexPriceKline(
     params: GetIndexPriceKlineParamsV5
   ): Promise<
-    APIResponseV3WithTime<CategorySymbolListV5<OHLCV5[], 'linear' | 'inverse'>>
+    APIResponseV3WithTime<
+      CategorySymbolListV5<OHLCKlineV5[], 'linear' | 'inverse'>
+    >
   > {
     return this.get(`/v5/market/index-price-kline`, params);
   }
@@ -202,7 +206,9 @@ export class RestClientV5 extends BaseRestClient {
    */
   getPremiumIndexPriceKline(
     params: GetPremiumIndexPriceKlineParams
-  ): Promise<APIResponseV3WithTime<CategorySymbolListV5<OHLCV5[], 'linear'>>> {
+  ): Promise<
+    APIResponseV3WithTime<CategorySymbolListV5<OHLCKlineV5[], 'linear'>>
+  > {
     return this.get(`/v5/market/premium-index-price-kline`, params);
   }
 
@@ -215,7 +221,7 @@ export class RestClientV5 extends BaseRestClient {
    */
   getInstrumentsInfo(
     params: GetInstrumentsInfoParamsV5
-  ): Promise<APIResponseV3WithTime<CursorListV5<InstrumentInfoV5[]>>> {
+  ): Promise<APIResponseV3WithTime<InstrumentInfoResponseV5>> {
     return this.get(`/v5/market/instruments-info`, params);
   }
 
