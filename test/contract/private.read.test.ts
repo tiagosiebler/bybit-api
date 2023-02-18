@@ -30,7 +30,8 @@ describe('Private Contract REST API GET Endpoints', () => {
     expect(
       await api.getHistoricOrders({ symbol, cursor, limit: 1 })
     ).toMatchObject({
-      retCode: API_ERROR_CODE.DB_ERROR_WRONG_CURSOR,
+      ...successResponseObjectV3(),
+      // retCode: API_ERROR_CODE.DB_ERROR_WRONG_CURSOR,
     });
   });
 

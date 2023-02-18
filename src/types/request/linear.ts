@@ -163,6 +163,7 @@ export interface LinearSetTradingStopRequest {
   sl_trigger_by?: string;
   sl_size?: number;
   tp_size?: number;
+  position_idx?: 0 | 1 | 2;
 }
 
 export interface LinearGetTradeRecordsRequest {
