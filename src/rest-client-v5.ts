@@ -601,7 +601,7 @@ export class RestClientV5 extends BaseRestClient {
    * Unified account covers: Spot / Linear contract / Options
    * Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures
    */
-  getExecutionListV5(
+  getExecutionList(
     params: GetExecutionListParamsV5
   ): Promise<APIResponseV3WithTime<CategoryCursorListV5<ExecutionV5[]>>> {
     return this.getPrivate('/v5/execution/list', params);
@@ -764,7 +764,7 @@ export class RestClientV5 extends BaseRestClient {
       nextPageCursor?: string;
     }>
   > {
-    return this.get('/v5/asset/exchange/order-record', params);
+    return this.getPrivate('/v5/asset/exchange/order-record', params);
   }
 
   /**
@@ -870,7 +870,7 @@ export class RestClientV5 extends BaseRestClient {
    * Query the internal transfer records between different account types under the same UID.
    */
   getInternalTransferRecords(
-    params: GetInternalTransferParamsV5
+    params?: GetInternalTransferParamsV5
   ): Promise<APIResponseV3WithTime<CursorListV5<InternalTransferRecordV5[]>>> {
     return this.getPrivate(
       '/v5/asset/transfer/query-inter-transfer-list',
@@ -1014,7 +1014,10 @@ export class RestClientV5 extends BaseRestClient {
   getCoinInfo(
     coin?: string
   ): Promise<APIResponseV3WithTime<{ rows: CoinInfoV5[] }>> {
-    return this.get('/v5/asset/coin/query-info', coin ? { coin } : undefined);
+    return this.getPrivate(
+      '/v5/asset/coin/query-info',
+      coin ? { coin } : undefined
+    );
   }
 
   /**
