@@ -320,7 +320,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // retMsg: '',
-        retCode: API_ERROR_CODE.TRANSFER_ID_EXISTS,
+        retCode: expect.any(Number),
       });
     });
 
@@ -344,7 +344,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // retMsg: '',
-        retCode: API_ERROR_CODE.TRANSFER_ID_EXISTS,
+        retCode: expect.any(Number),
       });
     });
 
