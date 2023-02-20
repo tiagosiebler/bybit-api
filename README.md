@@ -66,14 +66,15 @@ Each REST API group has a dedicated REST client. To avoid confusion, here are th
 | Class | Description |
 |:------------------------------------------------------------------: |:----------------------------------------------------------------------------------------------------------------------------: |
 | [ **V5 API** ] | The new unified V5 APIs (successor to previously fragmented APIs for all API groups). To learn more about the V5 API, please read the [V5 upgrade guideline](https://bybit-exchange.github.io/docs/v5/upgrade-guide). |
-| [RestClientV5](src/rest-client-v5.ts) | Coming soon... Unified V5 all-in-one REST client for all [V5 REST APIs](https://bybit-exchange.github.io/docs/v5/intro) |
+| [RestClientV5](src/rest-client-v5.ts) | Unified V5 all-in-one REST client for all [V5 REST APIs](https://bybit-exchange.github.io/docs/v5/intro) |
 | [ **Derivatives v3** ] | The Derivatives v3 APIs (successor to the Futures V2 APIs) |
 | [UnifiedMarginClient](src/unified-margin-client.ts) | [Derivatives (v3) Unified Margin APIs](https://bybit-exchange.github.io/docs/derivatives/unified/place-order) |
 | [ContractClient](src/contract-client.ts) | [Derivatives (v3) Contract APIs](https://bybit-exchange.github.io/docs/derivatives/contract/place-order). |
 | [ **Futures v2** ] | The Futures v2 APIs |
-| [InverseClient](src/inverse-client.ts) | [Inverse Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse/) |
-| [LinearClient](src/linear-client.ts) | [USDT Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-introduction) |
-| [InverseFuturesClient](src/inverse-futures-client.ts) | [Inverse Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-introduction) |
+| Deprecated! ContractClient or RestClientV5 recommended | Please read the [V5 upgrade guideline](https://bybit-exchange.github.io/docs/v5/upgrade-guide) |
+| [~InverseClient~](src/inverse-client.ts)| [Inverse Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse/) |
+| [~LinearClient~](src/linear-client.ts) | [USDT Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-introduction) |
+| [~InverseFuturesClient~](src/inverse-futures-client.ts) | [Inverse Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-introduction) |
 | [ **Spot** ] | The spot APIs |
 | [SpotClientV3](src/spot-client-v3.ts) | [Spot Market (v3) APIs](https://bybit-exchange.github.io/docs/spot/public/instrument) |
 | [~SpotClient~](src/spot-client.ts) (deprecated, SpotClientV3 recommended)| [Spot Market (v1) APIs](https://bybit-exchange.github.io/docs/spot/v1/#t-introduction) |
