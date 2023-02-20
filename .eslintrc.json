@@ -18,8 +18,8 @@
         "projecasdft": true,
         "project": [
           "./tsconfig.json",
-          "examples/tsconfig.examples.json",
-          "tsconfig.test.json"
+          "./tsconfig.examples.json",
+          "./tsconfig.test.json"
         ]
       },
       "rules": {
