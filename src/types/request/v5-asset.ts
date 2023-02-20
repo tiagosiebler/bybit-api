@@ -71,18 +71,6 @@ export interface GetUniversalTransferRecordsParamsV5 {
   cursor?: string;
 }
 
-export interface UniversalTransferRecordV5 {
-  transferId: string;
-  coin: string;
-  amount: string;
-  fromMemberId: string;
-  toMemberId: string;
-  fromAccountType: AccountTypeV5;
-  toAccountType: AccountTypeV5;
-  timestamp: string;
-  status: string;
-}
-
 export interface GetAllowedDepositCoinInfoParamsV5 {
   coin?: string;
   chain?: string;
@@ -123,7 +111,6 @@ export interface WithdrawParamsV5 {
   address: string;
   tag?: string;
   amount: string;
-  timestamp: number;
   forceChain?: number;
   accountType?: 'SPOT' | 'FUND';
 }

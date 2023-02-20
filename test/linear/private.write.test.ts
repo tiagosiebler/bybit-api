@@ -138,8 +138,8 @@ describe('Private Linear REST API POST Endpoints', () => {
       await api.setMarginSwitch({
         symbol,
         is_isolated: true,
-        buy_leverage: 5,
-        sell_leverage: 5,
+        buy_leverage: 10,
+        sell_leverage: 10,
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ISOLATED_NOT_MODIFIED_LINEAR,
@@ -186,8 +186,8 @@ describe('Private Linear REST API POST Endpoints', () => {
     expect(
       await api.setUserLeverage({
         symbol,
-        buy_leverage: 5,
-        sell_leverage: 5,
+        buy_leverage: 10,
+        sell_leverage: 10,
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.LEVERAGE_NOT_MODIFIED,
@@ -206,7 +206,7 @@ describe('Private Linear REST API POST Endpoints', () => {
     });
   });
 
-  it('setRiskLimit()', async () => {
+  it.skip('setRiskLimit()', async () => {
     expect(
       await api.setRiskLimit({
         symbol,

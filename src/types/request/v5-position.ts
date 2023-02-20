@@ -1,4 +1,10 @@
-import { CategoryV5, ExecTypeV5, PositionIdx, TPSLModeV5 } from '../v5-shared';
+import {
+  CategoryV5,
+  ExecTypeV5,
+  OrderTriggerByV5,
+  PositionIdx,
+  TPSLModeV5,
+} from '../v5-shared';
 
 export interface PositionInfoParamsV5 {
   category: CategoryV5;
@@ -50,8 +56,8 @@ export interface SetTradingStopParamsV5 {
   takeProfit?: string;
   stopLoss?: string;
   trailingStop?: string;
-  tpTriggerBy?: string;
-  slTriggerBy?: string;
+  tpTriggerBy?: OrderTriggerByV5;
+  slTriggerBy?: OrderTriggerByV5;
   activePrice?: string;
   tpSize?: string;
   slSize?: string;

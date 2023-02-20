@@ -489,6 +489,8 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Query real-time position data, such as position size, cumulative realizedPNL.
    *
+   * 0: cross margin. 1: isolated margin
+   *
    * Unified account covers: Linear contract / Options
    *
    * Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures
@@ -516,6 +518,7 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * Select cross margin mode or isolated margin mode.
+   * 0: cross margin. 1: isolated margin
    *
    * Covers: USDT perpetual (Normal account) / Inverse contract (Normal account).
    *

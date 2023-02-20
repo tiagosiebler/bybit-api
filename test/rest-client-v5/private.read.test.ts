@@ -1,7 +1,7 @@
 import { API_ERROR_CODE, RestClientV5 } from '../../src';
-import { SUCCESS_MSG_REGEX, successResponseObjectV3 } from '../response.util';
+import { successResponseObjectV3 } from '../response.util';
 
-describe('Private V5 REST API Endpoints', () => {
+describe('Private READ V5 REST API Endpoints', () => {
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
 
