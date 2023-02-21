@@ -738,7 +738,7 @@ export class RestClientV5 extends BaseRestClient {
    * Once the mmp triggered, you can unfreeze the account via this endpoint
    */
   resetMMP(baseCoin: string): Promise<APIResponseV3<undefined>> {
-    return this.postPrivate('/v5/account/mmp-modify', { baseCoin });
+    return this.postPrivate('/v5/account/mmp-reset', { baseCoin });
   }
 
   /**

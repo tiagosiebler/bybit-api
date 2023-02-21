@@ -258,9 +258,7 @@ describe('Private READ V5 REST API Endpoints', () => {
   describe('Spot Leverage Token APIs', () => {
     it('getSpotLeveragedTokenOrderHistory()', async () => {
       expect(await api.getSpotLeveragedTokenOrderHistory()).toMatchObject({
-        // ...successResponseObjectV3(),
-        // retMsg: '',
-        retCode: API_ERROR_CODE.SPOT_LEVERAGE_TOKEN_ORDER_NOT_FOUND,
+        ...successResponseObjectV3(),
       });
     });
   });

@@ -62,7 +62,7 @@ interface UnsignedRequest<T> {
   paramsWithSign: T;
 }
 
-type SignMethod = 'keyInBody' | 'usdc';
+type SignMethod = 'v2auth' | 'v5auth';
 
 export default abstract class BaseRestClient {
   private timeOffset: number | null = null;
@@ -233,7 +233,7 @@ export default abstract class BaseRestClient {
 
       const signResult = await this.prepareSignParams(
         method,
-        'usdc',
+        'v5auth',
         params,
         isPublicApi
       );
@@ -245,11 +245,9 @@ export default abstract class BaseRestClient {
       options.headers['X-BAPI-RECV-WINDOW'] = signResult.recvWindow;
 
       if (method === 'GET') {
-        // const serialisedParams = signResult.serializedParams;
         return {
           ...options,
           params: signResult.originalParams,
-          // url: url + (serialisedParams ? '?' + serialisedParams : ''),
         };
       }
 
@@ -261,7 +259,7 @@ export default abstract class BaseRestClient {
 
     const signResult = await this.prepareSignParams(
       method,
-      'keyInBody',
+      'v2auth',
       params,
       isPublicApi
     );
@@ -376,7 +374,7 @@ export default abstract class BaseRestClient {
     res.recvWindow = recvWindow;
 
     // usdc is different for some reason
-    if (signMethod === 'usdc') {
+    if (signMethod === 'v5auth') {
       const sortProperties = false;
       const signRequestParams =
         method === 'GET'
@@ -397,7 +395,7 @@ export default abstract class BaseRestClient {
     }
 
     // spot/v2 derivatives
-    if (signMethod === 'keyInBody') {
+    if (signMethod === 'v2auth') {
       res.originalParams.api_key = key;
       res.originalParams.timestamp = timestamp;
 

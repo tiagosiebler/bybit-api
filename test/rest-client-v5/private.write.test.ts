@@ -1,5 +1,6 @@
 import {
   API_ERROR_CODE,
+  LeverageTokenInfoV5,
   OrderSideV5,
   OrderTypeV5,
   RestClientV5,
@@ -93,62 +94,74 @@ describe('Private WRITE V5 REST API Endpoints', () => {
       });
     });
 
-    it('batchSubmitOrders()', async () => {
-      expect(
-        await api.batchSubmitOrders('option', [
-          {
-            orderLinkId: 'customOrderId1',
-            orderType: orderType,
-            qty: '1',
-            side: orderSide,
-            symbol: linearSymbol,
-          },
-          {
-            orderLinkId: 'customOrderId2',
-            orderType: orderType,
-            qty: '2',
-            side: orderSide,
-            symbol: linearSymbol,
-          },
-        ])
-      ).toMatchObject({
-        ...successResponseObjectV3(),
+    describe('options only methods', () => {
+      // These should use a real symbol from the options category
+      let optionsSymbol: string;
+      beforeAll(async () => {
+        const deliveryPriceResponse = await api.getOptionDeliveryPrice({
+          category: 'option',
+        });
+        const resultsList = deliveryPriceResponse.result.list;
+        optionsSymbol = resultsList[0].symbol;
       });
-    });
 
-    it('batchAmendOrders()', async () => {
-      expect(
-        await api.batchAmendOrders('option', [
-          {
-            orderLinkId: 'customOrderId1',
-            qty: '3',
-            symbol: linearSymbol,
-          },
-          {
-            orderLinkId: 'customOrderId2',
-            qty: '4',
-            symbol: linearSymbol,
-          },
-        ])
-      ).toMatchObject({
-        ...successResponseObjectV3(),
+      it('batchSubmitOrders()', async () => {
+        expect(
+          await api.batchSubmitOrders('option', [
+            {
+              orderLinkId: 'customOrderId1',
+              orderType: orderType,
+              qty: '1',
+              side: orderSide,
+              symbol: optionsSymbol,
+            },
+            {
+              orderLinkId: 'customOrderId2',
+              orderType: orderType,
+              qty: '2',
+              side: orderSide,
+              symbol: optionsSymbol,
+            },
+          ])
+        ).toMatchObject({
+          ...successResponseObjectV3(),
+        });
       });
-    });
 
-    it('batchCancelOrders()', async () => {
-      expect(
-        await api.batchCancelOrders('option', [
-          {
-            orderLinkId: 'customOrderId1',
-            symbol: linearSymbol,
-          },
-          {
-            orderLinkId: 'customOrderId2',
-            symbol: linearSymbol,
-          },
-        ])
-      ).toMatchObject({
-        ...successResponseObjectV3(),
+      it('batchAmendOrders()', async () => {
+        expect(
+          await api.batchAmendOrders('option', [
+            {
+              orderLinkId: 'customOrderId1',
+              qty: '3',
+              symbol: optionsSymbol,
+            },
+            {
+              orderLinkId: 'customOrderId2',
+              qty: '4',
+              symbol: optionsSymbol,
+            },
+          ])
+        ).toMatchObject({
+          ...successResponseObjectV3(),
+        });
+      });
+
+      it('batchCancelOrders()', async () => {
+        expect(
+          await api.batchCancelOrders('option', [
+            {
+              orderLinkId: 'customOrderId1',
+              symbol: optionsSymbol,
+            },
+            {
+              orderLinkId: 'customOrderId2',
+              symbol: optionsSymbol,
+            },
+          ])
+        ).toMatchObject({
+          ...successResponseObjectV3(),
+        });
       });
     });
 
@@ -296,13 +309,11 @@ describe('Private WRITE V5 REST API Endpoints', () => {
       });
     });
 
-    it.skip('resetMMP()', async () => {
+    it('resetMMP()', async () => {
       expect(await api.resetMMP(settleCoin)).toMatchObject({
-        ...successResponseObjectV3(),
-        retMsg: '',
-        retCode: 3500715,
-        // Contacted bybit for info
-        //     +   "retMsg": "Parameter window cannot be empty.",
+        // ...successResponseObjectV3(),
+        // retMsg: '',
+        retCode: API_ERROR_CODE.INSTITION_MMP_PROFILE_NOT_FOUND,
       });
     });
   });
@@ -397,18 +408,24 @@ describe('Private WRITE V5 REST API Endpoints', () => {
     });
   });
 
-  // Not currently working. In touch with bybit.
-  describe.skip('Spot Leverage Token APIs', () => {
-    it('purchaseSpotLeveragedToken()', async () => {
+  describe('Spot Leverage Token APIs', () => {
+    let leverageToken: LeverageTokenInfoV5;
+
+    beforeAll(async () => {
+      const tokenResult = await api.getLeveragedTokenInfo();
+      leverageToken = tokenResult.result.list[0];
+    });
+
+    // Still failing - in contact with bybit
+    it.skip('purchaseSpotLeveragedToken()', async () => {
       expect(
         await api.purchaseSpotLeveragedToken({
           ltAmount: '100',
-          ltCoin: 'EOS3L',
-          serialNo: 'purchase-001',
+          ltCoin: leverageToken.ltCoin,
         })
       ).toMatchObject({
         // ...successResponseObjectV3(),
-        retCode: 0,
+        retCode: API_ERROR_CODE.SPOT_LEVERAGE_TOKEN_INSUFFICIENT_BALANCE,
         retMsg: '',
       });
     });
@@ -417,13 +434,12 @@ describe('Private WRITE V5 REST API Endpoints', () => {
       expect(
         await api.redeemSpotLeveragedToken({
           quantity: '100',
-          ltCoin: 'EOS3L',
-          serialNo: 'redeem-001',
+          ltCoin: leverageToken.ltCoin,
         })
       ).toMatchObject({
         // ...successResponseObjectV3(),
-        retCode: 0,
-        retMsg: '',
+        retCode: API_ERROR_CODE.SPOT_LEVERAGE_TOKEN_INSUFFICIENT_BALANCE,
+        // retMsg: '',
       });
     });
   });
