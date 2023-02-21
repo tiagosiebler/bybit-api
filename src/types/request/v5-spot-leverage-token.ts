@@ -2,7 +2,7 @@ import { LTOrderTypeV5 } from '../v5-shared';
 
 export interface PurchaseSpotLeveragedTokenParamsV5 {
   ltCoin: string;
-  ltAmount: string;
+  amount: string;
   serialNo?: string;
 }
 

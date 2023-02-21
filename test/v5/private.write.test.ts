@@ -416,17 +416,16 @@ describe('Private WRITE V5 REST API Endpoints', () => {
       leverageToken = tokenResult.result.list[0];
     });
 
-    // Still failing - in contact with bybit
-    it.skip('purchaseSpotLeveragedToken()', async () => {
+    it('purchaseSpotLeveragedToken()', async () => {
       expect(
         await api.purchaseSpotLeveragedToken({
-          ltAmount: '100',
+          amount: '100',
           ltCoin: leverageToken.ltCoin,
         })
       ).toMatchObject({
         // ...successResponseObjectV3(),
-        retCode: API_ERROR_CODE.SPOT_LEVERAGE_TOKEN_INSUFFICIENT_BALANCE,
-        retMsg: '',
+        retCode: API_ERROR_CODE.SPOT_LEVERAGE_QUIZ_REQUIRED,
+        // retMsg: '',
       });
     });
 
