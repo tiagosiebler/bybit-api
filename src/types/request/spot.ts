@@ -1,4 +1,4 @@
-import { numberInString, OrderSide } from '../shared';
+import { OrderSide, numberInString } from '../shared';
 
 export type OrderTypeSpot = 'LIMIT' | 'MARKET' | 'LIMIT_MAKER';
 export type OrderTimeInForce = 'GTC' | 'FOK' | 'IOC';

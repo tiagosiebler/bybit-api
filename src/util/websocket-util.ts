@@ -298,7 +298,7 @@ export function getWsKeyForTopic(
         : WS_KEY_MAP.contractUSDTPublic;
     }
     default: {
-      throw neverGuard(market, `getWsKeyForTopic(): Unhandled market`);
+      throw neverGuard(market, 'getWsKeyForTopic(): Unhandled market');
     }
   }
 }
@@ -322,7 +322,7 @@ export function getMaxTopicsPerSubscribeEvent(
       return 10;
     }
     default: {
-      throw neverGuard(market, `getWsKeyForTopic(): Unhandled market`);
+      throw neverGuard(market, 'getWsKeyForTopic(): Unhandled market');
     }
   }
 }

@@ -1,8 +1,5 @@
 import { API_ERROR_CODE, USDCPerpetualClient } from '../../../src';
-import {
-  successEmptyResponseObjectV3,
-  successResponseObjectV3,
-} from '../../response.util';
+import { successEmptyResponseObjectV3 } from '../../response.util';
 
 describe('Private USDC Perp REST API POST Endpoints', () => {
   const API_KEY = process.env.API_KEY_COM;

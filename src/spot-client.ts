@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  NewSpotOrder,
   APIResponse,
   KlineInterval,
+  NewSpotOrder,
   OrderSide,
   OrderTypeSpot,
   SpotBalances,
@@ -87,7 +88,9 @@ export class SpotClient extends BaseRestClient {
   }
 
   getLastTradedPrice(): Promise<APIResponse<SpotLastPrice[]>>;
+
   getLastTradedPrice(symbol: string): Promise<APIResponse<SpotLastPrice>>;
+
   getLastTradedPrice(
     symbol?: string
   ): Promise<APIResponse<SpotLastPrice | SpotLastPrice[]>> {

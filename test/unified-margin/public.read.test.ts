@@ -1,4 +1,4 @@
-import { UnifiedMarginClient, UMCandlesRequest } from '../../src';
+import { UMCandlesRequest, UnifiedMarginClient } from '../../src';
 import {
   successResponseObject,
   successResponseObjectV3,

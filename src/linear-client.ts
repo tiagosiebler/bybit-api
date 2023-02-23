@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { REST_CLIENT_TYPE_ENUM } from './util/requestUtils';
 import {
   APIResponse,
@@ -37,7 +38,6 @@ import {
   WalletFundRecordsReq,
   WithdrawRecordsReq,
 } from './types';
-import { linearPositionModeEnum, positionTpSlModeEnum } from './constants/enum';
 import BaseRestClient from './util/BaseRestClient';
 
 /**
@@ -273,6 +273,7 @@ export class LinearClient extends BaseRestClient {
    */
 
   getPosition(): Promise<APIResponseWithTime<PerpPositionRoot[]>>;
+
   getPosition(
     params: Partial<SymbolParam>
   ): Promise<APIResponseWithTime<PerpPosition[]>>;
@@ -344,7 +345,10 @@ export class LinearClient extends BaseRestClient {
   getHistoryTradeRecords(
     params: LinearGetHistoryTradeRecordsRequest
   ): Promise<APIResponseWithTime<any>> {
-    return this.getPrivate('/private/linear/trade/execution/history-list', params);
+    return this.getPrivate(
+      '/private/linear/trade/execution/history-list',
+      params
+    );
   }
 
   getClosedPnl(

@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { API_ERROR_CODE } from '../src';
 
-const SUCCESS_MSG_REGEX = /OK|SUCCESS|success|success\.|Request accepted|/gim;
+export const SUCCESS_MSG_REGEX =
+  /OK|SUCCESS|success|success\.|Request accepted|/gim;
 
 export function successResponseList(successMsg: string | null = 'OK') {
   return {
     result: expect.any(Array),
-    ret_code: API_ERROR_CODE.SUCCESS,
     ret_msg: successMsg,
+    ret_code: API_ERROR_CODE.SUCCESS,
   };
 }
 
@@ -19,11 +21,11 @@ export function successResponseListV3() {
   };
 }
 
-export function successResponseObject(successMsg: string | null = 'OK') {
+export function successResponseObject() {
   return {
     result: expect.any(Object),
-    ret_code: API_ERROR_CODE.SUCCESS,
     ret_msg: expect.stringMatching(SUCCESS_MSG_REGEX),
+    ret_code: API_ERROR_CODE.SUCCESS,
   };
 }
 

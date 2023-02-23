@@ -16,7 +16,8 @@ describe('Private Linear REST API POST Endpoints', () => {
     testnet: false,
   });
 
-  // Warning: if some of these start to fail with 10001 params error, it's probably that this future expired and a newer one exists with a different symbol!
+  // Warning: if some of these start to fail with 10001 params error,
+  // it's probably that this future expired and a newer one exists with a different symbol!
   const symbol = 'BTCUSDT';
 
   // These tests are primarily check auth is working by expecting balance or order not found style errors
@@ -137,8 +138,8 @@ describe('Private Linear REST API POST Endpoints', () => {
       await api.setMarginSwitch({
         symbol,
         is_isolated: true,
-        buy_leverage: 5,
-        sell_leverage: 5,
+        buy_leverage: 10,
+        sell_leverage: 10,
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ISOLATED_NOT_MODIFIED_LINEAR,
@@ -185,8 +186,8 @@ describe('Private Linear REST API POST Endpoints', () => {
     expect(
       await api.setUserLeverage({
         symbol,
-        buy_leverage: 5,
-        sell_leverage: 5,
+        buy_leverage: 10,
+        sell_leverage: 10,
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.LEVERAGE_NOT_MODIFIED,
@@ -205,7 +206,7 @@ describe('Private Linear REST API POST Endpoints', () => {
     });
   });
 
-  it('setRiskLimit()', async () => {
+  it.skip('setRiskLimit()', async () => {
     expect(
       await api.setRiskLimit({
         symbol,

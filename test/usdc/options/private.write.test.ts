@@ -1,5 +1,5 @@
 import { API_ERROR_CODE, USDCOptionClient } from '../../../src';
-import { successResponseObjectV3 } from '../../response.util';
+// import { successResponseObjectV3 } from '../../response.util';
 
 describe('Private USDC Options REST API POST Endpoints', () => {
   const API_KEY = process.env.API_KEY_COM;

@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { SpotClientV3 } from '../../src';
 import {
   notAuthenticatedError,

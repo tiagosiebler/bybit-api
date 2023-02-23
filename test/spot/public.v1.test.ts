@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { SpotClient } from '../../src';
 import {
   notAuthenticatedError,
@@ -28,43 +30,39 @@ describe('Public Spot REST API Endpoints', () => {
 
   it('getOrderBook()', async () => {
     expect(await api.getOrderBook(symbol)).toMatchObject(
-      successResponseObject(null)
+      successResponseObject()
     );
   });
 
   it('getMergedOrderBook()', async () => {
     expect(await api.getMergedOrderBook(symbol)).toMatchObject(
-      successResponseObject(null)
+      successResponseObject()
     );
   });
 
   it('getTrades()', async () => {
-    expect(await api.getTrades(symbol)).toMatchObject(
-      successResponseObject(null)
-    );
+    expect(await api.getTrades(symbol)).toMatchObject(successResponseObject());
   });
 
   it('getCandles()', async () => {
     expect(await api.getCandles(symbol, interval)).toMatchObject(
-      successResponseObject(null)
+      successResponseObject()
     );
   });
 
   it('get24hrTicker()', async () => {
-    expect(await api.get24hrTicker()).toMatchObject(
-      successResponseObject(null)
-    );
+    expect(await api.get24hrTicker()).toMatchObject(successResponseObject());
   });
 
   it('getLastTradedPrice()', async () => {
     expect(await api.getLastTradedPrice()).toMatchObject(
-      successResponseObject(null)
+      successResponseObject()
     );
   });
 
   it('getBestBidAskPrice()', async () => {
     expect(await api.getBestBidAskPrice()).toMatchObject(
-      successResponseObject(null)
+      successResponseObject()
     );
   });
 

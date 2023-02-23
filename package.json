@@ -1,7 +1,7 @@
 {
   "name": "bybit-api",
-  "version": "3.4.2",
-  "description": "Complete & robust node.js SDK for Bybit's REST APIs and WebSockets, with TypeScript & integration tests.",
+  "version": "3.5.0",
+  "description": "Complete & robust Node.js SDK for Bybit's REST APIs and WebSockets, with TypeScript & strong end to end tests.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
@@ -29,12 +29,14 @@
     "ws": "^7.4.0"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.23",
+    "@types/jest": "^27.0.4",
     "@types/node": "^14.14.7",
-    "eslint": "^7.10.0",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "@typescript-eslint/parser": "^5.46.0",
+    "eslint": "^8.29.0",
     "jest": "^27.0.4",
     "source-map-loader": "^2.0.0",
-    "ts-jest": "^27.0.3",
+    "ts-jest": "^27.0.4",
     "ts-loader": "^8.0.11",
     "typescript": "^4.0.5",
     "webpack": "^5.4.0",

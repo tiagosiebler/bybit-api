@@ -13,7 +13,7 @@ Node.js SDK for the Bybit APIs and WebSockets:
 
 - Complete integration with all Bybit APIs.
 - TypeScript support (with type declarations for most API requests & responses).
-- Over 300 end-to-end tests making real API calls & WebSocket connections, validating any changes before they reach npm.
+- Over 450 end-to-end tests making real API calls & WebSocket connections, validating any changes before they reach npm.
 - Robust WebSocket integration with configurable connection heartbeats & automatic reconnect then resubscribe workflows.
 - Browser support (via webpack bundle - see "Browser Usage" below).
 
@@ -43,9 +43,9 @@ Check out my related projects:
 
 ## Documentation
 
-Most methods accept JS objects. These can be populated using parameters specified by Bybit's API documentation, or check the type definition in each class within this repository (see table below for convenient links to each class).
+Most methods accept JS objects. These can be populated using parameters specified by Bybit's API documentation, or check the type definition in each class within the github repository (see table below for convenient links to each class).
 
-- [Bybit API Docs (choose API category from the tabs at the top)](https://bybit-exchange.github.io/docs/futuresV2/inverse/#t-introduction).
+- [Bybit API Docs (choose API category from the tabs at the top)](https://bybit-exchange.github.io/docs/v5/intro).
 
 ## Structure
 
@@ -62,18 +62,23 @@ The version on npm is the output from the `build` command and can be used in pro
 
 ## REST API Clients
 
-Each REST API group has a dedicated REST client. To avoid confusion, here are the available REST clients and the corresponding API groups:
+Bybit has several API groups (originally one per product). Each generation is labelled with the version number (e.g. v1/v2/v3/v5). Some of the newer API groups can only be used by upgrading your account to the unified account, but doing so will prevent you from using the V1 and V2 APIs.
+
+Refer to the [V5 upgrade guide](https://bybit-exchange.github.io/docs/v5/upgrade-guide) for more information on requirements to use each API group. If you have a choice, you should use the newest generation that is available (e.g. use the V5 instead of the V3 APIs if you can).
+
+Here are the available REST clients and the corresponding API groups described in the documentation:
 | Class | Description |
 |:------------------------------------------------------------------: |:----------------------------------------------------------------------------------------------------------------------------: |
 | [ **V5 API** ] | The new unified V5 APIs (successor to previously fragmented APIs for all API groups). To learn more about the V5 API, please read the [V5 upgrade guideline](https://bybit-exchange.github.io/docs/v5/upgrade-guide). |
-| [RestClientV5](src/rest-client-v5.ts) | Coming soon... Unified V5 all-in-one REST client for all [V5 REST APIs](https://bybit-exchange.github.io/docs/v5/intro) |
+| [RestClientV5](src/rest-client-v5.ts) | Unified V5 all-in-one REST client for all [V5 REST APIs](https://bybit-exchange.github.io/docs/v5/intro) |
 | [ **Derivatives v3** ] | The Derivatives v3 APIs (successor to the Futures V2 APIs) |
 | [UnifiedMarginClient](src/unified-margin-client.ts) | [Derivatives (v3) Unified Margin APIs](https://bybit-exchange.github.io/docs/derivatives/unified/place-order) |
 | [ContractClient](src/contract-client.ts) | [Derivatives (v3) Contract APIs](https://bybit-exchange.github.io/docs/derivatives/contract/place-order). |
 | [ **Futures v2** ] | The Futures v2 APIs |
-| [InverseClient](src/inverse-client.ts) | [Inverse Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse/) |
-| [LinearClient](src/linear-client.ts) | [USDT Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-introduction) |
-| [InverseFuturesClient](src/inverse-futures-client.ts) | [Inverse Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-introduction) |
+| Deprecated! ContractClient or RestClientV5 recommended | Please read the [V5 upgrade guideline](https://bybit-exchange.github.io/docs/v5/upgrade-guide) |
+| [~InverseClient~](src/inverse-client.ts)| [Inverse Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse/) |
+| [~LinearClient~](src/linear-client.ts) | [USDT Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-introduction) |
+| [~InverseFuturesClient~](src/inverse-futures-client.ts) | [Inverse Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-introduction) |
 | [ **Spot** ] | The spot APIs |
 | [SpotClientV3](src/spot-client-v3.ts) | [Spot Market (v3) APIs](https://bybit-exchange.github.io/docs/spot/public/instrument) |
 | [~SpotClient~](src/spot-client.ts) (deprecated, SpotClientV3 recommended)| [Spot Market (v1) APIs](https://bybit-exchange.github.io/docs/spot/v1/#t-introduction) |
@@ -109,13 +114,13 @@ const {
   InverseClient,
   LinearClient,
   InverseFuturesClient,
-  SpotClient,
   SpotClientV3,
   UnifiedMarginClient,
   USDCOptionClient,
   USDCPerpetualClient,
   AccountAssetClient,
   CopyTradingClient,
+  RestClientV5,
 } = require('bybit-api');
 
 const restClientOptions = {
@@ -154,7 +159,7 @@ const API_KEY = 'xxx';
 const API_SECRET = 'yyy';
 const useTestnet = false;
 
-const client = new InverseClient({
+const client = new RestClientV5({
   key: API_KEY,
   secret: API_SECRET,
   testnet: useTestnet
@@ -163,17 +168,17 @@ const client = new InverseClient({
 );
 
 // For public-only API calls, simply don't provide a key & secret or set them to undefined
-// const client = new InverseClient({});
+// const client = new RestClientV5({});
 
-client.getApiKeyInfo()
+client.getAccountInfo()
   .then(result => {
-    console.log("getApiKeyInfo result: ", result);
+    console.log("getAccountInfo result: ", result);
   })
   .catch(err => {
-    console.error("getApiKeyInfo error: ", err);
+    console.error("getAccountInfo error: ", err);
   });
 
-client.getOrderBook({ symbol: 'BTCUSD' })
+client.getOrderbook({ category: 'linear', symbol: 'BTCUSD' })
   .then(result => {
     console.log("getOrderBook result: ", result);
   })
@@ -201,6 +206,7 @@ The WebsocketClient can be configured to a specific API group using the market p
 | USDC Options | `market: 'usdcOption'`| The [USDC options](https://bybit-exchange.github.io/docs/usdc/option/#t-websocket) category. |
 | Contract v3 USDT | `market: 'contractUSDT'`| The [Contract V3](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket) category (USDT perps) |
 | Contract v3 Inverse | `market: 'contractInverse'`| The [Contract V3](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket) category (inverse perps) |
+| V5 Subscriptions | Coming soon | The [v5](https://bybit-exchange.github.io/docs/v5/ws/connect) websockets will be supported in the next release. |
 
 ```javascript
 const { WebsocketClient } = require('bybit-api');

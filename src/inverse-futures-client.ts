@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { REST_CLIENT_TYPE_ENUM } from './util/requestUtils';
 import {
   APIResponseWithTime,

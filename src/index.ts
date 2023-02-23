@@ -4,6 +4,7 @@ export * from './copy-trading-client';
 export * from './inverse-client';
 export * from './inverse-futures-client';
 export * from './linear-client';
+export * from './rest-client-v5';
 export * from './spot-client';
 export * from './spot-client-v3';
 export * from './usdc-option-client';

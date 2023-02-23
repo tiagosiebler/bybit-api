@@ -1,15 +1,17 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  WebsocketClient,
   WSClientConfigurableOptions,
   WS_ERROR_ENUM,
   WS_KEY_MAP,
+  WebsocketClient,
 } from '../../../src';
 import {
+  WS_OPEN_EVENT_PARTIAL,
   fullLogger,
   getSilentLogger,
   logAllEvents,
   waitForSocketEvent,
-  WS_OPEN_EVENT_PARTIAL,
 } from '../../ws.util';
 
 describe('Private USDC Option Websocket Client', () => {
@@ -22,7 +24,7 @@ describe('Private USDC Option Websocket Client', () => {
     secret: API_SECRET,
   };
 
-  const wsTopic = `user.openapi.option.position`;
+  const wsTopic = 'user.openapi.option.position';
 
   describe('with invalid credentials', () => {
     it('should reject private subscribe if keys/signature are incorrect', async () => {

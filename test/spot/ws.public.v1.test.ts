@@ -1,14 +1,16 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  WebsocketClient,
   WSClientConfigurableOptions,
   WS_KEY_MAP,
+  WebsocketClient,
 } from '../../src';
 import {
-  logAllEvents,
-  getSilentLogger,
-  fullLogger,
-  waitForSocketEvent,
   WS_OPEN_EVENT_PARTIAL,
+  fullLogger,
+  getSilentLogger,
+  logAllEvents,
+  waitForSocketEvent,
 } from '../ws.util';
 
 describe('Public Spot V1 Websocket Client', () => {
@@ -64,7 +66,7 @@ describe('Public Spot V1 Websocket Client', () => {
     try {
       await wsUpdatePromise;
     } catch (e) {
-      console.error(`Wait for spot v1 orderbook event exception: `, e);
+      console.error('Wait for spot v1 orderbook event exception: ', e);
     }
   });
 });

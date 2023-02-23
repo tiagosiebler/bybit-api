@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface UMPaginatedResult<List = any> {
   nextPageCursor: string;
   category: string;

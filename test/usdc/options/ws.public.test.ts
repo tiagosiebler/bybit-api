@@ -1,13 +1,15 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  WebsocketClient,
   WSClientConfigurableOptions,
   WS_KEY_MAP,
+  WebsocketClient,
 } from '../../../src';
 import {
-  logAllEvents,
-  getSilentLogger,
-  waitForSocketEvent,
   WS_OPEN_EVENT_PARTIAL,
+  getSilentLogger,
+  logAllEvents,
+  waitForSocketEvent,
 } from '../../ws.util';
 
 describe('Public USDC Option Websocket Client', () => {

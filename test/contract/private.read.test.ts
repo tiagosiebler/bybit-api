@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { API_ERROR_CODE, ContractClient } from '../../src';
 import { successResponseObjectV3 } from '../response.util';
 
@@ -30,8 +31,9 @@ describe('Private Contract REST API GET Endpoints', () => {
     expect(
       await api.getHistoricOrders({ symbol, cursor, limit: 1 })
     ).toMatchObject({
-      ...successResponseObjectV3(),
       // retCode: API_ERROR_CODE.DB_ERROR_WRONG_CURSOR,
+      ...successResponseObjectV3(),
+      retMsg: 'OK',
     });
   });
 

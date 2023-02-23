@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  APIResponseV3,
   APIResponseWithTime,
   SymbolLimitParam,
   SymbolPeriodLimitParam,
-  APIResponseV3,
   USDCKlineRequest,
   USDCLast500TradesRequest,
   USDCOpenInterestRequest,
@@ -213,7 +214,9 @@ export class USDCPerpetualClient extends BaseRestClient {
   }
 
   /**
-   * If USDC derivatives account balance is greater than X, you can open PORTFOLIO_MARGIN, and if it is less than Y, it will automatically close PORTFOLIO_MARGIN and change back to REGULAR_MARGIN. X and Y will be adjusted according to operational requirements.
+   * If USDC derivatives account balance is greater than X, you can open PORTFOLIO_MARGIN,
+   * and if it is less than Y, it will automatically close PORTFOLIO_MARGIN and change back to REGULAR_MARGIN.
+   * X and Y will be adjusted according to operational requirements.
    * Rest API returns the result of checking prerequisites. You could get the real status of margin mode change by subscribing margin mode.
    */
   setMarginMode(

@@ -98,6 +98,7 @@ export interface WSClientConfigurableOptions {
   pingInterval?: number;
   reconnectTimeout?: number;
   restOptions?: RestClientOptions;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   requestOptions?: any;
   wsUrl?: string;
   /** If true, fetch server time before trying to authenticate (disabled by default) */

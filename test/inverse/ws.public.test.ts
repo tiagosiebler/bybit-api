@@ -1,14 +1,16 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   LinearClient,
-  WebsocketClient,
   WSClientConfigurableOptions,
   WS_KEY_MAP,
+  WebsocketClient,
 } from '../../src';
 import {
-  promiseSleep,
-  getSilentLogger,
-  waitForSocketEvent,
   WS_OPEN_EVENT_PARTIAL,
+  getSilentLogger,
+  promiseSleep,
+  waitForSocketEvent,
 } from '../ws.util';
 
 describe('Public Inverse Perps Websocket Client', () => {

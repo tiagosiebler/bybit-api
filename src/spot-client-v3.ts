@@ -1,17 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  APIResponseWithTime,
   APIResponseV3,
-  SpotOrderQueryById,
-  OrderSide,
-  OrderTypeSpot,
-  SpotBalances,
+  APIResponseWithTime,
   KlineInterval,
   NewSpotOrderV3,
-  SpotMyTradesRequest,
-  SpotLeveragedTokenPRHistoryRequest,
+  SpotBalances,
+  SpotCancelOrderBatchRequest,
   SpotCrossMarginBorrowingInfoRequest,
   SpotCrossMarginRepaymentHistoryRequest,
-  SpotCancelOrderBatchRequest,
+  SpotLeveragedTokenPRHistoryRequest,
+  SpotMyTradesRequest,
+  SpotOrderQueryById,
 } from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
@@ -167,6 +166,7 @@ export class SpotClientV3 extends BaseRestClient {
       symbol,
       orderId,
       limit,
+      orderCategory,
     });
   }
 

@@ -3,6 +3,7 @@ export async function signMessage(
   secret: string
 ): Promise<string> {
   const encoder = new TextEncoder();
+  // eslint-disable-next-line no-undef
   const key = await window.crypto.subtle.importKey(
     'raw',
     encoder.encode(secret),
@@ -11,6 +12,7 @@ export async function signMessage(
     ['sign']
   );
 
+  // eslint-disable-next-line no-undef
   const signature = await window.crypto.subtle.sign(
     'HMAC',
     key,
@@ -18,8 +20,10 @@ export async function signMessage(
   );
 
   return Array.prototype.map
-    .call(new Uint8Array(signature), (x: any) =>
-      ('00' + x.toString(16)).slice(-2)
+    .call(
+      new Uint8Array(signature),
+      (x: { toString: (arg0: number) => string }) =>
+        ('00' + x.toString(16)).slice(-2)
     )
     .join('');
 }

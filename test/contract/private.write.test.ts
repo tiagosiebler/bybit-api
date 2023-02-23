@@ -89,8 +89,8 @@ describe('Private Contract REST API POST Endpoints', () => {
       await api.setMarginSwitch({
         symbol,
         tradeMode: 1,
-        buyLeverage: '5',
-        sellLeverage: '5',
+        buyLeverage: '10',
+        sellLeverage: '10',
       })
     ).toMatchObject({
       retCode: API_ERROR_CODE.CONTRACT_MARGIN_MODE_NOT_MODIFIED,
@@ -116,7 +116,7 @@ describe('Private Contract REST API POST Endpoints', () => {
   });
 
   it('setLeverage()', async () => {
-    expect(await api.setLeverage(symbol, '5', '5')).toMatchObject({
+    expect(await api.setLeverage(symbol, '10', '10')).toMatchObject({
       retCode: API_ERROR_CODE.CONTRACT_SET_LEVERAGE_NOT_MODIFIED,
     });
   });

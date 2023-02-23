@@ -16,7 +16,8 @@ type WsTopic = string;
 
 /**
  * A "Set" is used to ensure we only subscribe to a topic once (tracking a list of unique topics we're expected to be connected to)
- * Note: Accurate duplicate tracking only works for plaintext topics. E.g. JSON objects may not be seen as duplicates if keys are in different orders. If that's needed, check the FTX implementation.
+ * Note: Accurate duplicate tracking only works for plaintext topics.
+ * E.g. JSON objects may not be seen as duplicates if keys are in different orders. If that's needed, check the FTX implementation.
  */
 type WsTopicList = Set<WsTopic>;
 
@@ -39,6 +40,7 @@ interface WsStoredState {
 
 export default class WsStore {
   private wsState: Record<string, WsStoredState>;
+
   private logger: typeof DefaultLogger;
 
   constructor(logger: typeof DefaultLogger) {
@@ -48,7 +50,9 @@ export default class WsStore {
 
   /** Get WS stored state for key, optionally create if missing */
   get(key: WsKey, createIfMissing?: true): WsStoredState;
+
   get(key: WsKey, createIfMissing?: false): WsStoredState | undefined;
+
   get(key: WsKey, createIfMissing?: boolean): WsStoredState | undefined {
     if (this.wsState[key]) {
       return this.wsState[key];
