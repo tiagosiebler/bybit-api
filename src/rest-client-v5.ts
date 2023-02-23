@@ -12,12 +12,12 @@ import {
   ApiKeyInfoV5,
   AssetInfoV5,
   BatchAmendOrderParamsV5,
-  BatchAmendOrderResult,
+  BatchAmendOrderResultV5,
   BatchCancelOrderParamsV5,
-  BatchCancelOrderResult,
+  BatchCancelOrderResultV5,
+  BatchCreateOrderResultV5,
   BatchOrderParamsV5,
-  BatchOrderResult,
-  BatchOrdersResult,
+  BatchOrdersResponseV5,
   BorrowHistoryRecordV5,
   CancelAllOrdersParamsV5,
   CancelOrderParamsV5,
@@ -63,7 +63,7 @@ import {
   GetOpenInterestParamsV5,
   GetOptionDeliveryPriceParamsV5,
   GetOrderbookParamsV5,
-  GetPremiumIndexPriceKlineParams,
+  GetPremiumIndexPriceKlineParamsV5,
   GetPublicTradingHistoryParamsV5,
   GetRiskLimitParamsV5,
   GetSettlementRecordParamsV5,
@@ -105,7 +105,7 @@ import {
   SetTPSLModeParamsV5,
   SetTradingStopParamsV5,
   SettlementRecordV5,
-  SpotBorrowCheckResult,
+  SpotBorrowCheckResultV5,
   SpotLeveragedTokenOrderHistoryV5,
   SubMemberV5,
   SwitchIsolatedMarginParamsV5,
@@ -205,7 +205,7 @@ export class RestClientV5 extends BaseRestClient {
    * Covers: Linear contract
    */
   getPremiumIndexPriceKline(
-    params: GetPremiumIndexPriceKlineParams
+    params: GetPremiumIndexPriceKlineParamsV5
   ): Promise<
     APIResponseV3WithTime<CategorySymbolListV5<OHLCKlineV5[], 'linear'>>
   > {
@@ -403,7 +403,9 @@ export class RestClientV5 extends BaseRestClient {
   batchSubmitOrders(
     category: 'option',
     orders: BatchOrderParamsV5[]
-  ): Promise<APIResponseV3WithTime<BatchOrdersResult<BatchOrderResult[]>>> {
+  ): Promise<
+    APIResponseV3WithTime<BatchOrdersResponseV5<BatchCreateOrderResultV5[]>>
+  > {
     return this.postPrivate('/v5/order/create-batch', {
       category,
       request: orders,
@@ -421,7 +423,7 @@ export class RestClientV5 extends BaseRestClient {
     category: 'option',
     orders: BatchAmendOrderParamsV5[]
   ): Promise<
-    APIResponseV3WithTime<BatchOrdersResult<BatchAmendOrderResult[]>>
+    APIResponseV3WithTime<BatchOrdersResponseV5<BatchAmendOrderResultV5[]>>
   > {
     return this.postPrivate('/v5/order/amend-batch', {
       category,
@@ -440,7 +442,7 @@ export class RestClientV5 extends BaseRestClient {
     category: 'option',
     orders: BatchCancelOrderParamsV5[]
   ): Promise<
-    APIResponseV3WithTime<BatchOrdersResult<BatchCancelOrderResult[]>>
+    APIResponseV3WithTime<BatchOrdersResponseV5<BatchCancelOrderResultV5[]>>
   > {
     return this.postPrivate('/v5/order/cancel-batch', {
       category,
@@ -456,7 +458,7 @@ export class RestClientV5 extends BaseRestClient {
   getSpotBorrowCheck(
     symbol: string,
     side: OrderSideV5
-  ): Promise<APIResponseV3WithTime<SpotBorrowCheckResult>> {
+  ): Promise<APIResponseV3WithTime<SpotBorrowCheckResultV5>> {
     return this.getPrivate('/v5/order/spot-borrow-check', {
       category: 'spot',
       symbol,

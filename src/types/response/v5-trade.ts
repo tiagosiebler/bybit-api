@@ -53,7 +53,7 @@ export interface AccountOrderV5 {
   updatedTime: string;
 }
 
-export interface BatchOrderResult {
+export interface BatchCreateOrderResultV5 {
   category: CategoryV5;
   symbol: string;
   orderId: string;
@@ -61,7 +61,7 @@ export interface BatchOrderResult {
   createAt: string;
 }
 
-export interface BatchOrdersResult<T extends unknown[]> {
+export interface BatchOrdersResponseV5<T extends unknown[]> {
   result: {
     list: T;
   };
@@ -73,21 +73,21 @@ export interface BatchOrdersResult<T extends unknown[]> {
   };
 }
 
-export interface BatchAmendOrderResult {
+export interface BatchAmendOrderResultV5 {
   category: CategoryV5;
   symbol: string;
   orderId: string;
   orderLinkId: string;
 }
 
-export interface BatchCancelOrderResult {
+export interface BatchCancelOrderResultV5 {
   category: CategoryV5;
   symbol: string;
   orderId: string;
   orderLinkId: string;
 }
 
-export interface SpotBorrowCheckResult {
+export interface SpotBorrowCheckResultV5 {
   symbol: string;
   side: OrderSideV5;
   maxTradeQty: string;

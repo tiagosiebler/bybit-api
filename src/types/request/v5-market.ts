@@ -28,7 +28,7 @@ export interface GetIndexPriceKlineParamsV5 {
   limit?: number;
 }
 
-export interface GetPremiumIndexPriceKlineParams {
+export interface GetPremiumIndexPriceKlineParamsV5 {
   category: 'linear';
   symbol: string;
   interval: KlineIntervalV3;
