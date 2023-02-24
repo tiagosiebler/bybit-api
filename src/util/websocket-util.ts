@@ -1,4 +1,4 @@
-import { APIMarket, WsKey } from '../types';
+import { APIMarket, CategoryV5, WsKey } from '../types';
 
 interface NetworkMapV3 {
   livenet: string;
@@ -9,10 +9,28 @@ interface NetworkMapV3 {
 
 type PublicPrivateNetwork = 'public' | 'private';
 
+/**
+ * The following WS keys are logical.
+ *
+ * They're not directly used as a market. They usually have one private endpoint but many public ones,
+ * so they need a bit of extra handling for seamless messaging between endpoints.
+ *
+ * For the unified keys, the "split" happens using the symbol. Symbols suffixed with USDT are obviously USDT topics.
+ * For the v5 endpoints, the subscribe/unsubscribe call must specify the category the subscription should route to.
+ */
+type PublicOnlyWsKeys =
+  | 'unifiedPerpUSDT'
+  | 'unifiedPerpUSDC'
+  | 'v5SpotPublic'
+  | 'v5LinearPublic'
+  | 'v5InversePublic'
+  | 'v5OptionPublic';
+
 export const WS_BASE_URL_MAP: Record<
-  APIMarket | 'unifiedPerpUSDT' | 'unifiedPerpUSDC',
+  APIMarket,
   Record<PublicPrivateNetwork, NetworkMapV3>
-> = {
+> &
+  Record<PublicOnlyWsKeys, Record<'public', NetworkMapV3>> = {
   inverse: {
     public: {
       livenet: 'wss://stream.bybit.com/realtime',
@@ -106,19 +124,11 @@ export const WS_BASE_URL_MAP: Record<
       livenet: 'wss://stream.bybit.com/contract/usdt/public/v3',
       testnet: 'wss://stream-testnet.bybit.com/contract/usdt/public/v3',
     },
-    private: {
-      livenet: 'useUnifiedEndpoint',
-      testnet: 'useUnifiedEndpoint',
-    },
   },
   unifiedPerpUSDC: {
     public: {
       livenet: 'wss://stream.bybit.com/contract/usdc/public/v3',
       testnet: 'wss://stream-testnet.bybit.com/contract/usdc/public/v3',
-    },
-    private: {
-      livenet: 'useUnifiedEndpoint',
-      testnet: 'useUnifiedEndpoint',
     },
   },
   contractUSDT: {
@@ -139,6 +149,40 @@ export const WS_BASE_URL_MAP: Record<
     private: {
       livenet: 'wss://stream.bybit.com/contract/private/v3',
       testnet: 'wss://stream-testnet.bybit.com/contract/private/v3',
+    },
+  },
+  v5: {
+    public: {
+      livenet: 'public topics are routed internally via the public wskeys',
+      testnet: 'public topics are routed internally via the public wskeys',
+    },
+    private: {
+      livenet: 'wss://stream.bybit.com/v5/private',
+      testnet: 'wss://stream-testnet.bybit.com/v5/private',
+    },
+  },
+  v5SpotPublic: {
+    public: {
+      livenet: 'wss://stream.bybit.com/v5/public/spot',
+      testnet: 'wss://stream-testnet.bybit.com/v5/public/spot',
+    },
+  },
+  v5LinearPublic: {
+    public: {
+      livenet: 'wss://stream.bybit.com/v5/public/linear',
+      testnet: 'wss://stream-testnet.bybit.com/v5/public/linear',
+    },
+  },
+  v5InversePublic: {
+    public: {
+      livenet: 'wss://stream.bybit.com/v5/public/inverse',
+      testnet: 'wss://stream-testnet.bybit.com/v5/public/inverse',
+    },
+  },
+  v5OptionPublic: {
+    public: {
+      livenet: 'wss://stream.bybit.com/v5/public/option',
+      testnet: 'wss://stream-testnet.bybit.com/v5/public/option',
     },
   },
 };
@@ -163,6 +207,11 @@ export const WS_KEY_MAP = {
   contractUSDTPrivate: 'contractUSDTPrivate',
   contractInversePublic: 'contractInversePublic',
   contractInversePrivate: 'contractInversePrivate',
+  v5SpotPublic: 'v5SpotPublic',
+  v5LinearPublic: 'v5LinearPublic',
+  v5InversePublic: 'v5InversePublic',
+  v5OptionPublic: 'v5OptionPublic',
+  v5Private: 'v5Private',
 } as const;
 
 export const WS_AUTH_ON_CONNECT_KEYS: WsKey[] = [
@@ -172,6 +221,7 @@ export const WS_AUTH_ON_CONNECT_KEYS: WsKey[] = [
   WS_KEY_MAP.unifiedPrivate,
   WS_KEY_MAP.contractUSDTPrivate,
   WS_KEY_MAP.contractInversePrivate,
+  WS_KEY_MAP.v5Private,
 ];
 
 export const PUBLIC_WS_KEYS = [
@@ -185,15 +235,15 @@ export const PUBLIC_WS_KEYS = [
   WS_KEY_MAP.unifiedPerpUSDCPublic,
   WS_KEY_MAP.contractUSDTPublic,
   WS_KEY_MAP.contractInversePublic,
+  WS_KEY_MAP.v5SpotPublic,
+  WS_KEY_MAP.v5LinearPublic,
+  WS_KEY_MAP.v5InversePublic,
+  WS_KEY_MAP.v5OptionPublic,
 ] as string[];
 
 /** Used to automatically determine if a sub request should be to the public or private ws (when there's two) */
 const PRIVATE_TOPICS = [
-  'position',
-  'execution',
-  'order',
   'stop_order',
-  'wallet',
   'outboundAccountInfo',
   'executionReport',
   'ticketInfo',
@@ -226,12 +276,23 @@ const PRIVATE_TOPICS = [
   'user.execution.contractAccount',
   'user.order.contractAccount',
   'user.wallet.contractAccount',
+  // v5
+  'position',
+  'execution',
+  'order',
+  'wallet',
+  'greeks',
 ];
+
+export function isPrivateWsTopic(topic: string): boolean {
+  return PRIVATE_TOPICS.includes(topic);
+}
 
 export function getWsKeyForTopic(
   market: APIMarket,
   topic: string,
-  isPrivate?: boolean
+  isPrivate?: boolean,
+  category?: CategoryV5
 ): WsKey {
   const isPrivateTopic = isPrivate === true || PRIVATE_TOPICS.includes(topic);
   switch (market) {
@@ -297,8 +358,134 @@ export function getWsKeyForTopic(
         ? WS_KEY_MAP.contractUSDTPrivate
         : WS_KEY_MAP.contractUSDTPublic;
     }
+    case 'v5': {
+      if (isPrivateTopic) {
+        return WS_KEY_MAP.v5Private;
+      }
+
+      switch (category) {
+        case 'spot': {
+          return WS_KEY_MAP.v5SpotPublic;
+        }
+        case 'linear': {
+          return WS_KEY_MAP.v5LinearPublic;
+        }
+        case 'inverse': {
+          return WS_KEY_MAP.v5InversePublic;
+        }
+        case 'option': {
+          return WS_KEY_MAP.v5OptionPublic;
+        }
+        case undefined: {
+          throw new Error('Category cannot be undefined');
+        }
+        default: {
+          throw neverGuard(
+            category,
+            'getWsKeyForTopic(v5): Unhandled v5 category'
+          );
+        }
+      }
+      // TODO: simple way to manage many public api groups in one api market?
+      return isPrivateTopic ? WS_KEY_MAP.v5Private : WS_KEY_MAP.v5Private;
+    }
     default: {
       throw neverGuard(market, 'getWsKeyForTopic(): Unhandled market');
+    }
+  }
+}
+
+export function getWsUrl(
+  wsKey: WsKey,
+  wsUrl: string | undefined,
+  isTestnet: boolean
+): string {
+  if (wsUrl) {
+    return wsUrl;
+  }
+
+  const networkKey = isTestnet ? 'testnet' : 'livenet';
+
+  switch (wsKey) {
+    case WS_KEY_MAP.linearPublic: {
+      return WS_BASE_URL_MAP.linear.public[networkKey];
+    }
+    case WS_KEY_MAP.linearPrivate: {
+      return WS_BASE_URL_MAP.linear.private[networkKey];
+    }
+    case WS_KEY_MAP.spotPublic: {
+      return WS_BASE_URL_MAP.spot.public[networkKey];
+    }
+    case WS_KEY_MAP.spotPrivate: {
+      return WS_BASE_URL_MAP.spot.private[networkKey];
+    }
+    case WS_KEY_MAP.spotV3Public: {
+      return WS_BASE_URL_MAP.spotv3.public[networkKey];
+    }
+    case WS_KEY_MAP.spotV3Private: {
+      return WS_BASE_URL_MAP.spotv3.private[networkKey];
+    }
+    case WS_KEY_MAP.inverse: {
+      // private and public are on the same WS connection
+      return WS_BASE_URL_MAP.inverse.public[networkKey];
+    }
+    case WS_KEY_MAP.usdcOptionPublic: {
+      return WS_BASE_URL_MAP.usdcOption.public[networkKey];
+    }
+    case WS_KEY_MAP.usdcOptionPrivate: {
+      return WS_BASE_URL_MAP.usdcOption.private[networkKey];
+    }
+    case WS_KEY_MAP.usdcPerpPublic: {
+      return WS_BASE_URL_MAP.usdcPerp.public[networkKey];
+    }
+    case WS_KEY_MAP.usdcPerpPrivate: {
+      return WS_BASE_URL_MAP.usdcPerp.private[networkKey];
+    }
+    case WS_KEY_MAP.unifiedOptionPublic: {
+      return WS_BASE_URL_MAP.unifiedOption.public[networkKey];
+    }
+    case WS_KEY_MAP.unifiedPerpUSDTPublic: {
+      return WS_BASE_URL_MAP.unifiedPerpUSDT.public[networkKey];
+    }
+    case WS_KEY_MAP.unifiedPerpUSDCPublic: {
+      return WS_BASE_URL_MAP.unifiedPerpUSDC.public[networkKey];
+    }
+    case WS_KEY_MAP.unifiedPrivate: {
+      return WS_BASE_URL_MAP.unifiedPerp.private[networkKey];
+    }
+    case WS_KEY_MAP.contractInversePrivate: {
+      return WS_BASE_URL_MAP.contractInverse.private[networkKey];
+    }
+    case WS_KEY_MAP.contractInversePublic: {
+      return WS_BASE_URL_MAP.contractInverse.public[networkKey];
+    }
+    case WS_KEY_MAP.contractUSDTPrivate: {
+      return WS_BASE_URL_MAP.contractUSDT.private[networkKey];
+    }
+    case WS_KEY_MAP.contractUSDTPublic: {
+      return WS_BASE_URL_MAP.contractUSDT.public[networkKey];
+    }
+    case WS_KEY_MAP.v5Private: {
+      return WS_BASE_URL_MAP.v5.private[networkKey];
+    }
+    case WS_KEY_MAP.v5SpotPublic: {
+      return WS_BASE_URL_MAP.v5SpotPublic.public[networkKey];
+    }
+    case WS_KEY_MAP.v5LinearPublic: {
+      return WS_BASE_URL_MAP.v5LinearPublic.public[networkKey];
+    }
+    case WS_KEY_MAP.v5InversePublic: {
+      return WS_BASE_URL_MAP.v5InversePublic.public[networkKey];
+    }
+    case WS_KEY_MAP.v5OptionPublic: {
+      return WS_BASE_URL_MAP.v5OptionPublic.public[networkKey];
+    }
+    default: {
+      this.logger.error('getWsUrl(): Unhandled wsKey: ', {
+        category: 'bybit-ws',
+        wsKey,
+      });
+      throw neverGuard(wsKey, 'getWsUrl(): Unhandled wsKey');
     }
   }
 }
@@ -315,7 +502,8 @@ export function getMaxTopicsPerSubscribeEvent(
     case 'unifiedPerp':
     case 'spot':
     case 'contractInverse':
-    case 'contractUSDT': {
+    case 'contractUSDT':
+    case 'v5': {
       return null;
     }
     case 'spotv3': {
