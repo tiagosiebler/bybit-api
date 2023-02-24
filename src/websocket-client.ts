@@ -139,7 +139,7 @@ export class WebsocketClient extends EventEmitter {
    * @param isPrivateTopic - optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
    */
   public subscribeV5(
-    wsTopics: WsTopic[] | WsTopic[],
+    wsTopics: WsTopic[] | WsTopic,
     category: CategoryV5,
     isPrivateTopic?: boolean
   ) {
@@ -240,7 +240,7 @@ export class WebsocketClient extends EventEmitter {
    * @param isPrivateTopic - optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
    */
   public unsubscribeV5(
-    wsTopics: WsTopic[] | WsTopic[],
+    wsTopics: WsTopic[] | WsTopic,
     category: CategoryV5,
     isPrivateTopic?: boolean
   ) {
