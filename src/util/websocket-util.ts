@@ -386,8 +386,6 @@ export function getWsKeyForTopic(
           );
         }
       }
-      // TODO: simple way to manage many public api groups in one api market?
-      return isPrivateTopic ? WS_KEY_MAP.v5Private : WS_KEY_MAP.v5Private;
     }
     default: {
       throw neverGuard(market, 'getWsKeyForTopic(): Unhandled market');
