@@ -63,7 +63,7 @@ wsClient.on('reconnected', (data) => {
 
 wsClient.subscribeV5('position', 'linear');
 wsClient.subscribeV5('execution', 'linear');
-wsClient.subscribeV5(['order', 'wallet', 'greek'], 'linear');
+wsClient.subscribeV5(['order', 'wallet', 'greeks'], 'linear');
 
 /**
  * The following has the same effect as above, since there's only one private endpoint for V5 account topics:
