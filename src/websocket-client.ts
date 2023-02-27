@@ -30,7 +30,6 @@ import {
   DefaultLogger,
   PUBLIC_WS_KEYS,
   WS_AUTH_ON_CONNECT_KEYS,
-  WS_BASE_URL_MAP,
   WS_KEY_MAP,
   WsConnectionStateEnum,
   getMaxTopicsPerSubscribeEvent,
