@@ -107,7 +107,9 @@ Create API credentials on Bybit's website:
 
 All REST clients have can be used in a similar way. However, method names, parameters and responses may vary depending on the API category you're using!
 
-Not sure which function to call or which parameters to use? Click the class name in the table above to look at all the function names (they are in the same order as the official API docs), and check the API docs for a list of endpoints/paramters/responses.
+Not sure which function to call or which parameters to use? Click the class name in the table above to look at all the function names (they are in the same order as the official API docs), and check the API docs for a list of endpoints/parameters/responses.
+
+The following is a minimal example for using the REST clients included with this SDK. For more detailed examples, refer to the [examples](./examples/) folder in the repository on GitHub:
 
 ```typescript
 const {
@@ -206,7 +208,9 @@ The WebsocketClient can be configured to a specific API group using the market p
 | USDC Options | `market: 'usdcOption'`| The [USDC options](https://bybit-exchange.github.io/docs/usdc/option/#t-websocket) category. |
 | Contract v3 USDT | `market: 'contractUSDT'`| The [Contract V3](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket) category (USDT perps) |
 | Contract v3 Inverse | `market: 'contractInverse'`| The [Contract V3](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket) category (inverse perps) |
-| V5 Subscriptions | Coming soon | The [v5](https://bybit-exchange.github.io/docs/v5/ws/connect) websockets will be supported in the next release. |
+| V5 Subscriptions | `market: 'v5'` | The [v5](https://bybit-exchange.github.io/docs/v5/ws/connect) websocket topics for all categories under one market. Use the subscribeV5 method when subscribing to v5 topics. |
+
+For more complete examples, look into the ws-\* examples in the [examples](./examples/) folder in the repo on GitHub. Here's a minimal example for using the websocket client:
 
 ```javascript
 const { WebsocketClient } = require('bybit-api');
@@ -222,14 +226,15 @@ const wsConfig = {
     The following parameters are optional:
   */
 
-  // defaults to true == livenet
-  // testnet: false
+  // Connects to livenet by default. Set testnet to true to use the testnet environment.
+  // testnet: true
 
-  // NOTE: to listen to multiple markets (spot vs inverse vs linear vs linearfutures) at once, make one WebsocketClient instance per market
+  // If you can, use the v5 market (the newest generation of Bybit's websockets)
+  market: 'v5',
 
-  market: 'linear',
+  // The older generations of Bybit's websockets are still available under the previous markets:
+  // market: 'linear',
   // market: 'inverse',
-  // market: 'spot',
   // market: 'spotv3',
   // market: 'usdcOption',
   // market: 'usdcPerp',
@@ -257,11 +262,18 @@ const wsConfig = {
 
 const ws = new WebsocketClient(wsConfig);
 
-// subscribe to multiple topics at once
+// (before v5) subscribe to multiple topics at once
 ws.subscribe(['position', 'execution', 'trade']);
 
-// and/or subscribe to individual topics on demand
+// (before v5) and/or subscribe to individual topics on demand
 ws.subscribe('kline.BTCUSD.1m');
+
+// (v5) subscribe to multiple topics at once
+ws.subscribeV5(['orderbook.50.BTCUSDT', 'orderbook.50.ETHUSDT'], 'linear');
+
+// (v5) and/or subscribe to individual topics on demand
+ws.subscribeV5('position', 'linear');
+ws.subscribeV5('publicTrade.BTC', 'option');
 
 // Listen to events coming from websockets. This is the primary data source
 ws.on('update', (data) => {

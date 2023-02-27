@@ -11,7 +11,8 @@ export type APIMarket =
   | 'unifiedPerp'
   | 'unifiedOption'
   | 'contractUSDT'
-  | 'contractInverse';
+  | 'contractInverse'
+  | 'v5';
 
 // Same as inverse futures
 export type WsPublicInverseTopic =

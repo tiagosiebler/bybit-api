@@ -17,6 +17,7 @@ import WsStore from './util/WsStore';
 
 import {
   APIMarket,
+  CategoryV5,
   KlineInterval,
   RESTClient,
   WSClientConfigurableOptions,
@@ -29,15 +30,17 @@ import {
   DefaultLogger,
   PUBLIC_WS_KEYS,
   WS_AUTH_ON_CONNECT_KEYS,
-  WS_BASE_URL_MAP,
   WS_KEY_MAP,
   WsConnectionStateEnum,
   getMaxTopicsPerSubscribeEvent,
   getWsKeyForTopic,
+  getWsUrl,
+  isPrivateWsTopic,
   isWsPong,
   neverGuard,
   serializeParams,
 } from './util';
+import { RestClientV5 } from './rest-client-v5';
 
 const loggerCategory = { category: 'bybit-ws' };
 
@@ -119,13 +122,82 @@ export class WebsocketClient extends EventEmitter {
     this.on('error', () => {});
   }
 
+  /** Get the WsStore that tracks websockets & topics */
+  public getWsStore(): WsStore {
+    return this.wsStore;
+  }
+
+  public isTestnet(): boolean {
+    return this.options.testnet === true;
+  }
+
   /**
-   * Subscribe to topics & track/persist them. They will be automatically resubscribed to if the connection drops/reconnects.
-   * @param wsTopics topic or list of topics
+   * Subscribe to V5 topics & track/persist them.
+   * @param wsTopics - topic or list of topics
+   * @param category - the API category this topic is for (e.g. "linear"). The value is only important when connecting to public topics and will be ignored for private topics.
+   * @param isPrivateTopic - optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
+   */
+  public subscribeV5(
+    wsTopics: WsTopic[] | WsTopic,
+    category: CategoryV5,
+    isPrivateTopic?: boolean
+  ) {
+    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
+
+    topics.forEach((topic) => {
+      const wsKey = getWsKeyForTopic(
+        this.options.market,
+        topic,
+        isPrivateTopic,
+        category
+      );
+
+      // Persist topic for reconnects
+      this.wsStore.addTopic(wsKey, topic);
+
+      // if connected, send subscription request
+      if (
+        this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
+      ) {
+        return this.requestSubscribeTopics(wsKey, [topic]);
+      }
+
+      // start connection process if it hasn't yet begun. Topics are automatically subscribed to on-connect
+      if (
+        !this.wsStore.isConnectionState(
+          wsKey,
+          WsConnectionStateEnum.CONNECTING
+        ) &&
+        !this.wsStore.isConnectionState(
+          wsKey,
+          WsConnectionStateEnum.RECONNECTING
+        )
+      ) {
+        return this.connect(wsKey);
+      }
+    });
+  }
+
+  /**
+   * Subscribe to V1-V3 topics & track/persist them.
+   *
+   * Note: for public V5 topics use the `subscribeV5()` method.
+   *
+   * Topics will be automatically resubscribed to if the connection resets/drops/reconnects.
+   * @param wsTopics - topic or list of topics
    * @param isPrivateTopic optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
    */
   public subscribe(wsTopics: WsTopic[] | WsTopic, isPrivateTopic?: boolean) {
     const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
+    if (this.options.market === 'v5') {
+      topics.forEach((topic) => {
+        if (!isPrivateWsTopic(topic)) {
+          throw new Error(
+            'For public "v5" websocket topics, use the subscribeV5() method & provide the category parameter'
+          );
+        }
+      });
+    }
 
     topics.forEach((topic) => {
       const wsKey = getWsKeyForTopic(
@@ -161,12 +233,57 @@ export class WebsocketClient extends EventEmitter {
   }
 
   /**
-   * Unsubscribe from topics & remove them from memory. They won't be re-subscribed to if the connection reconnects.
+   * Unsubscribe from V5 topics & remove them from memory. They won't be re-subscribed to if the connection reconnects.
+   * @param wsTopics - topic or list of topics
+   * @param category - the API category this topic is for (e.g. "linear"). The value is only important when connecting to public topics and will be ignored for private topics.
+   * @param isPrivateTopic - optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
+   */
+  public unsubscribeV5(
+    wsTopics: WsTopic[] | WsTopic,
+    category: CategoryV5,
+    isPrivateTopic?: boolean
+  ) {
+    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
+    topics.forEach((topic) => {
+      const wsKey = getWsKeyForTopic(
+        this.options.market,
+        topic,
+        isPrivateTopic,
+        category
+      );
+
+      // Remove topic from persistence for reconnects
+      this.wsStore.deleteTopic(wsKey, topic);
+
+      // unsubscribe request only necessary if active connection exists
+      if (
+        this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
+      ) {
+        this.requestUnsubscribeTopics(wsKey, [topic]);
+      }
+    });
+  }
+
+  /**
+   * Unsubscribe from V1-V3 topics & remove them from memory. They won't be re-subscribed to if the connection reconnects.
+   *
+   * Note: For public V5 topics, use `unsubscribeV5()` instead!
+   *
    * @param wsTopics topic or list of topics
    * @param isPrivateTopic optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
    */
   public unsubscribe(wsTopics: WsTopic[] | WsTopic, isPrivateTopic?: boolean) {
     const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
+    if (this.options.market === 'v5') {
+      topics.forEach((topic) => {
+        if (!isPrivateWsTopic(topic)) {
+          throw new Error(
+            'For public "v5" websocket topics, use the unsubscribeV5() method & provide the category parameter'
+          );
+        }
+      });
+    }
+
     topics.forEach((topic) => {
       const wsKey = getWsKeyForTopic(
         this.options.market,
@@ -251,6 +368,13 @@ export class WebsocketClient extends EventEmitter {
         );
         break;
       }
+      case 'v5': {
+        this.restClient = new RestClientV5(
+          this.options.restOptions,
+          this.options.requestOptions
+        );
+        break;
+      }
       default: {
         throw neverGuard(
           this.options.market,
@@ -258,15 +382,6 @@ export class WebsocketClient extends EventEmitter {
         );
       }
     }
-  }
-
-  /** Get the WsStore that tracks websockets & topics */
-  public getWsStore(): WsStore {
-    return this.wsStore;
-  }
-
-  public isTestnet(): boolean {
-    return this.options.testnet === true;
   }
 
   public close(wsKey: WsKey, force?: boolean) {
@@ -310,6 +425,9 @@ export class WebsocketClient extends EventEmitter {
       case 'contractInverse': {
         return [...this.connectPublic(), this.connectPrivate()];
       }
+      case 'v5': {
+        return [this.connectPrivate()];
+      }
       default: {
         throw neverGuard(this.options.market, 'connectAll(): Unhandled market');
       }
@@ -349,6 +467,14 @@ export class WebsocketClient extends EventEmitter {
         return [this.connect(WS_KEY_MAP.contractUSDTPublic)];
       case 'contractInverse':
         return [this.connect(WS_KEY_MAP.contractInversePublic)];
+      case 'v5': {
+        return [
+          this.connect(WS_KEY_MAP.v5SpotPublic),
+          this.connect(WS_KEY_MAP.v5LinearPublic),
+          this.connect(WS_KEY_MAP.v5InversePublic),
+          this.connect(WS_KEY_MAP.v5OptionPublic),
+        ];
+      }
       default: {
         throw neverGuard(
           this.options.market,
@@ -386,6 +512,9 @@ export class WebsocketClient extends EventEmitter {
         return this.connect(WS_KEY_MAP.contractUSDTPrivate);
       case 'contractInverse':
         return this.connect(WS_KEY_MAP.contractInversePrivate);
+      case 'v5': {
+        return this.connect(WS_KEY_MAP.v5Private);
+      }
       default: {
         throw neverGuard(
           this.options.market,
@@ -423,8 +552,8 @@ export class WebsocketClient extends EventEmitter {
       }
 
       const authParams = await this.getAuthParams(wsKey);
-      const url = this.getWsUrl(wsKey) + authParams;
-      const ws = this.connectToWsUrl(url, wsKey);
+      const url = getWsUrl(wsKey, this.options.wsUrl, this.isTestnet());
+      const ws = this.connectToWsUrl(url + authParams, wsKey);
 
       return this.wsStore.setWs(wsKey, ws);
     } catch (err) {
@@ -891,85 +1020,9 @@ export class WebsocketClient extends EventEmitter {
     this.wsStore.setConnectionState(wsKey, state);
   }
 
-  private getWsUrl(wsKey: WsKey): string {
-    if (this.options.wsUrl) {
-      return this.options.wsUrl;
-    }
-
-    const networkKey = this.isTestnet() ? 'testnet' : 'livenet';
-
-    switch (wsKey) {
-      case WS_KEY_MAP.linearPublic: {
-        return WS_BASE_URL_MAP.linear.public[networkKey];
-      }
-      case WS_KEY_MAP.linearPrivate: {
-        return WS_BASE_URL_MAP.linear.private[networkKey];
-      }
-      case WS_KEY_MAP.spotPublic: {
-        return WS_BASE_URL_MAP.spot.public[networkKey];
-      }
-      case WS_KEY_MAP.spotPrivate: {
-        return WS_BASE_URL_MAP.spot.private[networkKey];
-      }
-      case WS_KEY_MAP.spotV3Public: {
-        return WS_BASE_URL_MAP.spotv3.public[networkKey];
-      }
-      case WS_KEY_MAP.spotV3Private: {
-        return WS_BASE_URL_MAP.spotv3.private[networkKey];
-      }
-      case WS_KEY_MAP.inverse: {
-        // private and public are on the same WS connection
-        return WS_BASE_URL_MAP.inverse.public[networkKey];
-      }
-      case WS_KEY_MAP.usdcOptionPublic: {
-        return WS_BASE_URL_MAP.usdcOption.public[networkKey];
-      }
-      case WS_KEY_MAP.usdcOptionPrivate: {
-        return WS_BASE_URL_MAP.usdcOption.private[networkKey];
-      }
-      case WS_KEY_MAP.usdcPerpPublic: {
-        return WS_BASE_URL_MAP.usdcPerp.public[networkKey];
-      }
-      case WS_KEY_MAP.usdcPerpPrivate: {
-        return WS_BASE_URL_MAP.usdcPerp.private[networkKey];
-      }
-      case WS_KEY_MAP.unifiedOptionPublic: {
-        return WS_BASE_URL_MAP.unifiedOption.public[networkKey];
-      }
-      case WS_KEY_MAP.unifiedPerpUSDTPublic: {
-        return WS_BASE_URL_MAP.unifiedPerpUSDT.public[networkKey];
-      }
-      case WS_KEY_MAP.unifiedPerpUSDCPublic: {
-        return WS_BASE_URL_MAP.unifiedPerpUSDC.public[networkKey];
-      }
-      case WS_KEY_MAP.unifiedPrivate: {
-        return WS_BASE_URL_MAP.unifiedPerp.private[networkKey];
-      }
-      case WS_KEY_MAP.contractInversePrivate: {
-        return WS_BASE_URL_MAP.contractInverse.private[networkKey];
-      }
-      case WS_KEY_MAP.contractInversePublic: {
-        return WS_BASE_URL_MAP.contractInverse.public[networkKey];
-      }
-      case WS_KEY_MAP.contractUSDTPrivate: {
-        return WS_BASE_URL_MAP.contractUSDT.private[networkKey];
-      }
-      case WS_KEY_MAP.contractUSDTPublic: {
-        return WS_BASE_URL_MAP.contractUSDT.public[networkKey];
-      }
-      default: {
-        this.logger.error('getWsUrl(): Unhandled wsKey: ', {
-          ...loggerCategory,
-          wsKey,
-        });
-        throw neverGuard(wsKey, 'getWsUrl(): Unhandled wsKey');
-      }
-    }
-  }
-
   private wrongMarketError(market: APIMarket) {
     return new Error(
-      `This WS client was instanced for the ${this.options.market} market. Make another WebsocketClient instance with "market: '${market}' to listen to spot topics`
+      `This WS client was instanced for the ${this.options.market} market. Make another WebsocketClient instance with "market: '${market}'" to listen to ${market} topics`
     );
   }
 

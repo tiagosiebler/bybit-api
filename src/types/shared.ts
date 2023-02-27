@@ -1,6 +1,7 @@
 import { ContractClient } from '../contract-client';
 import { InverseClient } from '../inverse-client';
 import { LinearClient } from '../linear-client';
+import { RestClientV5 } from '../rest-client-v5';
 import { SpotClient } from '../spot-client';
 import { SpotClientV3 } from '../spot-client-v3';
 import { UnifiedMarginClient } from '../unified-margin-client';
@@ -15,7 +16,8 @@ export type RESTClient =
   | USDCOptionClient
   | USDCPerpetualClient
   | UnifiedMarginClient
-  | ContractClient;
+  | ContractClient
+  | RestClientV5;
 
 export type numberInString = string;
 
