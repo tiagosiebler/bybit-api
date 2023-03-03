@@ -81,7 +81,11 @@ export default abstract class BaseRestClient {
 
   private clientType: RestClientType;
 
-  /** Function that calls exchange API to query & resolve server time, used by time sync, disabled by default */
+  /**
+   * Function that calls exchange API to query & resolve server time, used by time sync, disabled by default.
+   *
+   * Note: this should always return server time in seconds
+   */
   abstract fetchServerTime(): Promise<number>;
 
   /** Defines the client type (affecting how requests & signatures behave) */

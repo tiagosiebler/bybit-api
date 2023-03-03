@@ -95,6 +95,14 @@ export interface GetSubAccountDepositRecordParamsV5 {
   cursor?: string;
 }
 
+export interface GetInternalDepositRecordParamsV5 {
+  startTime?: number;
+  endTime?: number;
+  coin?: string;
+  cursor?: string;
+  limit?: number;
+}
+
 export interface GetWithdrawalRecordsParamsV5 {
   withdrawID?: string;
   coin?: string;

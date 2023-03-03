@@ -11,7 +11,12 @@ export interface RestClientOptions {
   /** Override the max size of the request window (in ms) */
   recv_window?: number;
 
-  /** Disabled by default. This can help on machines with consistent latency problems. */
+  /**
+   * Disabled by default.
+   * This can help on machines with consistent latency problems.
+   *
+   * Note: this feature is not recommended as one slow request can cause problems
+   */
   enable_time_sync?: boolean;
 
   /** How often to sync time drift with bybit servers */
