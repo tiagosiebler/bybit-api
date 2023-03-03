@@ -57,6 +57,7 @@ import {
   GetIndexPriceKlineParamsV5,
   GetInstrumentsInfoParamsV5,
   GetInsuranceParamsV5,
+  GetInternalDepositRecordParamsV5,
   GetInternalTransferParamsV5,
   GetKlineParamsV5,
   GetMarkPriceKlineParamsV5,
@@ -77,6 +78,7 @@ import {
   HistoricalVolatilityV5,
   InstrumentInfoResponseV5,
   InsuranceResponseV5,
+  InternalDepositRecordV5,
   InternalTransferRecordV5,
   LeverageTokenInfoV5,
   LeveragedTokenMarketResultV5,
@@ -139,7 +141,7 @@ export class RestClientV5 extends BaseRestClient {
 
   async fetchServerTime(): Promise<number> {
     const res = await this.getServerTime();
-    return Number(res.time);
+    return Number(res.time) / 1000;
   }
 
   getServerTime(): Promise<
@@ -637,7 +639,7 @@ export class RestClientV5 extends BaseRestClient {
    */
   getWalletBalance(
     params: GetWalletBalanceParamsV5
-  ): Promise<APIResponseV3WithTime<WalletBalanceV5>> {
+  ): Promise<APIResponseV3WithTime<{ list: WalletBalanceV5[] }>> {
     return this.getPrivate('/v5/account/wallet-balance', params);
   }
 
@@ -980,6 +982,23 @@ export class RestClientV5 extends BaseRestClient {
     APIResponseV3WithTime<{ rows: DepositRecordV5[]; nextPageCursor: string }>
   > {
     return this.getPrivate('/v5/asset/deposit/query-sub-member-record', params);
+  }
+
+  /**
+   * Get Internal Deposit Records (across Bybit)
+   * Query deposit records through Bybit platform
+   *
+   * RULES
+   * The maximum difference between the start time and the end time is 30 days.
+   * Support to get deposit records by Master or Sub Member Api Key
+   */
+  getInternalDepositRecords(params?: GetInternalDepositRecordParamsV5): Promise<
+    APIResponseV3WithTime<{
+      rows: InternalDepositRecordV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/asset/deposit/query-internal-record', params);
   }
 
   /**

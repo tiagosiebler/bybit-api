@@ -115,6 +115,16 @@ export interface DepositRecordV5 {
   blockHash: string;
 }
 
+export interface InternalDepositRecordV5 {
+  id: string;
+  type: 1;
+  coin: string;
+  amount: string;
+  status: 1 | 2 | 3;
+  address: string;
+  createdTime: string;
+}
+
 export interface DepositAddressChainV5 {
   chainType: string;
   addressDeposit: string;
