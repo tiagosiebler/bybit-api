@@ -52,16 +52,20 @@ export interface NewLinearOrder {
   symbol: string;
   order_type: LinearOrderType;
   qty: number;
-  price?: number;
+  price?: string;
+  basePrice?: string;
+  triggerPrice?: string;
+  triggerBy?: string;
+  orderIv?: string;
   time_in_force: LinearTimeInForce;
-  take_profit?: number;
-  stop_loss?: number;
+  position_idx?: LinearPositionIdx;
+  order_link_id?: string;
+  take_profit?: string;
+  stop_loss?: string;
   tp_trigger_by?: string;
   sl_trigger_by?: string;
   reduce_only: boolean;
   close_on_trigger: boolean;
-  order_link_id?: string;
-  position_idx?: LinearPositionIdx;
 }
 
 export interface LinearConditionalOrderRequest {
