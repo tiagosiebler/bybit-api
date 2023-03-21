@@ -234,10 +234,6 @@ export default abstract class BaseRestClient {
 
     // USDC endpoints, unified margin and a few others use a different way of authenticating requests (headers instead of params)
     if (this.clientType === REST_CLIENT_TYPE_ENUM.v3) {
-      if (!options.headers) {
-        options.headers = {};
-      }
-
       const signResult = await this.prepareSignParams(
         method,
         'v5auth',
