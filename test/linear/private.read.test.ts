@@ -45,9 +45,10 @@ describe('Private Linear REST API GET Endpoints', () => {
   });
 
   it('getActiveOrderList()', async () => {
-    expect(await api.getActiveOrderList({ symbol: symbol })).toMatchObject(
-      successResponseObject()
-    );
+    expect(await api.getActiveOrderList({ symbol: symbol })).toMatchObject({
+      ...successResponseObject(),
+      // ret_msg: 'ok',
+    });
   });
 
   it('queryActiveOrder()', async () => {

@@ -11,16 +11,19 @@ import {
 } from './requestUtils';
 import { signMessage } from './node-support';
 
-// axios.interceptors.request.use((request) => {
-//   console.log(new Date(), 'Starting Request', JSON.stringify(request, null, 2));
-//   return request;
-// });
-
 if (
   typeof process === 'object' &&
   typeof process.env === 'object' &&
   process.env.BYBITTRACE
 ) {
+  // axios.interceptors.request.use((request) => {
+  //   console.log(
+  //     new Date(),
+  //     'Starting Request',
+  //     JSON.stringify(request, null, 2)
+  //   );
+  //   return request;
+  // });
   axios.interceptors.response.use((response) => {
     console.log(new Date(), 'Response:', {
       request: {
@@ -231,10 +234,6 @@ export default abstract class BaseRestClient {
 
     // USDC endpoints, unified margin and a few others use a different way of authenticating requests (headers instead of params)
     if (this.clientType === REST_CLIENT_TYPE_ENUM.v3) {
-      if (!options.headers) {
-        options.headers = {};
-      }
-
       const signResult = await this.prepareSignParams(
         method,
         'v5auth',
@@ -242,21 +241,26 @@ export default abstract class BaseRestClient {
         isPublicApi
       );
 
-      options.headers['X-BAPI-SIGN-TYPE'] = 2;
-      options.headers['X-BAPI-API-KEY'] = this.key;
-      options.headers['X-BAPI-TIMESTAMP'] = signResult.timestamp;
-      options.headers['X-BAPI-SIGN'] = signResult.sign;
-      options.headers['X-BAPI-RECV-WINDOW'] = signResult.recvWindow;
+      const headers = {
+        'X-BAPI-SIGN-TYPE': 2,
+        'X-BAPI-API-KEY': this.key,
+        'X-BAPI-TIMESTAMP': signResult.timestamp,
+        'X-BAPI-SIGN': signResult.sign,
+        'X-BAPI-RECV-WINDOW': signResult.recvWindow,
+        ...options.headers,
+      };
 
       if (method === 'GET') {
         return {
           ...options,
+          headers,
           params: signResult.originalParams,
         };
       }
 
       return {
         ...options,
+        headers,
         data: signResult.originalParams,
       };
     }
@@ -391,10 +395,14 @@ export default abstract class BaseRestClient {
           : JSON.stringify(res.originalParams);
 
       const paramsStr = timestamp + key + recvWindow + signRequestParams;
+
       res.sign = await signMessage(paramsStr, this.secret);
       res.serializedParams = signRequestParams;
 
-      // console.log('sign req: ', paramsStr);
+      // console.log('sign req: ', {
+      //   req: paramsStr,
+      //   sign: res.sign,
+      // });
       return res;
     }
 
