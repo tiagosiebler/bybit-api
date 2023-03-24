@@ -49,6 +49,7 @@ export interface ContractModifyOrderRequest {
   tpTriggerBy?: string;
   slTriggerBy?: string;
   triggerBy?: string;
+  triggerPrice?: string;
 }
 
 export interface ContractActiveOrdersRequest {
