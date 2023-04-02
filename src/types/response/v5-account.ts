@@ -11,6 +11,8 @@ export interface WalletBalanceV5Coin {
   equity: string;
   usdValue: string;
   walletBalance: string;
+  free: string; // spot only
+  locked: string; // spot only
   borrowAmount: string;
   availableToBorrow: string;
   availableToWithdraw: string;
@@ -20,10 +22,12 @@ export interface WalletBalanceV5Coin {
   totalPositionMM: string;
   unrealisedPnl: string;
   cumRealisedPnl: string;
+  bonus: string;
 }
 
 export interface WalletBalanceV5 {
   accountType: AccountTypeV5;
+  accountLTV: string;
   accountIMRate: string;
   accountMMRate: string;
   totalEquity: string;
