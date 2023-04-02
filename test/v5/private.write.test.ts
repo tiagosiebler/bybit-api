@@ -181,8 +181,8 @@ describe('Private WRITE V5 REST API Endpoints', () => {
       expect(
         await api.setLeverage({
           category: 'linear',
-          buyLeverage: '10',
-          sellLeverage: '10',
+          buyLeverage: '5',
+          sellLeverage: '5',
           symbol: linearSymbol,
         })
       ).toMatchObject({
@@ -196,8 +196,8 @@ describe('Private WRITE V5 REST API Endpoints', () => {
       expect(
         await api.switchIsolatedMargin({
           category: 'linear',
-          buyLeverage: '10',
-          sellLeverage: '10',
+          buyLeverage: '5',
+          sellLeverage: '5',
           symbol: linearSymbol,
           // isolated
           tradeMode: 1,
