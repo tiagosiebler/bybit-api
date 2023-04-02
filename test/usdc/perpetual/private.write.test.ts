@@ -78,7 +78,7 @@ describe('Private USDC Perp REST API POST Endpoints', () => {
   });
 
   it('setLeverage()', async () => {
-    expect(await api.setLeverage(symbol, '10')).toMatchObject({
+    expect(await api.setLeverage(symbol, '5')).toMatchObject({
       retCode: API_ERROR_CODE.LEVERAGE_NOT_MODIFIED,
     });
   });
