@@ -186,8 +186,8 @@ describe('Private Linear REST API POST Endpoints', () => {
     expect(
       await api.setUserLeverage({
         symbol,
-        buy_leverage: 10,
-        sell_leverage: 10,
+        buy_leverage: 5,
+        sell_leverage: 5,
       })
     ).toMatchObject({
       ret_code: API_ERROR_CODE.LEVERAGE_NOT_MODIFIED,
