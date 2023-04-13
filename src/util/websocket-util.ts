@@ -292,7 +292,7 @@ export function getWsKeyForTopic(
   market: APIMarket,
   topic: string,
   isPrivate?: boolean,
-  category?: CategoryV5
+  category?: CategoryV5,
 ): WsKey {
   const isPrivateTopic = isPrivate === true || PRIVATE_TOPICS.includes(topic);
   switch (market) {
@@ -345,7 +345,7 @@ export function getWsKeyForTopic(
       }
 
       throw new Error(
-        `Failed to determine wskey for unified perps topic: "${topic}"`
+        `Failed to determine wskey for unified perps topic: "${topic}"`,
       );
     }
     case 'contractInverse': {
@@ -382,7 +382,7 @@ export function getWsKeyForTopic(
         default: {
           throw neverGuard(
             category,
-            'getWsKeyForTopic(v5): Unhandled v5 category'
+            'getWsKeyForTopic(v5): Unhandled v5 category',
           );
         }
       }
@@ -396,7 +396,7 @@ export function getWsKeyForTopic(
 export function getWsUrl(
   wsKey: WsKey,
   wsUrl: string | undefined,
-  isTestnet: boolean
+  isTestnet: boolean,
 ): string {
   if (wsUrl) {
     return wsUrl;
@@ -489,8 +489,10 @@ export function getWsUrl(
 }
 
 export function getMaxTopicsPerSubscribeEvent(
-  market: APIMarket
+  market: APIMarket,
+  wsKey: WsKey,
 ): number | null {
+  const topicsPerEventSpot = 10;
   switch (market) {
     case 'inverse':
     case 'linear':
@@ -502,10 +504,13 @@ export function getMaxTopicsPerSubscribeEvent(
     case 'contractInverse':
     case 'contractUSDT':
     case 'v5': {
+      if (wsKey === WS_KEY_MAP.v5SpotPublic) {
+        return topicsPerEventSpot;
+      }
       return null;
     }
     case 'spotv3': {
-      return 10;
+      return topicsPerEventSpot;
     }
     default: {
       throw neverGuard(market, 'getWsKeyForTopic(): Unhandled market');
@@ -515,7 +520,7 @@ export function getMaxTopicsPerSubscribeEvent(
 
 export function getUsdcWsKeyForTopic(
   topic: string,
-  subGroup: 'option' | 'perp'
+  subGroup: 'option' | 'perp',
 ): WsKey {
   const isPrivateTopic = PRIVATE_TOPICS.includes(topic);
   if (subGroup === 'option') {

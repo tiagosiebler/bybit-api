@@ -17,9 +17,10 @@ const wsClient = new WebsocketClient(
     // market: 'spot',
     // market: 'spotv3',
     // market: 'usdcOption',
-    market: 'usdcPerp',
+    // market: 'usdcPerp',
     // market: 'unifiedPerp',
     // market: 'unifiedOption',
+    market: 'contractUSDT',
   },
   logger
 );
@@ -139,7 +140,7 @@ wsClient.on('reconnected', (data) => {
 // usdc perps (note: the syntax is different for the unified perp market)
 // (market: 'usdcPerp')
 // wsClient.subscribe('trade.BTCUSDC');
-wsClient.subscribe('instrument_info.100ms.BTCPERP');
+// wsClient.subscribe('instrument_info.100ms.BTCPERP');
 
 // unified perps
 // wsClient.subscribe('publicTrade.BTCUSDT');

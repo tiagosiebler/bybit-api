@@ -31,6 +31,7 @@ if (
         method: response.config.method,
         data: response.config.data,
         headers: response.config.headers,
+        params: response.config.params,
       },
       response: {
         status: response.status,
@@ -101,7 +102,7 @@ export default abstract class BaseRestClient {
    */
   constructor(
     restOptions: RestClientOptions = {},
-    networkOptions: AxiosRequestConfig = {}
+    networkOptions: AxiosRequestConfig = {},
   ) {
     this.clientType = this.getClientType();
 
@@ -134,7 +135,7 @@ export default abstract class BaseRestClient {
 
     if (this.key && !this.secret) {
       throw new Error(
-        'API Key & Secret are both required for private endpoints'
+        'API Key & Secret are both required for private endpoints',
       );
     }
 
@@ -172,21 +173,21 @@ export default abstract class BaseRestClient {
     method: Method,
     signMethod: SignMethod,
     params?: TParams,
-    isPublicApi?: true
+    isPublicApi?: true,
   ): Promise<UnsignedRequest<TParams>>;
 
   private async prepareSignParams<TParams = any>(
     method: Method,
     signMethod: SignMethod,
     params?: TParams,
-    isPublicApi?: false | undefined
+    isPublicApi?: false | undefined,
   ): Promise<SignedRequest<TParams>>;
 
   private async prepareSignParams<TParams extends SignedRequestContext = any>(
     method: Method,
     signMethod: SignMethod,
     params?: TParams,
-    isPublicApi?: boolean
+    isPublicApi?: boolean,
   ) {
     if (isPublicApi) {
       return {
@@ -211,7 +212,7 @@ export default abstract class BaseRestClient {
     method: Method,
     url: string,
     params?: any,
-    isPublicApi?: boolean
+    isPublicApi?: boolean,
   ): Promise<AxiosRequestConfig> {
     const options: AxiosRequestConfig = {
       ...this.globalRequestOptions,
@@ -238,7 +239,7 @@ export default abstract class BaseRestClient {
         method,
         'v5auth',
         params,
-        isPublicApi
+        isPublicApi,
       );
 
       const headers = {
@@ -269,7 +270,7 @@ export default abstract class BaseRestClient {
       method,
       'v2auth',
       params,
-      isPublicApi
+      isPublicApi,
     );
 
     if (method === 'GET' || this.isSpotV1Client()) {
@@ -292,11 +293,11 @@ export default abstract class BaseRestClient {
     method: Method,
     endpoint: string,
     params?: any,
-    isPublicApi?: boolean
+    isPublicApi?: boolean,
   ): Promise<any> {
     // Sanity check to make sure it's only ever prefixed by one forward slash
     const requestUrl = [this.baseUrl, endpoint].join(
-      endpoint.startsWith('/') ? '' : '/'
+      endpoint.startsWith('/') ? '' : '/',
     );
 
     // Build a request and handle signature process
@@ -304,7 +305,7 @@ export default abstract class BaseRestClient {
       method,
       requestUrl,
       params,
-      isPublicApi
+      isPublicApi,
     );
 
     // Dispatch request
@@ -355,7 +356,7 @@ export default abstract class BaseRestClient {
   private async signRequest<T extends SignedRequestContext | {} = {}>(
     data: T,
     method: Method,
-    signMethod: SignMethod
+    signMethod: SignMethod,
   ): Promise<SignedRequest<T>> {
     const timestamp = Date.now() + (this.timeOffset || 0);
 
@@ -390,7 +391,7 @@ export default abstract class BaseRestClient {
               res.originalParams,
               strictParamValidation,
               sortProperties,
-              encodeSerialisedValues
+              encodeSerialisedValues,
             )
           : JSON.stringify(res.originalParams);
 
@@ -426,7 +427,7 @@ export default abstract class BaseRestClient {
         res.originalParams,
         strictParamValidation,
         sortProperties,
-        encodeValues
+        encodeValues,
       );
       res.sign = await signMessage(res.serializedParams, this.secret);
 
@@ -473,7 +474,7 @@ export default abstract class BaseRestClient {
 
       if (!serverTime || isNaN(serverTime)) {
         throw new Error(
-          `fetchServerTime() returned non-number: "${serverTime}" typeof(${typeof serverTime})`
+          `fetchServerTime() returned non-number: "${serverTime}" typeof(${typeof serverTime})`,
         );
       }
 
