@@ -40,7 +40,7 @@ describe('Private READ V5 REST API Endpoints', () => {
       );
     });
 
-    // 10016 system errors - reached out to bybit on 13th April 2023
+    // 10016 system errors if the account is not UTA upgraded
     it.skip('getSpotBorrowCheck()', async () => {
       expect(await api.getSpotBorrowCheck(linearSymbol, 'Buy')).toMatchObject({
         ...successResponseObjectV3(),
