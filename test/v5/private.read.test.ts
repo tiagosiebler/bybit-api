@@ -28,7 +28,7 @@ describe('Private READ V5 REST API Endpoints', () => {
   describe('Trade APIs', () => {
     it('getActiveOrders()', async () => {
       expect(
-        await api.getActiveOrders({ category: 'linear', settleCoin })
+        await api.getActiveOrders({ category: 'linear', settleCoin }),
       ).toMatchObject({
         ...successResponseObjectV3(),
       });
@@ -36,11 +36,12 @@ describe('Private READ V5 REST API Endpoints', () => {
 
     it('getHistoricOrders()', async () => {
       expect(await api.getHistoricOrders({ category: 'linear' })).toMatchObject(
-        { ...successResponseObjectV3() }
+        { ...successResponseObjectV3() },
       );
     });
 
-    it('getSpotBorrowCheck()', async () => {
+    // 10016 system errors - reached out to bybit on 13th April 2023
+    it.skip('getSpotBorrowCheck()', async () => {
       expect(await api.getSpotBorrowCheck(linearSymbol, 'Buy')).toMatchObject({
         ...successResponseObjectV3(),
       });
@@ -50,7 +51,7 @@ describe('Private READ V5 REST API Endpoints', () => {
   describe('Position APIs', () => {
     it('getPositionInfo()', async () => {
       expect(
-        await api.getPositionInfo({ category: 'linear', settleCoin })
+        await api.getPositionInfo({ category: 'linear', settleCoin }),
       ).toMatchObject({
         ...successResponseObjectV3(),
       });
@@ -58,7 +59,10 @@ describe('Private READ V5 REST API Endpoints', () => {
 
     it('getExecutionList()', async () => {
       expect(
-        await api.getExecutionList({ category: 'linear', symbol: linearSymbol })
+        await api.getExecutionList({
+          category: 'linear',
+          symbol: linearSymbol,
+        }),
       ).toMatchObject({
         ...successResponseObjectV3(),
       });
@@ -66,7 +70,7 @@ describe('Private READ V5 REST API Endpoints', () => {
 
     it('getClosedPnL()', async () => {
       expect(
-        await api.getClosedPnL({ category: 'linear', symbol: linearSymbol })
+        await api.getClosedPnL({ category: 'linear', symbol: linearSymbol }),
       ).toMatchObject({
         ...successResponseObjectV3(),
       });
@@ -76,7 +80,7 @@ describe('Private READ V5 REST API Endpoints', () => {
   describe('Account APIs', () => {
     it('getWalletBalance()', async () => {
       expect(
-        await api.getWalletBalance({ accountType: 'CONTRACT' })
+        await api.getWalletBalance({ accountType: 'CONTRACT' }),
       ).toMatchObject({ ...successResponseObjectV3() });
     });
 
@@ -138,13 +142,13 @@ describe('Private READ V5 REST API Endpoints', () => {
 
     it('getDeliveryRecord()', async () => {
       expect(await api.getDeliveryRecord({ category: 'option' })).toMatchObject(
-        { ...successResponseObjectV3() }
+        { ...successResponseObjectV3() },
       );
     });
 
     it('getSettlementRecords()', async () => {
       expect(
-        await api.getSettlementRecords({ category: 'linear' })
+        await api.getSettlementRecords({ category: 'linear' }),
       ).toMatchObject({ ...successResponseObjectV3() });
     });
 
@@ -156,19 +160,19 @@ describe('Private READ V5 REST API Endpoints', () => {
 
     it('getAllCoinsBalance()', async () => {
       expect(
-        await api.getAllCoinsBalance({ accountType: 'SPOT' })
+        await api.getAllCoinsBalance({ accountType: 'SPOT' }),
       ).toMatchObject({ ...successResponseObjectV3() });
     });
 
     it('getCoinBalance()', async () => {
       expect(
-        await api.getCoinBalance({ accountType: 'SPOT', coin: settleCoin })
+        await api.getCoinBalance({ accountType: 'SPOT', coin: settleCoin }),
       ).toMatchObject({ ...successResponseObjectV3() });
     });
 
     it('getTransferableCoinList()', async () => {
       expect(
-        await api.getTransferableCoinList('SPOT', 'CONTRACT')
+        await api.getTransferableCoinList('SPOT', 'CONTRACT'),
       ).toMatchObject({ ...successResponseObjectV3() });
     });
 
@@ -204,7 +208,7 @@ describe('Private READ V5 REST API Endpoints', () => {
 
     it('getSubAccountDepositRecords()', async () => {
       expect(
-        await api.getSubAccountDepositRecords({ subMemberId: 'fakeid' })
+        await api.getSubAccountDepositRecords({ subMemberId: 'fakeid' }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // Expected, since sub account ID is fake
@@ -220,7 +224,7 @@ describe('Private READ V5 REST API Endpoints', () => {
 
     it('querySubMemberAddress()', async () => {
       expect(
-        await api.querySubMemberAddress(settleCoin, 'TRC20', 'fakeid')
+        await api.querySubMemberAddress(settleCoin, 'TRC20', 'fakeid'),
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // Expected, since sub account ID is fake
