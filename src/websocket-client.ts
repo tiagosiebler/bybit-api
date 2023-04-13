@@ -74,7 +74,7 @@ interface WebsocketClientEvents {
 export declare interface WebsocketClient {
   on<U extends keyof WebsocketClientEvents>(
     event: U,
-    listener: WebsocketClientEvents[U]
+    listener: WebsocketClientEvents[U],
   ): this;
 
   emit<U extends keyof WebsocketClientEvents>(
@@ -95,7 +95,7 @@ export class WebsocketClient extends EventEmitter {
 
   constructor(
     options: WSClientConfigurableOptions,
-    logger?: typeof DefaultLogger
+    logger?: typeof DefaultLogger,
   ) {
     super();
 
@@ -140,7 +140,7 @@ export class WebsocketClient extends EventEmitter {
   public subscribeV5(
     wsTopics: WsTopic[] | WsTopic,
     category: CategoryV5,
-    isPrivateTopic?: boolean
+    isPrivateTopic?: boolean,
   ) {
     const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
 
@@ -149,7 +149,7 @@ export class WebsocketClient extends EventEmitter {
         this.options.market,
         topic,
         isPrivateTopic,
-        category
+        category,
       );
 
       // Persist topic for reconnects
@@ -166,11 +166,11 @@ export class WebsocketClient extends EventEmitter {
       if (
         !this.wsStore.isConnectionState(
           wsKey,
-          WsConnectionStateEnum.CONNECTING
+          WsConnectionStateEnum.CONNECTING,
         ) &&
         !this.wsStore.isConnectionState(
           wsKey,
-          WsConnectionStateEnum.RECONNECTING
+          WsConnectionStateEnum.RECONNECTING,
         )
       ) {
         return this.connect(wsKey);
@@ -193,7 +193,7 @@ export class WebsocketClient extends EventEmitter {
       topics.forEach((topic) => {
         if (!isPrivateWsTopic(topic)) {
           throw new Error(
-            'For public "v5" websocket topics, use the subscribeV5() method & provide the category parameter'
+            'For public "v5" websocket topics, use the subscribeV5() method & provide the category parameter',
           );
         }
       });
@@ -203,7 +203,7 @@ export class WebsocketClient extends EventEmitter {
       const wsKey = getWsKeyForTopic(
         this.options.market,
         topic,
-        isPrivateTopic
+        isPrivateTopic,
       );
 
       // Persist topic for reconnects
@@ -220,11 +220,11 @@ export class WebsocketClient extends EventEmitter {
       if (
         !this.wsStore.isConnectionState(
           wsKey,
-          WsConnectionStateEnum.CONNECTING
+          WsConnectionStateEnum.CONNECTING,
         ) &&
         !this.wsStore.isConnectionState(
           wsKey,
-          WsConnectionStateEnum.RECONNECTING
+          WsConnectionStateEnum.RECONNECTING,
         )
       ) {
         return this.connect(wsKey);
@@ -241,7 +241,7 @@ export class WebsocketClient extends EventEmitter {
   public unsubscribeV5(
     wsTopics: WsTopic[] | WsTopic,
     category: CategoryV5,
-    isPrivateTopic?: boolean
+    isPrivateTopic?: boolean,
   ) {
     const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
     topics.forEach((topic) => {
@@ -249,7 +249,7 @@ export class WebsocketClient extends EventEmitter {
         this.options.market,
         topic,
         isPrivateTopic,
-        category
+        category,
       );
 
       // Remove topic from persistence for reconnects
@@ -278,7 +278,7 @@ export class WebsocketClient extends EventEmitter {
       topics.forEach((topic) => {
         if (!isPrivateWsTopic(topic)) {
           throw new Error(
-            'For public "v5" websocket topics, use the unsubscribeV5() method & provide the category parameter'
+            'For public "v5" websocket topics, use the unsubscribeV5() method & provide the category parameter',
           );
         }
       });
@@ -288,7 +288,7 @@ export class WebsocketClient extends EventEmitter {
       const wsKey = getWsKeyForTopic(
         this.options.market,
         topic,
-        isPrivateTopic
+        isPrivateTopic,
       );
 
       // Remove topic from persistence for reconnects
@@ -312,21 +312,21 @@ export class WebsocketClient extends EventEmitter {
       case 'inverse': {
         this.restClient = new InverseClient(
           this.options.restOptions,
-          this.options.requestOptions
+          this.options.requestOptions,
         );
         break;
       }
       case 'linear': {
         this.restClient = new LinearClient(
           this.options.restOptions,
-          this.options.requestOptions
+          this.options.requestOptions,
         );
         break;
       }
       case 'spot': {
         this.restClient = new SpotClient(
           this.options.restOptions,
-          this.options.requestOptions
+          this.options.requestOptions,
         );
         this.connectPublic();
         break;
@@ -334,21 +334,21 @@ export class WebsocketClient extends EventEmitter {
       case 'spotv3': {
         this.restClient = new SpotClientV3(
           this.options.restOptions,
-          this.options.requestOptions
+          this.options.requestOptions,
         );
         break;
       }
       case 'usdcOption': {
         this.restClient = new USDCOptionClient(
           this.options.restOptions,
-          this.options.requestOptions
+          this.options.requestOptions,
         );
         break;
       }
       case 'usdcPerp': {
         this.restClient = new USDCPerpetualClient(
           this.options.restOptions,
-          this.options.requestOptions
+          this.options.requestOptions,
         );
         break;
       }
@@ -356,7 +356,7 @@ export class WebsocketClient extends EventEmitter {
       case 'unifiedPerp': {
         this.restClient = new UnifiedMarginClient(
           this.options.restOptions,
-          this.options.requestOptions
+          this.options.requestOptions,
         );
         break;
       }
@@ -364,21 +364,21 @@ export class WebsocketClient extends EventEmitter {
       case 'contractUSDT': {
         this.restClient = new ContractClient(
           this.options.restOptions,
-          this.options.requestOptions
+          this.options.requestOptions,
         );
         break;
       }
       case 'v5': {
         this.restClient = new RestClientV5(
           this.options.restOptions,
-          this.options.requestOptions
+          this.options.requestOptions,
         );
         break;
       }
       default: {
         throw neverGuard(
           this.options.market,
-          'prepareRESTClient(): Unhandled market'
+          'prepareRESTClient(): Unhandled market',
         );
       }
     }
@@ -478,7 +478,7 @@ export class WebsocketClient extends EventEmitter {
       default: {
         throw neverGuard(
           this.options.market,
-          'connectPublic(): Unhandled market'
+          'connectPublic(): Unhandled market',
         );
       }
     }
@@ -518,7 +518,7 @@ export class WebsocketClient extends EventEmitter {
       default: {
         throw neverGuard(
           this.options.market,
-          'connectPrivate(): Unhandled market'
+          'connectPrivate(): Unhandled market',
         );
       }
     }
@@ -529,7 +529,7 @@ export class WebsocketClient extends EventEmitter {
       if (this.wsStore.isWsOpen(wsKey)) {
         this.logger.error(
           'Refused to connect to ws with existing active connection',
-          { ...loggerCategory, wsKey }
+          { ...loggerCategory, wsKey },
         );
         return this.wsStore.getWs(wsKey);
       }
@@ -539,7 +539,7 @@ export class WebsocketClient extends EventEmitter {
       ) {
         this.logger.error(
           'Refused to connect to ws, connection attempt already active',
-          { ...loggerCategory, wsKey }
+          { ...loggerCategory, wsKey },
         );
         return;
       }
@@ -586,12 +586,12 @@ export class WebsocketClient extends EventEmitter {
             `${context} due to unexpected response error: "${
               error?.msg || error?.message || error
             }"`,
-            { ...loggerCategory, wsKey, error }
+            { ...loggerCategory, wsKey, error },
           );
           this.executeReconnectableClose(wsKey, 'unhandled onWsError');
         } else {
           this.logger.info(
-            `${wsKey} socket forcefully closed. Will not reconnect.`
+            `${wsKey} socket forcefully closed. Will not reconnect.`,
           );
         }
         break;
@@ -644,14 +644,14 @@ export class WebsocketClient extends EventEmitter {
   }
 
   private async getWsAuthSignature(
-    wsKey: WsKey
+    wsKey: WsKey,
   ): Promise<{ expiresAt: number; signature: string }> {
     const { key, secret } = this.options;
 
     if (!key || !secret) {
       this.logger.warning(
         'Cannot authenticate websocket, either api or private keys missing.',
-        { ...loggerCategory, wsKey }
+        { ...loggerCategory, wsKey },
       );
       throw new Error('Cannot auth - missing api or secret in config');
     }
@@ -669,7 +669,7 @@ export class WebsocketClient extends EventEmitter {
 
     const signature = await signMessage(
       'GET/realtime' + signatureExpiresAt,
-      secret
+      secret,
     );
 
     return {
@@ -714,7 +714,7 @@ export class WebsocketClient extends EventEmitter {
 
     this.wsStore.get(wsKey, true).activePongTimer = setTimeout(
       () => this.executeReconnectableClose(wsKey, 'Pong timeout'),
-      this.options.pongTimeout
+      this.options.pongTimeout,
     );
   }
 
@@ -743,7 +743,7 @@ export class WebsocketClient extends EventEmitter {
           ...loggerCategory,
           wsKey,
           reason,
-        }
+        },
       );
       this.reconnectWithDelay(wsKey, this.options.reconnectTimeout);
     }
@@ -790,11 +790,12 @@ export class WebsocketClient extends EventEmitter {
     }
 
     const maxTopicsPerEvent = getMaxTopicsPerSubscribeEvent(
-      this.options.market
+      this.options.market,
+      wsKey,
     );
     if (maxTopicsPerEvent && topics.length > maxTopicsPerEvent) {
       this.logger.silly(
-        `Subscribing to topics in batches of ${maxTopicsPerEvent}`
+        `Subscribing to topics in batches of ${maxTopicsPerEvent}`,
       );
       for (let i = 0; i < topics.length; i += maxTopicsPerEvent) {
         const batch = topics.slice(i, i + maxTopicsPerEvent);
@@ -802,7 +803,7 @@ export class WebsocketClient extends EventEmitter {
         this.requestSubscribeTopics(wsKey, batch);
       }
       this.logger.silly(
-        `Finished batch subscribing to ${topics.length} topics`
+        `Finished batch subscribing to ${topics.length} topics`,
       );
       return;
     }
@@ -825,11 +826,12 @@ export class WebsocketClient extends EventEmitter {
     }
 
     const maxTopicsPerEvent = getMaxTopicsPerSubscribeEvent(
-      this.options.market
+      this.options.market,
+      wsKey,
     );
     if (maxTopicsPerEvent && topics.length > maxTopicsPerEvent) {
       this.logger.silly(
-        `Unsubscribing to topics in batches of ${maxTopicsPerEvent}`
+        `Unsubscribing to topics in batches of ${maxTopicsPerEvent}`,
       );
       for (let i = 0; i < topics.length; i += maxTopicsPerEvent) {
         const batch = topics.slice(i, i + maxTopicsPerEvent);
@@ -837,7 +839,7 @@ export class WebsocketClient extends EventEmitter {
         this.requestUnsubscribeTopics(wsKey, batch);
       }
       this.logger.silly(
-        `Finished batch unsubscribing to ${topics.length} topics`
+        `Finished batch unsubscribing to ${topics.length} topics`,
       );
       return;
     }
@@ -859,13 +861,13 @@ export class WebsocketClient extends EventEmitter {
       });
       if (!wsKey) {
         throw new Error(
-          'Cannot send message due to no known websocket for this wsKey'
+          'Cannot send message due to no known websocket for this wsKey',
         );
       }
       const ws = this.getWs(wsKey);
       if (!ws) {
         throw new Error(
-          `${wsKey} socket not connected yet, call "connect(${wsKey}) first then try again when the "open" event arrives`
+          `${wsKey} socket not connected yet, call "connect(${wsKey}) first then try again when the "open" event arrives`,
         );
       }
       ws.send(wsMessage);
@@ -935,7 +937,7 @@ export class WebsocketClient extends EventEmitter {
 
     this.wsStore.get(wsKey, true)!.activePingTimer = setInterval(
       () => this.ping(wsKey),
-      this.options.pingInterval
+      this.options.pingInterval,
     );
   }
 
@@ -1022,7 +1024,7 @@ export class WebsocketClient extends EventEmitter {
 
   private wrongMarketError(market: APIMarket) {
     return new Error(
-      `This WS client was instanced for the ${this.options.market} market. Make another WebsocketClient instance with "market: '${market}'" to listen to ${market} topics`
+      `This WS client was instanced for the ${this.options.market} market. Make another WebsocketClient instance with "market: '${market}'" to listen to ${market} topics`,
     );
   }
 
@@ -1041,7 +1043,7 @@ export class WebsocketClient extends EventEmitter {
         params: {
           binary: !!binary,
         },
-      })
+      }),
     );
   }
 
@@ -1060,7 +1062,7 @@ export class WebsocketClient extends EventEmitter {
         params: {
           binary: !!binary,
         },
-      })
+      }),
     );
   }
 
@@ -1068,7 +1070,7 @@ export class WebsocketClient extends EventEmitter {
   public subscribePublicSpotV1Kline(
     symbol: string,
     candleSize: KlineInterval,
-    binary?: boolean
+    binary?: boolean,
   ) {
     if (this.options.market !== 'spot') {
       throw this.wrongMarketError('spot');
@@ -1083,7 +1085,7 @@ export class WebsocketClient extends EventEmitter {
         params: {
           binary: !!binary,
         },
-      })
+      }),
     );
   }
 
@@ -1096,7 +1098,7 @@ export class WebsocketClient extends EventEmitter {
     symbol: string,
     depth: 'full' | 'merge' | 'delta',
     dumpScale?: number,
-    binary?: boolean
+    binary?: boolean,
   ) {
     if (this.options.market !== 'spot') {
       throw this.wrongMarketError('spot');
