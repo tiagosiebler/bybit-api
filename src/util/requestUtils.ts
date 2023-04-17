@@ -22,6 +22,9 @@ export interface RestClientOptions {
   /** How often to sync time drift with bybit servers */
   sync_interval_ms?: number | string;
 
+  /** Determines whether to perform time synchronization before sending private requests */
+  syncTimeBeforePrivateRequests?: false;
+
   /** Default: false. If true, we'll throw errors if any params are undefined */
   strict_param_validation?: boolean;
 

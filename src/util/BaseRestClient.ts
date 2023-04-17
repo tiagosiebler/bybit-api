@@ -113,6 +113,8 @@ export default abstract class BaseRestClient {
       enable_time_sync: false,
       /** How often to sync time drift with bybit servers (if time sync is enabled) */
       sync_interval_ms: 3600000,
+      /** Determines whether to perform time synchronization before sending private requests */
+      syncTimeBeforePrivateRequests: false,
       /** Request parameter values are now URI encoded by default during signing. Set to false to override this behaviour. */
       encodeSerialisedValues: true,
       ...restOptions,
@@ -203,6 +205,10 @@ export default abstract class BaseRestClient {
       await this.syncTime();
     }
 
+    if (this.options.syncTimeBeforePrivateRequests) {
+      this.timeOffset = await this.fetchTimeOffset();
+    }
+    
     return this.signRequest(params || {}, method, signMethod);
   }
 
