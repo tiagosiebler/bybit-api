@@ -20,7 +20,7 @@ describe('Private Contract REST API GET Endpoints', () => {
   const symbol = 'BTCUSDT';
   it('getHistoricOrders()', async () => {
     expect(await api.getHistoricOrders({ symbol })).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
@@ -29,7 +29,7 @@ describe('Private Contract REST API GET Endpoints', () => {
       'eyJza2lwX2xvY2FsX3N5bWJvbCI6ZmFsc2UsInBhZ2VfdG9rZW4iOiJleUpOSWpwN0luQnJJanA3SWtJaU9pSktSRmt6VG1wcmVFMXFaM2xNVkUwMFQwUlpkRTVFUlRKTmFURm9UakpPYWt4WFVUSk9lbFY1VDBSU2FrMVhXVEJOZHowOUluMHNJbDl6YTE4aU9uc2lRaUk2SWtaNFltMWFZMDV6TUROek1rNTZXVFZOVkVrMFRXa3dlazlFWnpKTVZGRjRUbXBKZEZsVVpHcFplVEZyVG1wak1VMXFaekJaZWtadFRrUk5QU0o5TENKZmRYTmZJanA3SWtJaU9pSkJLMmt2WkZGRlJ5SjlmWDA9In0=';
 
     expect(
-      await api.getHistoricOrders({ symbol, cursor, limit: 1 })
+      await api.getHistoricOrders({ symbol, cursor, limit: 1 }),
     ).toMatchObject({
       // retCode: API_ERROR_CODE.DB_ERROR_WRONG_CURSOR,
       ...successResponseObjectV3(),
@@ -43,7 +43,7 @@ describe('Private Contract REST API GET Endpoints', () => {
     const cursor = orders.result.nextPageCursor;
 
     expect(
-      await api.getHistoricOrders({ symbol, cursor, limit: 1 })
+      await api.getHistoricOrders({ symbol, cursor, limit: 1 }),
     ).toMatchObject({
       ...successResponseObjectV3(),
       retMsg: 'OK',
@@ -51,26 +51,27 @@ describe('Private Contract REST API GET Endpoints', () => {
   });
 
   it('getActiveOrders()', async () => {
-    expect(await api.getActiveOrders({ symbol })).toMatchObject(
-      successResponseObjectV3()
-    );
+    expect(await api.getActiveOrders({ symbol })).toMatchObject({
+      ...successResponseObjectV3(),
+      retMsg: 'OK',
+    });
   });
 
   it('getPositions()', async () => {
     expect(await api.getPositions({ symbol })).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
   it('getUserExecutionHistory()', async () => {
     expect(await api.getUserExecutionHistory({ symbol })).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
   it('getClosedProfitAndLoss()', async () => {
     expect(await api.getClosedProfitAndLoss({ symbol })).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
@@ -88,13 +89,13 @@ describe('Private Contract REST API GET Endpoints', () => {
 
   it('getTradingFeeRate()', async () => {
     expect(await api.getTradingFeeRate()).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
   it('getWalletFundRecords()', async () => {
     expect(await api.getWalletFundRecords()).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 });
