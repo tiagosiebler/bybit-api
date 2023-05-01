@@ -305,9 +305,11 @@ See [websocket-client.ts](./src/websocket-client.ts) for further information.
 
 ---
 
-## Customise Logging
+## Logging
 
-Pass a custom logger which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired.
+### Customise logging
+
+Pass a custom logger (or mutate the imported DefaultLogger class) which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired, as in the example below:
 
 ```javascript
 const { WebsocketClient, DefaultLogger } = require('bybit-api');
@@ -320,6 +322,10 @@ const customLogger = {
 
 const ws = new WebsocketClient({ key: 'xxx', secret: 'yyy' }, customLogger);
 ```
+
+### Debug HTTP requests
+
+In rare situations, you may want to see the raw HTTP requets being built as well as the API response. These can be enabled by setting the `BYBITTRACE` env var to `true`.
 
 ## Browser Usage
 

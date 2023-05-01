@@ -39,6 +39,7 @@ export interface GetAccountCoinBalanceParamsV5 {
   accountType: AccountTypeV5;
   coin: string;
   withBonus?: number;
+  withTransferSafeAmount?: 0 | 1;
 }
 
 export interface GetInternalTransferParamsV5 {
@@ -119,6 +120,7 @@ export interface WithdrawParamsV5 {
   address: string;
   tag?: string;
   amount: string;
+  timestamp: number;
   forceChain?: number;
   accountType?: 'SPOT' | 'FUND';
 }

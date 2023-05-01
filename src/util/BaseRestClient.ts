@@ -11,11 +11,12 @@ import {
 } from './requestUtils';
 import { signMessage } from './node-support';
 
-if (
+const ENABLE_HTTP_TRACE =
   typeof process === 'object' &&
   typeof process.env === 'object' &&
-  process.env.BYBITTRACE
-) {
+  process.env.BYBITTRACE;
+
+if (ENABLE_HTTP_TRACE) {
   // axios.interceptors.request.use((request) => {
   //   console.log(
   //     new Date(),
@@ -209,7 +210,7 @@ export default abstract class BaseRestClient {
     if (this.options.syncTimeBeforePrivateRequests) {
       this.timeOffset = await this.fetchTimeOffset();
     }
-    
+
     return this.signRequest(params || {}, method, signMethod);
   }
 
@@ -313,6 +314,10 @@ export default abstract class BaseRestClient {
       params,
       isPublicApi,
     );
+
+    if (ENABLE_HTTP_TRACE) {
+      console.log('full request: ', options);
+    }
 
     // Dispatch request
     return axios(options)
