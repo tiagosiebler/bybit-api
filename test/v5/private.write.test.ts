@@ -46,7 +46,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           side: orderSide,
           qty: '1',
           positionIdx: 1,
-        })
+        }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // retMsg: '',
@@ -61,7 +61,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           symbol: linearSymbol,
           qty: '2',
           orderId: fakeOrderId,
-        })
+        }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // retMsg: '',
@@ -75,7 +75,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           category: 'linear',
           symbol: linearSymbol,
           orderId: fakeOrderId,
-        })
+        }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // retMsg: '',
@@ -88,7 +88,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
         await api.cancelAllOrders({
           category: 'linear',
           settleCoin: settleCoin,
-        })
+        }),
       ).toMatchObject({
         ...successResponseObjectV3(),
       });
@@ -122,7 +122,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
               side: orderSide,
               symbol: optionsSymbol,
             },
-          ])
+          ]),
         ).toMatchObject({
           ...successResponseObjectV3(),
         });
@@ -141,7 +141,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
               qty: '4',
               symbol: optionsSymbol,
             },
-          ])
+          ]),
         ).toMatchObject({
           ...successResponseObjectV3(),
         });
@@ -158,7 +158,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
               orderLinkId: 'customOrderId2',
               symbol: optionsSymbol,
             },
-          ])
+          ]),
         ).toMatchObject({
           ...successResponseObjectV3(),
         });
@@ -171,7 +171,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           // ...successResponseObjectV3(),
           // retMsg: '',
           retCode: API_ERROR_CODE.V5_API_KEY_PERMISSION_DENIED,
-        }
+        },
       );
     });
   });
@@ -184,7 +184,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           buyLeverage: '5',
           sellLeverage: '5',
           symbol: linearSymbol,
-        })
+        }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // retMsg: '',
@@ -201,7 +201,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           symbol: linearSymbol,
           // isolated
           tradeMode: 1,
-        })
+        }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // retMsg: '',
@@ -215,7 +215,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           category: 'linear',
           symbol: linearSymbol,
           tpSlMode: 'Full',
-        })
+        }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // retMsg: '',
@@ -230,7 +230,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           // both sides
           mode: 3,
           coin: settleCoin,
-        })
+        }),
       ).toMatchObject({
         ...successResponseObjectV3(),
       });
@@ -243,7 +243,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           positionIdx: 1,
           riskId: 1,
           symbol: linearSymbol,
-        })
+        }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // retMsg: '',
@@ -260,7 +260,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           slSize: '100',
           slTriggerBy: 'LastPrice',
           stopLoss: '25000',
-        })
+        }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // retMsg: '',
@@ -275,7 +275,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           autoAddMargin: 0,
           symbol: linearSymbol,
           positionIdx: 0,
-        })
+        }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // retMsg: '',
@@ -301,7 +301,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           frozenPeriod: '1',
           qtyLimit: '1',
           window: '1',
-        })
+        }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // retMsg: '',
@@ -326,8 +326,8 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           settleCoin,
           '100',
           'SPOT',
-          'CONTRACT'
-        )
+          'CONTRACT',
+        ),
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // retMsg: '',
@@ -351,7 +351,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           toAccountType: 'CONTRACT',
           toMemberId: 2,
           transferId: fakeTransferId,
-        })
+        }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // retMsg: '',
@@ -366,7 +366,8 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           amount: '100',
           chain: 'TRC20',
           coin: settleCoin,
-        })
+          timestamp: Date.now(),
+        }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // retMsg: '',
@@ -391,7 +392,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           username: 'sub1account',
           switch: 1,
           note: 'created via e2e test',
-        })
+        }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // retMsg: '',
@@ -421,7 +422,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
         await api.purchaseSpotLeveragedToken({
           amount: '100',
           ltCoin: leverageToken.ltCoin,
-        })
+        }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
         retCode: API_ERROR_CODE.SPOT_LEVERAGE_QUIZ_REQUIRED,
@@ -434,7 +435,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
         await api.redeemSpotLeveragedToken({
           quantity: '100',
           ltCoin: leverageToken.ltCoin,
-        })
+        }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
         retCode: API_ERROR_CODE.SPOT_LEVERAGE_TOKEN_INSUFFICIENT_BALANCE,
