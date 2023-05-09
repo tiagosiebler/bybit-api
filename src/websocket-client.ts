@@ -1070,7 +1070,7 @@ export class WebsocketClient extends EventEmitter {
   }
 
   private updatePendingTopicSubscriptionStatus(wsKey: string, msg: any) {
-    const req_id = msg['req_id'] as string;
+    const requestsIds = msg['req_id'] as string;
     const pendingTopicsSubscriptions = this.pendingTopicsSubscriptions.find(
       (s) => s.wsKey === wsKey,
     );
@@ -1081,33 +1081,38 @@ export class WebsocketClient extends EventEmitter {
     }
 
     const subscriptionSuccess = isTopicSubscriptionSuccess(msg);
+    const splitRequestsIds = requestsIds.split(',');
     if (!subscriptionSuccess) {
-      pendingTopicsSubscriptions.failedTopicsSubscriptions.add(req_id);
+      splitRequestsIds.forEach((req_id) =>
+        pendingTopicsSubscriptions.failedTopicsSubscriptions.add(req_id),
+      );
     }
 
-    this.removeTopicPendingSubscription(wsKey, req_id);
+    splitRequestsIds.forEach((req_id) => {
+      this.removeTopicPendingSubscription(wsKey, req_id);
 
-    if (
-      !pendingTopicsSubscriptions.pendingTopicsSubscriptions.size &&
-      !pendingTopicsSubscriptions.failedTopicsSubscriptions.size
-    ) {
-      // all topics have been subscribed successfully, so we can resolve the subscription request
-      pendingTopicsSubscriptions.resolver();
-      this.clearTopicsPendingSubscriptions(wsKey);
-    }
+      if (
+        !pendingTopicsSubscriptions.pendingTopicsSubscriptions.size &&
+        !pendingTopicsSubscriptions.failedTopicsSubscriptions.size
+      ) {
+        // all topics have been subscribed successfully, so we can resolve the subscription request
+        pendingTopicsSubscriptions.resolver();
+        this.clearTopicsPendingSubscriptions(wsKey);
+      }
 
-    if (
-      !pendingTopicsSubscriptions.pendingTopicsSubscriptions.size &&
-      pendingTopicsSubscriptions.failedTopicsSubscriptions.size
-    ) {
-      // not all topics have been subscribed successfully, so we reject the subscription request
-      // and let the caller handle the situation by providing the list of failed subscriptions requests
-      const failedSubscriptionsMessage = `(${[
-        ...pendingTopicsSubscriptions.failedTopicsSubscriptions,
-      ].toString()}) failed to subscribe`;
-      pendingTopicsSubscriptions.rejector(failedSubscriptionsMessage);
-      this.clearTopicsPendingSubscriptions(wsKey);
-    }
+      if (
+        !pendingTopicsSubscriptions.pendingTopicsSubscriptions.size &&
+        pendingTopicsSubscriptions.failedTopicsSubscriptions.size
+      ) {
+        // not all topics have been subscribed successfully, so we reject the subscription request
+        // and let the caller handle the situation by providing the list of failed subscriptions requests
+        const failedSubscriptionsMessage = `(${[
+          ...pendingTopicsSubscriptions.failedTopicsSubscriptions,
+        ].toString()}) failed to subscribe`;
+        pendingTopicsSubscriptions.rejector(failedSubscriptionsMessage);
+        this.clearTopicsPendingSubscriptions(wsKey);
+      }
+    });
   }
 
   private onWsClose(event, wsKey: WsKey) {
