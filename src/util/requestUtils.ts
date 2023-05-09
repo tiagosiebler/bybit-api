@@ -124,6 +124,32 @@ export function isWsPong(msg: any): boolean {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isTopicSubscriptionConfirmation(msg: any): boolean {
+  if (!msg) {
+    return false;
+  }
+
+  if (!msg['op'] || msg['op'] !== 'subscribe') {
+    return false;
+  }
+
+  return true;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isTopicSubscriptionSuccess(msg: any): boolean {
+  if (!msg) {
+    return false;
+  }
+
+  if (!msg['op'] || msg['op'] !== 'subscribe') {
+    return false;
+  }
+
+  return msg['success'] === true;
+}
+
 export const APIID = 'bybitapinode';
 
 /**
