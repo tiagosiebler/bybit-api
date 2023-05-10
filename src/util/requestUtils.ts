@@ -1,3 +1,6 @@
+import { WebsocketSucceededTopicSubscriptionConfirmationEvent } from '../types/ws-events/succeeded-topic-subscription-confirmation';
+import { WebsocketTopicSubscriptionConfirmationEvent } from '../types/ws-events/topic-subscription-confirmation';
+
 export interface RestClientOptions {
   /** Your API key */
   key?: string;
@@ -57,7 +60,7 @@ export function serializeParams(
   params: object = {},
   strict_validation = false,
   sortProperties = true,
-  encodeSerialisedValues = true
+  encodeSerialisedValues = true,
 ): string {
   const properties = sortProperties
     ? Object.keys(params).sort()
@@ -71,7 +74,7 @@ export function serializeParams(
 
       if (strict_validation === true && typeof value === 'undefined') {
         throw new Error(
-          'Failed to sign API request due to undefined parameter'
+          'Failed to sign API request due to undefined parameter',
         );
       }
       return `${key}=${value}`;
@@ -81,7 +84,7 @@ export function serializeParams(
 
 export function getRestBaseUrl(
   useTestnet: boolean,
-  restInverseOptions: RestClientOptions
+  restInverseOptions: RestClientOptions,
 ): string {
   const exchangeBaseUrls = {
     livenet: 'https://api.bybit.com',
@@ -124,30 +127,30 @@ export function isWsPong(msg: any): boolean {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isTopicSubscriptionConfirmation(msg: any): boolean {
+export function isTopicSubscriptionConfirmation(
+  msg: unknown,
+): msg is WebsocketTopicSubscriptionConfirmationEvent {
+  if (typeof msg !== 'object') {
+    return false;
+  }
   if (!msg) {
     return false;
   }
-
-  if (!msg['op'] || msg['op'] !== 'subscribe') {
+  if (typeof msg['op'] !== 'string') {
+    return false;
+  }
+  if (msg['op'] !== 'subscribe') {
     return false;
   }
 
   return true;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isTopicSubscriptionSuccess(msg: any): boolean {
-  if (!msg) {
-    return false;
-  }
-
-  if (!msg['op'] || msg['op'] !== 'subscribe') {
-    return false;
-  }
-
-  return msg['success'] === true;
+export function isTopicSubscriptionSuccess(
+  msg: unknown,
+): msg is WebsocketSucceededTopicSubscriptionConfirmationEvent {
+  if (!isTopicSubscriptionConfirmation(msg)) return false;
+  return msg.success === true;
 }
 
 export const APIID = 'bybitapinode';
@@ -165,4 +168,4 @@ export const REST_CLIENT_TYPE_ENUM = {
 } as const;
 
 export type RestClientType =
-  typeof REST_CLIENT_TYPE_ENUM[keyof typeof REST_CLIENT_TYPE_ENUM];
+  (typeof REST_CLIENT_TYPE_ENUM)[keyof typeof REST_CLIENT_TYPE_ENUM];

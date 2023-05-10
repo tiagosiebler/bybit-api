@@ -43,6 +43,7 @@ import {
   serializeParams,
 } from './util';
 import { RestClientV5 } from './rest-client-v5';
+import { WebsocketTopicSubscriptionConfirmationEvent } from './types/ws-events/topic-subscription-confirmation';
 
 const loggerCategory = { category: 'bybit-ws' };
 
@@ -1069,20 +1070,19 @@ export class WebsocketClient extends EventEmitter {
     }
   }
 
-  private updatePendingTopicSubscriptionStatus(wsKey: string, msg: any) {
-    const requestsIds = msg['req_id'] as string;
+  private updatePendingTopicSubscriptionStatus(
+    wsKey: string,
+    msg: WebsocketTopicSubscriptionConfirmationEvent,
+  ) {
+    const requestsIds = msg.req_id as string;
     const pendingTopicsSubscriptions = this.pendingTopicsSubscriptions.find(
       (s) => s.wsKey === wsKey,
     );
-    if (!pendingTopicsSubscriptions) {
-      throw new Error(
-        `Could not find "${wsKey}" within pending topics subscriptions.`,
-      );
-    }
 
-    const subscriptionSuccess = isTopicSubscriptionSuccess(msg);
+    if (!pendingTopicsSubscriptions) return;
+
     const splitRequestsIds = requestsIds.split(',');
-    if (!subscriptionSuccess) {
+    if (!isTopicSubscriptionSuccess(msg)) {
       splitRequestsIds.forEach((req_id) =>
         pendingTopicsSubscriptions.failedTopicsSubscriptions.add(req_id),
       );
