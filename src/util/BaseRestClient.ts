@@ -108,15 +108,7 @@ export default abstract class BaseRestClient {
     networkOptions: AxiosRequestConfig = {},
   ) {
     this.clientType = this.getClientType();
-    if (this.options.proxy_host){
-      this.proxy = {
-        protocol: 'http',
-        host: this.options.proxy_host,
-        port: this.options.proxy_port!
-      };
-    } else {
-      this.proxy = undefined;
-    }
+
     this.options = {
       recv_window: 5000,
       /** Throw errors if any request params are empty */
@@ -131,6 +123,16 @@ export default abstract class BaseRestClient {
       encodeSerialisedValues: true,
       ...restOptions,
     };
+
+    if (this.options.proxy_host){
+      this.proxy = {
+        protocol: 'http',
+        host: this.options.proxy_host,
+        port: this.options.proxy_port!
+      };
+    } else {
+      this.proxy = undefined;
+    }
 
     this.globalRequestOptions = {
       // in ms == 5 minutes by default
