@@ -43,6 +43,10 @@ export interface RestClientOptions {
 
   /** Default: true. whether to try and post-process request exceptions. */
   parse_exceptions?: boolean;
+
+  proxy_host?: string;
+
+  proxy_port?: number;
 }
 
 /**

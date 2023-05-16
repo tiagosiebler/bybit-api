@@ -85,6 +85,8 @@ export default abstract class BaseRestClient {
   private secret: string | undefined;
 
   private clientType: RestClientType;
+  
+  private proxy: { protocol: string; host: string; port: number; } | undefined;
 
   /**
    * Function that calls exchange API to query & resolve server time, used by time sync, disabled by default.
@@ -106,7 +108,15 @@ export default abstract class BaseRestClient {
     networkOptions: AxiosRequestConfig = {},
   ) {
     this.clientType = this.getClientType();
-
+    if (this.options.proxy_host){
+      this.proxy = {
+        protocol: 'http',
+        host: this.options.proxy_host,
+        port: this.options.proxy_port!
+      };
+    } else {
+      this.proxy = undefined;
+    }
     this.options = {
       recv_window: 5000,
       /** Throw errors if any request params are empty */
@@ -225,6 +235,7 @@ export default abstract class BaseRestClient {
       ...this.globalRequestOptions,
       url: url,
       method: method,
+      proxy:this.proxy
     };
 
     for (const key in params) {
