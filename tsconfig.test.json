@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "distTest",
+    "outDir": "./distTest",
     "allowJs": true
   },
   "include": ["test/**/*.ts", "test/**/*.js"]

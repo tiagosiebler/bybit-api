@@ -76,7 +76,7 @@ describe('Private Contract REST API GET Endpoints', () => {
   });
 
   // Doesn't work on e2e test account. This endpoint throws this error if the account never opened a position before.
-  it('getOpenInterestLimitInfo()', async () => {
+  it.skip('getOpenInterestLimitInfo()', async () => {
     expect(await api.getOpenInterestLimitInfo('ETHUSDT')).toMatchObject({
       retCode: API_ERROR_CODE.PARAMS_MISSING_OR_WRONG,
       retMsg: expect.stringMatching(/OI group don't exist/gim),

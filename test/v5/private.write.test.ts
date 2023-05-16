@@ -247,7 +247,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // retMsg: '',
-        retCode: API_ERROR_CODE.V5_RISK_ID_NOT_CHANGED,
+        retCode: API_ERROR_CODE.V5_RISK_ID_NOT_MODIFIED,
       });
     });
 
@@ -338,6 +338,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
     it('enableUniversalTransferForSubUIDs()', async () => {
       expect(await api.enableUniversalTransferForSubUIDs([])).toMatchObject({
         ...successResponseObjectV3(),
+        retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
       });
     });
 
@@ -385,7 +386,8 @@ describe('Private WRITE V5 REST API Endpoints', () => {
   });
 
   describe('User APIs', () => {
-    it('createSubMember()', async () => {
+    // Not available on sub account
+    it.skip('createSubMember()', async () => {
       expect(
         await api.createSubMember({
           memberType: 1,

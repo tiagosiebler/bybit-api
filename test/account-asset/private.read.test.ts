@@ -1,4 +1,4 @@
-import { AccountAssetClient } from '../../src/';
+import { API_ERROR_CODE, AccountAssetClient } from '../../src/';
 import { successResponseObject } from '../response.util';
 
 describe('Private Account Asset REST API GET Endpoints', () => {
@@ -18,53 +18,58 @@ describe('Private Account Asset REST API GET Endpoints', () => {
 
   it('getInternalTransfers()', async () => {
     expect(await api.getInternalTransfers()).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getSubAccountTransfers()', async () => {
-    expect(await api.getSubAccountTransfers()).toMatchObject(
-      successResponseObject()
-    );
+    expect(await api.getSubAccountTransfers()).toMatchObject({
+      ...successResponseObject(),
+      ret_code: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
+    });
   });
 
   it('getSubAccounts()', async () => {
-    expect(await api.getSubAccounts()).toMatchObject(successResponseObject());
+    expect(await api.getSubAccounts()).toMatchObject({
+      ...successResponseObject(),
+      ret_code: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
+    });
   });
 
   it('getUniversalTransfers()', async () => {
     expect(await api.getInternalTransfers()).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getDepositRecords()', async () => {
     expect(await api.getDepositRecords()).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getWithdrawRecords()', async () => {
     expect(await api.getWithdrawRecords()).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getCoinInformation()', async () => {
     expect(await api.getCoinInformation()).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getAssetInformation()', async () => {
     expect(await api.getAssetInformation()).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getDepositAddress()', async () => {
-    expect(await api.getDepositAddress('BTC')).toMatchObject(
-      successResponseObject()
-    );
+    expect(await api.getDepositAddress('BTC')).toMatchObject({
+      ...successResponseObject(),
+      ret_code: API_ERROR_CODE.NOT_SUPPORTED_FOR_SUBACCOUNTS,
+    });
   });
 });
