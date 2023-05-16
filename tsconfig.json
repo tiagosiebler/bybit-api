@@ -14,7 +14,7 @@
     "sourceMap": true,
     "esModuleInterop": true,
     "lib": ["es2017", "dom"],
-    "outDir": "lib"
+    "outDir": "./lib"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/node_modules/*", "coverage", "doc"]

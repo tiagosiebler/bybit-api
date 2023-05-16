@@ -185,12 +185,14 @@ describe('Private READ V5 REST API Endpoints', () => {
     it('getSubUID()', async () => {
       expect(await api.getSubUID()).toMatchObject({
         ...successResponseObjectV3(),
+        retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
       });
     });
 
     it('getUniversalTransferRecords()', async () => {
       expect(await api.getUniversalTransferRecords()).toMatchObject({
         ...successResponseObjectV3(),
+        retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
       });
     });
 
@@ -216,7 +218,8 @@ describe('Private READ V5 REST API Endpoints', () => {
       });
     });
 
-    it('getMasterDepositAddress()', async () => {
+    // Not available for sub accounts
+    it.skip('getMasterDepositAddress()', async () => {
       expect(await api.getMasterDepositAddress(settleCoin)).toMatchObject({
         ...successResponseObjectV3(),
       });

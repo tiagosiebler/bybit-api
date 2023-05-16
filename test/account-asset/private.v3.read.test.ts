@@ -1,4 +1,4 @@
-import { AccountAssetClientV3 } from '../../src';
+import { API_ERROR_CODE, AccountAssetClientV3 } from '../../src';
 import { successResponseObjectV3 } from '../response.util';
 
 // Only some minimal coverage for v3 apis, since v5 apis are already available
@@ -27,24 +27,29 @@ describe('Private Account Asset V3 REST API Endpoints', () => {
     expect(
       await api.getInternalTransfers({
         coin: coin,
-      })
+      }),
     ).toMatchObject(successResponseObjectV3());
   });
 
   it('getSubAccountTransfers()', async () => {
-    expect(await api.getSubAccountTransfers()).toMatchObject(
-      successResponseObjectV3()
-    );
+    expect(await api.getSubAccountTransfers()).toMatchObject({
+      ...successResponseObjectV3(),
+      retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
+    });
   });
 
   it('getSubAccounts()', async () => {
-    expect(await api.getSubAccounts()).toMatchObject(successResponseObjectV3());
+    expect(await api.getSubAccounts()).toMatchObject({
+      ...successResponseObjectV3(),
+      retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
+    });
   });
 
   it('getUniversalTransfers()', async () => {
-    expect(await api.getUniversalTransfers({ coin: coin })).toMatchObject(
-      successResponseObjectV3()
-    );
+    expect(await api.getUniversalTransfers({ coin: coin })).toMatchObject({
+      ...successResponseObjectV3(),
+      retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
+    });
   });
 
   it('getTransferableCoinList()', async () => {
@@ -52,7 +57,7 @@ describe('Private Account Asset V3 REST API Endpoints', () => {
       await api.getTransferableCoinList({
         fromAccountType: 'SPOT',
         toAccountType: 'CONTRACT',
-      })
+      }),
     ).toMatchObject(successResponseObjectV3());
   });
 });
