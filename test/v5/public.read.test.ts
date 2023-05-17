@@ -20,7 +20,7 @@ describe('Public V5 REST API Endpoints', () => {
 
     it('getServerTime()', async () => {
       expect(await api.getServerTime()).toMatchObject(
-        successResponseObjectV3()
+        successResponseObjectV3(),
       );
     });
   });
@@ -32,7 +32,7 @@ describe('Public V5 REST API Endpoints', () => {
           category: 'linear',
           interval: '1',
           symbol: linearSymbol,
-        })
+        }),
       ).toMatchObject(successResponseObjectV3());
     });
 
@@ -42,7 +42,7 @@ describe('Public V5 REST API Endpoints', () => {
           category: 'linear',
           interval: '1',
           symbol: linearSymbol,
-        })
+        }),
       ).toMatchObject(successResponseObjectV3());
     });
 
@@ -52,7 +52,7 @@ describe('Public V5 REST API Endpoints', () => {
           category: 'linear',
           interval: '1',
           symbol: linearSymbol,
-        })
+        }),
       ).toMatchObject(successResponseObjectV3());
     });
 
@@ -62,7 +62,7 @@ describe('Public V5 REST API Endpoints', () => {
           category: 'linear',
           interval: '1',
           symbol: linearSymbol,
-        })
+        }),
       ).toMatchObject(successResponseObjectV3());
     });
 
@@ -71,7 +71,7 @@ describe('Public V5 REST API Endpoints', () => {
         await api.getInstrumentsInfo({
           category: 'linear',
           symbol: linearSymbol,
-        })
+        }),
       ).toMatchObject(successResponseObjectV3());
     });
 
@@ -80,7 +80,7 @@ describe('Public V5 REST API Endpoints', () => {
         await api.getOrderbook({
           category: 'linear',
           symbol: linearSymbol,
-        })
+        }),
       ).toMatchObject(successResponseObjectV3());
     });
 
@@ -89,7 +89,7 @@ describe('Public V5 REST API Endpoints', () => {
         await api.getTickers({
           category: 'linear',
           symbol: linearSymbol,
-        })
+        }),
       ).toMatchObject(successResponseObjectV3());
     });
 
@@ -98,7 +98,7 @@ describe('Public V5 REST API Endpoints', () => {
         await api.getFundingRateHistory({
           category: 'linear',
           symbol: linearSymbol,
-        })
+        }),
       ).toMatchObject(successResponseObjectV3());
     });
 
@@ -107,8 +107,12 @@ describe('Public V5 REST API Endpoints', () => {
         await api.getPublicTradingHistory({
           category: 'linear',
           symbol: linearSymbol,
-        })
-      ).toMatchObject(successResponseObjectV3());
+        }),
+      ).toMatchObject({
+        ...successResponseObjectV3(),
+        retMsg: 'OK',
+        retCode: 0,
+      });
     });
 
     it('getOpenInterest()', async () => {
@@ -117,7 +121,7 @@ describe('Public V5 REST API Endpoints', () => {
           category: 'linear',
           symbol: linearSymbol,
           intervalTime: '15min',
-        })
+        }),
       ).toMatchObject(successResponseObjectV3());
     });
 
@@ -125,7 +129,7 @@ describe('Public V5 REST API Endpoints', () => {
       expect(
         await api.getHistoricalVolatility({
           category: 'option',
-        })
+        }),
       ).toMatchObject(successResponseObjectV3());
     });
 
@@ -138,7 +142,7 @@ describe('Public V5 REST API Endpoints', () => {
         await api.getRiskLimit({
           category: 'linear',
           symbol: linearSymbol,
-        })
+        }),
       ).toMatchObject(successResponseObjectV3());
     });
 
@@ -146,7 +150,7 @@ describe('Public V5 REST API Endpoints', () => {
       expect(
         await api.getOptionDeliveryPrice({
           category: 'option',
-        })
+        }),
       ).toMatchObject(successResponseObjectV3());
     });
   });
