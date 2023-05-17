@@ -20,7 +20,7 @@ describe('Public V5 Websocket client', () => {
         await api.subscribeV5(`publicTrade.${linearSymbol}X`, linearCategory);
       } catch (e) {
         expect(e).toBeDefined();
-        expect(e).toMatch('(publicTrade.BTCUSDT) failed to subscribe');
+        expect(e).toMatch(`(publicTrade.${linearSymbol}X) failed to subscribe`);
       }
     });
   });
