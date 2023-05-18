@@ -47,6 +47,8 @@ export interface RestClientOptions {
   proxy_host?: string;
 
   proxy_port?: number;
+
+  proxy_protocol?: string;
 }
 
 /**

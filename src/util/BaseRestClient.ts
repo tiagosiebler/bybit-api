@@ -126,7 +126,7 @@ export default abstract class BaseRestClient {
 
     if (this.options.proxy_host){
       this.proxy = {
-        protocol: this.options.proxy_protocol,
+        protocol: this.options.proxy_protocol!,
         host: this.options.proxy_host,
         port: this.options.proxy_port!
       };
