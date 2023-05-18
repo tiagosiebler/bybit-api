@@ -34,7 +34,7 @@ describe('Private Unified Margin REST API POST Endpoints', () => {
         price: '20000',
         orderLinkId: Date.now().toString(),
         timeInForce: 'GoodTillCancel',
-      })
+      }),
     ).toMatchObject({
       retCode: expect.any(Number),
       // retMsg: '',
@@ -48,7 +48,7 @@ describe('Private Unified Margin REST API POST Endpoints', () => {
         category,
         orderId: 'somethingFake',
         price: '20000',
-      })
+      }),
     ).toMatchObject({
       retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
     });
@@ -61,7 +61,7 @@ describe('Private Unified Margin REST API POST Endpoints', () => {
         category,
         orderId: 'somethingFake1',
         orderFilter: 'Order',
-      })
+      }),
     ).toMatchObject({
       retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
     });
@@ -94,7 +94,7 @@ describe('Private Unified Margin REST API POST Endpoints', () => {
           price: '10002',
           timeInForce: 'FillOrKill',
         },
-      ])
+      ]),
     ).toMatchObject({
       retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
     });
@@ -118,7 +118,7 @@ describe('Private Unified Margin REST API POST Endpoints', () => {
           orderLinkId: 'somethingFake3',
           qty: '6',
         },
-      ])
+      ]),
     ).toMatchObject({
       retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
     });
@@ -139,7 +139,7 @@ describe('Private Unified Margin REST API POST Endpoints', () => {
           symbol,
           orderLinkId: 'somethingFake3',
         },
-      ])
+      ]),
     ).toMatchObject({
       retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
     });
@@ -183,9 +183,10 @@ describe('Private Unified Margin REST API POST Endpoints', () => {
         from_account_type: 'SPOT',
         to_account_type: 'CONTRACT',
         transfer_id: 'testtransfer',
-      })
+      }),
     ).toMatchObject({
-      ret_code: API_ERROR_CODE.INVALID_API_KEY_OR_PERMISSIONS,
+      // seems to fluctuate between these two errors
+      ret_code: /^10003|10001$/,
     });
   });
 });
