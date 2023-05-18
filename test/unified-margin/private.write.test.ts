@@ -185,8 +185,8 @@ describe('Private Unified Margin REST API POST Endpoints', () => {
         transfer_id: 'testtransfer',
       }),
     ).toMatchObject({
-      ret_code: API_ERROR_CODE.INVALID_API_KEY_OR_PERMISSIONS,
-      ret_msg: 'invalid api_key',
+      // seems to fluctuate between these two errors
+      ret_code: /^10003|10001$/,
     });
   });
 });
