@@ -36,11 +36,14 @@ import {
   getWsKeyForTopic,
   getWsUrl,
   isPrivateWsTopic,
+  isTopicSubscriptionConfirmation,
+  isTopicSubscriptionSuccess,
   isWsPong,
   neverGuard,
   serializeParams,
 } from './util';
 import { RestClientV5 } from './rest-client-v5';
+import { WebsocketTopicSubscriptionConfirmationEvent } from './types/ws-events/topic-subscription-confirmation';
 
 const loggerCategory = { category: 'bybit-ws' };
 
@@ -70,6 +73,17 @@ interface WebsocketClientEvents {
   error: (response: any) => void;
 }
 
+type TopicsPendingSubscriptionsResolver = () => void;
+type TopicsPendingSubscriptionsRejector = (reason: string) => void;
+
+interface TopicsPendingSubscriptions {
+  wsKey: string;
+  failedTopicsSubscriptions: Set<string>;
+  pendingTopicsSubscriptions: Set<string>;
+  resolver: TopicsPendingSubscriptionsResolver;
+  rejector: TopicsPendingSubscriptionsRejector;
+}
+
 // Type safety for on and emit handlers: https://stackoverflow.com/a/61609010/880837
 export declare interface WebsocketClient {
   on<U extends keyof WebsocketClientEvents>(
@@ -92,6 +106,8 @@ export class WebsocketClient extends EventEmitter {
   private options: WebsocketClientOptions;
 
   private wsStore: WsStore;
+
+  private pendingTopicsSubscriptions: TopicsPendingSubscriptions[] = [];
 
   constructor(
     options: WSClientConfigurableOptions,
@@ -144,37 +160,40 @@ export class WebsocketClient extends EventEmitter {
   ) {
     const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
 
-    topics.forEach((topic) => {
-      const wsKey = getWsKeyForTopic(
-        this.options.market,
-        topic,
-        isPrivateTopic,
-        category,
-      );
+    return new Promise<void>((resolver, rejector) => {
+      topics.forEach((topic) => {
+        const wsKey = getWsKeyForTopic(
+          this.options.market,
+          topic,
+          isPrivateTopic,
+          category,
+        );
 
-      // Persist topic for reconnects
-      this.wsStore.addTopic(wsKey, topic);
+        // Persist topic for reconnects
+        this.wsStore.addTopic(wsKey, topic);
+        this.upsertPendingTopicsSubscriptions(wsKey, topic, resolver, rejector);
 
-      // if connected, send subscription request
-      if (
-        this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
-      ) {
-        return this.requestSubscribeTopics(wsKey, [topic]);
-      }
+        // if connected, send subscription request
+        if (
+          this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
+        ) {
+          return this.requestSubscribeTopics(wsKey, [topic]);
+        }
 
-      // start connection process if it hasn't yet begun. Topics are automatically subscribed to on-connect
-      if (
-        !this.wsStore.isConnectionState(
-          wsKey,
-          WsConnectionStateEnum.CONNECTING,
-        ) &&
-        !this.wsStore.isConnectionState(
-          wsKey,
-          WsConnectionStateEnum.RECONNECTING,
-        )
-      ) {
-        return this.connect(wsKey);
-      }
+        // start connection process if it hasn't yet begun. Topics are automatically subscribed to on-connect
+        if (
+          !this.wsStore.isConnectionState(
+            wsKey,
+            WsConnectionStateEnum.CONNECTING,
+          ) &&
+          !this.wsStore.isConnectionState(
+            wsKey,
+            WsConnectionStateEnum.RECONNECTING,
+          )
+        ) {
+          return this.connect(wsKey);
+        }
+      });
     });
   }
 
@@ -187,7 +206,10 @@ export class WebsocketClient extends EventEmitter {
    * @param wsTopics - topic or list of topics
    * @param isPrivateTopic optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
    */
-  public subscribe(wsTopics: WsTopic[] | WsTopic, isPrivateTopic?: boolean) {
+  public subscribe(
+    wsTopics: WsTopic[] | WsTopic,
+    isPrivateTopic?: boolean,
+  ): Promise<void> {
     const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
     if (this.options.market === 'v5') {
       topics.forEach((topic) => {
@@ -199,37 +221,62 @@ export class WebsocketClient extends EventEmitter {
       });
     }
 
-    topics.forEach((topic) => {
-      const wsKey = getWsKeyForTopic(
-        this.options.market,
-        topic,
-        isPrivateTopic,
-      );
+    return new Promise<void>((resolver, rejector) => {
+      topics.forEach((topic) => {
+        const wsKey = getWsKeyForTopic(
+          this.options.market,
+          topic,
+          isPrivateTopic,
+        );
 
-      // Persist topic for reconnects
-      this.wsStore.addTopic(wsKey, topic);
+        // Persist topic for reconnects
+        this.wsStore.addTopic(wsKey, topic);
+        this.upsertPendingTopicsSubscriptions(wsKey, topic, resolver, rejector);
 
-      // if connected, send subscription request
-      if (
-        this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
-      ) {
-        return this.requestSubscribeTopics(wsKey, [topic]);
-      }
+        // if connected, send subscription request
+        if (
+          this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.CONNECTED)
+        ) {
+          return this.requestSubscribeTopics(wsKey, [topic]);
+        }
 
-      // start connection process if it hasn't yet begun. Topics are automatically subscribed to on-connect
-      if (
-        !this.wsStore.isConnectionState(
-          wsKey,
-          WsConnectionStateEnum.CONNECTING,
-        ) &&
-        !this.wsStore.isConnectionState(
-          wsKey,
-          WsConnectionStateEnum.RECONNECTING,
-        )
-      ) {
-        return this.connect(wsKey);
-      }
+        // start connection process if it hasn't yet begun. Topics are automatically subscribed to on-connect
+        if (
+          !this.wsStore.isConnectionState(
+            wsKey,
+            WsConnectionStateEnum.CONNECTING,
+          ) &&
+          !this.wsStore.isConnectionState(
+            wsKey,
+            WsConnectionStateEnum.RECONNECTING,
+          )
+        ) {
+          return this.connect(wsKey);
+        }
+      });
     });
+  }
+
+  private upsertPendingTopicsSubscriptions(
+    wsKey: string,
+    topic: string,
+    resolver: TopicsPendingSubscriptionsResolver,
+    rejector: TopicsPendingSubscriptionsRejector,
+  ) {
+    const existingWsKeyPendingSubscriptions =
+      this.pendingTopicsSubscriptions.find((s) => s.wsKey === wsKey);
+    if (!existingWsKeyPendingSubscriptions) {
+      this.pendingTopicsSubscriptions.push({
+        wsKey,
+        resolver,
+        rejector,
+        failedTopicsSubscriptions: new Set(),
+        pendingTopicsSubscriptions: new Set([topic]),
+      });
+      return;
+    }
+
+    existingWsKeyPendingSubscriptions.pendingTopicsSubscriptions.add(topic);
   }
 
   /**
@@ -254,6 +301,7 @@ export class WebsocketClient extends EventEmitter {
 
       // Remove topic from persistence for reconnects
       this.wsStore.deleteTopic(wsKey, topic);
+      this.removeTopicPendingSubscription(wsKey, topic);
 
       // unsubscribe request only necessary if active connection exists
       if (
@@ -262,6 +310,26 @@ export class WebsocketClient extends EventEmitter {
         this.requestUnsubscribeTopics(wsKey, [topic]);
       }
     });
+  }
+
+  private removeTopicPendingSubscription(wsKey: string, topic: string) {
+    const existingWsKeyPendingSubscriptions =
+      this.pendingTopicsSubscriptions.find((s) => s.wsKey === wsKey);
+    if (existingWsKeyPendingSubscriptions) {
+      existingWsKeyPendingSubscriptions.pendingTopicsSubscriptions.delete(
+        topic,
+      );
+      if (!existingWsKeyPendingSubscriptions.pendingTopicsSubscriptions.size) {
+        this.pendingTopicsSubscriptions =
+          this.pendingTopicsSubscriptions.filter((s) => s.wsKey !== wsKey);
+      }
+    }
+  }
+
+  private clearTopicsPendingSubscriptions(wsKey: string) {
+    this.pendingTopicsSubscriptions = this.pendingTopicsSubscriptions.filter(
+      (s) => s.wsKey !== wsKey,
+    );
   }
 
   /**
@@ -293,6 +361,7 @@ export class WebsocketClient extends EventEmitter {
 
       // Remove topic from persistence for reconnects
       this.wsStore.deleteTopic(wsKey, topic);
+      this.removeTopicPendingSubscription(wsKey, topic);
 
       // unsubscribe request only necessary if active connection exists
       if (
@@ -953,6 +1022,10 @@ export class WebsocketClient extends EventEmitter {
       //   msg: JSON.stringify(msg),
       // });
 
+      if (isTopicSubscriptionConfirmation(msg)) {
+        this.updatePendingTopicSubscriptionStatus(wsKey, msg);
+      }
+
       // TODO: cleanme
       if (msg['success'] || msg?.pong || isWsPong(msg)) {
         if (isWsPong(msg)) {
@@ -995,6 +1068,51 @@ export class WebsocketClient extends EventEmitter {
         wsKey,
       });
     }
+  }
+
+  private updatePendingTopicSubscriptionStatus(
+    wsKey: string,
+    msg: WebsocketTopicSubscriptionConfirmationEvent,
+  ) {
+    const requestsIds = msg.req_id as string;
+    const pendingTopicsSubscriptions = this.pendingTopicsSubscriptions.find(
+      (s) => s.wsKey === wsKey,
+    );
+
+    if (!pendingTopicsSubscriptions) return;
+
+    const splitRequestsIds = requestsIds.split(',');
+    if (!isTopicSubscriptionSuccess(msg)) {
+      splitRequestsIds.forEach((req_id) =>
+        pendingTopicsSubscriptions.failedTopicsSubscriptions.add(req_id),
+      );
+    }
+
+    splitRequestsIds.forEach((req_id) => {
+      this.removeTopicPendingSubscription(wsKey, req_id);
+
+      if (
+        !pendingTopicsSubscriptions.pendingTopicsSubscriptions.size &&
+        !pendingTopicsSubscriptions.failedTopicsSubscriptions.size
+      ) {
+        // all topics have been subscribed successfully, so we can resolve the subscription request
+        pendingTopicsSubscriptions.resolver();
+        this.clearTopicsPendingSubscriptions(wsKey);
+      }
+
+      if (
+        !pendingTopicsSubscriptions.pendingTopicsSubscriptions.size &&
+        pendingTopicsSubscriptions.failedTopicsSubscriptions.size
+      ) {
+        // not all topics have been subscribed successfully, so we reject the subscription request
+        // and let the caller handle the situation by providing the list of failed subscriptions requests
+        const failedSubscriptionsMessage = `(${[
+          ...pendingTopicsSubscriptions.failedTopicsSubscriptions,
+        ].toString()}) failed to subscribe`;
+        pendingTopicsSubscriptions.rejector(failedSubscriptionsMessage);
+        this.clearTopicsPendingSubscriptions(wsKey);
+      }
+    });
   }
 
   private onWsClose(event, wsKey: WsKey) {
