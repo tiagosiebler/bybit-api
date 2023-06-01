@@ -5,7 +5,7 @@
 [![last commit](https://img.shields.io/github/last-commit/tiagosiebler/bybit-api)][1]
 [![CodeFactor](https://www.codefactor.io/repository/github/tiagosiebler/bybit-api/badge)](https://www.codefactor.io/repository/github/tiagosiebler/bybit-api)
 
-[![connector logo](https://cdn.builder.io/api/v1/image/assets%2Ffddee401a9284ab792b271538c28932d%2F5190c99403ac474699a1959fdee1ab6c?format=webp&width=2000)][1]
+[![connector logo](https://github.com/tiagosiebler/bybit-api/blob/master/docs/images/logo1.png?raw=true)][1]
 
 [1]: https://www.npmjs.com/package/bybit-api
 

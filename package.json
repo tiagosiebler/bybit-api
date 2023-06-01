@@ -1,6 +1,6 @@
 {
   "name": "bybit-api",
-  "version": "3.6.0",
+  "version": "3.6.1",
   "description": "Complete & robust Node.js SDK for Bybit's REST APIs and WebSockets, with TypeScript & strong end to end tests.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
