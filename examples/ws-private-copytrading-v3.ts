@@ -8,30 +8,26 @@ import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../src';
 
 const logger = {
   ...DefaultLogger,
-  silly: () => {},
+  silly: (...params) => {
+    // console.log(params);
+  },
 };
 
 const key = process.env.API_KEY;
 const secret = process.env.API_SECRET;
 
-// USDT Perps:
-// const market = 'linear';
-// Inverse Perp
-// const market = 'inverse';
-// const market = 'spotv3';
-// Contract v3
-const market = 'contractUSDT';
-// const market = 'contractInverse';
+/**
+ * Copy trading api docs say that private topics should connect to: wss://stream.bybit.com/realtime_private
+ *
+ * Within this SDK, only the market `linear` uses this endpoint for private topics:
+ */
+const market = 'linear';
 
 const wsClient = new WebsocketClient(
   {
     key: key,
     secret: secret,
     market: market,
-    // testnet: true,
-    restOptions: {
-      // enable_time_sync: true,
-    },
   },
   logger,
 );
@@ -56,14 +52,10 @@ wsClient.on('error', (data) => {
   console.error('ws exception: ', data);
 });
 
-// subscribe to private endpoints
-// check the api docs in your api category to see the available topics
-// wsClient.subscribe(['position', 'execution', 'order', 'wallet']);
-
-// Contract v3
+// copy trading topics from api docs: https://bybit-exchange.github.io/docs/copy-trade/ws-private/position
 wsClient.subscribe([
-  'user.position.contractAccount',
-  'user.execution.contractAccount',
-  'user.order.contractAccount',
-  'user.wallet.contractAccount',
+  'copyTradePosition',
+  'copyTradeOrder',
+  'copyTradeExecution',
+  'copyTradeWallet',
 ]);
