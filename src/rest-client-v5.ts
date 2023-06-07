@@ -35,6 +35,7 @@ import {
   CreateSubMemberParamsV5,
   CreateSubMemberResultV5,
   CursorListV5,
+  DeliveryPriceV5,
   DeliveryRecordV5,
   DepositAddressResultV5,
   DepositRecordV5,
@@ -50,6 +51,7 @@ import {
   GetBorrowHistoryParamsV5,
   GetClosedPnLParamsV5,
   GetCoinExchangeRecordParamsV5,
+  GetDeliveryPriceParamsV5,
   GetDeliveryRecordParamsV5,
   GetDepositRecordParamsV5,
   GetExecutionListParamsV5,
@@ -333,12 +335,25 @@ export class RestClientV5 extends BaseRestClient {
    * Get the delivery price for option
    *
    * Covers: Option
+   *
+   * @deprecated use getDeliveryPrice() instead
    */
   getOptionDeliveryPrice(
     params: GetOptionDeliveryPriceParamsV5,
   ): Promise<
     APIResponseV3WithTime<CategoryCursorListV5<OptionDeliveryPriceV5[]>>
   > {
+    return this.get('/v5/market/delivery-price', params);
+  }
+
+  /**
+   * Get the delivery price of Inverse futures, USDC futures and Options
+   *
+   * Covers: USDC futures / Inverse futures / Option
+   */
+  getDeliveryPrice(
+    params: GetDeliveryPriceParamsV5,
+  ): Promise<APIResponseV3WithTime<CategoryCursorListV5<DeliveryPriceV5[]>>> {
     return this.get('/v5/market/delivery-price', params);
   }
 

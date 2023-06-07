@@ -4,7 +4,12 @@ export type ContractTypeV5 =
   | 'LinearPerpetual'
   | 'InverseFutures';
 
-export type InstrumentStatusV5 = 'Pending' | 'Trading' | 'Settling' | 'Closed';
+export type InstrumentStatusV5 =
+  | 'PreLaunch'
+  | 'Trading'
+  | 'Settling'
+  | 'Delivering'
+  | 'Closed';
 
 export type OrderFilterV5 = 'Order' | 'tpslOrder';
 export type OrderSideV5 = 'Buy' | 'Sell';

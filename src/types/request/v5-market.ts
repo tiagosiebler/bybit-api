@@ -1,5 +1,5 @@
 import { KlineIntervalV3 } from '../shared';
-import { CategoryV5, OptionTypeV5 } from '../v5-shared';
+import { CategoryV5, InstrumentStatusV5, OptionTypeV5 } from '../v5-shared';
 
 export interface GetKlineParamsV5 {
   category: 'spot' | 'linear' | 'inverse';
@@ -40,6 +40,7 @@ export interface GetPremiumIndexPriceKlineParamsV5 {
 export interface GetInstrumentsInfoParamsV5 {
   category: CategoryV5;
   symbol?: string;
+  status?: InstrumentStatusV5;
   baseCoin?: string;
   limit?: number;
   cursor?: string;
@@ -95,7 +96,7 @@ export interface GetOpenInterestParamsV5 {
 export interface GetHistoricalVolatilityParamsV5 {
   category: 'option';
   baseCoin?: string;
-  period?: number;
+  period?: 7 | 14 | 21 | 30 | 60 | 90 | 180 | 270;
   startTime?: number;
   endTime?: number;
 }
@@ -111,6 +112,14 @@ export interface GetRiskLimitParamsV5 {
 
 export interface GetOptionDeliveryPriceParamsV5 {
   category: 'option';
+  symbol?: string;
+  baseCoin?: string;
+  limit?: number;
+  cursor?: string;
+}
+
+export interface GetDeliveryPriceParamsV5 {
+  category: 'linear' | 'inverse' | 'option';
   symbol?: string;
   baseCoin?: string;
   limit?: number;
