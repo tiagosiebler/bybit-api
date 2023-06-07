@@ -42,6 +42,7 @@ import {
   FeeRateV5,
   FundingRateHistoryResponseV5,
   GetAccountCoinBalanceParamsV5,
+  GetAccountHistoricOrdersPArams,
   GetAccountOrdersParams,
   GetAllCoinsBalanceParamsV5,
   GetAllowedDepositCoinInfoParamsV5,
@@ -162,7 +163,7 @@ export class RestClientV5 extends BaseRestClient {
    * Covers: Spot / Linear contract / Inverse contract
    */
   getKline(
-    params: GetKlineParamsV5
+    params: GetKlineParamsV5,
   ): Promise<
     APIResponseV3WithTime<
       CategorySymbolListV5<OHLCVKlineV5[], 'spot' | 'linear' | 'inverse'>
@@ -177,7 +178,7 @@ export class RestClientV5 extends BaseRestClient {
    * Covers: Linear contract / Inverse contract
    */
   getMarkPriceKline(
-    params: GetMarkPriceKlineParamsV5
+    params: GetMarkPriceKlineParamsV5,
   ): Promise<
     APIResponseV3WithTime<
       CategorySymbolListV5<OHLCKlineV5[], 'linear' | 'inverse'>
@@ -192,7 +193,7 @@ export class RestClientV5 extends BaseRestClient {
    * Covers: Linear contract / Inverse contract
    */
   getIndexPriceKline(
-    params: GetIndexPriceKlineParamsV5
+    params: GetIndexPriceKlineParamsV5,
   ): Promise<
     APIResponseV3WithTime<
       CategorySymbolListV5<OHLCKlineV5[], 'linear' | 'inverse'>
@@ -207,7 +208,7 @@ export class RestClientV5 extends BaseRestClient {
    * Covers: Linear contract
    */
   getPremiumIndexPriceKline(
-    params: GetPremiumIndexPriceKlineParamsV5
+    params: GetPremiumIndexPriceKlineParamsV5,
   ): Promise<
     APIResponseV3WithTime<CategorySymbolListV5<OHLCKlineV5[], 'linear'>>
   > {
@@ -222,7 +223,7 @@ export class RestClientV5 extends BaseRestClient {
    * Note: Spot does not support pagination, so limit & cursor are invalid.
    */
   getInstrumentsInfo(
-    params: GetInstrumentsInfoParamsV5
+    params: GetInstrumentsInfoParamsV5,
   ): Promise<APIResponseV3WithTime<InstrumentInfoResponseV5>> {
     return this.get('/v5/market/instruments-info', params);
   }
@@ -233,7 +234,7 @@ export class RestClientV5 extends BaseRestClient {
    * Covers: Spot / Linear contract / Inverse contract / Option
    */
   getOrderbook(
-    params: GetOrderbookParamsV5
+    params: GetOrderbookParamsV5,
   ): Promise<APIResponseV3WithTime<OrderbookResponseV5>> {
     return this.get('/v5/market/orderbook', params);
   }
@@ -244,7 +245,7 @@ export class RestClientV5 extends BaseRestClient {
    * Covers: Spot / Linear contract / Inverse contract / Option
    */
   getTickers(
-    params: GetTickersParamsV5
+    params: GetTickersParamsV5,
   ): Promise<
     APIResponseV3WithTime<
       | CategoryListV5<TickerLinearInverseV5[], 'linear' | 'inverse'>
@@ -261,7 +262,7 @@ export class RestClientV5 extends BaseRestClient {
    * Covers: Linear contract / Inverse perpetual
    */
   getFundingRateHistory(
-    params: GetFundingRateHistoryParamsV5
+    params: GetFundingRateHistoryParamsV5,
   ): Promise<
     APIResponseV3WithTime<
       CategoryListV5<FundingRateHistoryResponseV5[], 'linear' | 'inverse'>
@@ -276,7 +277,7 @@ export class RestClientV5 extends BaseRestClient {
    * Covers: Spot / Linear contract / Inverse contract / Option
    */
   getPublicTradingHistory(
-    params: GetPublicTradingHistoryParamsV5
+    params: GetPublicTradingHistoryParamsV5,
   ): Promise<
     APIResponseV3WithTime<CategoryListV5<PublicTradeV5[], CategoryV5>>
   > {
@@ -289,7 +290,7 @@ export class RestClientV5 extends BaseRestClient {
    * Covers: Linear contract / Inverse contract
    */
   getOpenInterest(
-    params: GetOpenInterestParamsV5
+    params: GetOpenInterestParamsV5,
   ): Promise<APIResponseV3WithTime<OpenInterestResponseV5>> {
     return this.get('/v5/market/open-interest', params);
   }
@@ -299,7 +300,7 @@ export class RestClientV5 extends BaseRestClient {
    * Covers: Option
    */
   getHistoricalVolatility(
-    params: GetHistoricalVolatilityParamsV5
+    params: GetHistoricalVolatilityParamsV5,
   ): Promise<
     APIResponseV3WithTime<CategoryListV5<HistoricalVolatilityV5[], 'option'>>
   > {
@@ -310,7 +311,7 @@ export class RestClientV5 extends BaseRestClient {
    * Query Bybit insurance pool data (BTC/USDT/USDC etc). The data is updated every 24 hours.
    */
   getInsurance(
-    params?: GetInsuranceParamsV5
+    params?: GetInsuranceParamsV5,
   ): Promise<APIResponseV3WithTime<InsuranceResponseV5>> {
     return this.get('/v5/market/insurance', params);
   }
@@ -321,7 +322,7 @@ export class RestClientV5 extends BaseRestClient {
    * Covers: Linear contract / Inverse contract
    */
   getRiskLimit(
-    params?: GetRiskLimitParamsV5
+    params?: GetRiskLimitParamsV5,
   ): Promise<
     APIResponseV3WithTime<CategoryListV5<RiskLimitV5[], 'inverse' | 'linear'>>
   > {
@@ -334,7 +335,7 @@ export class RestClientV5 extends BaseRestClient {
    * Covers: Option
    */
   getOptionDeliveryPrice(
-    params: GetOptionDeliveryPriceParamsV5
+    params: GetOptionDeliveryPriceParamsV5,
   ): Promise<
     APIResponseV3WithTime<CategoryCursorListV5<OptionDeliveryPriceV5[]>>
   > {
@@ -348,19 +349,19 @@ export class RestClientV5 extends BaseRestClient {
    */
 
   submitOrder(
-    params: OrderParamsV5
+    params: OrderParamsV5,
   ): Promise<APIResponseV3WithTime<OrderResultV5>> {
     return this.postPrivate('/v5/order/create', params);
   }
 
   amendOrder(
-    params: AmendOrderParamsV5
+    params: AmendOrderParamsV5,
   ): Promise<APIResponseV3WithTime<OrderResultV5>> {
     return this.postPrivate('/v5/order/amend', params);
   }
 
   cancelOrder(
-    params: CancelOrderParamsV5
+    params: CancelOrderParamsV5,
   ): Promise<APIResponseV3WithTime<OrderResultV5>> {
     return this.postPrivate('/v5/order/cancel', params);
   }
@@ -369,13 +370,13 @@ export class RestClientV5 extends BaseRestClient {
    * Query unfilled or partially filled orders in real-time. To query older order records, please use the order history interface.
    */
   getActiveOrders(
-    params: GetAccountOrdersParams
+    params: GetAccountOrdersParams,
   ): Promise<APIResponseV3WithTime<CategoryCursorListV5<AccountOrderV5[]>>> {
     return this.getPrivate('/v5/order/realtime', params);
   }
 
   cancelAllOrders(
-    params: CancelAllOrdersParamsV5
+    params: CancelAllOrdersParamsV5,
   ): Promise<APIResponseV3WithTime<{ list: OrderResultV5[] }>> {
     return this.postPrivate('/v5/order/cancel-all', params);
   }
@@ -386,7 +387,7 @@ export class RestClientV5 extends BaseRestClient {
    * If you want to get real-time order information, you could query this endpoint or rely on the websocket stream (recommended).
    */
   getHistoricOrders(
-    params: GetAccountOrdersParams
+    params: GetAccountHistoricOrdersPArams,
   ): Promise<APIResponseV3WithTime<CategoryCursorListV5<AccountOrderV5[]>>> {
     return this.getPrivate('/v5/order/history', params);
   }
@@ -404,7 +405,7 @@ export class RestClientV5 extends BaseRestClient {
    */
   batchSubmitOrders(
     category: 'option',
-    orders: BatchOrderParamsV5[]
+    orders: BatchOrderParamsV5[],
   ): Promise<
     APIResponseV3WithTime<BatchOrdersResponseV5<BatchCreateOrderResultV5[]>>
   > {
@@ -423,7 +424,7 @@ export class RestClientV5 extends BaseRestClient {
    */
   batchAmendOrders(
     category: 'option',
-    orders: BatchAmendOrderParamsV5[]
+    orders: BatchAmendOrderParamsV5[],
   ): Promise<
     APIResponseV3WithTime<BatchOrdersResponseV5<BatchAmendOrderResultV5[]>>
   > {
@@ -442,7 +443,7 @@ export class RestClientV5 extends BaseRestClient {
    */
   batchCancelOrders(
     category: 'option',
-    orders: BatchCancelOrderParamsV5[]
+    orders: BatchCancelOrderParamsV5[],
   ): Promise<
     APIResponseV3WithTime<BatchOrdersResponseV5<BatchCancelOrderResultV5[]>>
   > {
@@ -459,7 +460,7 @@ export class RestClientV5 extends BaseRestClient {
    */
   getSpotBorrowCheck(
     symbol: string,
-    side: OrderSideV5
+    side: OrderSideV5,
   ): Promise<APIResponseV3WithTime<SpotBorrowCheckResultV5>> {
     return this.getPrivate('/v5/order/spot-borrow-check', {
       category: 'spot',
@@ -476,7 +477,7 @@ export class RestClientV5 extends BaseRestClient {
    */
   setDisconnectCancelAllWindow(
     category: 'option',
-    timeWindow: number
+    timeWindow: number,
   ): Promise<APIResponseV3<undefined>> {
     return this.postPrivate('/v5/order/disconnected-cancel-all', {
       category,
@@ -502,7 +503,7 @@ export class RestClientV5 extends BaseRestClient {
    * Note: this will give a 404 error if you query the `option` category if your account is not unified
    */
   getPositionInfo(
-    params: PositionInfoParamsV5
+    params: PositionInfoParamsV5,
   ): Promise<APIResponseV3WithTime<CategoryCursorListV5<PositionV5[]>>> {
     return this.getPrivate('/v5/position/list', params);
   }
@@ -530,7 +531,7 @@ export class RestClientV5 extends BaseRestClient {
    * Please make sure that there are no open orders before you switch margin modes.
    */
   switchIsolatedMargin(
-    params: SwitchIsolatedMarginParamsV5
+    params: SwitchIsolatedMarginParamsV5,
   ): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate('/v5/position/switch-isolated', params);
   }
@@ -543,7 +544,7 @@ export class RestClientV5 extends BaseRestClient {
    * For partial TP/SL mode, you can set the TP/SL size smaller than position size.
    */
   setTPSLMode(
-    params: SetTPSLModeParamsV5
+    params: SetTPSLModeParamsV5,
   ): Promise<APIResponseV3WithTime<{ tpSlMode: TPSLModeV5 }>> {
     return this.postPrivate('/v5/position/set-tpsl-mode', params);
   }
@@ -558,7 +559,7 @@ export class RestClientV5 extends BaseRestClient {
    * Position mode. 0: Merged Single. 3: Both Sides.
    */
   switchPositionMode(
-    params: SwitchPositionModeParamsV5
+    params: SwitchPositionModeParamsV5,
   ): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate('/v5/position/switch-mode', params);
   }
@@ -571,7 +572,7 @@ export class RestClientV5 extends BaseRestClient {
    * If the order exceeds the current risk limit when placing an order, it will be rejected.
    */
   setRiskLimit(
-    params: SetRiskLimitParamsV5
+    params: SetRiskLimitParamsV5,
   ): Promise<APIResponseV3WithTime<SetRiskLimitResultV5>> {
     return this.postPrivate('/v5/position/set-risk-limit', params);
   }
@@ -586,7 +587,7 @@ export class RestClientV5 extends BaseRestClient {
    * Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures.
    */
   setTradingStop(
-    params: SetTradingStopParamsV5
+    params: SetTradingStopParamsV5,
   ): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate('/v5/position/trading-stop', params);
   }
@@ -597,7 +598,7 @@ export class RestClientV5 extends BaseRestClient {
    * Covers: USDT perpetual (Normal Account).
    */
   setAutoAddMargin(
-    params: SetAutoAddMarginParamsV5
+    params: SetAutoAddMarginParamsV5,
   ): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate('/v5/position/set-auto-add-margin', params);
   }
@@ -609,7 +610,7 @@ export class RestClientV5 extends BaseRestClient {
    * Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures
    */
   getExecutionList(
-    params: GetExecutionListParamsV5
+    params: GetExecutionListParamsV5,
   ): Promise<APIResponseV3WithTime<CategoryCursorListV5<ExecutionV5[]>>> {
     return this.getPrivate('/v5/execution/list', params);
   }
@@ -621,7 +622,7 @@ export class RestClientV5 extends BaseRestClient {
    * Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures
    */
   getClosedPnL(
-    params: GetClosedPnLParamsV5
+    params: GetClosedPnLParamsV5,
   ): Promise<APIResponseV3WithTime<CategoryCursorListV5<ClosedPnLV5[]>>> {
     return this.getPrivate('/v5/position/closed-pnl', params);
   }
@@ -638,7 +639,7 @@ export class RestClientV5 extends BaseRestClient {
    * By default, currency information with assets or liabilities of 0 is not returned.
    */
   getWalletBalance(
-    params: GetWalletBalanceParamsV5
+    params: GetWalletBalanceParamsV5,
   ): Promise<APIResponseV3WithTime<{ list: WalletBalanceV5[] }>> {
     return this.getPrivate('/v5/account/wallet-balance', params);
   }
@@ -660,7 +661,7 @@ export class RestClientV5 extends BaseRestClient {
    * Unified account
    */
   getBorrowHistory(
-    params?: GetBorrowHistoryParamsV5
+    params?: GetBorrowHistoryParamsV5,
   ): Promise<APIResponseV3WithTime<CursorListV5<BorrowHistoryRecordV5[]>>> {
     return this.getPrivate('/v5/account/borrow-history', params);
   }
@@ -670,7 +671,7 @@ export class RestClientV5 extends BaseRestClient {
    * loanable amount, collateral conversion rate, whether it can be mortgaged as margin, etc.
    */
   getCollateralInfo(
-    currency?: string
+    currency?: string,
   ): Promise<APIResponseV3WithTime<{ list: CollateralInfoV5[] }>> {
     return this.getPrivate('/v5/account/collateral-info', { currency });
   }
@@ -679,11 +680,11 @@ export class RestClientV5 extends BaseRestClient {
    * Get current account Greeks information
    */
   getCoinGreeks(
-    baseCoin?: string
+    baseCoin?: string,
   ): Promise<APIResponseV3WithTime<{ list: CoinGreeksV5[] }>> {
     return this.getPrivate(
       '/v5/asset/coin-greeks',
-      baseCoin ? { baseCoin } : undefined
+      baseCoin ? { baseCoin } : undefined,
     );
   }
 
@@ -692,11 +693,11 @@ export class RestClientV5 extends BaseRestClient {
    * Covers: USDT perpetual / Inverse perpetual / Inverse futures
    */
   getFeeRate(
-    symbol?: string
+    symbol?: string,
   ): Promise<APIResponseV3WithTime<{ list: FeeRateV5[] }>> {
     return this.getPrivate(
       '/v5/account/fee-rate',
-      symbol ? { symbol } : undefined
+      symbol ? { symbol } : undefined,
     );
   }
 
@@ -711,7 +712,7 @@ export class RestClientV5 extends BaseRestClient {
    * Query transaction logs in Unified account.
    */
   getTransactionLog(
-    params?: GetTransactionLogParamsV5
+    params?: GetTransactionLogParamsV5,
   ): Promise<APIResponseV3WithTime<CursorListV5<TransactionLogV5[]>>> {
     return this.getPrivate('/v5/account/transaction-log', params);
   }
@@ -722,7 +723,7 @@ export class RestClientV5 extends BaseRestClient {
    * This mode is valid for USDT Perp, USDC Perp and USDC Option.
    */
   setMarginMode(
-    marginMode: AccountMarginModeV5
+    marginMode: AccountMarginModeV5,
   ): Promise<
     APIResponseV3<{ reasons: { reasonCode: string; reasonMsg: string }[] }>
   > {
@@ -749,7 +750,7 @@ export class RestClientV5 extends BaseRestClient {
    * Get MMP State
    */
   getMMPState(
-    baseCoin: string
+    baseCoin: string,
   ): Promise<APIResponseV3WithTime<{ result: MMPStateV5[] }>> {
     return this.getPrivate('/v5/account/mmp-state', { baseCoin });
   }
@@ -780,7 +781,7 @@ export class RestClientV5 extends BaseRestClient {
    * Covers: Option
    */
   getDeliveryRecord(
-    params: GetDeliveryRecordParamsV5
+    params: GetDeliveryRecordParamsV5,
   ): Promise<APIResponseV3WithTime<CategoryCursorListV5<DeliveryRecordV5[]>>> {
     return this.getPrivate('/v5/asset/delivery-record', params);
   }
@@ -791,7 +792,7 @@ export class RestClientV5 extends BaseRestClient {
    * Covers: Linear contract (USDC Perpetual only, Unified Account)
    */
   getSettlementRecords(
-    params: GetSettlementRecordParamsV5
+    params: GetSettlementRecordParamsV5,
   ): Promise<
     APIResponseV3WithTime<CategoryCursorListV5<SettlementRecordV5[]>>
   > {
@@ -805,7 +806,7 @@ export class RestClientV5 extends BaseRestClient {
    * For now, it can query SPOT only.
    */
   getAssetInfo(
-    params: GetAssetInfoParamsV5
+    params: GetAssetInfoParamsV5,
   ): Promise<APIResponseV3WithTime<{ spot: AssetInfoV5 }>> {
     return this.getPrivate('/v5/asset/transfer/query-asset-info', params);
   }
@@ -816,11 +817,11 @@ export class RestClientV5 extends BaseRestClient {
    * It is not allowed to get the master account coin balance via sub account API key.
    */
   getAllCoinsBalance(
-    params: GetAllCoinsBalanceParamsV5
+    params: GetAllCoinsBalanceParamsV5,
   ): Promise<APIResponseV3WithTime<AllCoinsBalanceV5>> {
     return this.getPrivate(
       '/v5/asset/transfer/query-account-coins-balance',
-      params
+      params,
     );
   }
 
@@ -830,11 +831,11 @@ export class RestClientV5 extends BaseRestClient {
    * CAUTION: Can query by the master UID's api key only.
    */
   getCoinBalance(
-    params: GetAccountCoinBalanceParamsV5
+    params: GetAccountCoinBalanceParamsV5,
   ): Promise<APIResponseV3<AccountCoinBalanceV5>> {
     return this.getPrivate(
       '/v5/asset/transfer/query-account-coin-balance',
-      params
+      params,
     );
   }
 
@@ -843,7 +844,7 @@ export class RestClientV5 extends BaseRestClient {
    */
   getTransferableCoinList(
     fromAccountType: AccountTypeV5,
-    toAccountType: AccountTypeV5
+    toAccountType: AccountTypeV5,
   ): Promise<APIResponseV3WithTime<{ list: string[] }>> {
     return this.getPrivate('/v5/asset/transfer/query-transfer-coin-list', {
       fromAccountType,
@@ -862,7 +863,7 @@ export class RestClientV5 extends BaseRestClient {
     coin: string,
     amount: string,
     fromAccountType: AccountTypeV5,
-    toAccountType: AccountTypeV5
+    toAccountType: AccountTypeV5,
   ): Promise<APIResponseV3WithTime<{ transferId: string }>> {
     return this.postPrivate('/v5/asset/transfer/inter-transfer', {
       transferId,
@@ -877,11 +878,11 @@ export class RestClientV5 extends BaseRestClient {
    * Query the internal transfer records between different account types under the same UID.
    */
   getInternalTransferRecords(
-    params?: GetInternalTransferParamsV5
+    params?: GetInternalTransferParamsV5,
   ): Promise<APIResponseV3WithTime<CursorListV5<InternalTransferRecordV5[]>>> {
     return this.getPrivate(
       '/v5/asset/transfer/query-inter-transfer-list',
-      params
+      params,
     );
   }
 
@@ -907,7 +908,7 @@ export class RestClientV5 extends BaseRestClient {
    * If not set, your subaccount cannot use universal transfers.
    */
   enableUniversalTransferForSubUIDs(
-    subMemberIds: string[]
+    subMemberIds: string[],
   ): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate('/v5/asset/transfer/save-transfer-sub-member', {
       subMemberIds,
@@ -918,7 +919,7 @@ export class RestClientV5 extends BaseRestClient {
    * Transfer between sub-sub or main-sub. Please make sure you have enabled universal transfer on your sub UID in advance.
    */
   createUniversalTransfer(
-    params: UniversalTransferParamsV5
+    params: UniversalTransferParamsV5,
   ): Promise<APIResponseV3WithTime<{ transferId: string }>> {
     return this.postPrivate('/v5/asset/transfer/universal-transfer', params);
   }
@@ -930,11 +931,11 @@ export class RestClientV5 extends BaseRestClient {
    * Can query by the master UID's API key only
    */
   getUniversalTransferRecords(
-    params?: GetUniversalTransferRecordsParamsV5
+    params?: GetUniversalTransferRecordsParamsV5,
   ): Promise<APIResponseV3WithTime<CursorListV5<UniversalTransferRecordV5[]>>> {
     return this.getPrivate(
       '/v5/asset/transfer/query-universal-transfer-list',
-      params
+      params,
     );
   }
 
@@ -943,7 +944,7 @@ export class RestClientV5 extends BaseRestClient {
    * To find out paired chain of coin, please refer to the coin info api.
    */
   getAllowedDepositCoinInfo(
-    params?: GetAllowedDepositCoinInfoParamsV5
+    params?: GetAllowedDepositCoinInfoParamsV5,
   ): Promise<
     APIResponseV3WithTime<{
       configList: AllowedDepositCoinInfoV5[];
@@ -962,7 +963,7 @@ export class RestClientV5 extends BaseRestClient {
    * Can use main or sub UID api key to query deposit records respectively.
    */
   getDepositRecords(
-    params?: GetDepositRecordParamsV5
+    params?: GetDepositRecordParamsV5,
   ): Promise<
     APIResponseV3WithTime<{ rows: DepositRecordV5[]; nextPageCursor: string }>
   > {
@@ -977,7 +978,7 @@ export class RestClientV5 extends BaseRestClient {
    *      Queries for the last 30 days worth of records by default.
    */
   getSubAccountDepositRecords(
-    params: GetSubAccountDepositRecordParamsV5
+    params: GetSubAccountDepositRecordParamsV5,
   ): Promise<
     APIResponseV3WithTime<{ rows: DepositRecordV5[]; nextPageCursor: string }>
   > {
@@ -1006,7 +1007,7 @@ export class RestClientV5 extends BaseRestClient {
    */
   getMasterDepositAddress(
     coin: string,
-    chainType?: string
+    chainType?: string,
   ): Promise<APIResponseV3WithTime<DepositAddressResultV5>> {
     return this.getPrivate('/v5/asset/deposit/query-address', {
       coin,
@@ -1023,7 +1024,7 @@ export class RestClientV5 extends BaseRestClient {
   querySubMemberAddress(
     coin: string,
     chainType: string,
-    subMemberId: string
+    subMemberId: string,
   ): Promise<APIResponseV3<DepositAddressResultV5>> {
     return this.getPrivate('/v5/asset/deposit/query-sub-member-address', {
       coin,
@@ -1036,11 +1037,11 @@ export class RestClientV5 extends BaseRestClient {
    * Query coin information, including chain information, withdraw and deposit status.
    */
   getCoinInfo(
-    coin?: string
+    coin?: string,
   ): Promise<APIResponseV3WithTime<{ rows: CoinInfoV5[] }>> {
     return this.getPrivate(
       '/v5/asset/coin/query-info',
-      coin ? { coin } : undefined
+      coin ? { coin } : undefined,
     );
   }
 
@@ -1048,7 +1049,7 @@ export class RestClientV5 extends BaseRestClient {
    * Query withdrawal records.
    */
   getWithdrawalRecords(
-    params?: GetWithdrawalRecordsParamsV5
+    params?: GetWithdrawalRecordsParamsV5,
   ): Promise<APIResponseV3<{ rows: WithdrawalRecordV5[] }>> {
     return this.getPrivate('/v5/asset/withdraw/query-record', params);
   }
@@ -1061,7 +1062,7 @@ export class RestClientV5 extends BaseRestClient {
    * You can make an off-chain transfer if the target wallet address is from Bybit. This means that no blockchain fee will be charged.
    */
   submitWithdrawal(
-    params: WithdrawParamsV5
+    params: WithdrawParamsV5,
   ): Promise<APIResponseV3WithTime<{ id: string }>> {
     return this.postPrivate('/v5/asset/withdraw/create', params);
   }
@@ -1072,7 +1073,7 @@ export class RestClientV5 extends BaseRestClient {
    * CAUTION: Can query by the master UID's api key only
    */
   cancelWithdrawal(
-    id: string
+    id: string,
   ): Promise<APIResponseV3WithTime<{ status: 0 | 1 }>> {
     return this.postPrivate('/v5/asset/withdraw/cancel', { id });
   }
@@ -1091,7 +1092,7 @@ export class RestClientV5 extends BaseRestClient {
    * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
    */
   createSubMember(
-    params: CreateSubMemberParamsV5
+    params: CreateSubMemberParamsV5,
   ): Promise<APIResponseV3WithTime<CreateSubMemberResultV5>> {
     return this.postPrivate('/v5/user/create-sub-member', params);
   }
@@ -1104,7 +1105,7 @@ export class RestClientV5 extends BaseRestClient {
    * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
    */
   createSubUIDAPIKey(
-    params: CreateSubApiKeyParamsV5
+    params: CreateSubApiKeyParamsV5,
   ): Promise<APIResponseV3WithTime<CreateSubApiKeyResultV5>> {
     return this.postPrivate('/v5/user/create-sub-api', params);
   }
@@ -1127,7 +1128,7 @@ export class RestClientV5 extends BaseRestClient {
    */
   setSubUIDFrozenState(
     subuid: number,
-    frozen: 0 | 1
+    frozen: 0 | 1,
   ): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate('/v5/user/frozen-sub-member', { subuid, frozen });
   }
@@ -1150,7 +1151,7 @@ export class RestClientV5 extends BaseRestClient {
    * Master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
    */
   updateMasterApiKey(
-    params: UpdateApiKeyParamsV5
+    params: UpdateApiKeyParamsV5,
   ): Promise<APIResponseV3WithTime<UpdateApiKeyResultV5>> {
     return this.postPrivate('/v5/user/update-api', params);
   }
@@ -1163,7 +1164,7 @@ export class RestClientV5 extends BaseRestClient {
    * The API key must own "Account Transfer" permission to be allowed to call this API endpoint.
    */
   updateSubApiKey(
-    params: UpdateApiKeyParamsV5
+    params: UpdateApiKeyParamsV5,
   ): Promise<APIResponseV3<UpdateApiKeyResultV5>> {
     return this.postPrivate('/v5/user/update-sub-api', params);
   }
@@ -1203,7 +1204,7 @@ export class RestClientV5 extends BaseRestClient {
    * Query leverage token information
    */
   getLeveragedTokenInfo(
-    ltCoin?: string
+    ltCoin?: string,
   ): Promise<APIResponseV3WithTime<{ list: LeverageTokenInfoV5[] }>> {
     return this.get('/v5/spot-lever-token/info', { ltCoin });
   }
@@ -1212,7 +1213,7 @@ export class RestClientV5 extends BaseRestClient {
    * Get leverage token market information.
    */
   getLeveragedTokenMarket(
-    ltCoin: string
+    ltCoin: string,
   ): Promise<APIResponseV3WithTime<LeveragedTokenMarketResultV5>> {
     return this.get('/v5/spot-lever-token/reference', { ltCoin });
   }
@@ -1221,7 +1222,7 @@ export class RestClientV5 extends BaseRestClient {
    * This endpoint allows you to purchase a leveraged token with a specified amount.
    */
   purchaseSpotLeveragedToken(
-    params: PurchaseSpotLeveragedTokenParamsV5
+    params: PurchaseSpotLeveragedTokenParamsV5,
   ): Promise<APIResponseV3WithTime<PurchaseSpotLeveragedTokenResultV5>> {
     return this.postPrivate('/v5/spot-lever-token/purchase', params);
   }
@@ -1230,7 +1231,7 @@ export class RestClientV5 extends BaseRestClient {
    * Redeem leveraged token.
    */
   redeemSpotLeveragedToken(
-    params: RedeemSpotLeveragedTokenParamsV5
+    params: RedeemSpotLeveragedTokenParamsV5,
   ): Promise<APIResponseV3WithTime<RedeemSpotLeveragedTokenResultV5>> {
     return this.postPrivate('/v5/spot-lever-token/redeem', params);
   }
@@ -1239,7 +1240,7 @@ export class RestClientV5 extends BaseRestClient {
    * Get purchase or redemption history
    */
   getSpotLeveragedTokenOrderHistory(
-    params?: GetSpotLeveragedTokenOrderHistoryParamsV5
+    params?: GetSpotLeveragedTokenOrderHistoryParamsV5,
   ): Promise<
     APIResponseV3WithTime<{ list: SpotLeveragedTokenOrderHistoryV5[] }>
   > {
@@ -1259,7 +1260,7 @@ export class RestClientV5 extends BaseRestClient {
    * Your account needs to turn on spot margin first
    */
   toggleSpotMarginTrade(
-    spotMarginMode: '1' | '0'
+    spotMarginMode: '1' | '0',
   ): Promise<APIResponseV3WithTime<{ spotMarginMode: '1' | '0' }>> {
     return this.postPrivate('/v5/spot-margin-trade/switch-mode', {
       spotMarginMode,

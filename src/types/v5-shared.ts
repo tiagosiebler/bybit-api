@@ -11,6 +11,13 @@ export type OrderSideV5 = 'Buy' | 'Sell';
 export type OrderTypeV5 = 'Market' | 'Limit';
 export type OrderTimeInForceV5 = 'GTC' | 'IOC' | 'FOK' | 'PostOnly';
 export type OrderTriggerByV5 = 'LastPrice' | 'IndexPrice' | 'MarkPrice';
+
+export type OrderSMPTypeV5 =
+  | 'None'
+  | 'CancelMaker'
+  | 'CancelTaker'
+  | 'CancelBoth';
+
 export type OrderStatusV5 =
   | 'Created'
   | 'New'
@@ -166,7 +173,7 @@ export interface PermissionsV5 {
 
 export interface CategoryCursorListV5<
   T extends unknown[],
-  TCategory extends CategoryV5 = CategoryV5
+  TCategory extends CategoryV5 = CategoryV5,
 > {
   category: TCategory;
   list: T;
@@ -183,7 +190,7 @@ export interface CursorListV5<T extends unknown[]> {
 
 export interface CategoryListV5<
   T extends unknown[],
-  TCategory extends CategoryV5
+  TCategory extends CategoryV5,
 > {
   category: TCategory;
   list: T;
@@ -191,7 +198,7 @@ export interface CategoryListV5<
 
 export interface CategorySymbolListV5<
   T extends unknown[],
-  TCategory extends CategoryV5
+  TCategory extends CategoryV5,
 > {
   category: TCategory;
   symbol: string;
