@@ -43,6 +43,32 @@ export interface SetRiskLimitResultV5 {
   riskLimitValue: string;
 }
 
+export interface AddOrReduceMarginResultV5 {
+  category: CategoryV5;
+  symbol: string;
+  positionIdx: PositionIdx;
+  riskId: number;
+  riskLimitValue: string;
+  size: string;
+  avgPrice: string;
+  liqPrice: string;
+  bustPrice: string;
+  markPrice: string;
+  positionValue: string;
+  leverage: string;
+  autoAddMargin: 0 | 1;
+  positionStatus: 'Normal' | 'Liq' | 'Adl';
+  positionIM: string;
+  positionMM: string;
+  takeProfit: string;
+  stopLoss: string;
+  trailingStop: string;
+  unrealisedPnl: string;
+  cumRealisedPnl: string;
+  createdTime: string;
+  updatedTime: string;
+}
+
 export interface ExecutionV5 {
   symbol: string;
   orderId: string;

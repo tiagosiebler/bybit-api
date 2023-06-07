@@ -6,6 +6,8 @@ import {
   AccountMarginModeV5,
   AccountOrderV5,
   AccountTypeV5,
+  AddOrReduceMarginParamsV5,
+  AddOrReduceMarginResultV5,
   AllCoinsBalanceV5,
   AllowedDepositCoinInfoV5,
   AmendOrderParamsV5,
@@ -616,6 +618,18 @@ export class RestClientV5 extends BaseRestClient {
     params: SetAutoAddMarginParamsV5,
   ): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate('/v5/position/set-auto-add-margin', params);
+  }
+
+  /**
+   * Manually add or reduce margin for isolated margin position
+   *
+   * Unified account covers: USDT perpetual / USDC perpetual / USDC futures / Inverse contract
+   * Normal account covers: USDT perpetual / Inverse contract
+   */
+  addOrReduceMargin(
+    params: AddOrReduceMarginParamsV5,
+  ): Promise<APIResponseV3WithTime<AddOrReduceMarginResultV5>> {
+    return this.postPrivate('/v5/position/add-margin', params);
   }
 
   /**
