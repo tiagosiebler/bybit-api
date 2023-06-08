@@ -94,6 +94,7 @@ export interface ExecutionV5 {
   indexPrice: string;
   underlyingPrice?: string;
   blockTradeId?: string;
+  closedSize?: string;
 }
 
 export interface ClosedPnLV5 {

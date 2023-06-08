@@ -69,6 +69,9 @@ import {
   GetOpenInterestParamsV5,
   GetOptionDeliveryPriceParamsV5,
   GetOrderbookParamsV5,
+  GetPreUpgradeClosedPnlParamsV5,
+  GetPreUpgradeOrderHistoryParamsV5,
+  GetPreUpgradeTradeHistoryParamsV5,
   GetPremiumIndexPriceKlineParamsV5,
   GetPublicTradingHistoryParamsV5,
   GetRiskLimitParamsV5,
@@ -654,6 +657,52 @@ export class RestClientV5 extends BaseRestClient {
     params: GetClosedPnLParamsV5,
   ): Promise<APIResponseV3WithTime<CategoryCursorListV5<ClosedPnLV5[]>>> {
     return this.getPrivate('/v5/position/closed-pnl', params);
+  }
+
+  /**
+   *
+   ****** Pre-upgrade APIs
+   *
+   */
+
+  /**
+   * Get those orders which occurred before you upgrade the account to Unified account.
+   *
+   * For now, it only supports to query USDT perpetual, USDC perpetual, Inverse perpetual and futures.
+   *
+   *   - can get all status in 7 days
+   *   - can only get filled orders beyond 7 days
+   */
+  getPreUpgradeOrderHistory(
+    params: GetPreUpgradeOrderHistoryParamsV5,
+  ): Promise<APIResponseV3WithTime<CategoryCursorListV5<AccountOrderV5[]>>> {
+    return this.getPrivate('/v5/pre-upgrade/order/history', params);
+  }
+
+  /**
+   * Get users' execution records which occurred before you upgrade the account to Unified account, sorted by execTime in descending order
+   *
+   * For now, it only supports to query USDT perpetual, Inverse perpetual and futures.
+   *
+   *   - You may have multiple executions in a single order.
+   *   - You can query by symbol, baseCoin, orderId and orderLinkId, and if you pass multiple params,
+   *      the system will process them according to this priority: orderId > orderLinkId > symbol > baseCoin.
+   */
+  getPreUpgradeTradeHistory(
+    params: GetPreUpgradeTradeHistoryParamsV5,
+  ): Promise<APIResponseV3WithTime<CategoryCursorListV5<ExecutionV5[]>>> {
+    return this.getPrivate('/v5/pre-upgrade/execution/list', params);
+  }
+
+  /**
+   * Query user's closed profit and loss records. The results are sorted by createdTime in descending order.
+   *
+   * For now, it only supports to query USDT perpetual, Inverse perpetual and futures.
+   */
+  getPreUpgradeClosedPnl(
+    params: GetPreUpgradeClosedPnlParamsV5,
+  ): Promise<APIResponseV3WithTime<CategoryCursorListV5<ClosedPnLV5[]>>> {
+    return this.getPrivate('/v5/pre-upgrade/position/closed-pnl', params);
   }
 
   /**
