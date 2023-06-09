@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   APIResponseV3,
   APIResponseV3WithTime,
@@ -1360,15 +1361,15 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    *
-   ****** Spot Margin Trade APIs
+   ****** Spot Margin Trade APIs (UTA)
    *
    */
 
   /**
-   * Turn spot margin trade on / off.
+   * Turn spot margin trade on / off in your UTA account.
    *
    * CAUTION
-   * Your account needs to turn on spot margin first
+   * Your account needs to turn on spot margin first.
    */
   toggleSpotMarginTrade(
     spotMarginMode: '1' | '0',
@@ -1384,5 +1385,254 @@ export class RestClientV5 extends BaseRestClient {
    */
   setSpotMarginLeverage(leverage: string): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate('/v5/spot-margin-trade/set-leverage', { leverage });
+  }
+
+  /**
+   *
+   ****** Spot Margin Trade APIs (Normal)
+   *
+   */
+
+  /**
+   * Get Margin Coin Info
+   */
+  getSpotMarginCoinInfo(coin?: string): Promise<
+    APIResponseV3WithTime<{
+      list: {
+        coin: string;
+        conversionRate: string;
+        liquidationOrder: number;
+      }[];
+    }>
+  > {
+    return this.getPrivate('/v5/spot-cross-margin-trade/pledge-token', {
+      coin,
+    });
+  }
+
+  /**
+   * Get Borrowable Coin Info
+   */
+  getSpotMarginBorrowableCoinInfo(coin?: string): Promise<
+    APIResponseV3WithTime<{
+      list: {
+        coin: string;
+        borrowingPrecision: number;
+        repaymentPrecision: number;
+      }[];
+    }>
+  > {
+    return this.getPrivate('/v5/spot-cross-margin-trade/borrow-token', {
+      coin,
+    });
+  }
+
+  /**
+   * Get Interest & Quota
+   */
+  getSpotMarginInterestAndQuota(coin: string): Promise<
+    APIResponseV3WithTime<{
+      list: {
+        coin: string;
+        interestRate: string;
+        loanAbleAmount: string;
+        maxLoanAmount: string;
+      }[];
+    }>
+  > {
+    return this.getPrivate('/v5/spot-cross-margin-trade/loan-info', {
+      coin,
+    });
+  }
+
+  /**
+   * Get Loan Account Info
+   */
+  getSpotMarginLoanAccountInfo(): Promise<
+    APIResponseV3WithTime<{
+      acctBalanceSum: string;
+      debtBalanceSum: string;
+      loanAccountList: {
+        free: string;
+        interest: string;
+        loan: string;
+        remainAmount: string;
+        locked: string;
+        tokenId: string;
+        total: string;
+      }[];
+      riskRate: string;
+      status: number;
+      switchStatus: number;
+    }>
+  > {
+    return this.getPrivate('/v5/spot-cross-margin-trade/account');
+  }
+
+  /**
+   * Borrow
+   */
+  spotMarginBorrow(params: { coin: string; qty: string }): Promise<
+    APIResponseV3WithTime<{
+      transactId: string;
+    }>
+  > {
+    return this.postPrivate('/v5/spot-cross-margin-trade/loan', params);
+  }
+
+  /**
+   * Repay
+   */
+  spotMarginRepay(params: {
+    coin: string;
+    qty?: string;
+    completeRepayment: 0 | 1;
+  }): Promise<
+    APIResponseV3WithTime<{
+      repayId: string;
+    }>
+  > {
+    return this.postPrivate('/v5/spot-cross-margin-trade/repay', params);
+  }
+
+  /**
+   * Get Borrow Order Detail
+   */
+  getSpotMarginBorrowOrderDetail(params?: {
+    startTime?: number;
+    endTime?: number;
+    coin?: string;
+    status?: 0 | 1 | 2;
+    limit?: number;
+  }): Promise<
+    APIResponseV3WithTime<{
+      list: {
+        accountId: string;
+        coin: string;
+        createdTime: number;
+        id: string;
+        interestAmount: string;
+        interestBalance: string;
+        loanAmount: string;
+        loanBalance: string;
+        remainAmount: string;
+        status: string;
+        type: string;
+      }[];
+    }>
+  > {
+    return this.getPrivate('/v5/spot-cross-margin-trade/orders', params);
+  }
+
+  /**
+   * Get Repayment Order Detail
+   */
+  getSpotMarginRepaymentOrderDetail(params?: {
+    startTime?: number;
+    endTime?: number;
+    coin?: string;
+    limit?: number;
+  }): Promise<
+    APIResponseV3WithTime<{
+      list: {
+        accountId: string;
+        coin: string;
+        repaidAmount: string;
+        repayId: string;
+        repayMarginOrderId: string;
+        repayTime: string;
+        transactIds: {
+          repaidInterest: string;
+          repaidPrincipal: string;
+          repaidSerialNumber: string;
+          transactId: string;
+        }[];
+      }[];
+    }>
+  > {
+    return this.getPrivate('/v5/spot-cross-margin-trade/repay-history', params);
+  }
+
+  /**
+   * Turn spot margin trade on / off in your NORMAL account.
+   */
+  toggleSpotCrossMarginTrade(params: {
+    switch: 1 | 0;
+  }): Promise<APIResponseV3WithTime<{ switchStatus: '1' | '0' }>> {
+    return this.postPrivate('/v5/spot-cross-margin-trade/switch', params);
+  }
+
+  /**
+   *
+   ****** Institutional Lending
+   *
+   */
+
+  /**
+   * Get Product Info
+   */
+  getInstitutionalLendingProductInfo(
+    productId?: string,
+  ): Promise<APIResponseV3WithTime<{ marginProductInfo: any[] }>> {
+    return this.get('/v5/ins-loan/product-infos', { productId });
+  }
+
+  /**
+   * Get Margin Coin Info
+   */
+  getInstitutionalLendingMarginCoinInfo(
+    productId?: string,
+  ): Promise<APIResponseV3WithTime<{ marginToken: any[] }>> {
+    return this.get('/v5/ins-loan/ensure-tokens', { productId });
+  }
+
+  /**
+   * Get Margin Coin Info With Conversion Rate
+   */
+  getInstitutionalLendingMarginCoinInfoWithConversionRate(
+    productId?: string,
+  ): Promise<APIResponseV3WithTime<{ marginToken: any[] }>> {
+    return this.get('/v5/ins-loan/ensure-tokens-convert', { productId });
+  }
+
+  /**
+   * Get Loan Orders
+   */
+  getInstitutionalLendingLoanOrders(params?: {
+    orderId?: string;
+    startTime?: number;
+    endTime?: number;
+    limit?: number;
+  }): Promise<APIResponseV3WithTime<{ marginToken: any[] }>> {
+    return this.getPrivate('/v5/ins-loan/loan-order', params);
+  }
+
+  /**
+   * Get Repay Orders
+   */
+  getInstitutionalLendingRepayOrders(params?: {
+    startTime?: number;
+    endTime?: number;
+    limit?: number;
+  }): Promise<APIResponseV3WithTime<{ repayInfo: any[] }>> {
+    return this.getPrivate('/v5/ins-loan/repaid-history', params);
+  }
+
+  /**
+   * Get LTV
+   */
+  getInstitutionalLendingLTV(): Promise<
+    APIResponseV3WithTime<{ ltvInfo: any[] }>
+  > {
+    return this.getPrivate('/v5/ins-loan/ltv');
+  }
+
+  /**
+   * Get LTV with Ladder Conversion Rate
+   */
+  getInstitutionalLendingLTVWithLadderConversionRate(): Promise<
+    APIResponseV3WithTime<{ ltvInfo: any[] }>
+  > {
+    return this.getPrivate('/v5/ins-loan/ltv-convert');
   }
 }
