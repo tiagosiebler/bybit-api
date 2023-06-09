@@ -5,10 +5,7 @@ const client = new RestClientV5({
 });
 
 client
-  .getTickers({
-    category: 'inverse',
-    symbol: 'BTCUSDT',
-  })
+  .getDeliveryPrice({ category: 'option', symbol: 'ETH-26DEC22-1400-C' })
   .then((response) => {
     console.log(response);
   })
