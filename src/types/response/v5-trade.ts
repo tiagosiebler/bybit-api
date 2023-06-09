@@ -42,6 +42,9 @@ export interface AccountOrderV5 {
   triggerPrice?: string;
   takeProfit?: string;
   stopLoss?: string;
+  tpslMode: 'Full' | 'Partial' | '';
+  tpLimitPrice: string;
+  slLimitPrice: string;
   tpTriggerBy?: OrderTriggerByV5;
   slTriggerBy?: OrderTriggerByV5;
   triggerDirection?: number;
@@ -49,6 +52,10 @@ export interface AccountOrderV5 {
   lastPriceOnCreated?: string;
   reduceOnly?: boolean;
   closeOnTrigger?: boolean;
+  placeType: 'iv' | 'price' | '';
+  smpType: string;
+  smpGroup: string;
+  smpOrderId: string;
   createdTime: string;
   updatedTime: string;
 }

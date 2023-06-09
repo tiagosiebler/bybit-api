@@ -54,7 +54,7 @@ export class ContractClient extends BaseRestClient {
   getOrderBook(
     symbol: string,
     category?: string,
-    limit?: number
+    limit?: number,
   ): Promise<APIResponseV3<any>> {
     return this.get('/derivatives/v3/public/order-book/L2', {
       category,
@@ -71,14 +71,14 @@ export class ContractClient extends BaseRestClient {
   /** Get a symbol price/statistics ticker */
   getSymbolTicker(
     category: UMCategory | '',
-    symbol?: string
+    symbol?: string,
   ): Promise<APIResponseV3<ContractListResult<ContractSymbolTicker>>> {
     return this.get('/derivatives/v3/public/tickers', { category, symbol });
   }
 
   /** Get trading rules per symbol/contract, incl price/amount/value/leverage filters */
   getInstrumentInfo(
-    params: UMInstrumentInfoRequest
+    params: UMInstrumentInfoRequest,
   ): Promise<APIResponseV3<any>> {
     return this.get('/derivatives/v3/public/instruments-info', params);
   }
@@ -98,18 +98,18 @@ export class ContractClient extends BaseRestClient {
    * For example, if a request is sent at 12:00 UTC, the funding rate generated earlier that day at 08:00 UTC will be sent.
    */
   getFundingRateHistory(
-    params: UMFundingRateHistoryRequest
+    params: UMFundingRateHistoryRequest,
   ): Promise<APIResponseV3<any>> {
     return this.get(
       '/derivatives/v3/public/funding/history-funding-rate',
-      params
+      params,
     );
   }
 
   /** Get Risk Limit */
   getRiskLimit(
     category: UMCategory,
-    symbol: string
+    symbol: string,
   ): Promise<APIResponseV3<any>> {
     return this.get('/derivatives/v3/public/risk-limit/list', {
       category,
@@ -119,7 +119,7 @@ export class ContractClient extends BaseRestClient {
 
   /** Get option delivery price */
   getOptionDeliveryPrice(
-    params: UMOptionDeliveryPriceRequest
+    params: UMOptionDeliveryPriceRequest,
   ): Promise<APIResponseV3<any>> {
     return this.get('/derivatives/v3/public/delivery-price', params);
   }
@@ -150,9 +150,14 @@ export class ContractClient extends BaseRestClient {
     return this.postPrivate('/contract/v3/private/order/create', params);
   }
 
-  /** Query order history. As order creation/cancellation is asynchronous, the data returned from the interface may be delayed. To access order information in real-time, call getActiveOrders() */
+  /**
+   * Query order history.
+   *
+   * As order creation/cancellation is asynchronous, the data returned from the interface may be delayed.
+   * To access order information in real-time, call getActiveOrders().
+   */
   getHistoricOrders(
-    params: ContractHistoricOrdersRequest
+    params: ContractHistoricOrdersRequest,
   ): Promise<APIResponseV3<PaginatedResult<ContractHistoricOrder>>> {
     return this.getPrivate('/contract/v3/private/order/list', params);
   }
@@ -169,18 +174,25 @@ export class ContractClient extends BaseRestClient {
     });
   }
 
-  /** Replace order : Active order parameters (such as quantity, price) and stop order parameters cannot be modified in one request at the same time. Please request modification separately. */
+  /**
+   * Replace order
+   *
+   * Active order parameters (such as quantity, price) and stop order parameters
+   * cannot be modified in one request at the same time.
+   *
+   * Please request modification separately.
+   */
   modifyOrder(params: ContractModifyOrderRequest): Promise<APIResponseV3<any>> {
     return this.postPrivate('/contract/v3/private/order/replace', params);
   }
 
   /** Query Open Order(s) (real-time) */
   getActiveOrders(
-    params: ContractActiveOrdersRequest
+    params: ContractActiveOrdersRequest,
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate(
       '/contract/v3/private/order/unfilled-orders',
-      params
+      params,
     );
   }
 
@@ -197,31 +209,31 @@ export class ContractClient extends BaseRestClient {
 
   /** Set auto add margin, or Auto-Margin Replenishment. */
   setAutoAddMargin(
-    params: ContractSetAutoAddMarginRequest
+    params: ContractSetAutoAddMarginRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/contract/v3/private/position/set-auto-add-margin',
-      params
+      params,
     );
   }
 
   /** Switch cross margin mode/isolated margin mode */
   setMarginSwitch(
-    params: ContractSetMarginSwitchRequest
+    params: ContractSetMarginSwitchRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/contract/v3/private/position/switch-isolated',
-      params
+      params,
     );
   }
 
   /** Supports switching between One-Way Mode and Hedge Mode at the coin level. */
   setPositionMode(
-    params: ContractSetPositionModeRequest
+    params: ContractSetPositionModeRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/contract/v3/private/position/switch-mode',
-      params
+      params,
     );
   }
 
@@ -230,7 +242,7 @@ export class ContractClient extends BaseRestClient {
    */
   setTPSLMode(
     symbol: string,
-    tpSlMode: 'Full' | 'Partial'
+    tpSlMode: 'Full' | 'Partial',
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate('/contract/v3/private/position/switch-tpsl-mode', {
       symbol,
@@ -242,7 +254,7 @@ export class ContractClient extends BaseRestClient {
   setLeverage(
     symbol: string,
     buyLeverage: string,
-    sellLeverage: string
+    sellLeverage: string,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate('/contract/v3/private/position/set-leverage', {
       symbol,
@@ -258,7 +270,7 @@ export class ContractClient extends BaseRestClient {
   setTPSL(params: ContractSetTPSLRequest): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/contract/v3/private/position/trading-stop',
-      params
+      params,
     );
   }
 
@@ -267,7 +279,7 @@ export class ContractClient extends BaseRestClient {
     symbol: string,
     riskId: number,
     /** 0-one-way, 1-buy side, 2-sell side */
-    positionIdx: 0 | 1 | 2
+    positionIdx: 0 | 1 | 2,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate('/contract/v3/private/position/set-risk-limit', {
       symbol,
@@ -281,7 +293,7 @@ export class ContractClient extends BaseRestClient {
    * The results are ordered in descending order (the first item is the latest). Returns records up to 2 years old.
    */
   getUserExecutionHistory(
-    params: ContractUserExecutionHistoryRequest
+    params: ContractUserExecutionHistoryRequest,
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate('/contract/v3/private/execution/list', params);
   }
@@ -291,7 +303,7 @@ export class ContractClient extends BaseRestClient {
    * The results are ordered in descending order (the first item is the latest).
    */
   getClosedProfitAndLoss(
-    params: ContractClosedPNLRequest
+    params: ContractClosedPNLRequest,
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate('/contract/v3/private/position/closed-pnl', params);
   }
@@ -321,16 +333,18 @@ export class ContractClient extends BaseRestClient {
 
   /**
    * Get wallet fund records.
-   * This endpoint also shows exchanges from the Asset Exchange, where the types for the exchange are ExchangeOrderWithdraw and ExchangeOrderDeposit.
+   * This endpoint also shows exchanges from the Asset Exchange,
+   * where the types for the exchange are ExchangeOrderWithdraw and ExchangeOrderDeposit.
+   *
    * This endpoint returns incomplete information for transfers involving the derivatives wallet.
    * Use the account asset API for creating and querying internal transfers.
    */
   getWalletFundRecords(
-    params?: ContractWalletFundRecordRequest
+    params?: ContractWalletFundRecordRequest,
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate(
       '/contract/v3/private/account/wallet/fund-records',
-      params
+      params,
     );
   }
 

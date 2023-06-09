@@ -5,21 +5,24 @@ import { USDCOrderFilter, USDCTimeInForce } from './usdc-shared';
 export interface ContractOrderRequest {
   symbol: string;
   side: OrderSide;
-  positionIdx?: '0' | '1' | '2';
   orderType: UMOrderType;
   qty: string;
+  timeInForce: USDCTimeInForce;
   price?: string;
   triggerDirection?: '1' | '2';
   triggerPrice?: string;
   triggerBy?: string;
-  tpTriggerBy?: string;
-  slTriggerBy?: string;
-  timeInForce: USDCTimeInForce;
+  positionIdx?: '0' | '1' | '2';
   orderLinkId?: string;
   takeProfit?: string;
   stopLoss?: string;
+  tpTriggerBy?: string;
+  slTriggerBy?: string;
   reduceOnly?: boolean;
   closeOnTrigger?: boolean;
+  tpslMode?: 'Partial' | 'Full';
+  tpOrderType?: UMOrderType;
+  slOrderType?: UMOrderType;
 }
 
 export interface ContractHistoricOrdersRequest {
@@ -39,17 +42,19 @@ export interface ContractCancelOrderRequest {
 }
 
 export interface ContractModifyOrderRequest {
+  symbol: string;
   orderId?: string;
   orderLinkId?: string;
-  symbol: string;
-  qty?: string;
   price?: string;
+  qty?: string;
+  triggerPrice?: string;
   takeProfit?: string;
   stopLoss?: string;
   tpTriggerBy?: string;
   slTriggerBy?: string;
   triggerBy?: string;
-  triggerPrice?: string;
+  tpLimitPrice?: string;
+  slLimitPrice?: string;
 }
 
 export interface ContractActiveOrdersRequest {
@@ -91,12 +96,17 @@ export interface ContractSetTPSLRequest {
   symbol: string;
   takeProfit?: string;
   stopLoss?: string;
-  activePrice?: string;
-  trailingStop?: string;
+  tpslMode?: 'Full' | 'Partial';
+  tpSize?: string;
+  slSize?: string;
   tpTriggerBy?: string;
   slTriggerBy?: string;
-  slSize?: string;
-  tpSize?: string;
+  trailingStop?: string;
+  activePrice?: string;
+  tpLimitPrice?: string;
+  slLimitPrice?: string;
+  tpOrderType?: UMOrderType;
+  slOrderType?: UMOrderType;
   /** 0-one-way, 1-buy side, 2-sell side */
   positionIdx?: 0 | 1 | 2;
 }
