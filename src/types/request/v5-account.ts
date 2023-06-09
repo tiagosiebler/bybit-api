@@ -13,6 +13,12 @@ export interface GetBorrowHistoryParamsV5 {
   cursor?: string;
 }
 
+export interface GetFeeRateParamsV5 {
+  category: CategoryV5;
+  symbol?: string;
+  baseCoin?: string;
+}
+
 export interface GetTransactionLogParamsV5 {
   accountType?: AccountTypeV5;
   category?: CategoryV5;

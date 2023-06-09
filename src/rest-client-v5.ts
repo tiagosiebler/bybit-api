@@ -57,6 +57,7 @@ import {
   GetDeliveryRecordParamsV5,
   GetDepositRecordParamsV5,
   GetExecutionListParamsV5,
+  GetFeeRateParamsV5,
   GetFundingRateHistoryParamsV5,
   GetHistoricalVolatilityParamsV5,
   GetIndexPriceKlineParamsV5,
@@ -767,16 +768,13 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
-   * Get the trading fee rate of derivatives.
-   * Covers: USDT perpetual / Inverse perpetual / Inverse futures
+   * Get the trading fee rate.
+   * Covers: Spot / USDT perpetual / Inverse perpetual / Inverse futures / Options
    */
   getFeeRate(
-    symbol?: string,
-  ): Promise<APIResponseV3WithTime<{ list: FeeRateV5[] }>> {
-    return this.getPrivate(
-      '/v5/account/fee-rate',
-      symbol ? { symbol } : undefined,
-    );
+    params: GetFeeRateParamsV5,
+  ): Promise<APIResponseV3WithTime<CategoryCursorListV5<FeeRateV5[]>>> {
+    return this.getPrivate('/v5/account/fee-rate', params);
   }
 
   /**
