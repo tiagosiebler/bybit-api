@@ -1031,6 +1031,17 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Set auto transfer account after deposit. The same function as the setting for Deposit on web GUI
+   */
+  setDepositAccount(params: { accountType: AccountTypeV5 }): Promise<
+    APIResponseV3WithTime<{
+      status: 0 | 1;
+    }>
+  > {
+    return this.postPrivate('/v5/asset/deposit/deposit-to-account', params);
+  }
+
+  /**
    * Query deposit records.
    *
    * TIP
@@ -1093,6 +1104,21 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * Query the deposit address information of SUB account.
+   */
+  getSubDepositAddress(
+    coin: string,
+    chainType: string,
+    subMemberId: string,
+  ): Promise<APIResponseV3WithTime<DepositAddressResultV5>> {
+    return this.getPrivate('/v5/asset/deposit/query-sub-member-address', {
+      coin,
+      chainType,
+      subMemberId,
+    });
+  }
+
+  /**
+   * Query the deposit address information of SUB account.
    *
    * CAUTION
    * Can use master UID's api key only
@@ -1128,6 +1154,15 @@ export class RestClientV5 extends BaseRestClient {
     params?: GetWithdrawalRecordsParamsV5,
   ): Promise<APIResponseV3<{ rows: WithdrawalRecordV5[] }>> {
     return this.getPrivate('/v5/asset/withdraw/query-record', params);
+  }
+
+  /**
+   * Query withdrawable amount.
+   */
+  getWithdrawableAmount(params: {
+    coin: string;
+  }): Promise<APIResponseV3<{ rows: WithdrawalRecordV5[] }>> {
+    return this.getPrivate('/v5/asset/withdraw/withdrawable-amount', params);
   }
 
   /**

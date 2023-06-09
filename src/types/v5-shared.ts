@@ -172,6 +172,8 @@ export interface PermissionsV5 {
   Wallet?: string[];
   Options?: string[];
   Derivatives?: string[];
+  CopyTrading?: string[];
+  BlockTrade?: string[];
   Exchange?: string[];
   NFT?: string[];
 }
