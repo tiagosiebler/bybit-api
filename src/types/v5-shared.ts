@@ -4,13 +4,25 @@ export type ContractTypeV5 =
   | 'LinearPerpetual'
   | 'InverseFutures';
 
-export type InstrumentStatusV5 = 'Pending' | 'Trading' | 'Settling' | 'Closed';
+export type InstrumentStatusV5 =
+  | 'PreLaunch'
+  | 'Trading'
+  | 'Settling'
+  | 'Delivering'
+  | 'Closed';
 
 export type OrderFilterV5 = 'Order' | 'tpslOrder';
 export type OrderSideV5 = 'Buy' | 'Sell';
 export type OrderTypeV5 = 'Market' | 'Limit';
 export type OrderTimeInForceV5 = 'GTC' | 'IOC' | 'FOK' | 'PostOnly';
 export type OrderTriggerByV5 = 'LastPrice' | 'IndexPrice' | 'MarkPrice';
+
+export type OrderSMPTypeV5 =
+  | 'None'
+  | 'CancelMaker'
+  | 'CancelTaker'
+  | 'CancelBoth';
+
 export type OrderStatusV5 =
   | 'Created'
   | 'New'
@@ -160,13 +172,15 @@ export interface PermissionsV5 {
   Wallet?: string[];
   Options?: string[];
   Derivatives?: string[];
+  CopyTrading?: string[];
+  BlockTrade?: string[];
   Exchange?: string[];
   NFT?: string[];
 }
 
 export interface CategoryCursorListV5<
   T extends unknown[],
-  TCategory extends CategoryV5 = CategoryV5
+  TCategory extends CategoryV5 = CategoryV5,
 > {
   category: TCategory;
   list: T;
@@ -183,7 +197,7 @@ export interface CursorListV5<T extends unknown[]> {
 
 export interface CategoryListV5<
   T extends unknown[],
-  TCategory extends CategoryV5
+  TCategory extends CategoryV5,
 > {
   category: TCategory;
   list: T;
@@ -191,7 +205,7 @@ export interface CategoryListV5<
 
 export interface CategorySymbolListV5<
   T extends unknown[],
-  TCategory extends CategoryV5
+  TCategory extends CategoryV5,
 > {
   category: TCategory;
   symbol: string;

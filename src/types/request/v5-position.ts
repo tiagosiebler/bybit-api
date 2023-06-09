@@ -2,6 +2,7 @@ import {
   CategoryV5,
   ExecTypeV5,
   OrderTriggerByV5,
+  OrderTypeV5,
   PositionIdx,
   TPSLModeV5,
 } from '../v5-shared';
@@ -51,16 +52,21 @@ export interface SetRiskLimitParamsV5 {
 }
 
 export interface SetTradingStopParamsV5 {
-  symbol: string;
   category: CategoryV5;
+  symbol: string;
   takeProfit?: string;
   stopLoss?: string;
   trailingStop?: string;
   tpTriggerBy?: OrderTriggerByV5;
   slTriggerBy?: OrderTriggerByV5;
   activePrice?: string;
+  tpslMode?: TPSLModeV5;
   tpSize?: string;
   slSize?: string;
+  tpLimitPrice?: string;
+  slLimitPrice?: string;
+  tpOrderType?: OrderTypeV5;
+  slOrderType?: OrderTypeV5;
   positionIdx: PositionIdx;
 }
 
@@ -69,6 +75,13 @@ export interface SetAutoAddMarginParamsV5 {
   symbol: string;
   autoAddMargin: 0 | 1;
   positionIdx?: PositionIdx;
+}
+
+export interface AddOrReduceMarginParamsV5 {
+  category: 'linear' | 'inverse';
+  symbol: string;
+  margin: string;
+  positionIDex?: PositionIdx;
 }
 
 export interface GetExecutionListParamsV5 {

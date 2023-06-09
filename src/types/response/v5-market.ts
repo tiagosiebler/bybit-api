@@ -24,7 +24,7 @@ export type OHLCVKlineV5 = [
   string,
   string,
   string,
-  string
+  string,
 ];
 
 /**
@@ -257,7 +257,14 @@ export interface RiskLimitV5 {
   maxLeverage: string;
 }
 
+/** @deprecated use DeliveryPriceV5 instead */
 export interface OptionDeliveryPriceV5 {
+  symbol: string;
+  deliveryPrice: string;
+  deliveryTime: string;
+}
+
+export interface DeliveryPriceV5 {
   symbol: string;
   deliveryPrice: string;
   deliveryTime: string;

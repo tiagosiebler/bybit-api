@@ -10,33 +10,43 @@ export interface ContractListResult<TList = any> {
 
 export interface ContractHistoricOrder {
   symbol: string;
+  orderId: string;
+  orderLinkId: string;
   side: string;
   orderType: string;
   price: string;
+  iv: string;
   qty: string;
-  reduceOnly: boolean;
   timeInForce: string;
   orderStatus: string;
-  leavesQty: string;
-  leavesValue: string;
-  cumExecQty: string;
-  cumExecValue: string;
-  cumExecFee: string;
+  positionIdx: number;
   lastPriceOnCreated: string;
-  rejectReason: string;
-  orderLinkId: string;
   createdTime: string;
   updatedTime: string;
-  orderId: string;
+  cancelType: string;
+  rejectReason: string;
   stopOrderType: string;
+  triggerDirection: number;
+  triggerBy: string;
+  triggerPrice: string;
+  cumExecValue: string;
+  cumExecFee: string;
+  cumExecQty: string;
+  leavesValue: string;
+  leavesQty: string;
   takeProfit: string;
   stopLoss: string;
+  tpslMode: string;
+  tpLimitPrice: string;
+  slLimitPrice: string;
   tpTriggerBy: string;
   slTriggerBy: string;
-  triggerPrice: string;
+  reduceOnly: boolean;
   closeOnTrigger: boolean;
-  triggerDirection: number;
-  positionIdx: number;
+  blockTradeId: string;
+  smpType: string;
+  smpGroup: number;
+  smpOrderId: string;
 }
 
 export interface ContractSymbolTicker {

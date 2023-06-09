@@ -105,7 +105,7 @@ describe('Private READ V5 REST API Endpoints', () => {
     });
 
     it('getFeeRate()', async () => {
-      expect(await api.getFeeRate()).toMatchObject({
+      expect(await api.getFeeRate({ category: 'linear' })).toMatchObject({
         ...successResponseObjectV3(),
       });
     });

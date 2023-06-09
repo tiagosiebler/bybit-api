@@ -78,6 +78,7 @@ export interface CoinGreeksV5 {
 
 export interface FeeRateV5 {
   symbol: string;
+  baseCoin: string;
   takerFeeRate: string;
   makerFeeRate: string;
 }

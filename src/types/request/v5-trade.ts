@@ -1,7 +1,9 @@
 import {
   CategoryV5,
   OrderFilterV5,
+  OrderSMPTypeV5,
   OrderSideV5,
+  OrderStatusV5,
   OrderTimeInForceV5,
   OrderTriggerByV5,
   OrderTypeV5,
@@ -30,7 +32,13 @@ export interface OrderParamsV5 {
   slTriggerBy?: OrderTriggerByV5;
   reduceOnly?: boolean;
   closeOnTrigger?: boolean;
+  smpType?: OrderSMPTypeV5;
   mmp?: boolean;
+  tpslMode?: 'Full' | 'Partial';
+  tpLimitPrice?: string;
+  slLimitPrice?: string;
+  tpOrderType?: OrderTypeV5;
+  slOrderType?: OrderTypeV5;
 }
 
 export interface AmendOrderParamsV5 {
@@ -47,6 +55,8 @@ export interface AmendOrderParamsV5 {
   tpTriggerBy?: OrderTriggerByV5;
   slTriggerBy?: OrderTriggerByV5;
   triggerBy?: OrderTriggerByV5;
+  tpLimitPrice?: string;
+  slLimitPrice?: string;
 }
 
 export interface CancelOrderParamsV5 {
@@ -66,6 +76,21 @@ export interface GetAccountOrdersParams {
   orderLinkId?: string;
   openOnly?: 0 | 1 | 2;
   orderFilter?: OrderFilterV5;
+  orderStatus?: OrderStatusV5;
+  limit?: number;
+  cursor?: string;
+}
+
+export interface GetAccountHistoricOrdersPArams {
+  category: CategoryV5;
+  symbol?: string;
+  baseCoin?: string;
+  orderId?: string;
+  orderLinkId?: string;
+  orderFilter?: OrderFilterV5;
+  orderStatus?: OrderStatusV5;
+  startTime?: number;
+  endTime?: number;
   limit?: number;
   cursor?: string;
 }
@@ -89,6 +114,7 @@ export interface BatchOrderParamsV5 {
   orderLinkId: string;
   reduceOnly?: boolean;
   mmp?: boolean;
+  smpType?: OrderSMPTypeV5;
 }
 
 export interface BatchAmendOrderParamsV5 {
