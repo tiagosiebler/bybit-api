@@ -21,6 +21,7 @@ function generateConfig(name) {
       alias: {
         [path.resolve(__dirname, "../lib/util/node-support.js")]:
           path.resolve(__dirname, "../lib/util/browser-support.js"),
+        process: "process/browser",
       }
     },
 

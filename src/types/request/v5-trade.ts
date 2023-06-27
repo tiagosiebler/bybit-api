@@ -67,7 +67,7 @@ export interface CancelOrderParamsV5 {
   orderFilter?: OrderFilterV5;
 }
 
-export interface GetAccountOrdersParams {
+export interface GetAccountOrdersParamsV5 {
   category: CategoryV5;
   symbol?: string;
   baseCoin?: string;
@@ -81,7 +81,7 @@ export interface GetAccountOrdersParams {
   cursor?: string;
 }
 
-export interface GetAccountHistoricOrdersPArams {
+export interface GetAccountHistoricOrdersParamsV5 {
   category: CategoryV5;
   symbol?: string;
   baseCoin?: string;

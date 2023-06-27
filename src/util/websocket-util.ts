@@ -1,4 +1,5 @@
 import { APIMarket, CategoryV5, WsKey } from '../types';
+import { DefaultLogger } from './logger';
 
 interface NetworkMapV3 {
   livenet: string;
@@ -397,6 +398,7 @@ export function getWsUrl(
   wsKey: WsKey,
   wsUrl: string | undefined,
   isTestnet: boolean,
+  logger: typeof DefaultLogger,
 ): string {
   if (wsUrl) {
     return wsUrl;
@@ -479,7 +481,7 @@ export function getWsUrl(
       return WS_BASE_URL_MAP.v5OptionPublic.public[networkKey];
     }
     default: {
-      this.logger.error('getWsUrl(): Unhandled wsKey: ', {
+      logger.error('getWsUrl(): Unhandled wsKey: ', {
         category: 'bybit-ws',
         wsKey,
       });
