@@ -46,8 +46,8 @@ import {
   FeeRateV5,
   FundingRateHistoryResponseV5,
   GetAccountCoinBalanceParamsV5,
-  GetAccountHistoricOrdersPArams,
-  GetAccountOrdersParams,
+  GetAccountHistoricOrdersParamsV5,
+  GetAccountOrdersParamsV5,
   GetAllCoinsBalanceParamsV5,
   GetAllowedDepositCoinInfoParamsV5,
   GetAssetInfoParamsV5,
@@ -392,7 +392,7 @@ export class RestClientV5 extends BaseRestClient {
    * Query unfilled or partially filled orders in real-time. To query older order records, please use the order history interface.
    */
   getActiveOrders(
-    params: GetAccountOrdersParams,
+    params: GetAccountOrdersParamsV5,
   ): Promise<APIResponseV3WithTime<CategoryCursorListV5<AccountOrderV5[]>>> {
     return this.getPrivate('/v5/order/realtime', params);
   }
@@ -409,7 +409,7 @@ export class RestClientV5 extends BaseRestClient {
    * If you want to get real-time order information, you could query this endpoint or rely on the websocket stream (recommended).
    */
   getHistoricOrders(
-    params: GetAccountHistoricOrdersPArams,
+    params: GetAccountHistoricOrdersParamsV5,
   ): Promise<APIResponseV3WithTime<CategoryCursorListV5<AccountOrderV5[]>>> {
     return this.getPrivate('/v5/order/history', params);
   }
