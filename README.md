@@ -1,4 +1,4 @@
-# Node.js & Typescript Bybit API SDK
+# Node.js & JavaScript SDK for Bybit REST API & WebSockets
 
 [![Tests](https://circleci.com/gh/tiagosiebler/bybit-api.svg?style=shield)](https://circleci.com/gh/tiagosiebler/bybit-api)
 [![npm version](https://img.shields.io/npm/v/bybit-api)][1] [![npm size](https://img.shields.io/bundlephobia/min/bybit-api/latest)][1] [![npm downloads](https://img.shields.io/npm/dt/bybit-api)][1]
@@ -9,9 +9,9 @@
 
 [1]: https://www.npmjs.com/package/bybit-api
 
-Node.js SDK for the Bybit APIs and WebSockets:
+Node.js & JavaScript SDK for the Bybit REST APIs and WebSockets:
 
-- Complete integration with all Bybit APIs.
+- Complete integration with all Bybit REST APIs & WebSockets.
 - TypeScript support (with type declarations for most API requests & responses).
 - Over 450 end-to-end tests making real API calls & WebSocket connections, validating any changes before they reach npm.
 - Robust WebSocket integration with configurable connection heartbeats & automatic reconnect then resubscribe workflows.
