@@ -1,4 +1,5 @@
 import { SpotClient } from '../../src';
+import { getTestProxy } from '../proxy.util';
 import { errorResponseObject, successResponseList } from '../response.util';
 
 describe('Private Spot REST API GET Endpoints', () => {
@@ -10,16 +11,19 @@ describe('Private Spot REST API GET Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new SpotClient({
-    key: API_KEY,
-    secret: API_SECRET,
-    testnet: false,
-  });
+  const api = new SpotClient(
+    {
+      key: API_KEY,
+      secret: API_SECRET,
+      testnet: false,
+    },
+    getTestProxy(),
+  );
 
   it('getOrder()', async () => {
     // No auth error == test pass
     expect(await api.getOrder({ orderId: '123123' })).toMatchObject(
-      errorResponseObject({}, -2013, 'Order does not exist.')
+      errorResponseObject({}, -2013, 'Order does not exist.'),
     );
   });
 

@@ -1,4 +1,5 @@
 import { InverseClient } from '../../src/inverse-client';
+import { getTestProxy } from '../proxy.util';
 import {
   notAuthenticatedError,
   successResponseList,
@@ -6,7 +7,7 @@ import {
 } from '../response.util';
 
 describe('Public Inverse REST API Endpoints', () => {
-  const api = new InverseClient();
+  const api = new InverseClient({}, getTestProxy());
 
   const symbol = 'BTCUSD';
   const interval = '15';
@@ -16,22 +17,22 @@ describe('Public Inverse REST API Endpoints', () => {
   describe('Inverse only endpoints', () => {
     it('should throw for unauthenticated private calls', async () => {
       expect(() => api.getPosition()).rejects.toMatchObject(
-        notAuthenticatedError()
+        notAuthenticatedError(),
       );
       expect(() => api.getApiKeyInfo()).rejects.toMatchObject(
-        notAuthenticatedError()
+        notAuthenticatedError(),
       );
     });
 
     it('getOrderBook()', async () => {
       expect(await api.getOrderBook({ symbol })).toMatchObject(
-        successResponseList()
+        successResponseList(),
       );
     });
 
     it('getKline()', async () => {
       expect(await api.getKline({ symbol, interval, from })).toMatchObject(
-        successResponseList()
+        successResponseList(),
       );
     });
 
@@ -41,7 +42,7 @@ describe('Public Inverse REST API Endpoints', () => {
 
     it('getTrades()', async () => {
       expect(await api.getTrades({ symbol })).toMatchObject(
-        successResponseList()
+        successResponseList(),
       );
     });
 
@@ -51,25 +52,25 @@ describe('Public Inverse REST API Endpoints', () => {
 
     it('getMarkPriceKline()', async () => {
       expect(
-        await api.getMarkPriceKline({ symbol, interval, from })
+        await api.getMarkPriceKline({ symbol, interval, from }),
       ).toMatchObject(successResponseList());
     });
 
     it('getIndexPriceKline()', async () => {
       expect(
-        await api.getIndexPriceKline({ symbol, interval, from })
+        await api.getIndexPriceKline({ symbol, interval, from }),
       ).toMatchObject(successResponseList());
     });
 
     it('getPremiumIndexKline()', async () => {
       expect(
-        await api.getPremiumIndexKline({ symbol, interval, from })
+        await api.getPremiumIndexKline({ symbol, interval, from }),
       ).toMatchObject(successResponseList());
     });
 
     it('getLastFundingRate()', async () => {
       expect(await api.getLastFundingRate({ symbol })).toMatchObject(
-        successResponseObject()
+        successResponseObject(),
       );
     });
 
@@ -83,7 +84,7 @@ describe('Public Inverse REST API Endpoints', () => {
 
     it('getApiAnnouncements()', async () => {
       expect(await api.getApiAnnouncements()).toMatchObject(
-        successResponseList()
+        successResponseList(),
       );
     });
   });

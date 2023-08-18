@@ -1,15 +1,19 @@
 import { InverseFuturesClient } from '../../src/inverse-futures-client';
+import { getTestProxy } from '../proxy.util';
 import { successResponseList, successResponseObject } from '../response.util';
 
 describe('Private Inverse-Futures REST API GET Endpoints', () => {
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
 
-  const api = new InverseFuturesClient({
-    key: API_KEY,
-    secret: API_SECRET,
-    testnet: false,
-  });
+  const api = new InverseFuturesClient(
+    {
+      key: API_KEY,
+      secret: API_SECRET,
+      testnet: false,
+    },
+    getTestProxy(),
+  );
 
   // Warning: if some of these start to fail with 10001 params error,
   // it's probably that this future expired and a newer one exists with a different symbol!
@@ -45,43 +49,43 @@ describe('Private Inverse-Futures REST API GET Endpoints', () => {
 
   it('getWalletFundRecords()', async () => {
     expect(await api.getWalletFundRecords()).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getWithdrawRecords()', async () => {
     expect(await api.getWithdrawRecords()).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getAssetExchangeRecords()', async () => {
     expect(await api.getAssetExchangeRecords()).toMatchObject(
-      successResponseList()
+      successResponseList(),
     );
   });
 
   it('getActiveOrderList()', async () => {
     expect(await api.getActiveOrderList({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('queryActiveOrder()', async () => {
     expect(await api.queryActiveOrder({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getConditionalOrder()', async () => {
     expect(await api.getConditionalOrder({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('queryConditionalOrder()', async () => {
     expect(await api.queryConditionalOrder({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
@@ -91,31 +95,31 @@ describe('Private Inverse-Futures REST API GET Endpoints', () => {
 
   it('getTradeRecords()', async () => {
     expect(await api.getTradeRecords({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getClosedPnl()', async () => {
     expect(await api.getClosedPnl({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getMyLastFundingFee()', async () => {
     expect(await api.getMyLastFundingFee({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getPredictedFunding()', async () => {
     expect(await api.getPredictedFunding({ symbol: 'BTCUSD' })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getLcpInfo()', async () => {
     expect(await api.getLcpInfo({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 });

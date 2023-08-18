@@ -1,4 +1,5 @@
 import { LinearClient } from '../../src/linear-client';
+import { getTestProxy } from '../proxy.util';
 import { successResponseList, successResponseObject } from '../response.util';
 
 describe('Private Linear REST API GET Endpoints', () => {
@@ -10,11 +11,14 @@ describe('Private Linear REST API GET Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new LinearClient({
-    key: API_KEY,
-    secret: API_SECRET,
-    testnet: false,
-  });
+  const api = new LinearClient(
+    {
+      key: API_KEY,
+      secret: API_SECRET,
+      testnet: false,
+    },
+    getTestProxy(),
+  );
 
   const symbol = 'BTCUSDT';
 
@@ -28,19 +32,19 @@ describe('Private Linear REST API GET Endpoints', () => {
 
   it('getWalletFundRecords()', async () => {
     expect(await api.getWalletFundRecords()).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getWithdrawRecords()', async () => {
     expect(await api.getWithdrawRecords()).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getAssetExchangeRecords()', async () => {
     expect(await api.getAssetExchangeRecords()).toMatchObject(
-      successResponseList()
+      successResponseList(),
     );
   });
 
@@ -53,19 +57,19 @@ describe('Private Linear REST API GET Endpoints', () => {
 
   it('queryActiveOrder()', async () => {
     expect(await api.queryActiveOrder({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getConditionalOrder()', async () => {
     expect(await api.getConditionalOrder({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('queryConditionalOrder()', async () => {
     expect(await api.queryConditionalOrder({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
@@ -75,31 +79,31 @@ describe('Private Linear REST API GET Endpoints', () => {
 
   it('getTradeRecords()', async () => {
     expect(await api.getTradeRecords({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getClosedPnl()', async () => {
     expect(await api.getClosedPnl({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getRiskLimitList()', async () => {
     expect(await api.getRiskLimitList({ symbol: symbol })).toMatchObject(
-      successResponseList()
+      successResponseList(),
     );
   });
 
   it('getPredictedFundingFee()', async () => {
     expect(await api.getPredictedFundingFee({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getLastFundingFee()', async () => {
     expect(await api.getLastFundingFee({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 });

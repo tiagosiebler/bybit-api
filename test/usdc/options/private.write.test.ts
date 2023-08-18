@@ -1,4 +1,5 @@
 import { API_ERROR_CODE, USDCOptionClient } from '../../../src';
+import { getTestProxy } from '../../proxy.util';
 // import { successResponseObjectV3 } from '../../response.util';
 
 describe('Private USDC Options REST API POST Endpoints', () => {
@@ -10,11 +11,14 @@ describe('Private USDC Options REST API POST Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new USDCOptionClient({
-    key: API_KEY,
-    secret: API_SECRET,
-    testnet: false,
-  });
+  const api = new USDCOptionClient(
+    {
+      key: API_KEY,
+      secret: API_SECRET,
+      testnet: false,
+    },
+    getTestProxy(),
+  );
 
   const currency = 'USDC';
   const symbol = 'BTC-30SEP22-400000-C';
@@ -29,7 +33,7 @@ describe('Private USDC Options REST API POST Endpoints', () => {
         orderPrice: '40',
         orderLinkId: Date.now().toString(),
         timeInForce: 'GoodTillCancel',
-      })
+      }),
     ).toMatchObject({
       retCode: API_ERROR_CODE.CONTRACT_NAME_NOT_EXIST,
     });
@@ -56,7 +60,7 @@ describe('Private USDC Options REST API POST Endpoints', () => {
           orderLinkId: Date.now().toString(),
           timeInForce: 'GoodTillCancel',
         },
-      ])
+      ]),
     ).toMatchObject({
       result: [
         { errorCode: API_ERROR_CODE.CONTRACT_NAME_NOT_EXIST },
@@ -70,7 +74,7 @@ describe('Private USDC Options REST API POST Endpoints', () => {
       await api.modifyOrder({
         symbol,
         orderId: 'somethingFake',
-      })
+      }),
     ).toMatchObject({
       retCode: API_ERROR_CODE.CONTRACT_NAME_NOT_EXIST,
     });
@@ -87,7 +91,7 @@ describe('Private USDC Options REST API POST Endpoints', () => {
           symbol,
           orderId: 'somethingFake2',
         },
-      ])
+      ]),
     ).toMatchObject({
       result: [
         { errorCode: API_ERROR_CODE.CONTRACT_NAME_NOT_EXIST },
@@ -101,7 +105,7 @@ describe('Private USDC Options REST API POST Endpoints', () => {
       await api.cancelOrder({
         symbol,
         orderId: 'somethingFake1',
-      })
+      }),
     ).toMatchObject({
       retCode: API_ERROR_CODE.CONTRACT_NAME_NOT_EXIST,
     });
@@ -118,7 +122,7 @@ describe('Private USDC Options REST API POST Endpoints', () => {
           symbol,
           orderId: 'somethingFake2',
         },
-      ])
+      ]),
     ).toMatchObject({
       result: [
         { errorCode: API_ERROR_CODE.CONTRACT_NAME_NOT_EXIST },
@@ -138,7 +142,7 @@ describe('Private USDC Options REST API POST Endpoints', () => {
     expect(await api.setMarginMode('REGULAR_MARGIN')).toMatchObject(
       {
         retCode: API_ERROR_CODE.SET_MARGIN_MODE_FAILED_USDC,
-      }
+      },
       // successResponseObjectV3()
     );
   });
@@ -151,7 +155,7 @@ describe('Private USDC Options REST API POST Endpoints', () => {
         frozenPeriodMs: 100,
         qtyLimit: '100',
         deltaLimit: '1',
-      })
+      }),
     ).toMatchObject({
       retCode: API_ERROR_CODE.INCORRECT_MMP_PARAMETERS,
     });

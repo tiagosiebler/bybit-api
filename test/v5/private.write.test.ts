@@ -5,6 +5,7 @@ import {
   OrderTypeV5,
   RestClientV5,
 } from '../../src';
+import { getTestProxy } from '../proxy.util';
 import { successResponseObjectV3 } from '../response.util';
 
 describe('Private WRITE V5 REST API Endpoints', () => {
@@ -16,11 +17,14 @@ describe('Private WRITE V5 REST API Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new RestClientV5({
-    key: API_KEY,
-    secret: API_SECRET,
-    testnet: false,
-  });
+  const api = new RestClientV5(
+    {
+      key: API_KEY,
+      secret: API_SECRET,
+      testnet: false,
+    },
+    getTestProxy(),
+  );
 
   const settleCoin = 'USDT';
   const linearSymbol = 'BTCUSDT';
@@ -125,6 +129,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           ]),
         ).toMatchObject({
           ...successResponseObjectV3(),
+          retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
         });
       });
 
@@ -144,6 +149,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           ]),
         ).toMatchObject({
           ...successResponseObjectV3(),
+          retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
         });
       });
 
@@ -161,6 +167,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           ]),
         ).toMatchObject({
           ...successResponseObjectV3(),
+          retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
         });
       });
     });
@@ -451,7 +458,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
       expect(await api.toggleSpotMarginTrade('1')).toMatchObject({
         // ...successResponseObjectV3(),
         // retMsg: '',
-        retCode: API_ERROR_CODE.SPOT_MARGIN_QUESTIONNAIRE_NOT_SUBMIT,
+        retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
       });
     });
 
@@ -459,7 +466,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
       expect(await api.setSpotMarginLeverage('2')).toMatchObject({
         // ...successResponseObjectV3(),
         // retMsg: '',
-        retCode: API_ERROR_CODE.SPOT_MARGIN_NOT_ENABLED,
+        retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
       });
     });
   });

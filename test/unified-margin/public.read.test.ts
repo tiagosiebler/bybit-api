@@ -1,4 +1,5 @@
 import { UMCandlesRequest, UnifiedMarginClient } from '../../src';
+import { getTestProxy } from '../proxy.util';
 import {
   successResponseObject,
   successResponseObjectV3,
@@ -8,11 +9,14 @@ describe('Public Unified Margin REST API Endpoints', () => {
   const API_KEY = undefined;
   const API_SECRET = undefined;
 
-  const api = new UnifiedMarginClient({
-    key: API_KEY,
-    secret: API_SECRET,
-    testnet: false,
-  });
+  const api = new UnifiedMarginClient(
+    {
+      key: API_KEY,
+      secret: API_SECRET,
+      testnet: false,
+    },
+    getTestProxy(),
+  );
 
   const symbol = 'BTCUSDT';
   const category = 'linear';
@@ -30,37 +34,37 @@ describe('Public Unified Margin REST API Endpoints', () => {
 
   it('getOrderBook()', async () => {
     expect(await api.getOrderBook(symbol, category)).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
   it('getCandles()', async () => {
     expect(await api.getCandles(candleRequest)).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
   it('getSymbolTicker()', async () => {
     expect(await api.getSymbolTicker(category)).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
   it('getInstrumentInfo()', async () => {
     expect(await api.getInstrumentInfo({ category })).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
   it('getMarkPrice()', async () => {
     expect(await api.getMarkPriceCandles(candleRequest)).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
   it('getIndexPrice()', async () => {
     expect(await api.getIndexPriceCandles(candleRequest)).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
@@ -69,31 +73,31 @@ describe('Public Unified Margin REST API Endpoints', () => {
       await api.getFundingRateHistory({
         category,
         symbol,
-      })
+      }),
     ).toMatchObject(successResponseObjectV3());
   });
 
   it('getRiskLimit()', async () => {
     expect(await api.getRiskLimit(category, symbol)).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
   it('getOptionDeliveryPrice()', async () => {
     expect(await api.getOptionDeliveryPrice({ category })).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
   it('getTrades()', async () => {
     expect(await api.getTrades({ category, symbol })).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
   it('getOpenInterest()', async () => {
     expect(
-      await api.getOpenInterest({ symbol, category, interval: '5min' })
+      await api.getOpenInterest({ symbol, category, interval: '5min' }),
     ).toMatchObject(successResponseObjectV3());
   });
 

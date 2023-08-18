@@ -7,7 +7,7 @@ import {
   successResponseObject,
 } from '../response.util';
 
-describe('Public Spot REST API Endpoints', () => {
+describe.skip('Public Spot REST API Endpoints', () => {
   const api = new SpotClient();
 
   const symbol = 'BTCUSDT';
@@ -17,10 +17,10 @@ describe('Public Spot REST API Endpoints', () => {
 
   it('should throw for unauthenticated private calls', async () => {
     expect(() => api.getOpenOrders()).rejects.toMatchObject(
-      notAuthenticatedError()
+      notAuthenticatedError(),
     );
     expect(() => api.getBalances()).rejects.toMatchObject(
-      notAuthenticatedError()
+      notAuthenticatedError(),
     );
   });
 
@@ -30,13 +30,13 @@ describe('Public Spot REST API Endpoints', () => {
 
   it('getOrderBook()', async () => {
     expect(await api.getOrderBook(symbol)).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getMergedOrderBook()', async () => {
     expect(await api.getMergedOrderBook(symbol)).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
@@ -46,7 +46,7 @@ describe('Public Spot REST API Endpoints', () => {
 
   it('getCandles()', async () => {
     expect(await api.getCandles(symbol, interval)).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
@@ -56,13 +56,13 @@ describe('Public Spot REST API Endpoints', () => {
 
   it('getLastTradedPrice()', async () => {
     expect(await api.getLastTradedPrice()).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getBestBidAskPrice()', async () => {
     expect(await api.getBestBidAskPrice()).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 

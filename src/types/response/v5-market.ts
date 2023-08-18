@@ -219,7 +219,10 @@ export interface PublicTradeV5 {
  * - openInterest	string	Open interest
  * - timestamp	string	The timestamp (ms)
  */
-export type OpenInterestV5 = [string, string];
+export type OpenInterestV5 = {
+  openInterest: string;
+  timestamp: string;
+};
 
 export interface OpenInterestResponseV5 {
   category: 'linear' | 'inverse';

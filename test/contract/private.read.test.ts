@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 import { API_ERROR_CODE, ContractClient } from '../../src';
+import { getTestProxy } from '../proxy.util';
 import { successResponseObjectV3 } from '../response.util';
 
 describe('Private Contract REST API GET Endpoints', () => {
@@ -11,11 +12,14 @@ describe('Private Contract REST API GET Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new ContractClient({
-    key: API_KEY,
-    secret: API_SECRET,
-    testnet: false,
-  });
+  const api = new ContractClient(
+    {
+      key: API_KEY,
+      secret: API_SECRET,
+      testnet: false,
+    },
+    getTestProxy(),
+  );
 
   const symbol = 'BTCUSDT';
   it('getHistoricOrders()', async () => {

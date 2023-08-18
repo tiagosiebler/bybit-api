@@ -1,4 +1,5 @@
 import { API_ERROR_CODE, USDCPerpetualClient } from '../../../src';
+import { getTestProxy } from '../../proxy.util';
 import { successEmptyResponseObjectV3 } from '../../response.util';
 
 describe('Private USDC Perp REST API POST Endpoints', () => {
@@ -10,11 +11,14 @@ describe('Private USDC Perp REST API POST Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new USDCPerpetualClient({
-    key: API_KEY,
-    secret: API_SECRET,
-    testnet: false,
-  });
+  const api = new USDCPerpetualClient(
+    {
+      key: API_KEY,
+      secret: API_SECRET,
+      testnet: false,
+    },
+    getTestProxy(),
+  );
 
   const symbol = 'BTCPERP';
 
@@ -29,7 +33,7 @@ describe('Private USDC Perp REST API POST Endpoints', () => {
         orderPrice: '20000',
         orderLinkId: Date.now().toString(),
         timeInForce: 'GoodTillCancel',
-      })
+      }),
     ).toMatchObject({
       retCode: API_ERROR_CODE.INSUFFICIENT_BALANCE_FOR_ORDER_COST,
     });
@@ -42,7 +46,7 @@ describe('Private USDC Perp REST API POST Endpoints', () => {
         orderId: 'somethingFake',
         orderPrice: '20000',
         orderFilter: 'Order',
-      })
+      }),
     ).toMatchObject({
       retCode: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
     });
@@ -54,7 +58,7 @@ describe('Private USDC Perp REST API POST Endpoints', () => {
         symbol,
         orderId: 'somethingFake1',
         orderFilter: 'Order',
-      })
+      }),
     ).toMatchObject({
       retCode: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
     });
@@ -62,7 +66,7 @@ describe('Private USDC Perp REST API POST Endpoints', () => {
 
   it('cancelActiveOrders()', async () => {
     expect(await api.cancelActiveOrders(symbol, 'Order')).toMatchObject(
-      successEmptyResponseObjectV3()
+      successEmptyResponseObjectV3(),
     );
   });
 
@@ -72,7 +76,7 @@ describe('Private USDC Perp REST API POST Endpoints', () => {
       {
         retCode: API_ERROR_CODE.SET_MARGIN_MODE_FAILED_USDC,
         retMsg: '',
-      }
+      },
       // successResponseObjectV3()
     );
   });

@@ -1,4 +1,5 @@
 import { API_ERROR_CODE, AccountAssetClient } from '../../src/';
+import { getTestProxy } from '../proxy.util';
 import { successResponseObject } from '../response.util';
 
 describe('Private Account Asset REST API GET Endpoints', () => {
@@ -10,11 +11,14 @@ describe('Private Account Asset REST API GET Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new AccountAssetClient({
-    key: API_KEY,
-    secret: API_SECRET,
-    testnet: false,
-  });
+  const api = new AccountAssetClient(
+    {
+      key: API_KEY,
+      secret: API_SECRET,
+      testnet: false,
+    },
+    getTestProxy(),
+  );
 
   it('getInternalTransfers()', async () => {
     expect(await api.getInternalTransfers()).toMatchObject(

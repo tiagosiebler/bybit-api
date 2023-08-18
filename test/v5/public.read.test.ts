@@ -1,15 +1,19 @@
 import { RestClientV5 } from '../../src';
+import { getTestProxy } from '../proxy.util';
 import { successResponseObjectV3 } from '../response.util';
 
 describe('Public V5 REST API Endpoints', () => {
   const API_KEY = undefined;
   const API_SECRET = undefined;
 
-  const api = new RestClientV5({
-    key: API_KEY,
-    secret: API_SECRET,
-    testnet: false,
-  });
+  const api = new RestClientV5(
+    {
+      key: API_KEY,
+      secret: API_SECRET,
+      testnet: false,
+    },
+    getTestProxy(),
+  );
 
   const linearSymbol = 'BTCUSDT';
 

@@ -1,4 +1,5 @@
 import { API_ERROR_CODE, CopyTradingClient } from '../../src';
+import { getTestProxy } from '../proxy.util';
 import { successResponseObjectV3 } from '../response.util';
 
 describe('Private Copy Trading REST API GET Endpoints', () => {
@@ -10,11 +11,14 @@ describe('Private Copy Trading REST API GET Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new CopyTradingClient({
-    key: API_KEY,
-    secret: API_SECRET,
-    testnet: false,
-  });
+  const api = new CopyTradingClient(
+    {
+      key: API_KEY,
+      secret: API_SECRET,
+      testnet: false,
+    },
+    getTestProxy(),
+  );
 
   // Don't have copy trading properly enabled on the test account, so testing is very light
   // (just make sure auth works and endpoint doesn't throw)
