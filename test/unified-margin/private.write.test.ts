@@ -1,4 +1,4 @@
-import { API_ERROR_CODE, UnifiedMarginClient } from '../../src';
+import { UnifiedMarginClient } from '../../src';
 import { getTestProxy } from '../proxy.util';
 
 describe('Private Unified Margin REST API POST Endpoints', () => {

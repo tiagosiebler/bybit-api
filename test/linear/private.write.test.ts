@@ -1,4 +1,4 @@
-import { API_ERROR_CODE, LinearClient } from '../../src';
+import { LinearClient } from '../../src';
 import { getTestProxy } from '../proxy.util';
 import { successResponseObject } from '../response.util';
 

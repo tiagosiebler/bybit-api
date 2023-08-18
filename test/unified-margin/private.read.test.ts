@@ -1,4 +1,4 @@
-import { API_ERROR_CODE, UnifiedMarginClient } from '../../src';
+import { UnifiedMarginClient } from '../../src';
 import { getTestProxy } from '../proxy.util';
 import { successResponseObjectV3 } from '../response.util';
 
