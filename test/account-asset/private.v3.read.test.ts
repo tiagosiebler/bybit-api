@@ -1,4 +1,5 @@
 import { API_ERROR_CODE, AccountAssetClientV3 } from '../../src';
+import { getTestProxy } from '../proxy.util';
 import { successResponseObjectV3 } from '../response.util';
 
 // Only some minimal coverage for v3 apis, since v5 apis are already available
@@ -11,11 +12,14 @@ describe('Private Account Asset V3 REST API Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new AccountAssetClientV3({
-    key: API_KEY,
-    secret: API_SECRET,
-    testnet: false,
-  });
+  const api = new AccountAssetClientV3(
+    {
+      key: API_KEY,
+      secret: API_SECRET,
+      testnet: false,
+    },
+    getTestProxy(),
+  );
 
   const coin = 'USDT';
 

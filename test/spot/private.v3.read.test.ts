@@ -1,4 +1,5 @@
 import { API_ERROR_CODE, SpotClientV3 } from '../../src';
+import { getTestProxy } from '../proxy.util';
 import {
   successEmptyResponseObjectV3,
   successResponseListV3,
@@ -14,11 +15,14 @@ describe('Private Spot REST API GET Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new SpotClientV3({
-    key: API_KEY,
-    secret: API_SECRET,
-    testnet: false,
-  });
+  const api = new SpotClientV3(
+    {
+      key: API_KEY,
+      secret: API_SECRET,
+      testnet: false,
+    },
+    getTestProxy(),
+  );
 
   const symbol = 'BTCUSDT';
   // const interval = '15m';
@@ -37,7 +41,7 @@ describe('Private Spot REST API GET Endpoints', () => {
 
   it('getOpenOrders() with symbol', async () => {
     expect(await api.getOpenOrders(symbol)).toMatchObject(
-      successResponseListV3()
+      successResponseListV3(),
     );
   });
 
@@ -47,13 +51,13 @@ describe('Private Spot REST API GET Endpoints', () => {
 
     // all these should succeed
     expect(
-      await api.getOpenOrders(symbol, orderId, ordersPerPage)
+      await api.getOpenOrders(symbol, orderId, ordersPerPage),
     ).toMatchObject(successResponseListV3());
     expect(
-      await api.getOpenOrders(symbol, orderId, ordersPerPage, 0)
+      await api.getOpenOrders(symbol, orderId, ordersPerPage, 0),
     ).toMatchObject(successResponseListV3());
     expect(
-      await api.getOpenOrders(symbol, orderId, ordersPerPage, 1)
+      await api.getOpenOrders(symbol, orderId, ordersPerPage, 1),
     ).toMatchObject(successResponseListV3());
   });
 
@@ -76,7 +80,7 @@ describe('Private Spot REST API GET Endpoints', () => {
 
   it('getLeveragedTokenMarketInfo()', async () => {
     expect(await api.getLeveragedTokenMarketInfo(ltCode)).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
@@ -89,25 +93,25 @@ describe('Private Spot REST API GET Endpoints', () => {
 
   it('getCrossMarginBorrowingInfo()', async () => {
     expect(await api.getCrossMarginBorrowingInfo()).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
   it('getCrossMarginAccountInfo()', async () => {
     expect(await api.getCrossMarginAccountInfo()).toMatchObject({
-      retCode: API_ERROR_CODE.QUERY_ACCOUNT_INFO_ERROR,
+      retCode: API_ERROR_CODE.CROSS_MARGIN_NOT_ENABLED,
     });
   });
 
   it('getCrossMarginInterestQuota()', async () => {
     expect(await api.getCrossMarginInterestQuota('USDT')).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
   it('getCrossMarginRepaymentHistory()', async () => {
     expect(await api.getCrossMarginRepaymentHistory()).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 });

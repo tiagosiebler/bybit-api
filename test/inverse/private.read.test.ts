@@ -1,4 +1,5 @@
 import { InverseClient } from '../../src/';
+import { getTestProxy } from '../proxy.util';
 import { successResponseList, successResponseObject } from '../response.util';
 
 describe('Private Inverse REST API GET Endpoints', () => {
@@ -10,11 +11,14 @@ describe('Private Inverse REST API GET Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new InverseClient({
-    key: API_KEY,
-    secret: API_SECRET,
-    testnet: false,
-  });
+  const api = new InverseClient(
+    {
+      key: API_KEY,
+      secret: API_SECRET,
+      testnet: false,
+    },
+    getTestProxy(),
+  );
 
   const symbol = 'BTCUSD';
 
@@ -28,43 +32,43 @@ describe('Private Inverse REST API GET Endpoints', () => {
 
   it('getWalletFundRecords()', async () => {
     expect(await api.getWalletFundRecords()).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getWithdrawRecords()', async () => {
     expect(await api.getWithdrawRecords()).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getAssetExchangeRecords()', async () => {
     expect(await api.getAssetExchangeRecords()).toMatchObject(
-      successResponseList()
+      successResponseList(),
     );
   });
 
   it('getActiveOrderList()', async () => {
     expect(await api.getActiveOrderList({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('queryActiveOrder()', async () => {
     expect(await api.queryActiveOrder({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getConditionalOrder()', async () => {
     expect(await api.getConditionalOrder({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('queryConditionalOrder()', async () => {
     expect(await api.queryConditionalOrder({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
@@ -74,25 +78,25 @@ describe('Private Inverse REST API GET Endpoints', () => {
 
   it('getTradeRecords()', async () => {
     expect(await api.getTradeRecords({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getClosedPnl()', async () => {
     expect(await api.getClosedPnl({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getMyLastFundingFee()', async () => {
     expect(await api.getMyLastFundingFee({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 
   it('getLcpInfo()', async () => {
     expect(await api.getLcpInfo({ symbol: symbol })).toMatchObject(
-      successResponseObject()
+      successResponseObject(),
     );
   });
 });

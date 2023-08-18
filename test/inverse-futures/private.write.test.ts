@@ -1,4 +1,5 @@
 import { API_ERROR_CODE, InverseFuturesClient } from '../../src';
+import { getTestProxy } from '../proxy.util';
 import { successResponseObject } from '../response.util';
 
 describe('Private Inverse-Futures REST API POST Endpoints', () => {
@@ -10,11 +11,14 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new InverseFuturesClient({
-    key: API_KEY,
-    secret: API_SECRET,
-    testnet: false,
-  });
+  const api = new InverseFuturesClient(
+    {
+      key: API_KEY,
+      secret: API_SECRET,
+      testnet: false,
+    },
+    getTestProxy(),
+  );
 
   // Warning: if some of these start to fail with 10001 params error,
   // it's probably that this future expired and a newer one exists with a different symbol!
@@ -51,7 +55,7 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
         price: 30000,
         qty: 1,
         time_in_force: 'GoodTillCancel',
-      })
+      }),
     ).toMatchObject({
       ret_code: API_ERROR_CODE.POSITION_IDX_NOT_MATCH_POSITION_MODE,
     });
@@ -61,7 +65,7 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
     expect(
       await api.cancelActiveOrder({
         symbol,
-      })
+      }),
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
     });
@@ -71,7 +75,7 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
     expect(
       await api.cancelAllActiveOrders({
         symbol,
-      })
+      }),
     ).toMatchObject(successResponseObject());
   });
 
@@ -82,7 +86,7 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
         order_id: '123123123',
         p_r_qty: '1',
         p_r_price: '30000',
-      })
+      }),
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
     });
@@ -100,7 +104,7 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
         stop_px: '8150',
         time_in_force: 'GoodTillCancel',
         order_link_id: 'cus_order_id_1',
-      })
+      }),
     ).toMatchObject({
       ret_code: API_ERROR_CODE.POSITION_IDX_NOT_MATCH_POSITION_MODE,
     });
@@ -111,7 +115,7 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       await api.cancelConditionalOrder({
         symbol,
         order_link_id: 'lkasmdflasd',
-      })
+      }),
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
     });
@@ -121,7 +125,7 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
     expect(
       await api.cancelAllConditionalOrders({
         symbol,
-      })
+      }),
     ).toMatchObject(successResponseObject());
   });
 
@@ -132,11 +136,11 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
         order_link_id: 'fakeOrderId',
         p_r_price: '50000',
         p_r_qty: 1,
-      })
+      }),
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE,
       ret_msg: expect.stringMatching(
-        /orderID or orderLinkID invalid|order not exists/gim
+        /orderID or orderLinkID invalid|order not exists/gim,
       ),
     });
   });
@@ -146,7 +150,7 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       await api.changePositionMargin({
         symbol,
         margin: '10',
-      })
+      }),
     ).toMatchObject({
       ret_code: API_ERROR_CODE.POSITION_IDX_NOT_MATCH_POSITION_MODE,
     });
@@ -157,7 +161,7 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       await api.setTradingStop({
         symbol,
         take_profit: 50000,
-      })
+      }),
     ).toMatchObject({
       // seems to fluctuate between POSITION_STATUS_NOT_NORMAL and POSITION_IDX_NOT_MATCH_POSITION_MODE
       ret_code: /^30013|30041$/,
@@ -170,7 +174,7 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
         symbol,
         buy_leverage: 5,
         sell_leverage: 5,
-      })
+      }),
     ).toMatchObject({
       ret_code: API_ERROR_CODE.LEVERAGE_NOT_MODIFIED,
     });
@@ -181,7 +185,7 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
       await api.setPositionMode({
         symbol,
         mode: 3,
-      })
+      }),
     ).toMatchObject({
       ret_code: API_ERROR_CODE.POSITION_MODE_NOT_MODIFIED,
     });
@@ -194,7 +198,7 @@ describe('Private Inverse-Futures REST API POST Endpoints', () => {
         is_isolated: false,
         buy_leverage: 5,
         sell_leverage: 5,
-      })
+      }),
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ISOLATED_NOT_MODIFIED,
     });

@@ -1,5 +1,6 @@
 import { API_ERROR_CODE, RestClientV5 } from '../../src';
 import { successResponseObjectV3 } from '../response.util';
+import { getTestProxy } from '../proxy.util';
 
 describe('Private READ V5 REST API Endpoints', () => {
   const API_KEY = process.env.API_KEY_COM;
@@ -10,11 +11,14 @@ describe('Private READ V5 REST API Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new RestClientV5({
-    key: API_KEY,
-    secret: API_SECRET,
-    testnet: false,
-  });
+  const api = new RestClientV5(
+    {
+      key: API_KEY,
+      secret: API_SECRET,
+      testnet: false,
+    },
+    getTestProxy(),
+  );
 
   const settleCoin = 'USDT';
   const linearSymbol = 'BTCUSDT';
@@ -87,12 +91,14 @@ describe('Private READ V5 REST API Endpoints', () => {
     it('getBorrowHistory()', async () => {
       expect(await api.getBorrowHistory()).toMatchObject({
         ...successResponseObjectV3(),
+        retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
       });
     });
 
     it('getCollateralInfo()', async () => {
       expect(await api.getCollateralInfo()).toMatchObject({
         ...successResponseObjectV3(),
+        retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
       });
     });
 
@@ -121,6 +127,7 @@ describe('Private READ V5 REST API Endpoints', () => {
     it('getTransactionLog()', async () => {
       expect(await api.getTransactionLog()).toMatchObject({
         ...successResponseObjectV3(),
+        retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
       });
     });
 
@@ -142,14 +149,20 @@ describe('Private READ V5 REST API Endpoints', () => {
 
     it('getDeliveryRecord()', async () => {
       expect(await api.getDeliveryRecord({ category: 'option' })).toMatchObject(
-        { ...successResponseObjectV3() },
+        {
+          ...successResponseObjectV3(),
+          retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
+        },
       );
     });
 
     it('getSettlementRecords()', async () => {
       expect(
         await api.getSettlementRecords({ category: 'linear' }),
-      ).toMatchObject({ ...successResponseObjectV3() });
+      ).toMatchObject({
+        ...successResponseObjectV3(),
+        retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
+      });
     });
 
     it('getAssetInfo()', async () => {

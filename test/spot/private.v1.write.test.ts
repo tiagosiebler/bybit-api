@@ -1,4 +1,5 @@
 import { API_ERROR_CODE, SpotClient } from '../../src';
+import { getTestProxy } from '../proxy.util';
 import { successResponseObject } from '../response.util';
 
 describe('Private Spot REST API POST Endpoints', () => {
@@ -10,11 +11,14 @@ describe('Private Spot REST API POST Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new SpotClient({
-    key: API_KEY,
-    secret: API_SECRET,
-    testnet: false,
-  });
+  const api = new SpotClient(
+    {
+      key: API_KEY,
+      secret: API_SECRET,
+      testnet: false,
+    },
+    getTestProxy(),
+  );
 
   // Warning: if some of these start to fail with 10001 params error,
   // it's probably that this future expired and a newer one exists with a different symbol!
@@ -29,7 +33,7 @@ describe('Private Spot REST API POST Endpoints', () => {
         symbol,
         qty: 10000,
         type: 'MARKET',
-      })
+      }),
     ).toMatchObject({
       ret_code: API_ERROR_CODE.BALANCE_INSUFFICIENT_SPOT,
       ret_msg: 'Balance insufficient ',
@@ -40,7 +44,7 @@ describe('Private Spot REST API POST Endpoints', () => {
     expect(
       await api.cancelOrder({
         orderId: '1231231',
-      })
+      }),
     ).toMatchObject({
       ret_code: API_ERROR_CODE.ORDER_NOT_FOUND_OR_TOO_LATE_SPOT,
       ret_msg: 'Order does not exist.',
@@ -52,7 +56,7 @@ describe('Private Spot REST API POST Endpoints', () => {
       await api.cancelOrderBatch({
         symbol,
         orderTypes: ['LIMIT', 'LIMIT_MAKER'],
-      })
+      }),
     ).toMatchObject(successResponseObject());
   });
 });

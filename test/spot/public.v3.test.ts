@@ -1,13 +1,14 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { SpotClientV3 } from '../../src';
+import { getTestProxy } from '../proxy.util';
 import {
   notAuthenticatedError,
   successResponseObjectV3,
 } from '../response.util';
 
 describe('Public Spot REST API Endpoints', () => {
-  const api = new SpotClientV3();
+  const api = new SpotClientV3({}, getTestProxy());
 
   const symbol = 'BTCUSDT';
   const interval = '15m';
@@ -16,10 +17,10 @@ describe('Public Spot REST API Endpoints', () => {
 
   it('should throw for unauthenticated private calls', async () => {
     expect(() => api.getOpenOrders()).rejects.toMatchObject(
-      notAuthenticatedError()
+      notAuthenticatedError(),
     );
     expect(() => api.getBalances()).rejects.toMatchObject(
-      notAuthenticatedError()
+      notAuthenticatedError(),
     );
   });
 
@@ -29,25 +30,25 @@ describe('Public Spot REST API Endpoints', () => {
 
   it('getOrderBook()', async () => {
     expect(await api.getOrderBook(symbol)).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
   it('getMergedOrderBook()', async () => {
     expect(await api.getMergedOrderBook(symbol)).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
   it('getTrades()', async () => {
     expect(await api.getTrades(symbol)).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
   it('getCandles()', async () => {
     expect(await api.getCandles(symbol, interval)).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
@@ -57,13 +58,13 @@ describe('Public Spot REST API Endpoints', () => {
 
   it('getLastTradedPrice()', async () => {
     expect(await api.getLastTradedPrice()).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
   it('getBestBidAskPrice()', async () => {
     expect(await api.getBestBidAskPrice()).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 

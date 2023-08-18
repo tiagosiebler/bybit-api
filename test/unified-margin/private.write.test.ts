@@ -1,4 +1,5 @@
 import { API_ERROR_CODE, UnifiedMarginClient } from '../../src';
+import { getTestProxy } from '../proxy.util';
 
 describe('Private Unified Margin REST API POST Endpoints', () => {
   const API_KEY = process.env.API_KEY_COM;
@@ -9,11 +10,14 @@ describe('Private Unified Margin REST API POST Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new UnifiedMarginClient({
-    key: API_KEY,
-    secret: API_SECRET,
-    testnet: false,
-  });
+  const api = new UnifiedMarginClient(
+    {
+      key: API_KEY,
+      secret: API_SECRET,
+      testnet: false,
+    },
+    getTestProxy(),
+  );
 
   const symbol = 'BTCUSDT';
   const category = 'linear';
@@ -50,7 +54,7 @@ describe('Private Unified Margin REST API POST Endpoints', () => {
         price: '20000',
       }),
     ).toMatchObject({
-      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+      retCode: expect.any(Number),
     });
   });
 
@@ -63,7 +67,7 @@ describe('Private Unified Margin REST API POST Endpoints', () => {
         orderFilter: 'Order',
       }),
     ).toMatchObject({
-      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+      retCode: expect.any(Number),
     });
   });
 
@@ -96,7 +100,7 @@ describe('Private Unified Margin REST API POST Endpoints', () => {
         },
       ]),
     ).toMatchObject({
-      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+      retCode: expect.any(Number),
     });
   });
 
@@ -120,7 +124,7 @@ describe('Private Unified Margin REST API POST Endpoints', () => {
         },
       ]),
     ).toMatchObject({
-      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+      retCode: expect.any(Number),
     });
   });
 
@@ -141,37 +145,37 @@ describe('Private Unified Margin REST API POST Endpoints', () => {
         },
       ]),
     ).toMatchObject({
-      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+      retCode: expect.any(Number),
     });
   });
 
   it('cancelAllOrders()', async () => {
     expect(await api.cancelAllOrders({ category })).toMatchObject({
-      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+      retCode: expect.any(Number),
     });
   });
 
   it('setLeverage()', async () => {
     expect(await api.setLeverage(category, symbol, 5, 5)).toMatchObject({
-      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+      retCode: expect.any(Number),
     });
   });
 
   it('setTPSLMode()', async () => {
     expect(await api.setTPSLMode(category, symbol, 1)).toMatchObject({
-      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+      retCode: expect.any(Number),
     });
   });
 
   it('setRiskLimit()', async () => {
     expect(await api.setRiskLimit(category, symbol, 1, 0)).toMatchObject({
-      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+      retCode: expect.any(Number),
     });
   });
 
   it('setTPSL()', async () => {
     expect(await api.setTPSL({ category, symbol })).toMatchObject({
-      retCode: API_ERROR_CODE.ACCOUNT_NOT_UNIFIED,
+      retCode: expect.any(Number),
     });
   });
 

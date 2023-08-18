@@ -1,4 +1,5 @@
 import { API_ERROR_CODE, ContractClient } from '../../src';
+import { getTestProxy } from '../proxy.util';
 import { successResponseObjectV3 } from '../response.util';
 
 describe('Private Contract REST API POST Endpoints', () => {
@@ -10,11 +11,14 @@ describe('Private Contract REST API POST Endpoints', () => {
     expect(API_SECRET).toStrictEqual(expect.any(String));
   });
 
-  const api = new ContractClient({
-    key: API_KEY,
-    secret: API_SECRET,
-    testnet: false,
-  });
+  const api = new ContractClient(
+    {
+      key: API_KEY,
+      secret: API_SECRET,
+      testnet: false,
+    },
+    getTestProxy(),
+  );
 
   const symbol = 'BTCUSDT';
 
@@ -34,7 +38,7 @@ describe('Private Contract REST API POST Endpoints', () => {
         orderLinkId: Date.now().toString(),
         timeInForce: 'GoodTillCancel',
         positionIdx: '2',
-      })
+      }),
     ).toMatchObject({
       // retMsg: '',
       retCode: API_ERROR_CODE.CONTRACT_INSUFFICIENT_BALANCE,
@@ -46,7 +50,7 @@ describe('Private Contract REST API POST Endpoints', () => {
       await api.cancelOrder({
         symbol,
         orderId: 'somethingFake1',
-      })
+      }),
     ).toMatchObject({
       retCode: API_ERROR_CODE.CONTRACT_ORDER_NOT_EXISTS,
     });
@@ -54,7 +58,7 @@ describe('Private Contract REST API POST Endpoints', () => {
 
   it('cancelAllOrders()', async () => {
     expect(await api.cancelAllOrders(symbol)).toMatchObject(
-      successResponseObjectV3()
+      successResponseObjectV3(),
     );
   });
 
@@ -64,7 +68,7 @@ describe('Private Contract REST API POST Endpoints', () => {
         symbol,
         orderId: 'somethingFake',
         price: '20000',
-      })
+      }),
     ).toMatchObject({
       retCode: API_ERROR_CODE.CONTRACT_ORDER_NOT_EXISTS,
     });
@@ -77,7 +81,7 @@ describe('Private Contract REST API POST Endpoints', () => {
         side: 'Buy',
         symbol,
         positionIdx: 1,
-      })
+      }),
     ).toMatchObject({
       retMsg: expect.stringMatching(/not modified/gim),
       retCode: API_ERROR_CODE.PARAMS_MISSING_OR_WRONG,
@@ -91,7 +95,7 @@ describe('Private Contract REST API POST Endpoints', () => {
         tradeMode: 1,
         buyLeverage: '5',
         sellLeverage: '5',
-      })
+      }),
     ).toMatchObject({
       retCode: API_ERROR_CODE.CONTRACT_MARGIN_MODE_NOT_MODIFIED,
     });
@@ -102,7 +106,7 @@ describe('Private Contract REST API POST Endpoints', () => {
       await api.setPositionMode({
         symbol,
         mode: 3,
-      })
+      }),
     ).toMatchObject({
       retCode: API_ERROR_CODE.CONTRACT_POSITION_MODE_NOT_MODIFIED,
     });
@@ -123,7 +127,7 @@ describe('Private Contract REST API POST Endpoints', () => {
 
   it('setTPSL()', async () => {
     expect(
-      await api.setTPSL({ symbol, positionIdx: 1, stopLoss: '100' })
+      await api.setTPSL({ symbol, positionIdx: 1, stopLoss: '100' }),
     ).toMatchObject({
       retMsg: expect.stringMatching(/zero position/gim),
       retCode: API_ERROR_CODE.PARAMS_MISSING_OR_WRONG,
