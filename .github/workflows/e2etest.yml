@@ -1,4 +1,4 @@
-name: "Build & Test"
+name: 'Build & Test'
 
 on: [push]
 
@@ -11,11 +11,11 @@ on: [push]
 
 jobs:
   build:
-    name: "Build & Test"
+    name: 'Build & Test'
     runs-on: ubuntu-latest
 
     steps:
-      - name: "Checkout source code"
+      - name: 'Checkout source code'
         uses: actions/checkout@v3
 
       - uses: actions/setup-node@v3
@@ -34,3 +34,8 @@ jobs:
         env:
           API_KEY_COM: ${{ secrets.API_KEY_COM }}
           API_SECRET_COM: ${{ secrets.API_SECRET_COM }}
+          PROXY_ENABLED: ${{ secrets.PROXY_ENABLED }}
+          PROXY_HOST: ${{ secrets.PROXY_HOST }}
+          PROXY_PASS: ${{ secrets.PROXY_PASS }}
+          PROXY_PORT: ${{ secrets.PROXY_PORT }}
+          PROXY_USER: ${{ secrets.PROXY_USER }}
