@@ -1,5 +1,6 @@
 import {
   CategoryCursorListV5,
+  CategoryV5,
   ContractTypeV5,
   InstrumentStatusV5,
   OptionTypeV5,
@@ -110,10 +111,14 @@ export interface SpotInstrumentInfoV5 {
   };
 }
 
-export type InstrumentInfoResponseV5 =
-  | CategoryCursorListV5<LinearInverseInstrumentInfoV5[], 'linear' | 'inverse'>
-  | CategoryCursorListV5<OptionInstrumentInfoV5[], 'option'>
-  | CategoryCursorListV5<SpotInstrumentInfoV5[], 'spot'>;
+type InstrumentInfoV5Mapping = {
+  linear: LinearInverseInstrumentInfoV5[],
+  inverse: LinearInverseInstrumentInfoV5[],
+  option: OptionInstrumentInfoV5[],
+  spot: SpotInstrumentInfoV5[]
+};
+
+export type InstrumentInfoResponseV5<C extends CategoryV5> = CategoryCursorListV5<InstrumentInfoV5Mapping[C], C>;
 
 export default interface OrderbookLevelV5 {
   price: string;
