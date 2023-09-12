@@ -231,9 +231,9 @@ export class RestClientV5 extends BaseRestClient {
    *
    * Note: Spot does not support pagination, so limit & cursor are invalid.
    */
-  getInstrumentsInfo(
-    params: GetInstrumentsInfoParamsV5,
-  ): Promise<APIResponseV3WithTime<InstrumentInfoResponseV5>> {
+  getInstrumentsInfo<C extends CategoryV5>(
+    params: GetInstrumentsInfoParamsV5 & { category: C },
+  ): Promise<APIResponseV3WithTime<InstrumentInfoResponseV5<C>>> {
     return this.get('/v5/market/instruments-info', params);
   }
 
