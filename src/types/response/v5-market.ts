@@ -2,7 +2,6 @@ import {
   CategoryCursorListV5,
   CategoryV5,
   ContractTypeV5,
-  CursorListV5,
   InstrumentStatusV5,
   OptionTypeV5,
   OrderSideV5,
