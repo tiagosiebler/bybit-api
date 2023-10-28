@@ -323,6 +323,7 @@ export default abstract class BaseRestClient {
     return axios(options)
       .then((response) => {
         if (response.status == 200) {
+	  response.data = {...response.data, headers: response.headers};
           return response.data;
         }
 
