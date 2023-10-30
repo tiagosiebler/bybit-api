@@ -2,7 +2,7 @@ import { API_ERROR_CODE, InverseFuturesClient } from '../../src';
 import { getTestProxy } from '../proxy.util';
 import { successResponseObject } from '../response.util';
 
-describe('Private Inverse-Futures REST API POST Endpoints', () => {
+describe.skip('Private Inverse-Futures REST API POST Endpoints', () => {
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
 

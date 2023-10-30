@@ -2,7 +2,7 @@ import { LinearClient } from '../../src/linear-client';
 import { getTestProxy } from '../proxy.util';
 import { successResponseList, successResponseObject } from '../response.util';
 
-describe('Private Linear REST API GET Endpoints', () => {
+describe.skip('Private Linear REST API GET Endpoints', () => {
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
 

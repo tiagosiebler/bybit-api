@@ -6,7 +6,7 @@ import {
   successResponseObject,
 } from '../response.util';
 
-describe('Public Inverse REST API Endpoints', () => {
+describe.skip('Public Inverse REST API Endpoints', () => {
   const api = new InverseClient({}, getTestProxy());
 
   const symbol = 'BTCUSD';

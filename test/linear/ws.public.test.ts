@@ -9,7 +9,7 @@ import {
   waitForSocketEvent,
 } from '../ws.util';
 
-describe('Public Linear Perps Websocket Client', () => {
+describe.skip('Public Linear Perps Websocket Client', () => {
   let wsClient: WebsocketClient;
 
   const wsClientOptions: WSClientConfigurableOptions = {

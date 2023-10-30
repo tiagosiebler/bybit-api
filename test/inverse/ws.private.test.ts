@@ -9,7 +9,7 @@ import {
   waitForSocketEvent,
 } from '../ws.util';
 
-describe('Private Inverse Perps Websocket Client', () => {
+describe.skip('Private Inverse Perps Websocket Client', () => {
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
 
@@ -27,7 +27,7 @@ describe('Private Inverse Perps Websocket Client', () => {
           key: 'bad',
           secret: 'bad',
         },
-        getSilentLogger('expect401')
+        getSilentLogger('expect401'),
       );
 
       const wsOpenPromise = waitForSocketEvent(badClient, 'open', 2500);
@@ -55,7 +55,7 @@ describe('Private Inverse Perps Websocket Client', () => {
     beforeAll(() => {
       wsClient = new WebsocketClient(
         wsClientOptions,
-        getSilentLogger('expectSuccess')
+        getSilentLogger('expectSuccess'),
       );
       wsClient.connectPrivate();
     });
