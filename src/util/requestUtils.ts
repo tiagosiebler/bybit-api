@@ -1,3 +1,4 @@
+import { APIRateLimit } from '../types';
 import { WebsocketSucceededTopicSubscriptionConfirmationEvent } from '../types/ws-events/succeeded-topic-subscription-confirmation';
 import { WebsocketTopicSubscriptionConfirmationEvent } from '../types/ws-events/topic-subscription-confirmation';
 
@@ -46,6 +47,12 @@ export interface RestClientOptions {
 
   /** Default: true. whether to try and post-process request exceptions. */
   parse_exceptions?: boolean;
+
+  /** Default: false. Enable to parse/include per-API/endpoint rate limits in responses. */
+  parseAPIRateLimits?: boolean;
+
+  /** Default: false. Enable to throw error if rate limit parser fails */
+  throwOnFailedRateLimitParse?: boolean;
 }
 
 /**
@@ -169,3 +176,54 @@ export const REST_CLIENT_TYPE_ENUM = {
 
 export type RestClientType =
   (typeof REST_CLIENT_TYPE_ENUM)[keyof typeof REST_CLIENT_TYPE_ENUM];
+
+/** Parse V5 rate limit response headers, if enabled */
+export function parseRateLimitHeaders(
+  headers: Record<string, string | undefined> = {},
+  throwOnFailedRateLimitParse: boolean,
+): APIRateLimit | undefined {
+  try {
+    const remaining = headers['x-bapi-limit-status'];
+    const max = headers['x-bapi-limit'];
+    const resetAt = headers['x-bapi-limit-reset-timestamp'];
+
+    if (
+      typeof remaining === 'undefined' ||
+      typeof max === 'undefined' ||
+      typeof resetAt === 'undefined'
+    ) {
+      return;
+    }
+
+    const result: APIRateLimit = {
+      remainingRequests: Number(remaining),
+      maxRequests: Number(max),
+      resetAtTimestamp: Number(resetAt),
+    };
+
+    if (
+      isNaN(result.remainingRequests) ||
+      isNaN(result.maxRequests) ||
+      isNaN(result.resetAtTimestamp)
+    ) {
+      return;
+    }
+
+    return result;
+  } catch (e) {
+    if (throwOnFailedRateLimitParse) {
+      console.log(
+        new Date(),
+        'parseRateLimitHeaders()',
+        'Failed to parse rate limit headers',
+        {
+          headers,
+          exception: e,
+        },
+      );
+      throw e;
+    }
+  }
+
+  return undefined;
+}

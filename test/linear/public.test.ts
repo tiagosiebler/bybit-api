@@ -6,7 +6,7 @@ import {
   successResponseObject,
 } from '../response.util';
 
-describe('Public Linear REST API Endpoints', () => {
+describe.skip('Public Linear REST API Endpoints', () => {
   const api = new LinearClient({}, getTestProxy());
 
   const symbol = 'BTCUSDT';

@@ -136,6 +136,7 @@ import {
   WithdrawParamsV5,
   WithdrawalRecordV5,
 } from './types';
+
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
 
@@ -247,6 +248,22 @@ export class RestClientV5 extends BaseRestClient {
   ): Promise<APIResponseV3WithTime<OrderbookResponseV5>> {
     return this.get('/v5/market/orderbook', params);
   }
+
+  getTickers(
+    params: GetTickersParamsV5<'linear' | 'inverse'>,
+  ): Promise<
+    APIResponseV3WithTime<
+      CategoryListV5<TickerLinearInverseV5[], 'linear' | 'inverse'>
+    >
+  >;
+
+  getTickers(
+    params: GetTickersParamsV5<'option'>,
+  ): Promise<APIResponseV3WithTime<CategoryListV5<TickerOptionV5[], 'option'>>>;
+
+  getTickers(
+    params: GetTickersParamsV5<'spot'>,
+  ): Promise<APIResponseV3WithTime<CategoryListV5<TickerSpotV5[], 'spot'>>>;
 
   /**
    * Query the latest price snapshot, best bid/ask price, and trading volume in the last 24 hours.

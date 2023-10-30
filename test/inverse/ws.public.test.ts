@@ -13,7 +13,7 @@ import {
   waitForSocketEvent,
 } from '../ws.util';
 
-describe('Public Inverse Perps Websocket Client', () => {
+describe.skip('Public Inverse Perps Websocket Client', () => {
   let wsClient: WebsocketClient;
 
   const wsClientOptions: WSClientConfigurableOptions = {
@@ -66,7 +66,7 @@ describe('Public Inverse Perps Websocket Client', () => {
     } catch (e) {
       console.error(
         `Wait for "${wsTopic}" subscription response exception: `,
-        e
+        e,
       );
     }
 

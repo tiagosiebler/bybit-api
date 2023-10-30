@@ -155,6 +155,12 @@ const restClientOptions = {
 
   /** Default: true. whether to try and post-process request exceptions. */
   parse_exceptions?: boolean;
+
+  /** Default: false. Enable to parse/include per-API/endpoint rate limits in responses. */
+  parseAPIRateLimits?: boolean;
+
+  /** Default: false. Enable to throw error if rate limit parser fails */
+  throwOnFailedRateLimitParse?: boolean;
 };
 
 const API_KEY = 'xxx';

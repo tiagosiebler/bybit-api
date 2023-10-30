@@ -7,6 +7,7 @@ import {
   RestClientOptions,
   RestClientType,
   getRestBaseUrl,
+  parseRateLimitHeaders,
   serializeParams,
 } from './requestUtils';
 import { signMessage } from './node-support';
@@ -98,7 +99,7 @@ export default abstract class BaseRestClient {
 
   /**
    * Create an instance of the REST client. Pass API credentials in the object in the first parameter.
-   * @param {RestClientOptions} [restClientOptions={}] options to configure REST API connectivity
+   * @param {RestClientOptions} [restOptions={}] options to configure REST API connectivity
    * @param {AxiosRequestConfig} [networkOptions={}] HTTP networking options for axios
    */
   constructor(
@@ -323,7 +324,17 @@ export default abstract class BaseRestClient {
     return axios(options)
       .then((response) => {
         if (response.status == 200) {
-          return response.data;
+          const perAPIRateLimits = this.options.parseAPIRateLimits
+            ? parseRateLimitHeaders(
+                response.headers,
+                this.options.throwOnFailedRateLimitParse === true,
+              )
+            : undefined;
+
+          return {
+            rateLimitApi: perAPIRateLimits,
+            ...response.data,
+          };
         }
 
         throw response;
