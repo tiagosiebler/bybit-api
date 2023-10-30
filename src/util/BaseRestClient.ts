@@ -7,6 +7,7 @@ import {
   RestClientOptions,
   RestClientType,
   getRestBaseUrl,
+  parseRateLimitHeaders,
   serializeParams,
 } from './requestUtils';
 import { signMessage } from './node-support';
@@ -323,7 +324,17 @@ export default abstract class BaseRestClient {
     return axios(options)
       .then((response) => {
         if (response.status == 200) {
-          return response.data;
+          const perAPIRateLimits = this.options.parseAPIRateLimits
+            ? parseRateLimitHeaders(
+                response.headers,
+                this.options.throwOnFailedRateLimitParse === true,
+              )
+            : undefined;
+
+          return {
+            rateLimitApi: perAPIRateLimits,
+            ...response.data,
+          };
         }
 
         throw response;

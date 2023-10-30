@@ -52,8 +52,8 @@ export interface GetOrderbookParamsV5 {
   limit?: number;
 }
 
-export interface GetTickersParamsV5 {
-  category: CategoryV5;
+export interface GetTickersParamsV5<TCategory = CategoryV5> {
+  category: TCategory;
   symbol?: string;
   baseCoin?: string;
   expDate?: string;

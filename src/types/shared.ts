@@ -61,18 +61,33 @@ export interface APIResponse<T> {
   result: T;
 }
 
+export interface APIRateLimit {
+  /** Remaining requests to this endpoint before the next reset */
+  remainingRequests: number;
+  /** Max requests for this endpoint per rollowing window (before next reset) */
+  maxRequests: number;
+  /**
+   * Timestamp when the rate limit resets if you have exceeded your current maxRequests.
+   * Otherwise, this is approximately your current timestamp.
+   */
+  resetAtTimestamp: number;
+}
+
 export interface APIResponseV3<T> {
   retCode: number;
   retMsg: 'OK' | string;
   result: T;
+  /**
+   * These are per-UID per-endpoint rate limits, automatically parsed from response headers if available.
+   *
+   * Note:
+   * - this is primarily for V5 (or newer) APIs.
+   * - these rate limits are per-endpoint per-account, so will not appear for public API calls
+   */
+  rateLimitApi?: APIRateLimit;
 }
 
-export interface APIResponseV3WithTime<T> {
-  retCode: number;
-  retMsg: 'OK' | string;
-  result: T;
-  time: number;
-}
+export type APIResponseV3WithTime<T> = APIResponseV3<T> & { time: number };
 
 export interface APIResponseWithTime<T = {}> extends APIResponse<T> {
   /** UTC timestamp */
