@@ -23,6 +23,10 @@ import BaseRestClient from './util/BaseRestClient';
 
 /**
  * REST API client for USDC Perpetual APIs
+ *
+ * @deprecated WARNING: V1/V2 private endpoints (Rest API & Websocket Stream) for mainnet
+ * will be switched off gradually from 30 Oct 2023 UTC, so they are not promised a stability.
+ * Please note that you are at your own risk of using old endpoints going forward, and please move to V5 ASAP.
  */
 export class USDCPerpetualClient extends BaseRestClient {
   getClientType() {
@@ -47,7 +51,7 @@ export class USDCPerpetualClient extends BaseRestClient {
 
   /** Fetch trading rules (such as min/max qty). Query for all if blank. */
   getContractInfo(
-    params?: USDCSymbolDirectionLimit
+    params?: USDCSymbolDirectionLimit,
   ): Promise<APIResponseV3<any>> {
     return this.get('/perpetual/usdc/openapi/public/v1/symbols', params);
   }
@@ -64,48 +68,48 @@ export class USDCPerpetualClient extends BaseRestClient {
   getMarkPrice(params: USDCKlineRequest): Promise<APIResponseV3<any>> {
     return this.get(
       '/perpetual/usdc/openapi/public/v1/mark-price-kline',
-      params
+      params,
     );
   }
 
   getIndexPrice(params: USDCKlineRequest): Promise<APIResponseV3<any>> {
     return this.get(
       '/perpetual/usdc/openapi/public/v1/index-price-kline',
-      params
+      params,
     );
   }
 
   getIndexPremium(params: USDCKlineRequest): Promise<APIResponseV3<any>> {
     return this.get(
       '/perpetual/usdc/openapi/public/v1/premium-index-kline',
-      params
+      params,
     );
   }
 
   getOpenInterest(
-    params: USDCOpenInterestRequest
+    params: USDCOpenInterestRequest,
   ): Promise<APIResponseV3<any>> {
     return this.get('/perpetual/usdc/openapi/public/v1/open-interest', params);
   }
 
   getLargeOrders(
-    params: SymbolLimitParam<string>
+    params: SymbolLimitParam<string>,
   ): Promise<APIResponseV3<any>> {
     return this.get('/perpetual/usdc/openapi/public/v1/big-deal', params);
   }
 
   getLongShortRatio(
-    params: SymbolPeriodLimitParam<string>
+    params: SymbolPeriodLimitParam<string>,
   ): Promise<APIResponseV3<any>> {
     return this.get('/perpetual/usdc/openapi/public/v1/account-ratio', params);
   }
 
   getLast500Trades(
-    params: USDCLast500TradesRequest
+    params: USDCLast500TradesRequest,
   ): Promise<APIResponseV3<any>> {
     return this.get(
       '/option/usdc/openapi/public/v1/query-trade-latest',
-      params
+      params,
     );
   }
 
@@ -125,7 +129,7 @@ export class USDCPerpetualClient extends BaseRestClient {
   submitOrder(params: USDCPerpOrderRequest): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/perpetual/usdc/openapi/private/v1/place-order',
-      params
+      params,
     );
   }
 
@@ -133,7 +137,7 @@ export class USDCPerpetualClient extends BaseRestClient {
   modifyOrder(params: USDCPerpModifyOrderRequest): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/perpetual/usdc/openapi/private/v1/replace-order',
-      params
+      params,
     );
   }
 
@@ -141,14 +145,14 @@ export class USDCPerpetualClient extends BaseRestClient {
   cancelOrder(params: USDCPerpCancelOrderRequest): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/perpetual/usdc/openapi/private/v1/cancel-order',
-      params
+      params,
     );
   }
 
   /** Cancel all active orders. The real-time response indicates whether the request is successful, depending on retCode. */
   cancelActiveOrders(
     symbol: string,
-    orderFilter: USDCOrderFilter
+    orderFilter: USDCOrderFilter,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate('/perpetual/usdc/openapi/private/v1/cancel-all', {
       symbol,
@@ -158,31 +162,31 @@ export class USDCPerpetualClient extends BaseRestClient {
 
   /** Query Unfilled/Partially Filled Orders */
   getActiveOrders(
-    params: USDCPerpActiveOrdersRequest
+    params: USDCPerpActiveOrdersRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-active-orders',
-      params
+      params,
     );
   }
 
   /** Query order history. The endpoint only supports up to 30 days of queried records */
   getHistoricOrders(
-    params: USDCPerpHistoricOrdersRequest
+    params: USDCPerpHistoricOrdersRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-order-history',
-      params
+      params,
     );
   }
 
   /** Query trade history. The endpoint only supports up to 30 days of queried records. An error will be returned if startTime is more than 30 days. */
   getOrderExecutionHistory(
-    params: USDCPerpActiveOrdersRequest
+    params: USDCPerpActiveOrdersRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/execution-list',
-      params
+      params,
     );
   }
 
@@ -190,18 +194,18 @@ export class USDCPerpetualClient extends BaseRestClient {
 
   /** The endpoint only supports up to 30 days of queried records. An error will be returned if startTime is more than 30 days. */
   getTransactionLog(
-    params: USDCTransactionLogRequest
+    params: USDCTransactionLogRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-transaction-log',
-      params
+      params,
     );
   }
 
   /** Wallet info for USDC account. */
   getBalances(): Promise<APIResponseV3<any>> {
     return this.postPrivate(
-      '/option/usdc/openapi/private/v1/query-wallet-balance'
+      '/option/usdc/openapi/private/v1/query-wallet-balance',
     );
   }
 
@@ -209,7 +213,7 @@ export class USDCPerpetualClient extends BaseRestClient {
   getAssetInfo(baseCoin?: string): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-asset-info',
-      { baseCoin }
+      { baseCoin },
     );
   }
 
@@ -220,18 +224,18 @@ export class USDCPerpetualClient extends BaseRestClient {
    * Rest API returns the result of checking prerequisites. You could get the real status of margin mode change by subscribing margin mode.
    */
   setMarginMode(
-    newMarginMode: 'REGULAR_MARGIN' | 'PORTFOLIO_MARGIN'
+    newMarginMode: 'REGULAR_MARGIN' | 'PORTFOLIO_MARGIN',
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/private/asset/account/setMarginMode',
-      { setMarginMode: newMarginMode }
+      { setMarginMode: newMarginMode },
     );
   }
 
   /** Query margin mode for USDC account. */
   getMarginMode(): Promise<APIResponseV3<any>> {
     return this.postPrivate(
-      '/option/usdc/openapi/private/v1/query-margin-info'
+      '/option/usdc/openapi/private/v1/query-margin-info',
     );
   }
 
@@ -241,7 +245,7 @@ export class USDCPerpetualClient extends BaseRestClient {
   getPositions(params: USDCPositionsRequest): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-position',
-      params
+      params,
     );
   }
 
@@ -249,17 +253,17 @@ export class USDCPerpetualClient extends BaseRestClient {
   setLeverage(symbol: string, leverage: string): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/perpetual/usdc/openapi/private/v1/position/leverage/save',
-      { symbol, leverage }
+      { symbol, leverage },
     );
   }
 
   /** Query Settlement History */
   getSettlementHistory(
-    params?: USDCSymbolDirectionLimitCursor
+    params?: USDCSymbolDirectionLimitCursor,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/session-settlement',
-      params
+      params,
     );
   }
 
@@ -271,7 +275,7 @@ export class USDCPerpetualClient extends BaseRestClient {
       '/perpetual/usdc/openapi/public/v1/risk-limit/list',
       {
         symbol,
-      }
+      },
     );
   }
 
@@ -279,7 +283,7 @@ export class USDCPerpetualClient extends BaseRestClient {
   setRiskLimit(symbol: string, riskId: number): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/perpetual/usdc/openapi/private/v1/position/set-risk-limit',
-      { symbol, riskId }
+      { symbol, riskId },
     );
   }
 
@@ -296,7 +300,7 @@ export class USDCPerpetualClient extends BaseRestClient {
   getPredictedFundingRate(symbol: string): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/perpetual/usdc/openapi/private/v1/predicted-funding',
-      { symbol }
+      { symbol },
     );
   }
 

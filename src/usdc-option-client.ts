@@ -25,6 +25,10 @@ import BaseRestClient from './util/BaseRestClient';
 
 /**
  * REST API client for USDC Option APIs
+ *
+ * @deprecated WARNING: V1/V2 private endpoints (Rest API & Websocket Stream) for mainnet
+ * will be switched off gradually from 30 Oct 2023 UTC, so they are not promised a stability.
+ * Please note that you are at your own risk of using old endpoints going forward, and please move to V5 ASAP.
  */
 export class USDCOptionClient extends BaseRestClient {
   getClientType() {
@@ -49,7 +53,7 @@ export class USDCOptionClient extends BaseRestClient {
 
   /** Fetch trading rules (such as min/max qty). Query for all if blank. */
   getContractInfo(
-    params?: USDCOptionsContractInfoRequest
+    params?: USDCOptionsContractInfoRequest,
   ): Promise<APIResponseV3<any>> {
     return this.get('/option/usdc/openapi/public/v1/symbols', params);
   }
@@ -61,18 +65,18 @@ export class USDCOptionClient extends BaseRestClient {
 
   /** Get delivery information */
   getDeliveryPrice(
-    params?: USDCOptionsDeliveryPriceRequest
+    params?: USDCOptionsDeliveryPriceRequest,
   ): Promise<APIResponseV3<any>> {
     return this.get('/option/usdc/openapi/public/v1/delivery-price', params);
   }
 
   /** Returned records are Taker Buy in default. */
   getLast500Trades(
-    params: USDCOptionsRecentTradesRequest
+    params: USDCOptionsRecentTradesRequest,
   ): Promise<APIResponseV3<any>> {
     return this.get(
       '/option/usdc/openapi/public/v1/query-trade-latest',
-      params
+      params,
     );
   }
 
@@ -84,11 +88,11 @@ export class USDCOptionClient extends BaseRestClient {
    * Both startTime & endTime entered together or both are left blank
    */
   getHistoricalVolatility(
-    params?: USDCOptionsHistoricalVolatilityRequest
+    params?: USDCOptionsHistoricalVolatilityRequest,
   ): Promise<APIResponseV3<any>> {
     return this.get(
       '/option/usdc/openapi/public/v1/query-historical-volatility',
-      params
+      params,
     );
   }
 
@@ -108,7 +112,7 @@ export class USDCOptionClient extends BaseRestClient {
   submitOrder(params: USDCOptionsOrderRequest): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/place-order',
-      params
+      params,
     );
   }
 
@@ -116,91 +120,91 @@ export class USDCOptionClient extends BaseRestClient {
    * Each request supports a max. of four orders. The reduceOnly parameter should be separate and unique for each order in the request.
    */
   batchSubmitOrders(
-    orderRequest: USDCOptionsOrderRequest[]
+    orderRequest: USDCOptionsOrderRequest[],
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/batch-place-orders',
-      { orderRequest }
+      { orderRequest },
     );
   }
 
   /** For Options, at least one of the three parameters — price, quantity or implied volatility — must be input. */
   modifyOrder(
-    params: USDCOptionsModifyOrderRequest
+    params: USDCOptionsModifyOrderRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/replace-order',
-      params
+      params,
     );
   }
 
   /** Each request supports a max. of four orders. The reduceOnly parameter should be separate and unique for each order in the request. */
   batchModifyOrders(
-    replaceOrderRequest: USDCOptionsModifyOrderRequest[]
+    replaceOrderRequest: USDCOptionsModifyOrderRequest[],
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/batch-replace-orders',
-      { replaceOrderRequest }
+      { replaceOrderRequest },
     );
   }
 
   /** Cancel order */
   cancelOrder(
-    params: USDCOptionsCancelOrderRequest
+    params: USDCOptionsCancelOrderRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/cancel-order',
-      params
+      params,
     );
   }
 
   /** Batch cancel orders */
   batchCancelOrders(
-    cancelRequest: USDCOptionsCancelOrderRequest[]
+    cancelRequest: USDCOptionsCancelOrderRequest[],
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/batch-cancel-orders',
-      { cancelRequest }
+      { cancelRequest },
     );
   }
 
   /** This is used to cancel all active orders. The real-time response indicates whether the request is successful, depending on retCode. */
   cancelActiveOrders(
-    params?: USDCOptionsCancelAllOrdersRequest
+    params?: USDCOptionsCancelAllOrdersRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/cancel-all',
-      params
+      params,
     );
   }
 
   /** Query Unfilled/Partially Filled Orders(real-time), up to last 7 days of partially filled/unfilled orders */
   getActiveRealtimeOrders(
-    params?: USDCOptionsActiveOrdersRealtimeRequest
+    params?: USDCOptionsActiveOrdersRealtimeRequest,
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate(
       '/option/usdc/openapi/private/v1/trade/query-active-orders',
-      params
+      params,
     );
   }
 
   /** Query Unfilled/Partially Filled Orders */
   getActiveOrders(
-    params: USDCOptionsActiveOrdersRequest
+    params: USDCOptionsActiveOrdersRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-active-orders',
-      params
+      params,
     );
   }
 
   /** Query order history. The endpoint only supports up to 30 days of queried records */
   getHistoricOrders(
-    params: USDCOptionsHistoricOrdersRequest
+    params: USDCOptionsHistoricOrdersRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-order-history',
-      params
+      params,
     );
   }
 
@@ -210,11 +214,11 @@ export class USDCOptionClient extends BaseRestClient {
    * An error will be returned if startTime is more than 30 days.
    */
   getOrderExecutionHistory(
-    params: USDCOptionsOrderExecutionRequest
+    params: USDCOptionsOrderExecutionRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/execution-list',
-      params
+      params,
     );
   }
 
@@ -222,18 +226,18 @@ export class USDCOptionClient extends BaseRestClient {
 
   /** The endpoint only supports up to 30 days of queried records. An error will be returned if startTime is more than 30 days. */
   getTransactionLog(
-    params: USDCTransactionLogRequest
+    params: USDCTransactionLogRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-transaction-log',
-      params
+      params,
     );
   }
 
   /** Wallet info for USDC account. */
   getBalances(): Promise<APIResponseV3<any>> {
     return this.postPrivate(
-      '/option/usdc/openapi/private/v1/query-wallet-balance'
+      '/option/usdc/openapi/private/v1/query-wallet-balance',
     );
   }
 
@@ -241,7 +245,7 @@ export class USDCOptionClient extends BaseRestClient {
   getAssetInfo(baseCoin?: string): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-asset-info',
-      { baseCoin }
+      { baseCoin },
     );
   }
 
@@ -252,18 +256,18 @@ export class USDCOptionClient extends BaseRestClient {
    * Rest API returns the result of checking prerequisites. You could get the real status of margin mode change by subscribing margin mode.
    */
   setMarginMode(
-    newMarginMode: 'REGULAR_MARGIN' | 'PORTFOLIO_MARGIN'
+    newMarginMode: 'REGULAR_MARGIN' | 'PORTFOLIO_MARGIN',
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/private/asset/account/setMarginMode',
-      { setMarginMode: newMarginMode }
+      { setMarginMode: newMarginMode },
     );
   }
 
   /** Query margin mode for USDC account. */
   getMarginMode(): Promise<APIResponseV3<any>> {
     return this.postPrivate(
-      '/option/usdc/openapi/private/v1/query-margin-info'
+      '/option/usdc/openapi/private/v1/query-margin-info',
     );
   }
 
@@ -273,27 +277,27 @@ export class USDCOptionClient extends BaseRestClient {
   getPositions(params: USDCPositionsRequest): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-position',
-      params
+      params,
     );
   }
 
   /** Query Delivery History */
   getDeliveryHistory(
-    params: USDCOptionsDeliveryHistoryRequest
+    params: USDCOptionsDeliveryHistoryRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-delivery-list',
-      params
+      params,
     );
   }
 
   /** Query Positions Info Upon Expiry */
   getPositionsInfoUponExpiry(
-    params?: USDCOptionsPositionsInfoExpiryRequest
+    params?: USDCOptionsPositionsInfoExpiryRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/query-position-exp-date',
-      params
+      params,
     );
   }
 
@@ -303,7 +307,7 @@ export class USDCOptionClient extends BaseRestClient {
   modifyMMP(params: USDCOptionsModifyMMPRequest): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/option/usdc/openapi/private/v1/mmp-modify',
-      params
+      params,
     );
   }
 

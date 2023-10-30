@@ -42,6 +42,10 @@ import BaseRestClient from './util/BaseRestClient';
 
 /**
  * REST API client for linear/USD perpetual futures APIs (v2)
+ *
+ * @deprecated WARNING: V1/V2 private endpoints (Rest API & Websocket Stream) for mainnet
+ * will be switched off gradually from 30 Oct 2023 UTC, so they are not promised a stability.
+ * Please note that you are at your own risk of using old endpoints going forward, and please move to V5 ASAP.
  */
 export class LinearClient extends BaseRestClient {
   getClientType() {
@@ -64,7 +68,7 @@ export class LinearClient extends BaseRestClient {
   }
 
   getKline(
-    params: SymbolIntervalFromLimitParam
+    params: SymbolIntervalFromLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('public/linear/kline', params);
   }
@@ -73,7 +77,7 @@ export class LinearClient extends BaseRestClient {
    * Get latest information for symbol
    */
   getTickers(
-    params?: Partial<SymbolParam>
+    params?: Partial<SymbolParam>,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/tickers', params);
   }
@@ -91,19 +95,19 @@ export class LinearClient extends BaseRestClient {
   }
 
   getMarkPriceKline(
-    params: SymbolIntervalFromLimitParam
+    params: SymbolIntervalFromLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('public/linear/mark-price-kline', params);
   }
 
   getIndexPriceKline(
-    params: SymbolIntervalFromLimitParam
+    params: SymbolIntervalFromLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('public/linear/index-price-kline', params);
   }
 
   getPremiumIndexKline(
-    params: SymbolIntervalFromLimitParam
+    params: SymbolIntervalFromLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('public/linear/premium-index-kline', params);
   }
@@ -115,19 +119,19 @@ export class LinearClient extends BaseRestClient {
    */
 
   getOpenInterest(
-    params: SymbolPeriodLimitParam
+    params: SymbolPeriodLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/open-interest', params);
   }
 
   getLatestBigDeal(
-    params: SymbolLimitParam
+    params: SymbolLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/big-deal', params);
   }
 
   getLongShortRatio(
-    params: SymbolPeriodLimitParam
+    params: SymbolPeriodLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/account-ratio', params);
   }
@@ -149,25 +153,25 @@ export class LinearClient extends BaseRestClient {
    */
 
   getWalletBalance(
-    params?: Partial<CoinParam>
+    params?: Partial<CoinParam>,
   ): Promise<APIResponseWithTime<WalletBalances>> {
     return this.getPrivate('v2/private/wallet/balance', params);
   }
 
   getWalletFundRecords(
-    params?: WalletFundRecordsReq
+    params?: WalletFundRecordsReq,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/wallet/fund/records', params);
   }
 
   getWithdrawRecords(
-    params?: WithdrawRecordsReq
+    params?: WithdrawRecordsReq,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/wallet/withdraw/list', params);
   }
 
   getAssetExchangeRecords(
-    params?: AssetExchangeRecordsReq
+    params?: AssetExchangeRecordsReq,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/exchange-order/list', params);
   }
@@ -193,37 +197,37 @@ export class LinearClient extends BaseRestClient {
    */
 
   placeActiveOrder(
-    params: NewLinearOrder
+    params: NewLinearOrder,
   ): Promise<APIResponseWithTime<LinearOrder | null>> {
     return this.postPrivate('private/linear/order/create', params);
   }
 
   getActiveOrderList(
-    params: LinearGetOrdersRequest
+    params: LinearGetOrdersRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('private/linear/order/list', params);
   }
 
   cancelActiveOrder(
-    params: LinearCancelOrderRequest
+    params: LinearCancelOrderRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/order/cancel', params);
   }
 
   cancelAllActiveOrders(
-    params: SymbolParam
+    params: SymbolParam,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/order/cancel-all', params);
   }
 
   replaceActiveOrder(
-    params: LinearReplaceOrderRequest
+    params: LinearReplaceOrderRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/order/replace', params);
   }
 
   queryActiveOrder(
-    params: LinearGetOrderRequest
+    params: LinearGetOrderRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('private/linear/order/search', params);
   }
@@ -233,37 +237,37 @@ export class LinearClient extends BaseRestClient {
    */
 
   placeConditionalOrder(
-    params: LinearConditionalOrderRequest
+    params: LinearConditionalOrderRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/stop-order/create', params);
   }
 
   getConditionalOrder(
-    params: LinearGetConditionalOrderRequest
+    params: LinearGetConditionalOrderRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('private/linear/stop-order/list', params);
   }
 
   cancelConditionalOrder(
-    params: LinearCancelConditionalOrderRequest
+    params: LinearCancelConditionalOrderRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/stop-order/cancel', params);
   }
 
   cancelAllConditionalOrders(
-    params: SymbolParam
+    params: SymbolParam,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/stop-order/cancel-all', params);
   }
 
   replaceConditionalOrder(
-    params: LinearReplaceConditionalOrderRequest
+    params: LinearReplaceConditionalOrderRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/stop-order/replace', params);
   }
 
   queryConditionalOrder(
-    params: LinearQueryConditionalOrderRequest
+    params: LinearQueryConditionalOrderRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('private/linear/stop-order/search', params);
   }
@@ -275,26 +279,26 @@ export class LinearClient extends BaseRestClient {
   getPosition(): Promise<APIResponseWithTime<PerpPositionRoot[]>>;
 
   getPosition(
-    params: Partial<SymbolParam>
+    params: Partial<SymbolParam>,
   ): Promise<APIResponseWithTime<PerpPosition[]>>;
 
   getPosition(
-    params?: Partial<SymbolParam>
+    params?: Partial<SymbolParam>,
   ): Promise<APIResponseWithTime<PerpPosition[] | PerpPositionRoot[]>> {
     return this.getPrivate('private/linear/position/list', params);
   }
 
   setAutoAddMargin(
-    params?: LinearSetAutoAddMarginRequest
+    params?: LinearSetAutoAddMarginRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate(
       'private/linear/position/set-auto-add-margin',
-      params
+      params,
     );
   }
 
   setMarginSwitch(
-    params?: LinearSetMarginSwitchRequest
+    params?: LinearSetMarginSwitchRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/position/switch-isolated', params);
   }
@@ -303,7 +307,7 @@ export class LinearClient extends BaseRestClient {
    * Switch between one-way vs hedge mode. Use `linearPositionModeEnum` for the mode parameter.
    */
   setPositionMode(
-    params: LinearSetPositionModeRequest
+    params: LinearSetPositionModeRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/position/switch-mode', params);
   }
@@ -313,46 +317,46 @@ export class LinearClient extends BaseRestClient {
    * This is set with the setTradingStop() method. Use `positionTpSlModeEnum` for the tp_sl_mode parameter.
    */
   setPositionTpSlMode(
-    params: LinearSetPositionTpSlModeRequest
+    params: LinearSetPositionTpSlModeRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/tpsl/switch-mode', params);
   }
 
   setAddReduceMargin(
-    params?: LinearSetAddReduceMarginRequest
+    params?: LinearSetAddReduceMarginRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/position/add-margin', params);
   }
 
   setUserLeverage(
-    params: LinearSetUserLeverageRequest
+    params: LinearSetUserLeverageRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/position/set-leverage', params);
   }
 
   setTradingStop(
-    params: LinearSetTradingStopRequest
+    params: LinearSetTradingStopRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/position/trading-stop', params);
   }
 
   getTradeRecords(
-    params: LinearGetTradeRecordsRequest
+    params: LinearGetTradeRecordsRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('private/linear/trade/execution/list', params);
   }
 
   getHistoryTradeRecords(
-    params: LinearGetHistoryTradeRecordsRequest
+    params: LinearGetHistoryTradeRecordsRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate(
       '/private/linear/trade/execution/history-list',
-      params
+      params,
     );
   }
 
   getClosedPnl(
-    params: LinearGetClosedPnlRequest
+    params: LinearGetClosedPnlRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('private/linear/trade/closed-pnl/list', params);
   }
@@ -366,7 +370,7 @@ export class LinearClient extends BaseRestClient {
   }
 
   setRiskLimit(
-    params: LinearSetRiskLimitRequest
+    params: LinearSetRiskLimitRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('private/linear/position/set-risk', params);
   }
@@ -376,7 +380,7 @@ export class LinearClient extends BaseRestClient {
    */
 
   getPredictedFundingFee(
-    params: SymbolParam
+    params: SymbolParam,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('private/linear/funding/predicted-funding', params);
   }

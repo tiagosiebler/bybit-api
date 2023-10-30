@@ -32,6 +32,10 @@ import BaseRestClient from './util/BaseRestClient';
 
 /**
  * REST API client for Inverse Perpetual Futures APIs (v2)
+ *
+ * @deprecated WARNING: V1/V2 private endpoints (Rest API & Websocket Stream) for mainnet
+ * will be switched off gradually from 30 Oct 2023 UTC, so they are not promised a stability.
+ * Please note that you are at your own risk of using old endpoints going forward, and please move to V5 ASAP.
  */
 export class InverseClient extends BaseRestClient {
   getClientType() {
@@ -54,7 +58,7 @@ export class InverseClient extends BaseRestClient {
   }
 
   getKline(
-    params: SymbolIntervalFromLimitParam
+    params: SymbolIntervalFromLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/kline/list', params);
   }
@@ -63,7 +67,7 @@ export class InverseClient extends BaseRestClient {
    * Get latest information for symbol
    */
   getTickers(
-    params?: Partial<SymbolParam>
+    params?: Partial<SymbolParam>,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/tickers', params);
   }
@@ -77,19 +81,19 @@ export class InverseClient extends BaseRestClient {
   }
 
   getMarkPriceKline(
-    params: SymbolIntervalFromLimitParam
+    params: SymbolIntervalFromLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/mark-price-kline', params);
   }
 
   getIndexPriceKline(
-    params: SymbolIntervalFromLimitParam
+    params: SymbolIntervalFromLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/index-price-kline', params);
   }
 
   getPremiumIndexKline(
-    params: SymbolIntervalFromLimitParam
+    params: SymbolIntervalFromLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/premium-index-kline', params);
   }
@@ -101,19 +105,19 @@ export class InverseClient extends BaseRestClient {
    */
 
   getOpenInterest(
-    params: SymbolPeriodLimitParam
+    params: SymbolPeriodLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/open-interest', params);
   }
 
   getLatestBigDeal(
-    params: SymbolLimitParam
+    params: SymbolLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/big-deal', params);
   }
 
   getLongShortRatio(
-    params: SymbolPeriodLimitParam
+    params: SymbolPeriodLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/account-ratio', params);
   }
@@ -135,25 +139,25 @@ export class InverseClient extends BaseRestClient {
    */
 
   getWalletBalance(
-    params?: Partial<CoinParam>
+    params?: Partial<CoinParam>,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/wallet/balance', params);
   }
 
   getWalletFundRecords(
-    params?: WalletFundRecordsReq
+    params?: WalletFundRecordsReq,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/wallet/fund/records', params);
   }
 
   getWithdrawRecords(
-    params?: WithdrawRecordsReq
+    params?: WithdrawRecordsReq,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/wallet/withdraw/list', params);
   }
 
   getAssetExchangeRecords(
-    params?: AssetExchangeRecordsReq
+    params?: AssetExchangeRecordsReq,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/exchange-order/list', params);
   }
@@ -183,37 +187,37 @@ export class InverseClient extends BaseRestClient {
    */
 
   placeActiveOrder(
-    orderRequest: InverseOrderRequest
+    orderRequest: InverseOrderRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/order/create', orderRequest);
   }
 
   getActiveOrderList(
-    params: InverseActiveOrdersRequest
+    params: InverseActiveOrdersRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/order/list', params);
   }
 
   cancelActiveOrder(
-    params: InverseCancelOrderRequest
+    params: InverseCancelOrderRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/order/cancel', params);
   }
 
   cancelAllActiveOrders(
-    params: SymbolParam
+    params: SymbolParam,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/order/cancelAll', params);
   }
 
   replaceActiveOrder(
-    params: InverseReplaceOrderRequest
+    params: InverseReplaceOrderRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/order/replace', params);
   }
 
   queryActiveOrder(
-    params: InverseGetOrderRequest
+    params: InverseGetOrderRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/order', params);
   }
@@ -223,38 +227,38 @@ export class InverseClient extends BaseRestClient {
    */
 
   placeConditionalOrder(
-    params: InverseConditionalOrderRequest
+    params: InverseConditionalOrderRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/stop-order/create', params);
   }
 
   /** get conditional order list. This may see delays, use queryConditionalOrder() for real-time queries */
   getConditionalOrder(
-    params: InverseActiveConditionalOrderRequest
+    params: InverseActiveConditionalOrderRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/stop-order/list', params);
   }
 
   cancelConditionalOrder(
-    params: InverseCancelConditionalOrderRequest
+    params: InverseCancelConditionalOrderRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/stop-order/cancel', params);
   }
 
   cancelAllConditionalOrders(
-    params: SymbolParam
+    params: SymbolParam,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/stop-order/cancelAll', params);
   }
 
   replaceConditionalOrder(
-    params: InverseReplaceConditionalOrderRequest
+    params: InverseReplaceConditionalOrderRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/stop-order/replace', params);
   }
 
   queryConditionalOrder(
-    params: InverseGetOrderRequest
+    params: InverseGetOrderRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/stop-order', params);
   }
@@ -264,49 +268,49 @@ export class InverseClient extends BaseRestClient {
    */
 
   getPosition(
-    params?: Partial<SymbolParam>
+    params?: Partial<SymbolParam>,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/position/list', params);
   }
 
   changePositionMargin(
-    params: InverseChangePositionMarginRequest
+    params: InverseChangePositionMarginRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('position/change-position-margin', params);
   }
 
   setTradingStop(
-    params: InverseSetTradingStopRequest
+    params: InverseSetTradingStopRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/position/trading-stop', params);
   }
 
   setUserLeverage(
-    params: InverseSetLeverageRequest
+    params: InverseSetLeverageRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/position/leverage/save', params);
   }
 
   getTradeRecords(
-    params: InverseGetTradeRecordsRequest
+    params: InverseGetTradeRecordsRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/execution/list', params);
   }
 
   getClosedPnl(
-    params: InverseGetClosedPnlRequest
+    params: InverseGetClosedPnlRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/trade/closed-pnl/list', params);
   }
 
   setSlTpPositionMode(
-    params: InverseSetSlTpPositionModeRequest
+    params: InverseSetSlTpPositionModeRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/tpsl/switch-mode', params);
   }
 
   setMarginType(
-    params: InverseSetMarginTypeRequest
+    params: InverseSetMarginTypeRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('v2/private/position/switch-isolated', params);
   }

@@ -16,6 +16,10 @@ import BaseRestClient from './util/BaseRestClient';
 
 /**
  * REST API client for Inverse Futures APIs (e.g. quarterly futures) (v2)
+ *
+ * @deprecated WARNING: V1/V2 private endpoints (Rest API & Websocket Stream) for mainnet
+ * will be switched off gradually from 30 Oct 2023 UTC, so they are not promised a stability.
+ * Please note that you are at your own risk of using old endpoints going forward, and please move to V5 ASAP.
  */
 export class InverseFuturesClient extends BaseRestClient {
   getClientType() {
@@ -38,7 +42,7 @@ export class InverseFuturesClient extends BaseRestClient {
   }
 
   getKline(
-    params: SymbolIntervalFromLimitParam
+    params: SymbolIntervalFromLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/kline/list', params);
   }
@@ -47,7 +51,7 @@ export class InverseFuturesClient extends BaseRestClient {
    * Get latest information for symbol
    */
   getTickers(
-    params?: Partial<SymbolParam>
+    params?: Partial<SymbolParam>,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/tickers', params);
   }
@@ -64,19 +68,19 @@ export class InverseFuturesClient extends BaseRestClient {
   }
 
   getMarkPriceKline(
-    params: SymbolIntervalFromLimitParam
+    params: SymbolIntervalFromLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/mark-price-kline', params);
   }
 
   getIndexPriceKline(
-    params: SymbolIntervalFromLimitParam
+    params: SymbolIntervalFromLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/index-price-kline', params);
   }
 
   getPremiumIndexKline(
-    params: SymbolIntervalFromLimitParam
+    params: SymbolIntervalFromLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/premium-index-kline', params);
   }
@@ -88,19 +92,19 @@ export class InverseFuturesClient extends BaseRestClient {
    */
 
   getOpenInterest(
-    params: SymbolPeriodLimitParam
+    params: SymbolPeriodLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/open-interest', params);
   }
 
   getLatestBigDeal(
-    params: SymbolLimitParam
+    params: SymbolLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/big-deal', params);
   }
 
   getLongShortRatio(
-    params: SymbolPeriodLimitParam
+    params: SymbolPeriodLimitParam,
   ): Promise<APIResponseWithTime<any[]>> {
     return this.get('v2/public/account-ratio', params);
   }
@@ -122,25 +126,25 @@ export class InverseFuturesClient extends BaseRestClient {
    */
 
   getWalletBalance(
-    params?: Partial<CoinParam>
+    params?: Partial<CoinParam>,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/wallet/balance', params);
   }
 
   getWalletFundRecords(
-    params?: WalletFundRecordsReq
+    params?: WalletFundRecordsReq,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/wallet/fund/records', params);
   }
 
   getWithdrawRecords(
-    params?: WithdrawRecordsReq
+    params?: WithdrawRecordsReq,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/wallet/withdraw/list', params);
   }
 
   getAssetExchangeRecords(
-    params?: AssetExchangeRecordsReq
+    params?: AssetExchangeRecordsReq,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('v2/private/exchange-order/list', params);
   }
@@ -204,7 +208,7 @@ export class InverseFuturesClient extends BaseRestClient {
   }
 
   cancelAllActiveOrders(
-    params: SymbolParam
+    params: SymbolParam,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('futures/private/order/cancelAll', params);
   }
@@ -266,7 +270,7 @@ export class InverseFuturesClient extends BaseRestClient {
   }
 
   cancelAllConditionalOrders(
-    params: SymbolParam
+    params: SymbolParam,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('futures/private/stop-order/cancelAll', params);
   }
@@ -298,7 +302,7 @@ export class InverseFuturesClient extends BaseRestClient {
    * Get position list
    */
   getPosition(
-    params?: Partial<SymbolParam>
+    params?: Partial<SymbolParam>,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('futures/private/position/list', params);
   }
@@ -309,7 +313,7 @@ export class InverseFuturesClient extends BaseRestClient {
   }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate(
       'futures/private/position/change-position-margin',
-      params
+      params,
     );
   }
 

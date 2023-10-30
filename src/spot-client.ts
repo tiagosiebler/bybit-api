@@ -14,8 +14,11 @@ import BaseRestClient from './util/BaseRestClient';
 import { REST_CLIENT_TYPE_ENUM } from './util/requestUtils';
 
 /**
- * @deprecated Use SpotV3Client instead, which leverages the newer v3 APIs
  * REST API client for Spot APIs (v1)
+ *
+ * @deprecated WARNING: V1/V2 private endpoints (Rest API & Websocket Stream) for mainnet
+ * will be switched off gradually from 30 Oct 2023 UTC, so they are not promised a stability.
+ * Please note that you are at your own risk of using old endpoints going forward, and please move to V5 ASAP.
  */
 export class SpotClient extends BaseRestClient {
   getClientType() {
@@ -51,7 +54,7 @@ export class SpotClient extends BaseRestClient {
   getMergedOrderBook(
     symbol: string,
     scale?: number,
-    limit?: number
+    limit?: number,
   ): Promise<APIResponse<any>> {
     return this.get('/spot/quote/v1/depth/merged', {
       symbol,
@@ -72,7 +75,7 @@ export class SpotClient extends BaseRestClient {
     interval: KlineInterval,
     limit?: number,
     startTime?: number,
-    endTime?: number
+    endTime?: number,
   ): Promise<APIResponse<any[]>> {
     return this.get('/spot/quote/v1/kline', {
       symbol,
@@ -92,7 +95,7 @@ export class SpotClient extends BaseRestClient {
   getLastTradedPrice(symbol: string): Promise<APIResponse<SpotLastPrice>>;
 
   getLastTradedPrice(
-    symbol?: string
+    symbol?: string,
   ): Promise<APIResponse<SpotLastPrice | SpotLastPrice[]>> {
     return this.get('/spot/quote/v1/ticker/price', { symbol });
   }
@@ -135,7 +138,7 @@ export class SpotClient extends BaseRestClient {
   getOpenOrders(
     symbol?: string,
     orderId?: string,
-    limit?: number
+    limit?: number,
   ): Promise<APIResponse<any>> {
     return this.getPrivate('/spot/v1/open-orders', {
       symbol,
@@ -147,7 +150,7 @@ export class SpotClient extends BaseRestClient {
   getPastOrders(
     symbol?: string,
     orderId?: string,
-    limit?: number
+    limit?: number,
   ): Promise<APIResponse<any>> {
     return this.getPrivate('/spot/v1/history-orders', {
       symbol,
@@ -160,7 +163,7 @@ export class SpotClient extends BaseRestClient {
     symbol?: string,
     limit?: number,
     fromId?: number,
-    toId?: number
+    toId?: number,
   ): Promise<APIResponse<any>> {
     return this.getPrivate('/spot/v1/myTrades', {
       symbol,

@@ -17,6 +17,10 @@ import BaseRestClient from './util/BaseRestClient';
 
 /**
  * REST API client for Account Asset APIs
+ *
+ * @deprecated WARNING: V1/V2 private endpoints (Rest API & Websocket Stream) for mainnet
+ * will be switched off gradually from 30 Oct 2023 UTC, so they are not promised a stability.
+ * Please note that you are at your own risk of using old endpoints going forward, and please move to V5 ASAP.
  */
 export class AccountAssetClient extends BaseRestClient {
   getClientType() {
@@ -35,29 +39,29 @@ export class AccountAssetClient extends BaseRestClient {
    */
 
   createInternalTransfer(
-    params: InternalTransferRequest
+    params: InternalTransferRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('/asset/v1/private/transfer', params);
   }
 
   createSubAccountTransfer(
-    params: SubAccountTransferRequest
+    params: SubAccountTransferRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('/asset/v1/private/sub-member/transfer', params);
   }
 
   getInternalTransfers(
-    params?: TransferQueryRequest
+    params?: TransferQueryRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('/asset/v1/private/transfer/list', params);
   }
 
   getSubAccountTransfers(
-    params?: TransferQueryRequest
+    params?: TransferQueryRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate(
       '/asset/v1/private/sub-member/transfer/list',
-      params
+      params,
     );
   }
 
@@ -66,19 +70,19 @@ export class AccountAssetClient extends BaseRestClient {
   }
 
   enableUniversalTransfer(
-    params?: EnableUniversalTransferRequest
+    params?: EnableUniversalTransferRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('/asset/v1/private/transferable-subs/save', params);
   }
 
   createUniversalTransfer(
-    params: UniversalTransferRequest
+    params: UniversalTransferRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('/asset/v1/private/universal/transfer', params);
   }
 
   getUniversalTransfers(
-    params?: TransferQueryRequest
+    params?: TransferQueryRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('/asset/v1/private/universal/transfer/list', params);
   }
@@ -90,19 +94,19 @@ export class AccountAssetClient extends BaseRestClient {
    */
 
   getSupportedDepositList(
-    params?: SupportedDepositListRequest
+    params?: SupportedDepositListRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.get('/asset/v1/public/deposit/allowed-deposit-list', params);
   }
 
   getDepositRecords(
-    params?: DepositRecordsRequest
+    params?: DepositRecordsRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('/asset/v1/private/deposit/record/query', params);
   }
 
   getWithdrawRecords(
-    params?: WithdrawalRecordsRequest
+    params?: WithdrawalRecordsRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('/asset/v1/private/withdraw/record/query', params);
   }
@@ -112,13 +116,13 @@ export class AccountAssetClient extends BaseRestClient {
   }
 
   getAssetInformation(
-    params?: AccountAssetInformationRequest
+    params?: AccountAssetInformationRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.getPrivate('/asset/v1/private/asset-info/query', params);
   }
 
   submitWithdrawal(
-    params: WithdrawalRequest
+    params: WithdrawalRequest,
   ): Promise<APIResponseWithTime<any>> {
     return this.postPrivate('/asset/v1/private/withdraw', params);
   }
