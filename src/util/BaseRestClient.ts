@@ -98,7 +98,7 @@ export default abstract class BaseRestClient {
 
   /**
    * Create an instance of the REST client. Pass API credentials in the object in the first parameter.
-   * @param {RestClientOptions} [restClientOptions={}] options to configure REST API connectivity
+   * @param {RestClientOptions} [restOptions={}] options to configure REST API connectivity
    * @param {AxiosRequestConfig} [networkOptions={}] HTTP networking options for axios
    */
   constructor(
