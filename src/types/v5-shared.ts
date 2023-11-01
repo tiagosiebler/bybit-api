@@ -45,7 +45,8 @@ export type OrderCancelTypeV5 =
   | 'CancelAllBeforeAdl'
   | 'CancelByAdmin'
   | 'CancelByTpSlTsClear'
-  | 'CancelByPzSideCh';
+  | 'CancelByPzSideCh'
+  | 'UNKNOWN';
 
 export type OrderRejectReasonV5 =
   | 'EC_NoError'
