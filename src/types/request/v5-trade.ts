@@ -109,21 +109,43 @@ export interface BatchOrderParamsV5 {
   orderType: OrderTypeV5;
   qty: string;
   price?: string;
+  triggerDirection?: 1 | 2;
+  triggerBy?: OrderTriggerByV5;
   orderIv?: string;
   timeInForce?: OrderTimeInForceV5;
-  orderLinkId: string;
+  positionIdx?: PositionIdx;
+  orderLinkId?: string;
+  takeProfit?: string;
+  stopLoss?: string;
+  tpTriggerBy?: OrderTriggerByV5;
+  slTriggerBy?: OrderTriggerByV5;
   reduceOnly?: boolean;
-  mmp?: boolean;
+  closeOnTrigger?: boolean;
   smpType?: OrderSMPTypeV5;
+  mmp?: boolean;
+  tpslMode?: 'Full' | 'Partial';
+  tpLimitPrice?: string;
+  slLimitPrice?: string;
+  tpOrderType?: OrderTypeV5;
+  slOrderType?: OrderTypeV5;
 }
 
 export interface BatchAmendOrderParamsV5 {
   symbol: string;
   orderId?: string;
   orderLinkId?: string;
+  orderIv?: string;
+  triggerPrice?: string;
   qty?: string;
   price?: string;
-  orderIv?: string;
+  tpslMode?: 'Full' | 'Partial';
+  takeProfit?: string;
+  stopLoss?: string;
+  tpTriggerBy?: OrderTriggerByV5;
+  slTriggerBy?: OrderTriggerByV5;
+  triggerBy?: OrderTriggerByV5;
+  tpLimitPrice?: string;
+  slLimitPrice?: string;
 }
 
 export interface BatchCancelOrderParamsV5 {
