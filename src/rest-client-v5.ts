@@ -432,7 +432,8 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
-   * This endpoint allows you to place more than one order in a single request. Covers: option (unified account).
+   * This endpoint allows you to place more than one order in a single request.
+   * Covers: Option (UTA, UTA Pro) / USDT Perpetual, UDSC Perpetual, USDC Futures (UTA Pro)
    *
    * Make sure you have sufficient funds in your account when placing an order.
    * Once an order is placed, according to the funds required by the order,
@@ -443,7 +444,7 @@ export class RestClientV5 extends BaseRestClient {
    * The structure of the two lists are completely consistent.
    */
   batchSubmitOrders(
-    category: 'option',
+    category: 'option' | 'linear',
     orders: BatchOrderParamsV5[],
   ): Promise<
     APIResponseV3WithTime<BatchOrdersResponseV5<BatchCreateOrderResultV5[]>>
@@ -455,14 +456,15 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
-   * This endpoint allows you to amend more than one open order in a single request. Covers: option (unified account).
+   * This endpoint allows you to amend more than one open order in a single request.
+   * Covers: Option (UTA, UTA Pro) / USDT Perpetual, UDSC Perpetual, USDC Futures (UTA Pro)
    *
    * You can modify unfilled or partially filled orders. Conditional orders are not supported.
    *
    * A maximum of 20 orders can be amended per request.
    */
   batchAmendOrders(
-    category: 'option',
+    category: 'option' | 'linear',
     orders: BatchAmendOrderParamsV5[],
   ): Promise<
     APIResponseV3WithTime<BatchOrdersResponseV5<BatchAmendOrderResultV5[]>>
@@ -474,14 +476,15 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
-   * This endpoint allows you to cancel more than one open order in a single request. Covers: option (unified account).
+   * This endpoint allows you to cancel more than one open order in a single request.
+   * Covers: Option (UTA, UTA Pro) / USDT Perpetual, UDSC Perpetual, USDC Futures (UTA Pro)
    *
    * You must specify orderId or orderLinkId. If orderId and orderLinkId is not matched, the system will process orderId first.
    *
    * You can cancel unfilled or partially filled orders. A maximum of 20 orders can be cancelled per request.
    */
   batchCancelOrders(
-    category: 'option',
+    category: 'option' | 'linear',
     orders: BatchCancelOrderParamsV5[],
   ): Promise<
     APIResponseV3WithTime<BatchOrdersResponseV5<BatchCancelOrderResultV5[]>>
