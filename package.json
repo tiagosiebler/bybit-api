@@ -24,7 +24,7 @@
     "Stefan Aebischer <os@pixtron.ch> (https://pixtron.ch)"
   ],
   "dependencies": {
-    "axios": "^0.21.0",
+    "axios": "^1.6.0",
     "isomorphic-ws": "^4.0.1",
     "ws": "^7.4.0"
   },
