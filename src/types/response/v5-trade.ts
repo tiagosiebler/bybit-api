@@ -58,6 +58,7 @@ export interface AccountOrderV5 {
   smpOrderId: string;
   createdTime: string;
   updatedTime: string;
+  category: CategoryV5;
 }
 
 export interface BatchCreateOrderResultV5 {
