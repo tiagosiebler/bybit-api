@@ -81,7 +81,7 @@ export type WsPrivateTopic =
 export type WsTopic = WsPublicTopics | WsPrivateTopic;
 
 /** This is used to differentiate between each of the available websocket streams (as bybit has multiple websockets) */
-export type WsKey = typeof WS_KEY_MAP[keyof typeof WS_KEY_MAP];
+export type WsKey = (typeof WS_KEY_MAP)[keyof typeof WS_KEY_MAP];
 
 export interface WSClientConfigurableOptions {
   key?: string;

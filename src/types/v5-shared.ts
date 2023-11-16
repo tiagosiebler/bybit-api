@@ -16,6 +16,10 @@ export type OrderSideV5 = 'Buy' | 'Sell';
 export type OrderTypeV5 = 'Market' | 'Limit';
 export type OrderTimeInForceV5 = 'GTC' | 'IOC' | 'FOK' | 'PostOnly';
 export type OrderTriggerByV5 = 'LastPrice' | 'IndexPrice' | 'MarkPrice';
+export type OCOTriggerTypeV5 =
+  | 'OcoTriggerByUnknown'
+  | 'OcoTriggerTp'
+  | 'OcoTriggerBySl';
 
 export type OrderSMPTypeV5 =
   | 'None'
