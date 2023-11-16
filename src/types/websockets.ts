@@ -1,17 +1,4 @@
 import { RestClientOptions, WS_KEY_MAP } from '../util';
-import {
-  CategoryV5,
-  OCOTriggerTypeV5,
-  OrderRejectReasonV5,
-  OrderSMPTypeV5,
-  OrderSideV5,
-  OrderStatusV5,
-  OrderTimeInForceV5,
-  OrderTriggerByV5,
-  OrderTypeV5,
-  StopOrderTypeV5,
-  TPSLModeV5,
-} from './v5-shared';
 
 /** For spot markets, spotV3 is recommended */
 export type APIMarket =
