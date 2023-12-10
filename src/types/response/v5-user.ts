@@ -45,6 +45,7 @@ export interface ApiKeyInfoV5 {
   vipLevel?: string;
   mktMakerLevel?: string;
   affiliateID?: number;
+  isMaster: boolean;
 }
 
 export interface UpdateApiKeyResultV5 {

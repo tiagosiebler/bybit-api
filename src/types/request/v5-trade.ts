@@ -19,7 +19,7 @@ export interface OrderParamsV5 {
   qty: string;
   price?: string;
   triggerDirection?: 1 | 2;
-  orderFilter?: 'Order' | 'tpslOrder';
+  orderFilter?: OrderFilterV5;
   triggerPrice?: string;
   triggerBy?: OrderTriggerByV5;
   orderIv?: string;
