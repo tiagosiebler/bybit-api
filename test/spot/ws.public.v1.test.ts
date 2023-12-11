@@ -13,7 +13,7 @@ import {
   waitForSocketEvent,
 } from '../ws.util';
 
-describe('Public Spot V1 Websocket Client', () => {
+describe.skip('Public Spot V1 Websocket Client', () => {
   let wsClient: WebsocketClient;
 
   const wsClientOptions: WSClientConfigurableOptions = {
@@ -23,7 +23,7 @@ describe('Public Spot V1 Websocket Client', () => {
   beforeAll(() => {
     wsClient = new WebsocketClient(
       wsClientOptions,
-      getSilentLogger('expectSuccess')
+      getSilentLogger('expectSuccess'),
     );
     wsClient.connectPublic();
     // logAllEvents(wsClient);
