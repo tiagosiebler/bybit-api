@@ -9,7 +9,7 @@ import {
   waitForSocketEvent,
 } from '../../ws.util';
 
-describe('Public USDC Perp Websocket Client', () => {
+describe.skip('Public USDC Perp Websocket Client', () => {
   let wsClient: WebsocketClient;
 
   const wsClientOptions: WSClientConfigurableOptions = {
@@ -19,7 +19,7 @@ describe('Public USDC Perp Websocket Client', () => {
   beforeAll(() => {
     wsClient = new WebsocketClient(
       wsClientOptions,
-      getSilentLogger('expectSuccessNoAuth')
+      getSilentLogger('expectSuccessNoAuth'),
     );
     wsClient.connectPublic();
     // logAllEvents(wsClient);

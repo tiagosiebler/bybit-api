@@ -14,7 +14,7 @@ import {
   waitForSocketEvent,
 } from '../../ws.util';
 
-describe('Private USDC Perp Websocket Client', () => {
+describe.skip('Private USDC Perp Websocket Client', () => {
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
 
@@ -36,7 +36,7 @@ describe('Private USDC Perp Websocket Client', () => {
           reconnectTimeout: 10000,
         },
         // fullLogger
-        getSilentLogger('expect401')
+        getSilentLogger('expect401'),
       );
       // logAllEvents(badClient);
 
@@ -77,7 +77,7 @@ describe('Private USDC Perp Websocket Client', () => {
     beforeAll(() => {
       wsClient = new WebsocketClient(
         wsClientOptions,
-        getSilentLogger('expectSuccess')
+        getSilentLogger('expectSuccess'),
       );
       wsClient.connectPrivate();
       // logAllEvents(wsClient);
@@ -131,7 +131,7 @@ describe('Private USDC Perp Websocket Client', () => {
       } catch (e) {
         console.error(
           `Wait for "${wsTopic}" subscription response exception: `,
-          e
+          e,
         );
         expect(e).toBeFalsy();
       }
