@@ -11,7 +11,7 @@ export type InstrumentStatusV5 =
   | 'Delivering'
   | 'Closed';
 
-export type OrderFilterV5 = 'Order' | 'tpslOrder';
+export type OrderFilterV5 = 'Order' | 'tpslOrder' | 'StopOrder';
 export type OrderSideV5 = 'Buy' | 'Sell';
 export type OrderTypeV5 = 'Market' | 'Limit';
 export type OrderTimeInForceV5 = 'GTC' | 'IOC' | 'FOK' | 'PostOnly';
