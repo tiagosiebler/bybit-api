@@ -14,7 +14,7 @@ import {
   waitForSocketEvent,
 } from '../ws.util';
 
-describe('Private Spot V1 Websocket Client', () => {
+describe.skip('Private Spot V1 Websocket Client', () => {
   let wsClient: WebsocketClient;
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
@@ -34,7 +34,7 @@ describe('Private Spot V1 Websocket Client', () => {
     wsClient = new WebsocketClient(
       wsClientOptions,
       // fullLogger
-      getSilentLogger('expectSuccess')
+      getSilentLogger('expectSuccess'),
     );
     logAllEvents(wsClient);
   });

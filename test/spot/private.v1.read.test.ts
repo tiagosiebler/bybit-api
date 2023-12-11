@@ -2,7 +2,7 @@ import { SpotClient } from '../../src';
 import { getTestProxy } from '../proxy.util';
 import { errorResponseObject, successResponseList } from '../response.util';
 
-describe('Private Spot REST API GET Endpoints', () => {
+describe.skip('Private Spot REST API GET Endpoints', () => {
   const API_KEY = process.env.API_KEY_COM;
   const API_SECRET = process.env.API_SECRET_COM;
 

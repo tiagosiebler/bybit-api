@@ -123,6 +123,7 @@ export class WebsocketClient extends EventEmitter {
       pongTimeout: 1000,
       pingInterval: 10000,
       reconnectTimeout: 500,
+      recvWindow: 5000,
       fetchTimeOffsetBeforeAuth: false,
       ...options,
     };
@@ -739,7 +740,9 @@ export class WebsocketClient extends EventEmitter {
       ? (await this.restClient?.fetchTimeOffset()) || 0
       : 0;
 
-    const signatureExpiresAt = Date.now() + timeOffset + 5000;
+    const recvWindow = this.options.recvWindow || 5000;
+
+    const signatureExpiresAt = Date.now() + timeOffset + recvWindow;
 
     const signature = await signMessage(
       'GET/realtime' + signatureExpiresAt,

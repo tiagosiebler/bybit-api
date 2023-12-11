@@ -35,7 +35,6 @@ Check out my related projects:
   - [bybit-api](https://www.npmjs.com/package/bybit-api)
   - [okx-api](https://www.npmjs.com/package/okx-api)
   - [bitget-api](https://www.npmjs.com/package/bitget-api)
-  - [ftx-api](https://www.npmjs.com/package/ftx-api)
 - Try my misc utilities:
   - [orderbooks](https://www.npmjs.com/package/orderbooks)
 - Check out my examples:
@@ -55,41 +54,41 @@ The version on npm is the output from the `build` command and can be used in pro
 
 - [src](./src) - the whole connector written in TypeScript
 - [lib](./lib) - the JavaScript version of the project (built from TypeScript). This should not be edited directly, as it will be overwritten with each release.
-- [dist](./dist) - the webpack bundle of the project for use in browser environments (see guidance on webpack below).
-- [examples](./examples) - some implementation examples & demonstrations. Contributions are welcome!
+- [examples](./examples) - examples & demonstrations. Contributions are welcome!
 
 ---
 
 ## REST API Clients
 
-Bybit has several API groups (originally one per product). Each generation is labelled with the version number (e.g. v1/v2/v3/v5). Some of the newer API groups can only be used by upgrading your account to the unified account, but doing so will prevent you from using the V1 and V2 APIs.
+Bybit has several API groups (originally one per product). Each generation is labelled with the version number (e.g. v1/v2/v3/v5). New projects & developments should use the newest available API generation (e.g. use the V5 APIs instead of V3).
 
-Refer to the [V5 upgrade guide](https://bybit-exchange.github.io/docs/v5/upgrade-guide) for more information on requirements to use each API group. If you have a choice, you should use the newest generation that is available (e.g. use the V5 instead of the V3 APIs if you can).
+Refer to the [V5 interface mapping page](https://bybit-exchange.github.io/docs/v5/intro#v5-and-v3-interface-mapping-list) for more information on which V5 endpoints can be used instead of previous V3 endpoints.
 
 Here are the available REST clients and the corresponding API groups described in the documentation:
-| Class | Description |
-|:------------------------------------------------------------------: |:----------------------------------------------------------------------------------------------------------------------------: |
-| [ **V5 API** ] | The new unified V5 APIs (successor to previously fragmented APIs for all API groups). To learn more about the V5 API, please read the [V5 upgrade guideline](https://bybit-exchange.github.io/docs/v5/upgrade-guide). |
-| [RestClientV5](src/rest-client-v5.ts) | Unified V5 all-in-one REST client for all [V5 REST APIs](https://bybit-exchange.github.io/docs/v5/intro) |
-| [ **Derivatives v3** ] | The Derivatives v3 APIs (successor to the Futures V2 APIs) |
-| [UnifiedMarginClient](src/unified-margin-client.ts) | [Derivatives (v3) Unified Margin APIs](https://bybit-exchange.github.io/docs/derivatives/unified/place-order) |
-| [ContractClient](src/contract-client.ts) | [Derivatives (v3) Contract APIs](https://bybit-exchange.github.io/docs/derivatives/contract/place-order). |
-| [ **Futures v2** ] | The Futures v2 APIs |
-| Deprecated! ContractClient or RestClientV5 recommended | Please read the [V5 upgrade guideline](https://bybit-exchange.github.io/docs/v5/upgrade-guide) |
-| [~InverseClient~](src/inverse-client.ts)| [Inverse Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse/) |
-| [~LinearClient~](src/linear-client.ts) | [USDT Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-introduction) |
-| [~InverseFuturesClient~](src/inverse-futures-client.ts) | [Inverse Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-introduction) |
-| [ **Spot** ] | The spot APIs |
-| [SpotClientV3](src/spot-client-v3.ts) | [Spot Market (v3) APIs](https://bybit-exchange.github.io/docs/spot/public/instrument) |
-| [~SpotClient~](src/spot-client.ts) (deprecated, SpotClientV3 recommended)| [Spot Market (v1) APIs](https://bybit-exchange.github.io/docs/spot/v1/#t-introduction) |
-| [ **USDC Contract** ] | The USDC Contract APIs |
-| [USDCPerpetualClient](src/usdc-perpetual-client.ts) | [USDC Perpetual APIs](https://bybit-exchange.github.io/docs/usdc/option/?console#t-querydeliverylog) |
-| [USDCOptionClient](src/usdc-option-client.ts) | [USDC Option APIs](https://bybit-exchange.github.io/docs/usdc/option/#t-introduction) |
-| [ **Other** ] | Other standalone API groups |
-| [CopyTradingClient](src/copy-trading-client.ts) | [Copy Trading APIs](https://bybit-exchange.github.io/docs/category/copy-trade) |
-| [AccountAssetClientV3](src/account-asset-client-v3.ts) | [Account Asset V3 APIs](https://bybit-exchange.github.io/docs/account-asset/internal-transfer) |
-| [~AccountAssetClient~](src/account-asset-client.ts) (deprecated, AccountAssetClientV3 recommended) | [Account Asset V1 APIs](https://bybit-exchange.github.io/docs/account_asset/v1/#t-introduction) |
-| [WebsocketClient](src/websocket-client.ts) | All WebSocket Events (Public & Private for all API categories) |
+
+|                                               Class                                                |                                                                                                      Description                                                                                                      |
+| :------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|                                           [ **V5 API** ]                                           | The new unified V5 APIs (successor to previously fragmented APIs for all API groups). To learn more about the V5 API, please read the [V5 upgrade guideline](https://bybit-exchange.github.io/docs/v5/upgrade-guide). |
+|                               [RestClientV5](src/rest-client-v5.ts)                                |                                                       Unified V5 all-in-one REST client for all [V5 REST APIs](https://bybit-exchange.github.io/docs/v5/intro)                                                        |
+|                                       [ **Derivatives v3** ]                                       |                                                                              The Derivatives v3 APIs (successor to the Futures V2 APIs)                                                                               |
+|                        [UnifiedMarginClient](src/unified-margin-client.ts)                         |                                                     [Derivatives (v3) Unified Margin APIs](https://bybit-exchange.github.io/docs/derivatives/unified/place-order)                                                     |
+|                              [ContractClient](src/contract-client.ts)                              |                                                       [Derivatives (v3) Contract APIs](https://bybit-exchange.github.io/docs/derivatives/contract/place-order).                                                       |
+|                                         [ **Futures v2** ]                                         |                                                                                                  The Futures v2 APIs                                                                                                  |
+|                                Deprecated! RestClientV5 recommended                                |                                             Please read the [V5 interface mapping page](https://bybit-exchange.github.io/docs/v5/intro#v5-and-v3-interface-mapping-list)                                              |
+|                              [~InverseClient~](src/inverse-client.ts)                              |                                                            [Inverse Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse/)                                                            |
+|                               [~LinearClient~](src/linear-client.ts)                               |                                                      [USDT Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-introduction)                                                       |
+|                      [~InverseFuturesClient~](src/inverse-futures-client.ts)                       |                                                     [Inverse Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-introduction)                                                      |
+|                                            [ **Spot** ]                                            |                                                                                                     The spot APIs                                                                                                     |
+|                               [SpotClientV3](src/spot-client-v3.ts)                                |                                                                 [Spot Market (v3) APIs](https://bybit-exchange.github.io/docs/spot/public/instrument)                                                                 |
+|             [~SpotClient~](src/spot-client.ts) (deprecated, SpotClientV3 recommended)              |                                                                [Spot Market (v1) APIs](https://bybit-exchange.github.io/docs/spot/v1/#t-introduction)                                                                 |
+|                                       [ **USDC Contract** ]                                        |                                                                                                The USDC Contract APIs                                                                                                 |
+|                        [USDCPerpetualClient](src/usdc-perpetual-client.ts)                         |                                                         [USDC Perpetual APIs](https://bybit-exchange.github.io/docs/usdc/option/?console#t-querydeliverylog)                                                          |
+|                           [USDCOptionClient](src/usdc-option-client.ts)                            |                                                                 [USDC Option APIs](https://bybit-exchange.github.io/docs/usdc/option/#t-introduction)                                                                 |
+|                                           [ **Other** ]                                            |                                                                                              Other standalone API groups                                                                                              |
+|                          [CopyTradingClient](src/copy-trading-client.ts)                           |                                                                    [Copy Trading APIs](https://bybit-exchange.github.io/docs/category/copy-trade)                                                                     |
+|                       [AccountAssetClientV3](src/account-asset-client-v3.ts)                       |                                                            [Account Asset V3 APIs](https://bybit-exchange.github.io/docs/account-asset/internal-transfer)                                                             |
+| [~AccountAssetClient~](src/account-asset-client.ts) (deprecated, AccountAssetClientV3 recommended) |                                                            [Account Asset V1 APIs](https://bybit-exchange.github.io/docs/account_asset/v1/#t-introduction)                                                            |
+|                             [WebsocketClient](src/websocket-client.ts)                             |                                                                            All WebSocket Events (Public & Private for all API categories)                                                                             |
 
 Examples for using each client can be found in:
 
@@ -255,6 +254,9 @@ const wsConfig = {
 
   // how long to wait before attempting to reconnect (in ms) after connection is closed
   // reconnectTimeout: 500,
+
+  // recv window size for authenticated websocket requests (higher latency connections (VPN) can cause authentication to fail if the recv window is too small)
+  // recvWindow: 5000,
 
   // config options sent to RestClient (used for time sync). See RestClient docs.
   // restOptions: { },

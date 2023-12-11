@@ -98,6 +98,8 @@ export interface WSClientConfigurableOptions {
   pongTimeout?: number;
   pingInterval?: number;
   reconnectTimeout?: number;
+  /** Override the recv window for authenticating over websockets (default: 5000 ms) */
+  recvWindow?: number;
   restOptions?: RestClientOptions;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   requestOptions?: any;
