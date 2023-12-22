@@ -808,10 +808,10 @@ export class WebsocketClient extends EventEmitter {
 
     const wasOpen = this.wsStore.isWsOpen(wsKey);
 
-    this.getWs(wsKey)?.terminate();
-    delete this.wsStore.get(wsKey, true).activePongTimer;
     this.clearPingTimer(wsKey);
     this.clearPongTimer(wsKey);
+
+    this.getWs(wsKey)?.terminate();
 
     if (!wasOpen) {
       this.logger.info(
