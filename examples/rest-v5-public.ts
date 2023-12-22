@@ -1,9 +1,4 @@
-import {
-  APIResponseV3WithTime,
-  CategoryListV5,
-  RestClientV5,
-  TickerLinearInverseV5,
-} from '../src/index';
+import { RestClientV5 } from '../src/index';
 
 // or
 // import { RestClientV5 } from 'bybit-api';
