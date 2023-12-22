@@ -220,6 +220,9 @@ The WebsocketClient can be configured to a specific API group using the market p
 
 The following API groups are still available in the WebsocketClient but are deprecated and may no longer work. They will be removed in the next major release:
 
+<details>
+  <summary>Click me to see the table</summary>
+
 |           API Category           |           Market            | Description                                                                                                                                                                                                                                             |
 | :------------------------------: | :-------------------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |   ~~Unified Margin - Options~~   |  `market: 'unifiedOption'`  | The [derivatives v3](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket) category for unified margin. Note: public topics only support options topics. If you need USDC/USDT perps, use `unifiedPerp` instead.             |
@@ -235,7 +238,11 @@ The following API groups are still available in the WebsocketClient but are depr
 |       ~~Contract v3 USDT~~       |  `market: 'contractUSDT'`   | The [Contract V3](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket) category (USDT perps)                                                                                                                                      |
 |     ~~Contract v3 Inverse~~      | `market: 'contractInverse'` | The [Contract V3](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket) category (inverse perps)                                                                                                                                   |
 
-For more complete examples, look into the ws-\* examples in the [examples](./examples/) folder in the repo on GitHub. Here's a minimal example for using the websocket client:
+</details
+
+---
+
+Here's a minimal example for using the websocket client. For more complete examples, look into the ws-\* examples in the [examples](./examples/) folder in the repo on GitHub.
 
 ```javascript
 const { WebsocketClient } = require('bybit-api');
