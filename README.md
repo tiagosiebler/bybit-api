@@ -44,7 +44,8 @@ Check out my related projects:
 
 Most methods accept JS objects. These can be populated using parameters specified by Bybit's API documentation, or check the type definition in each class within the github repository (see table below for convenient links to each class).
 
-- [Bybit API Docs (choose API category from the tabs at the top)](https://bybit-exchange.github.io/docs/v5/intro).
+- [Bybit API Docs](https://bybit-exchange.github.io/docs/v5/intro)
+- [TSDoc Documentation (generated using typedoc via npm module)](https://tsdocs.dev/docs/bybit-api)
 
 ## Structure
 
@@ -241,6 +242,8 @@ The following API groups are still available in the WebsocketClient but are depr
 </details
 
 ---
+
+### WebSocket Examples
 
 Here's a minimal example for using the websocket client. For more complete examples, look into the ws-\* examples in the [examples](./examples/) folder in the repo on GitHub.
 
