@@ -1,4 +1,4 @@
-import { SpotClientV3 } from '../src/index';
+import { SpotClientV3 } from '../../src/index';
 
 // or
 // import { SpotClientV3 } from 'bybit-api';

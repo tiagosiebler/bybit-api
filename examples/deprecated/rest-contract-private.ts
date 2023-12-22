@@ -1,4 +1,4 @@
-import { ContractClient } from '../src/index';
+import { ContractClient } from '../../src/index';
 
 // or
 // import { ContractClient } from 'bybit-api';

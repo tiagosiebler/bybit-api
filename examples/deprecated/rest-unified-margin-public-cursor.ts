@@ -1,4 +1,4 @@
-import { UnifiedMarginClient } from '../src/index';
+import { UnifiedMarginClient } from '../../src/index';
 
 // or
 // import { UnifiedMarginClient } from 'bybit-api';

@@ -1,4 +1,4 @@
-import { CopyTradingClient } from '../src/index';
+import { CopyTradingClient } from '../../src/index';
 
 // or
 // import { CopyTradingClient } from 'bybit-api';

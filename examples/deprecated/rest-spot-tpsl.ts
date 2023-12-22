@@ -1,4 +1,4 @@
-import { SpotClientV3 } from '../src/index';
+import { SpotClientV3 } from '../../src/index';
 
 // or
 // import { SpotClientV3 } from 'bybit-api';
@@ -25,7 +25,7 @@ const client = new SpotClientV3({
       symbol,
       orderId,
       ordersPerPage,
-      0
+      0,
     );
     console.log('normal orders:', normalOrders);
 
@@ -33,7 +33,7 @@ const client = new SpotClientV3({
       symbol,
       orderId,
       ordersPerPage,
-      1
+      1,
     );
     console.log('tpSlOrders:', tpSlOrders);
   } catch (e) {

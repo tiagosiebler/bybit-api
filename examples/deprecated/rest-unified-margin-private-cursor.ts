@@ -1,4 +1,4 @@
-import { UnifiedMarginClient } from '../src/index';
+import { UnifiedMarginClient } from '../../src/index';
 
 // or
 // import { UnifiedMarginClient } from 'bybit-api';
@@ -36,7 +36,7 @@ const client = new UnifiedMarginClient({
     });
     console.log(
       'both to compare:',
-      JSON.stringify(historicOrdersBoth, null, 2)
+      JSON.stringify(historicOrdersBoth, null, 2),
     );
   } catch (e) {
     console.error('request failed: ', e);
