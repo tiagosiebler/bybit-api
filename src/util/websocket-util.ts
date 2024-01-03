@@ -1,3 +1,5 @@
+import WebSocket from 'isomorphic-ws';
+
 import { APIMarket, CategoryV5, WsKey } from '../types';
 import { DefaultLogger } from './logger';
 
@@ -547,4 +549,16 @@ export const WS_ERROR_ENUM = {
 
 export function neverGuard(x: never, msg: string): Error {
   return new Error(`Unhandled value exception "x", ${msg}`);
+}
+
+/**
+ * #305: ws.terminate() is undefined in browsers.
+ * This only works in node.js, not in browsers.
+ * Does nothing if `ws` is undefined.
+ */
+export function safeTerminateWs(ws?: WebSocket | unknown) {
+  // #305: ws.terminate() undefined in browsers
+  if (ws && typeof ws['terminate'] === 'function') {
+    ws.terminate();
+  }
 }

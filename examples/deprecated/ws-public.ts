@@ -1,4 +1,4 @@
-import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../src';
+import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../../src';
 
 // or
 // import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from 'bybit-api';
@@ -22,7 +22,7 @@ const wsClient = new WebsocketClient(
     // market: 'unifiedOption',
     market: 'contractUSDT',
   },
-  logger
+  logger,
 );
 
 wsClient.on('update', (data) => {

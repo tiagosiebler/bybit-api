@@ -3,7 +3,7 @@
  */
 
 // For testing with the repo directly, import from the src folder
-import { ContractClient } from '../src';
+import { ContractClient } from '../../src';
 
 // or, use the version installed with npm
 // import { ContractClient } from 'bybit-api';

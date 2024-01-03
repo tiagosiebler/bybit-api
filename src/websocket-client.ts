@@ -40,6 +40,7 @@ import {
   isTopicSubscriptionSuccess,
   isWsPong,
   neverGuard,
+  safeTerminateWs,
   serializeParams,
 } from './util';
 import { RestClientV5 } from './rest-client-v5';
@@ -462,7 +463,7 @@ export class WebsocketClient extends EventEmitter {
     const ws = this.getWs(wsKey);
     ws?.close();
     if (force) {
-      ws?.terminate();
+      safeTerminateWs(ws);
     }
   }
 
@@ -808,10 +809,15 @@ export class WebsocketClient extends EventEmitter {
 
     const wasOpen = this.wsStore.isWsOpen(wsKey);
 
-    this.getWs(wsKey)?.terminate();
-    delete this.wsStore.get(wsKey, true).activePongTimer;
     this.clearPingTimer(wsKey);
     this.clearPongTimer(wsKey);
+
+    const ws = this.getWs(wsKey);
+
+    if (ws) {
+      ws.close();
+      safeTerminateWs(ws);
+    }
 
     if (!wasOpen) {
       this.logger.info(

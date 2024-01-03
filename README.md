@@ -31,8 +31,8 @@ Node.js & JavaScript SDK for the Bybit REST APIs and WebSockets:
 Check out my related projects:
 
 - Try my connectors:
-  - [binance](https://www.npmjs.com/package/binance)
   - [bybit-api](https://www.npmjs.com/package/bybit-api)
+  - [binance](https://www.npmjs.com/package/binance)
   - [okx-api](https://www.npmjs.com/package/okx-api)
   - [bitget-api](https://www.npmjs.com/package/bitget-api)
 - Try my misc utilities:
@@ -44,7 +44,8 @@ Check out my related projects:
 
 Most methods accept JS objects. These can be populated using parameters specified by Bybit's API documentation, or check the type definition in each class within the github repository (see table below for convenient links to each class).
 
-- [Bybit API Docs (choose API category from the tabs at the top)](https://bybit-exchange.github.io/docs/v5/intro).
+- [Bybit API Docs](https://bybit-exchange.github.io/docs/v5/intro)
+- [TSDoc Documentation (generated using typedoc via npm module)](https://tsdocs.dev/docs/bybit-api)
 
 ## Structure
 
@@ -66,29 +67,44 @@ Refer to the [V5 interface mapping page](https://bybit-exchange.github.io/docs/v
 
 Here are the available REST clients and the corresponding API groups described in the documentation:
 
-|                                               Class                                                |                                                                                                      Description                                                                                                      |
-| :------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|                                           [ **V5 API** ]                                           | The new unified V5 APIs (successor to previously fragmented APIs for all API groups). To learn more about the V5 API, please read the [V5 upgrade guideline](https://bybit-exchange.github.io/docs/v5/upgrade-guide). |
-|                               [RestClientV5](src/rest-client-v5.ts)                                |                                                       Unified V5 all-in-one REST client for all [V5 REST APIs](https://bybit-exchange.github.io/docs/v5/intro)                                                        |
-|                                       [ **Derivatives v3** ]                                       |                                                                              The Derivatives v3 APIs (successor to the Futures V2 APIs)                                                                               |
-|                        [UnifiedMarginClient](src/unified-margin-client.ts)                         |                                                     [Derivatives (v3) Unified Margin APIs](https://bybit-exchange.github.io/docs/derivatives/unified/place-order)                                                     |
-|                              [ContractClient](src/contract-client.ts)                              |                                                       [Derivatives (v3) Contract APIs](https://bybit-exchange.github.io/docs/derivatives/contract/place-order).                                                       |
-|                                         [ **Futures v2** ]                                         |                                                                                                  The Futures v2 APIs                                                                                                  |
-|                                Deprecated! RestClientV5 recommended                                |                                             Please read the [V5 interface mapping page](https://bybit-exchange.github.io/docs/v5/intro#v5-and-v3-interface-mapping-list)                                              |
-|                              [~InverseClient~](src/inverse-client.ts)                              |                                                            [Inverse Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse/)                                                            |
-|                               [~LinearClient~](src/linear-client.ts)                               |                                                      [USDT Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-introduction)                                                       |
-|                      [~InverseFuturesClient~](src/inverse-futures-client.ts)                       |                                                     [Inverse Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-introduction)                                                      |
-|                                            [ **Spot** ]                                            |                                                                                                     The spot APIs                                                                                                     |
-|                               [SpotClientV3](src/spot-client-v3.ts)                                |                                                                 [Spot Market (v3) APIs](https://bybit-exchange.github.io/docs/spot/public/instrument)                                                                 |
-|             [~SpotClient~](src/spot-client.ts) (deprecated, SpotClientV3 recommended)              |                                                                [Spot Market (v1) APIs](https://bybit-exchange.github.io/docs/spot/v1/#t-introduction)                                                                 |
-|                                       [ **USDC Contract** ]                                        |                                                                                                The USDC Contract APIs                                                                                                 |
-|                        [USDCPerpetualClient](src/usdc-perpetual-client.ts)                         |                                                         [USDC Perpetual APIs](https://bybit-exchange.github.io/docs/usdc/option/?console#t-querydeliverylog)                                                          |
-|                           [USDCOptionClient](src/usdc-option-client.ts)                            |                                                                 [USDC Option APIs](https://bybit-exchange.github.io/docs/usdc/option/#t-introduction)                                                                 |
-|                                           [ **Other** ]                                            |                                                                                              Other standalone API groups                                                                                              |
-|                          [CopyTradingClient](src/copy-trading-client.ts)                           |                                                                    [Copy Trading APIs](https://bybit-exchange.github.io/docs/category/copy-trade)                                                                     |
-|                       [AccountAssetClientV3](src/account-asset-client-v3.ts)                       |                                                            [Account Asset V3 APIs](https://bybit-exchange.github.io/docs/account-asset/internal-transfer)                                                             |
-| [~AccountAssetClient~](src/account-asset-client.ts) (deprecated, AccountAssetClientV3 recommended) |                                                            [Account Asset V1 APIs](https://bybit-exchange.github.io/docs/account_asset/v1/#t-introduction)                                                            |
-|                             [WebsocketClient](src/websocket-client.ts)                             |                                                                            All WebSocket Events (Public & Private for all API categories)                                                                             |
+|                         Class                          |                                                                                                      Description                                                                                                      |
+| :----------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|                     [ **V5 API** ]                     | The new unified V5 APIs (successor to previously fragmented APIs for all API groups). To learn more about the V5 API, please read the [V5 upgrade guideline](https://bybit-exchange.github.io/docs/v5/upgrade-guide). |
+|         [RestClientV5](src/rest-client-v5.ts)          |                                                       Unified V5 all-in-one REST client for all [V5 REST APIs](https://bybit-exchange.github.io/docs/v5/intro)                                                        |
+|       [WebsocketClient](src/websocket-client.ts)       |                                                                            All WebSocket Events (Public & Private for all API categories)                                                                             |
+|                 [ **Derivatives v3** ]                 |                                                                              The Derivatives v3 APIs (successor to the Futures V2 APIs)                                                                               |
+|  [UnifiedMarginClient](src/unified-margin-client.ts)   |                                                     [Derivatives (v3) Unified Margin APIs](https://bybit-exchange.github.io/docs/derivatives/unified/place-order)                                                     |
+|        [ContractClient](src/contract-client.ts)        |                                                       [Derivatives (v3) Contract APIs](https://bybit-exchange.github.io/docs/derivatives/contract/place-order).                                                       |
+|                     [ **Other** ]                      |                                                                                              Other standalone API groups                                                                                              |
+|    [CopyTradingClient](src/copy-trading-client.ts)     |                                                                    [Copy Trading APIs](https://bybit-exchange.github.io/docs/category/copy-trade)                                                                     |
+| [AccountAssetClientV3](src/account-asset-client-v3.ts) |                                                            [Account Asset V3 APIs](https://bybit-exchange.github.io/docs/account-asset/internal-transfer)                                                             |
+
+---
+
+### Deprecated/Obsolete APIs
+
+The following API clients are for previous generation REST APIs and will be removed in the next major release. Some have already stopped working (because bybit stopped supporting them). You should use the V5 APIs for all new development.
+
+<details>
+  <summary>Click me to see the list of APIs</summary>
+
+|                                                Class                                                 |                                                 Description                                                  |
+| :--------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------: |
+|                                          [ **Futures v2** ]                                          |                                             The Futures v2 APIs                                              |
+|                              [~~InverseClient~~](src/inverse-client.ts)                              |       [Inverse Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse/)        |
+|                               [~~LinearClient~~](src/linear-client.ts)                               |  [USDT Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-introduction)  |
+|                      [~~InverseFuturesClient~~](src/inverse-futures-client.ts)                       | [Inverse Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-introduction) |
+|                                             [ **Spot** ]                                             |                                                The spot APIs                                                 |
+|                                [SpotClientV3](src/spot-client-v3.ts)                                 |            [Spot Market (v3) APIs](https://bybit-exchange.github.io/docs/spot/public/instrument)             |
+|             [~~SpotClient~~](src/spot-client.ts) (deprecated, SpotClientV3 recommended)              |            [Spot Market (v1) APIs](https://bybit-exchange.github.io/docs/spot/v1/#t-introduction)            |
+|                                        [ **USDC Contract** ]                                         |                                            The USDC Contract APIs                                            |
+|                         [USDCPerpetualClient](src/usdc-perpetual-client.ts)                          |     [USDC Perpetual APIs](https://bybit-exchange.github.io/docs/usdc/option/?console#t-querydeliverylog)     |
+|                            [USDCOptionClient](src/usdc-option-client.ts)                             |            [USDC Option APIs](https://bybit-exchange.github.io/docs/usdc/option/#t-introduction)             |
+| [~~AccountAssetClient~~](src/account-asset-client.ts) (deprecated, AccountAssetClientV3 recommended) |       [Account Asset V1 APIs](https://bybit-exchange.github.io/docs/account_asset/v1/#t-introduction)        |
+
+</details>
+
+---
 
 Examples for using each client can be found in:
 
@@ -137,12 +153,6 @@ const restClientOptions = {
   /** Override the max size of the request window (in ms) */
   recv_window?: number;
 
-  /** Disabled by default. This can help on machines with consistent latency problems. */
-  enable_time_sync?: boolean;
-
-  /** How often to sync time drift with bybit servers */
-  sync_interval_ms?: number | string;
-
   /** Default: false. If true, we'll throw errors if any params are undefined */
   strict_param_validation?: boolean;
 
@@ -169,7 +179,9 @@ const useTestnet = false;
 const client = new RestClientV5({
   key: API_KEY,
   secret: API_SECRET,
-  testnet: useTestnet
+  testnet: useTestnet,
+  // Optional: enable to try parsing rate limit values from responses
+  // parseAPIRateLimits: true
 },
   // requestLibraryOptions
 );
@@ -201,21 +213,39 @@ All API groups can be used via a shared `WebsocketClient`. However, to listen to
 The WebsocketClient can be configured to a specific API group using the market parameter. These are the currently available API groups:
 | API Category | Market | Description |
 |:----------------------------: |:-------------------: |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Unified Margin - Options | `market: 'unifiedOption'`| The [derivatives v3](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket) category for unified margin. Note: public topics only support options topics. If you need USDC/USDT perps, use `unifiedPerp` instead. |
-| Unified Margin - Perps | `market: 'unifiedPerp'` | The [derivatives v3](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket) category for unified margin. Note: public topics only support USDT/USDC perpetual topics - use `unifiedOption` if you need public options topics. |
-| Futures v2 - Inverse Perps | `market: 'inverse'` | The [inverse v2 perps](https://bybit-exchange.github.io/docs/futuresV2/inverse/#t-websocket) category. |
-| Futures v2 - USDT Perps | `market: 'linear'` | The [USDT/linear v2 perps](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-websocket) category. |
-| Futures v2 - Inverse Futures | `market: 'inverse'` | The [inverse futures v2](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-websocket) category uses the same market as inverse perps. |
-| Spot v3 | `market: 'spotv3'` | The [spot v3](https://bybit-exchange.github.io/docs/spot/v3/#t-websocket) category. |
-| Spot v1 | `market: 'spot'` | The older [spot v1](https://bybit-exchange.github.io/docs/spot/v1/#t-websocket) category. Use the `spotv3` market if possible, as the v1 category does not have automatic re-subscribe if reconnected. |
-| Copy Trading | `market: 'linear'` | The [copy trading](https://bybit-exchange.github.io/docs/copy_trading/#t-websocket) category. Use the linear market to listen to all copy trading topics. |
-| USDC Perps | `market: 'usdcPerp` | The [USDC perps](https://bybit-exchange.github.io/docs/usdc/perpetual/#t-websocket) category. |
-| USDC Options | `market: 'usdcOption'`| The [USDC options](https://bybit-exchange.github.io/docs/usdc/option/#t-websocket) category. |
-| Contract v3 USDT | `market: 'contractUSDT'`| The [Contract V3](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket) category (USDT perps) |
-| Contract v3 Inverse | `market: 'contractInverse'`| The [Contract V3](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket) category (inverse perps) |
 | V5 Subscriptions | `market: 'v5'` | The [v5](https://bybit-exchange.github.io/docs/v5/ws/connect) websocket topics for all categories under one market. Use the subscribeV5 method when subscribing to v5 topics. |
 
-For more complete examples, look into the ws-\* examples in the [examples](./examples/) folder in the repo on GitHub. Here's a minimal example for using the websocket client:
+---
+
+### Older Websocket APIs
+
+The following API groups are still available in the WebsocketClient but are deprecated and may no longer work. They will be removed in the next major release:
+
+<details>
+  <summary>Click me to see the table</summary>
+
+|           API Category           |           Market            | Description                                                                                                                                                                                                                                             |
+| :------------------------------: | :-------------------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|   ~~Unified Margin - Options~~   |  `market: 'unifiedOption'`  | The [derivatives v3](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket) category for unified margin. Note: public topics only support options topics. If you need USDC/USDT perps, use `unifiedPerp` instead.             |
+|    ~~Unified Margin - Perps~~    |   `market: 'unifiedPerp'`   | The [derivatives v3](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket) category for unified margin. Note: public topics only support USDT/USDC perpetual topics - use `unifiedOption` if you need public options topics. |
+|  ~~Futures v2 - Inverse Perps~~  |     `market: 'inverse'`     | The [inverse v2 perps](https://bybit-exchange.github.io/docs/futuresV2/inverse/#t-websocket) category.                                                                                                                                                  |
+|   ~~Futures v2 - USDT Perps~~    |     `market: 'linear'`      | The [USDT/linear v2 perps](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-websocket) category.                                                                                                                                               |
+| ~~Futures v2 - Inverse Futures~~ |     `market: 'inverse'`     | The [inverse futures v2](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-websocket) category uses the same market as inverse perps.                                                                                                  |
+|           ~~Spot v3~~            |     `market: 'spotv3'`      | The [spot v3](https://bybit-exchange.github.io/docs/spot/v3/#t-websocket) category.                                                                                                                                                                     |
+|           ~~Spot v1~~            |      `market: 'spot'`       | The older [spot v1](https://bybit-exchange.github.io/docs/spot/v1/#t-websocket) category. Use the `spotv3` market if possible, as the v1 category does not have automatic re-subscribe if reconnected.                                                  |
+|         ~~Copy Trading~~         |     `market: 'linear'`      | The [copy trading](https://bybit-exchange.github.io/docs/copy_trading/#t-websocket) category. Use the linear market to listen to all copy trading topics.                                                                                               |
+|          ~~USDC Perps~~          |     `market: 'usdcPerp`     | The [USDC perps](https://bybit-exchange.github.io/docs/usdc/perpetual/#t-websocket) category.                                                                                                                                                           |
+|         ~~USDC Options~~         |   `market: 'usdcOption'`    | The [USDC options](https://bybit-exchange.github.io/docs/usdc/option/#t-websocket) category.                                                                                                                                                            |
+|       ~~Contract v3 USDT~~       |  `market: 'contractUSDT'`   | The [Contract V3](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket) category (USDT perps)                                                                                                                                      |
+|     ~~Contract v3 Inverse~~      | `market: 'contractInverse'` | The [Contract V3](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket) category (inverse perps)                                                                                                                                   |
+
+</details
+
+---
+
+### WebSocket Examples
+
+Here's a minimal example for using the websocket client. For more complete examples, look into the ws-\* examples in the [examples](./examples/) folder in the repo on GitHub.
 
 ```javascript
 const { WebsocketClient } = require('bybit-api');
@@ -236,15 +266,6 @@ const wsConfig = {
 
   // If you can, use the v5 market (the newest generation of Bybit's websockets)
   market: 'v5',
-
-  // The older generations of Bybit's websockets are still available under the previous markets:
-  // market: 'linear',
-  // market: 'inverse',
-  // market: 'spotv3',
-  // market: 'usdcOption',
-  // market: 'usdcPerp',
-  // market: 'unifiedPerp',
-  // market: 'unifiedOption',
 
   // how long to wait (in ms) before deciding the connection should be terminated & reconnected
   // pongTimeout: 1000,

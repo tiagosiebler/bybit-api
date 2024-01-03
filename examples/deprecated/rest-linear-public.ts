@@ -1,4 +1,4 @@
-import { LinearClient } from '../src/index';
+import { LinearClient } from '../../src/index';
 
 // or
 // import { LinearClient } from 'bybit-api';

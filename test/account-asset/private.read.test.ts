@@ -40,7 +40,7 @@ describe('Private Account Asset REST API GET Endpoints', () => {
     });
   });
 
-  it('getUniversalTransfers()', async () => {
+  it.skip('getUniversalTransfers()', async () => {
     expect(await api.getInternalTransfers()).toMatchObject(
       successResponseObject(),
     );

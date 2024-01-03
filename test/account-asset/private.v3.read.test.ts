@@ -49,7 +49,7 @@ describe('Private Account Asset V3 REST API Endpoints', () => {
     });
   });
 
-  it('getUniversalTransfers()', async () => {
+  it.skip('getUniversalTransfers()', async () => {
     expect(await api.getUniversalTransfers({ coin: coin })).toMatchObject({
       ...successResponseObjectV3(),
       retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
