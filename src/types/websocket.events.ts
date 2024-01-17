@@ -13,6 +13,35 @@ import {
 } from './v5-shared';
 import { WsKey } from './websockets';
 
+export interface WSOrderbookEventV5 {
+  topic: string;
+  /** Event timestamp */
+  ts: number;
+  type: 'delta' | 'snapshot';
+  data: {
+    /** Symbol */
+    s: string;
+    /** [price, qty][] */
+    b: [string, string][];
+    /** [price, qty][] */
+    a: [string, string][];
+    /** Update ID */
+    u: number;
+    /**
+     * Cross sequence
+     */
+    seq: number;
+  };
+  /**
+   * matching engine timestamp (correlated with T from public trade channel)
+   */
+  cts: number;
+  /**
+   * Internal reference, can be used to determine if this is spot/linear/inverse/etc
+   */
+  wsKey: WsKey;
+}
+
 export interface WSAccountOrderV5 {
   qty: string;
   price: string;
