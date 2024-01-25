@@ -9,8 +9,8 @@
     "index.js"
   ],
   "scripts": {
-    "test": "jest --detectOpenHandles",
-    "test:watch": "jest --detectOpenHandles --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "clean": "rimraf lib dist",
     "build": "tsc --project tsconfig.build.json",
     "build:clean": "npm run clean && npm run build",
