@@ -38,3 +38,12 @@ export interface MMPModifyParamsV5 {
   qtyLimit: string;
   deltaLimit: string;
 }
+
+export interface RepayLiabilityParamsV5 {
+  coin?: string;
+}
+
+export interface SetCollateralCoinParamsV5 {
+  coin: string;
+  collateralSwitch: 'ON' | 'OFF';
+}

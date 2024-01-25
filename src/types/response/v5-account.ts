@@ -120,3 +120,8 @@ export interface MMPStateV5 {
   mmpFrozenUntil: string;
   mmpFrozen: boolean;
 }
+
+export interface RepayLiabilityResultV5 {
+  coin: string;
+  repaymentQty: string;
+}

@@ -109,8 +109,11 @@ import {
   PurchaseSpotLeveragedTokenResultV5,
   RedeemSpotLeveragedTokenParamsV5,
   RedeemSpotLeveragedTokenResultV5,
+  RepayLiabilityParamsV5,
+  RepayLiabilityResultV5,
   RiskLimitV5,
   SetAutoAddMarginParamsV5,
+  SetCollateralCoinParamsV5,
   SetLeverageParamsV5,
   SetRiskLimitParamsV5,
   SetRiskLimitResultV5,
@@ -764,6 +767,35 @@ export class RestClientV5 extends BaseRestClient {
     params?: GetBorrowHistoryParamsV5,
   ): Promise<APIResponseV3WithTime<CursorListV5<BorrowHistoryRecordV5[]>>> {
     return this.getPrivate('/v5/account/borrow-history', params);
+  }
+
+  /**
+   * You can manually repay the liabilities of Unified account
+   * Applicable: Unified Account
+   * Permission: USDC Contracts
+   *
+   * - Input the specific coin: repay the liability of this coin in particular
+   * - No coin specified: repay the liability of all coins
+   */
+  repayLiability(
+    params?: RepayLiabilityParamsV5,
+  ): Promise<APIResponseV3WithTime<CursorListV5<RepayLiabilityResultV5[]>>> {
+    return this.postPrivate('/v5/account/quick-repayment', params);
+  }
+
+  /**
+   * You can decide whether the assets in the Unified account needs to be collateral coins.
+   */
+  setCollateralCoin(
+    params: SetCollateralCoinParamsV5,
+  ): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate('/v5/account/set-collateral-switch', params);
+  }
+
+  batchSetCollateralCoin(params: {
+    request: SetCollateralCoinParamsV5[];
+  }): Promise<APIResponseV3WithTime<{ list: SetCollateralCoinParamsV5[] }>> {
+    return this.postPrivate('/v5/account/set-collateral-switch-batch', params);
   }
 
   /**
