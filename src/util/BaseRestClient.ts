@@ -66,6 +66,9 @@ interface SignedRequest<T> {
 interface UnsignedRequest<T> {
   originalParams: T;
   paramsWithSign: T;
+  sign?: string;
+  timestamp?: number;
+  recvWindow?: number;
 }
 
 type SignMethod = 'v2auth' | 'v5auth';
@@ -192,6 +195,13 @@ export default abstract class BaseRestClient {
     signMethod: SignMethod,
     params?: TParams,
     isPublicApi?: boolean,
+  ): Promise<SignedRequest<TParams> | UnsignedRequest<TParams>>;
+
+  private async prepareSignParams<TParams extends SignedRequestContext = any>(
+    method: Method,
+    signMethod: SignMethod,
+    params?: TParams,
+    isPublicApi?: boolean,
   ) {
     if (isPublicApi) {
       return {
@@ -250,7 +260,7 @@ export default abstract class BaseRestClient {
         isPublicApi,
       );
 
-      const headers = {
+      const headers: AxiosRequestConfig['headers'] = {
         'X-BAPI-SIGN-TYPE': 2,
         'X-BAPI-API-KEY': this.key,
         'X-BAPI-TIMESTAMP': signResult.timestamp,
