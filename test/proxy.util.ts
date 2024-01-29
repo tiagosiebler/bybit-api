@@ -20,6 +20,7 @@ export function getTestProxy(): AxiosRequestConfig {
         username: user,
         password: pass,
       },
+      protocol: 'http',
     },
   };
 }

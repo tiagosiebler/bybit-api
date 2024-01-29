@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import { APIRateLimit } from '../types';
 import { WebsocketSucceededTopicSubscriptionConfirmationEvent } from '../types/ws-events/succeeded-topic-subscription-confirmation';
 import { WebsocketTopicSubscriptionConfirmationEvent } from '../types/ws-events/topic-subscription-confirmation';
@@ -179,10 +180,13 @@ export type RestClientType =
 
 /** Parse V5 rate limit response headers, if enabled */
 export function parseRateLimitHeaders(
-  headers: Record<string, string | undefined> = {},
+  headers: AxiosResponse['headers'] | undefined,
   throwOnFailedRateLimitParse: boolean,
 ): APIRateLimit | undefined {
   try {
+    if (!headers || typeof headers !== 'object') {
+      return;
+    }
     const remaining = headers['x-bapi-limit-status'];
     const max = headers['x-bapi-limit'];
     const resetAt = headers['x-bapi-limit-reset-timestamp'];

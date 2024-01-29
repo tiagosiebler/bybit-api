@@ -18,8 +18,9 @@
         "projecasdft": true,
         "project": [
           "./tsconfig.json",
+          "./tsconfig.build.json",
           "./tsconfig.examples.json",
-          "./tsconfig.test.json"
+          "./test/tsconfig.test.json"
         ]
       },
       "rules": {
