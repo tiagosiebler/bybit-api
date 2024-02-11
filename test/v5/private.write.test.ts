@@ -412,7 +412,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
     it.skip('deleteSubMember()', async () => {
       expect(
         await api.deleteSubMember({
-          subMemberId: 1,
+          subMemberId: '1',
         }),
       ).toMatchObject({
         // ...successResponseObjectV3(),

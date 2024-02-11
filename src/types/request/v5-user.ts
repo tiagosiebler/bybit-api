@@ -37,5 +37,5 @@ export interface UpdateSubApiKeyUpdateParamsV5 {
 }
 
 export interface DeleteSubMemberParamsV5 {
-  subMemberId: number;
+  subMemberId: string;
 }
