@@ -38,6 +38,7 @@ import {
   CreateSubMemberParamsV5,
   CreateSubMemberResultV5,
   CursorListV5,
+  DeleteSubMemberParamsV5,
   DeliveryPriceV5,
   DeliveryRecordV5,
   DepositAddressResultV5,
@@ -71,10 +72,10 @@ import {
   GetOpenInterestParamsV5,
   GetOptionDeliveryPriceParamsV5,
   GetOrderbookParamsV5,
+  GetPremiumIndexPriceKlineParamsV5,
   GetPreUpgradeClosedPnlParamsV5,
   GetPreUpgradeOrderHistoryParamsV5,
   GetPreUpgradeTradeHistoryParamsV5,
-  GetPremiumIndexPriceKlineParamsV5,
   GetPublicTradingHistoryParamsV5,
   GetRiskLimitParamsV5,
   GetSettlementRecordParamsV5,
@@ -90,18 +91,18 @@ import {
   InsuranceResponseV5,
   InternalDepositRecordV5,
   InternalTransferRecordV5,
-  LeverageTokenInfoV5,
   LeveragedTokenMarketResultV5,
+  LeverageTokenInfoV5,
   MMPModifyParamsV5,
   MMPStateV5,
   OHLCKlineV5,
   OHLCVKlineV5,
   OpenInterestResponseV5,
   OptionDeliveryPriceV5,
+  OrderbookResponseV5,
   OrderParamsV5,
   OrderResultV5,
   OrderSideV5,
-  OrderbookResponseV5,
   PositionInfoParamsV5,
   PositionV5,
   PublicTradeV5,
@@ -117,18 +118,18 @@ import {
   SetLeverageParamsV5,
   SetRiskLimitParamsV5,
   SetRiskLimitResultV5,
+  SettlementRecordV5,
   SetTPSLModeParamsV5,
   SetTradingStopParamsV5,
-  SettlementRecordV5,
   SpotBorrowCheckResultV5,
   SpotLeveragedTokenOrderHistoryV5,
   SubMemberV5,
   SwitchIsolatedMarginParamsV5,
   SwitchPositionModeParamsV5,
-  TPSLModeV5,
   TickerLinearInverseV5,
   TickerOptionV5,
   TickerSpotV5,
+  TPSLModeV5,
   TransactionLogV5,
   UnifiedAccountUpgradeResultV5,
   UniversalTransferParamsV5,
@@ -136,8 +137,8 @@ import {
   UpdateApiKeyParamsV5,
   UpdateApiKeyResultV5,
   WalletBalanceV5,
-  WithdrawParamsV5,
   WithdrawalRecordV5,
+  WithdrawParamsV5,
 } from './types';
 
 import { REST_CLIENT_TYPE_ENUM } from './util';
@@ -1251,9 +1252,8 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Create a new sub user id. Use master user's api key only.
    *
-   * The API key must own one of permissions will be allowed to call the following API endpoint.
-   *
-   * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+   * The API key must have one of the permissions to be allowed to call the following API endpoint.
+   * - master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
    */
   createSubMember(
     params: CreateSubMemberParamsV5,
@@ -1264,9 +1264,8 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * To create new API key for those newly created sub UID. Use master user's api key only.
    *
-   * TIP
-   * The API key must own one of permissions will be allowed to call the following API endpoint.
-   * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+   * TIP: The API key must have one of the permissions to be allowed to call the following API endpoint.
+   * - master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
    */
   createSubUIDAPIKey(
     params: CreateSubApiKeyParamsV5,
@@ -1286,9 +1285,8 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Froze sub uid. Use master user's api key only.
    *
-   * TIP: The API key must own one of the following permissions will be allowed to call the following API endpoint.
-   *
-   * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+   * TIP: The API key must have one of the permissions to be allowed to call the following API endpoint.
+   * - master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
    */
   setSubUIDFrozenState(
     subuid: number,
@@ -1310,9 +1308,8 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Modify the settings of a master API key. Use the API key pending to be modified to call the endpoint. Use master user's API key only.
    *
-   * TIP: The API key must own one of the permissions to call the following API endpoint.
-   *
-   * Master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+   * TIP: The API key must have one of the permissions to be allowed to call the following API endpoint.
+   * - master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
    */
   updateMasterApiKey(
     params: UpdateApiKeyParamsV5,
@@ -1336,8 +1333,9 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Delete the api key of master account. Use the api key pending to be delete to call the endpoint. Use master user's api key only.
    *
-   * TIP: The API key must own one of permissions will be allowed to call the following API endpoint.
-   *      master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+   * TIP:
+   * The API key must have one of the permissions to be allowed to call the following API endpoint.
+   * - master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
    *
    * DANGER: BE CAREFUL! The API key used to call this interface will be invalid immediately.
    */
@@ -1348,14 +1346,27 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Delete the api key of sub account. Use the api key pending to be delete to call the endpoint. Use sub user's api key only.
    *
-   * TIP
-   * The API key must own one of permissions will be allowed to call the following API endpoint.
-   * sub API key: "Account Transfer"
+   * TIP:
+   * The API key must have one of the permissions to be allowed to call the following API endpoint.
+   * - sub API key: "Account Transfer"
    *
    * DANGER: BE CAREFUL! The API key used to call this interface will be invalid immediately.
    */
   deleteSubApiKey(): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate('/v5/user/delete-sub-api');
+  }
+
+  /**
+   * Delete a sub UID. Before deleting the UID, please make sure there are no assets.
+   * 
+   * TIP:
+   * The API key must have one of the permissions to be allowed to call the following API endpoint.
+   * - master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+   */
+  deleteSubMember(
+    params: DeleteSubMemberParamsV5,
+  ): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate('/v5/user/del-submember', params);
   }
 
   /**
