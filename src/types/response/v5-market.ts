@@ -112,18 +112,19 @@ export interface SpotInstrumentInfoV5 {
 }
 
 type InstrumentInfoV5Mapping = {
-  linear: LinearInverseInstrumentInfoV5[],
-  inverse: LinearInverseInstrumentInfoV5[],
-  option: OptionInstrumentInfoV5[],
-  spot: SpotInstrumentInfoV5[]
+  linear: LinearInverseInstrumentInfoV5[];
+  inverse: LinearInverseInstrumentInfoV5[];
+  option: OptionInstrumentInfoV5[];
+  spot: SpotInstrumentInfoV5[];
 };
 
-export type InstrumentInfoResponseV5<C extends CategoryV5> = CategoryCursorListV5<InstrumentInfoV5Mapping[C], C>;
+export type InstrumentInfoResponseV5<C extends CategoryV5> =
+  CategoryCursorListV5<InstrumentInfoV5Mapping[C], C>;
 
-export default interface OrderbookLevelV5 {
-  price: string;
-  size: string;
-}
+/**
+ * [price, size]
+ */
+export type OrderbookLevelV5 = [string, string];
 
 export interface OrderbookResponseV5 {
   s: string;
