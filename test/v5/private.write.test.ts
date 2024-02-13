@@ -409,6 +409,18 @@ describe('Private WRITE V5 REST API Endpoints', () => {
       });
     });
 
+    it.skip('deleteSubMember()', async () => {
+      expect(
+        await api.deleteSubMember({
+          subMemberId: '1',
+        }),
+      ).toMatchObject({
+        // ...successResponseObjectV3(),
+        // retMsg: '',
+        retCode: API_ERROR_CODE.SUB_USER_NOT_FOUND,
+      });
+    });
+
     it('setSubUIDFrozenState()', async () => {
       expect(await api.setSubUIDFrozenState(0, 1)).toMatchObject({
         // ...successResponseObjectV3(),

@@ -124,18 +124,3 @@ export interface WithdrawParamsV5 {
   forceChain?: number;
   accountType?: 'SPOT' | 'FUND';
 }
-
-export interface CreateSubMemberParamsV5 {
-  username: string;
-  password?: string;
-  /**
-   * 1: normal, 6: custodial
-   */
-  memberType: 1 | 6;
-  /**
-   * 0: quick login disabled (default), 1: quick login enabled
-   */
-  switch?: 0 | 1;
-  isUta?: boolean;
-  note?: string;
-}

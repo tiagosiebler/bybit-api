@@ -38,6 +38,7 @@ import {
   CreateSubMemberParamsV5,
   CreateSubMemberResultV5,
   CursorListV5,
+  DeleteSubMemberParamsV5,
   DeliveryPriceV5,
   DeliveryRecordV5,
   DepositAddressResultV5,
@@ -1251,9 +1252,8 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Create a new sub user id. Use master user's api key only.
    *
-   * The API key must own one of permissions will be allowed to call the following API endpoint.
-   *
-   * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+   * The API key must have one of the permissions to be allowed to call the following API endpoint.
+   * - master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
    */
   createSubMember(
     params: CreateSubMemberParamsV5,
@@ -1264,9 +1264,8 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * To create new API key for those newly created sub UID. Use master user's api key only.
    *
-   * TIP
-   * The API key must own one of permissions will be allowed to call the following API endpoint.
-   * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+   * TIP: The API key must have one of the permissions to be allowed to call the following API endpoint.
+   * - master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
    */
   createSubUIDAPIKey(
     params: CreateSubApiKeyParamsV5,
@@ -1286,9 +1285,8 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Froze sub uid. Use master user's api key only.
    *
-   * TIP: The API key must own one of the following permissions will be allowed to call the following API endpoint.
-   *
-   * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+   * TIP: The API key must have one of the permissions to be allowed to call the following API endpoint.
+   * - master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
    */
   setSubUIDFrozenState(
     subuid: number,
@@ -1310,9 +1308,8 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Modify the settings of a master API key. Use the API key pending to be modified to call the endpoint. Use master user's API key only.
    *
-   * TIP: The API key must own one of the permissions to call the following API endpoint.
-   *
-   * Master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+   * TIP: The API key must have one of the permissions to be allowed to call the following API endpoint.
+   * - master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
    */
   updateMasterApiKey(
     params: UpdateApiKeyParamsV5,
@@ -1336,8 +1333,9 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Delete the api key of master account. Use the api key pending to be delete to call the endpoint. Use master user's api key only.
    *
-   * TIP: The API key must own one of permissions will be allowed to call the following API endpoint.
-   *      master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+   * TIP:
+   * The API key must have one of the permissions to be allowed to call the following API endpoint.
+   * - master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
    *
    * DANGER: BE CAREFUL! The API key used to call this interface will be invalid immediately.
    */
@@ -1348,14 +1346,27 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Delete the api key of sub account. Use the api key pending to be delete to call the endpoint. Use sub user's api key only.
    *
-   * TIP
-   * The API key must own one of permissions will be allowed to call the following API endpoint.
-   * sub API key: "Account Transfer"
+   * TIP:
+   * The API key must have one of the permissions to be allowed to call the following API endpoint.
+   * - sub API key: "Account Transfer"
    *
    * DANGER: BE CAREFUL! The API key used to call this interface will be invalid immediately.
    */
   deleteSubApiKey(): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate('/v5/user/delete-sub-api');
+  }
+
+  /**
+   * Delete a sub UID. Before deleting the UID, please make sure there are no assets.
+   * 
+   * TIP:
+   * The API key must have one of the permissions to be allowed to call the following API endpoint.
+   * - master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+   */
+  deleteSubMember(
+    params: DeleteSubMemberParamsV5,
+  ): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate('/v5/user/del-submember', params);
   }
 
   /**
