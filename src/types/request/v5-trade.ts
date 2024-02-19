@@ -17,6 +17,7 @@ export interface OrderParamsV5 {
   side: OrderSideV5;
   orderType: OrderTypeV5;
   qty: string;
+  marketUnit?: 'baseCoin' | 'quoteCoin';
   price?: string;
   triggerDirection?: 1 | 2;
   orderFilter?: OrderFilterV5;
