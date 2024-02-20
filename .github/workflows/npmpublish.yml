@@ -8,6 +8,10 @@ on:
     branches:
       - master
 
+# permissions:
+#   id-token: 'write'
+#   contents: 'read'
+
 jobs:
   publish-npm:
     runs-on: ubuntu-latest
@@ -20,42 +24,28 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/checkout@v2
+      - name: 'Checkout source code'
         if: steps.version-updated.outputs.has-updated
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         if: steps.version-updated.outputs.has-updated
         with:
-          node-version: 20.11.0
+          node-version-file: '.nvmrc'
           registry-url: https://registry.npmjs.org/
           cache: 'npm'
 
-      - run: npm ci --ignore-scripts
+      - name: Install
+        run: npm ci --ignore-scripts
         if: steps.version-updated.outputs.has-updated
+
       - run: npm run clean
         if: steps.version-updated.outputs.has-updated
+
       - run: npm run build
         if: steps.version-updated.outputs.has-updated
-      - run: npm publish --ignore-scripts
+
+      - run: npm publish --ignore-scripts --provenance
         if: steps.version-updated.outputs.has-updated
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-
-      # - name: Create Github Release
-      #   if: steps.version-updated.outputs.has-updated
-      #   id: create_release
-      #   uses: ncipollo/release-action@v1
-
-  #publish-gpr:
-  #needs: build
-  #runs-on: ubuntu-latest
-  #steps:
-  #- uses: actions/checkout@v2
-  #- uses: actions/setup-node@v1
-  # with:
-  #  node-version: 12
-  #    registry-url: https://npm.pkg.github.com/
-  #- run: npm ci
-  #- run: npm publish
-  #  env:
-  #    NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
