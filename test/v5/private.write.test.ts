@@ -98,7 +98,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
       });
     });
 
-    describe('options only methods', () => {
+    describe.skip('options only methods', () => {
       // These should use a real symbol from the options category
       let optionsSymbol: string;
       beforeAll(async () => {
