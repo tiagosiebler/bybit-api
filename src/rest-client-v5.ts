@@ -1207,7 +1207,7 @@ export class RestClientV5 extends BaseRestClient {
    */
   getWithdrawalRecords(
     params?: GetWithdrawalRecordsParamsV5,
-  ): Promise<CursorRowsV5<WithdrawalRecordV5[]>> {
+  ): Promise<APIResponseV3<CursorRowsV5<WithdrawalRecordV5[]>>> {
     return this.getPrivate('/v5/asset/withdraw/query-record', params);
   }
 
