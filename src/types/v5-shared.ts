@@ -200,6 +200,16 @@ export interface CursorListV5<T extends unknown[]> {
   list: T;
 }
 
+/**
+ * A wrapper type for any responses that have a "nextPageCursor" property, and a "rows" property with an array of elements
+ *
+ * ```{ nextPageCursor: "something", rows: someData[] }```
+ */
+export interface CursorRowsV5<T extends unknown[]> {
+  nextPageCursor: string;
+  rows: T;
+}
+
 export interface CategoryListV5<
   T extends unknown[],
   TCategory extends CategoryV5,
