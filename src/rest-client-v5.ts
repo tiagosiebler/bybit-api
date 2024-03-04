@@ -38,6 +38,7 @@ import {
   CreateSubMemberParamsV5,
   CreateSubMemberResultV5,
   CursorListV5,
+  CursorRowsV5,
   DeleteSubMemberParamsV5,
   DeliveryPriceV5,
   DeliveryRecordV5,
@@ -1206,7 +1207,7 @@ export class RestClientV5 extends BaseRestClient {
    */
   getWithdrawalRecords(
     params?: GetWithdrawalRecordsParamsV5,
-  ): Promise<APIResponseV3<{ rows: WithdrawalRecordV5[] }>> {
+  ): Promise<APIResponseV3<CursorRowsV5<WithdrawalRecordV5[]>>> {
     return this.getPrivate('/v5/asset/withdraw/query-record', params);
   }
 
@@ -1358,7 +1359,7 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * Delete a sub UID. Before deleting the UID, please make sure there are no assets.
-   * 
+   *
    * TIP:
    * The API key must have one of the permissions to be allowed to call the following API endpoint.
    * - master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
