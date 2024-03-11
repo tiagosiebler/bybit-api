@@ -1,6 +1,7 @@
 import {
   CategoryV5,
   OrderCancelTypeV5,
+  OrderCreateTypeV5,
   OrderRejectReasonV5,
   OrderSideV5,
   OrderStatusV5,
@@ -24,9 +25,10 @@ export interface AccountOrderV5 {
   price: string;
   qty: string;
   side: OrderSideV5;
-  isLeverage: string;
+  isLeverage: '0' | '1';
   positionIdx: PositionIdx;
   orderStatus: OrderStatusV5;
+  createType: OrderCreateTypeV5;
   cancelType: OrderCancelTypeV5;
   rejectReason: OrderRejectReasonV5;
   avgPrice: string;
@@ -39,15 +41,21 @@ export interface AccountOrderV5 {
   orderType: OrderTypeV5;
   stopOrderType: StopOrderTypeV5;
   orderIv: string;
+  marketUnit: 'baseCoin' | 'quoteCoin';
   triggerPrice: string;
   takeProfit: string;
   stopLoss: string;
   tpslMode: 'Full' | 'Partial' | '';
+  ocoTriggerType:
+    | 'OcoTriggerByUnknown'
+    | 'OcoTriggerTp'
+    | 'OcoTriggerBySl'
+    | '';
   tpLimitPrice: string;
   slLimitPrice: string;
   tpTriggerBy: OrderTriggerByV5;
   slTriggerBy: OrderTriggerByV5;
-  triggerDirection: number;
+  triggerDirection: 1 | 2;
   triggerBy: OrderTriggerByV5;
   lastPriceOnCreated: string;
   reduceOnly: boolean;

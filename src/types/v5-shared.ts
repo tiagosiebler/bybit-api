@@ -40,6 +40,60 @@ export type OrderStatusV5 =
   | 'Deactivated'
   | 'Active';
 
+/**
+ * Defines the types of order creation mechanisms.
+ */
+export type OrderCreateTypeV5 =
+  /** Represents an order created by a user. */
+  | 'CreateByUser'
+  /** Represents an order created by an admin closing. */
+  | 'CreateByAdminClosing'
+  /** Futures conditional order. */
+  | 'CreateByStopOrder'
+  /** Futures take profit order. */
+  | 'CreateByTakeProfit'
+  /** Futures partial take profit order. */
+  | 'CreateByPartialTakeProfit'
+  /** Futures stop loss order. */
+  | 'CreateByStopLoss'
+  /** Futures partial stop loss order. */
+  | 'CreateByPartialStopLoss'
+  /** Futures trailing stop order. */
+  | 'CreateByTrailingStop'
+  /** Laddered liquidation to reduce the required maintenance margin. */
+  | 'CreateByLiq'
+  /**
+   * If the position is still subject to liquidation (i.e., does not meet the required maintenance margin level),
+   * the position shall be taken over by the liquidation engine and closed at the bankruptcy price.
+   */
+  | 'CreateByTakeOver_PassThrough'
+  /** Auto-Deleveraging(ADL) */
+  | 'CreateByAdl_PassThrough'
+  /** Order placed via Paradigm. */
+  | 'CreateByBlock_PassThrough'
+  /** Order created by move position. */
+  | 'CreateByBlockTradeMovePosition_PassThrough'
+  /** The close order placed via web or app position area - web/app. */
+  | 'CreateByClosing'
+  /** Order created via grid bot - web/app. */
+  | 'CreateByFGridBot'
+  /** Order closed via grid bot - web/app. */
+  | 'CloseByFGridBot'
+  /** Order created by TWAP - web/app. */
+  | 'CreateByTWAP'
+  /** Order created by TV webhook - web/app. */
+  | 'CreateByTVSignal'
+  /** Order created by Mm rate close function - web/app. */
+  | 'CreateByMmRateClose'
+  /** Order created by Martingale bot - web/app. */
+  | 'CreateByMartingaleBot'
+  /** Order closed by Martingale bot - web/app. */
+  | 'CloseByMartingaleBot'
+  /** Order created by Ice berg strategy - web/app. */
+  | 'CreateByIceBerg'
+  /** Order created by arbitrage - web/app. */
+  | 'CreateByArbitrage';
+
 export type OrderCancelTypeV5 =
   | 'CancelByUser'
   | 'CancelByReduceOnly'
