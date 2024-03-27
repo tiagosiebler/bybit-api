@@ -3,6 +3,7 @@ export type ContractTypeV5 =
   | 'InversePerpetual'
   | 'LinearPerpetual'
   | 'InverseFutures';
+export type CopyTradingV5 = 'none' | 'both' | 'utaOnly' | 'normalOnly';
 
 export type InstrumentStatusV5 =
   | 'PreLaunch'
@@ -10,6 +11,8 @@ export type InstrumentStatusV5 =
   | 'Settling'
   | 'Delivering'
   | 'Closed';
+
+export type MarginTradingV5 = 'none' | 'both' | 'utaOnly' | 'normalSpotOnly';
 
 export type OrderFilterV5 = 'Order' | 'tpslOrder' | 'StopOrder';
 export type OrderSideV5 = 'Buy' | 'Sell';
