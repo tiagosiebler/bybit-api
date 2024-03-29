@@ -2,7 +2,9 @@ import {
   CategoryCursorListV5,
   CategoryV5,
   ContractTypeV5,
+  CopyTradingV5,
   InstrumentStatusV5,
+  MarginTradingV5,
   OptionTypeV5,
   OrderSideV5,
 } from '../v5-shared';
@@ -61,13 +63,18 @@ export interface LinearInverseInstrumentInfoV5 {
   };
   lotSizeFilter: {
     maxOrderQty: string;
+    maxMktOrderQty: string;
     minOrderQty: string;
     qtyStep: string;
     postOnlyMaxOrderQty?: string;
+    minNotionalValue?: string;
   };
   unifiedMarginTrade: boolean;
   fundingInterval: number;
   settleCoin: string;
+  copyTrading: CopyTradingV5;
+  upperFundingRate: string;
+  lowerFundingRate: string;
 }
 
 export interface OptionInstrumentInfoV5 {
@@ -98,6 +105,7 @@ export interface SpotInstrumentInfoV5 {
   quoteCoin: string;
   innovation: '0' | '1';
   status: InstrumentStatusV5;
+  marginTrading: MarginTradingV5;
   lotSizeFilter: {
     basePrecision: string;
     quotePrecision: string;
@@ -109,6 +117,10 @@ export interface SpotInstrumentInfoV5 {
   priceFilter: {
     tickSize: string;
   };
+  riskParameters: {
+    limitParameter: string;
+    marketParameter: string;
+  }
 }
 
 type InstrumentInfoV5Mapping = {
