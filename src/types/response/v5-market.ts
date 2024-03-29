@@ -67,6 +67,7 @@ export interface LinearInverseInstrumentInfoV5 {
     minOrderQty: string;
     qtyStep: string;
     postOnlyMaxOrderQty?: string;
+    minNotionalValue?: string;
   };
   unifiedMarginTrade: boolean;
   fundingInterval: number;
