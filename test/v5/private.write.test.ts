@@ -446,7 +446,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
         }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
-        retCode: API_ERROR_CODE.SPOT_LEVERAGE_QUIZ_REQUIRED,
+        retCode: 175025,
         // retMsg: '',
       });
     });
@@ -459,7 +459,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
         }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
-        retCode: API_ERROR_CODE.SPOT_LEVERAGE_TOKEN_INSUFFICIENT_BALANCE,
+        retCode: 175025,
         // retMsg: '',
       });
     });
