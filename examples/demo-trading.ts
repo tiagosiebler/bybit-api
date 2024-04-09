@@ -6,6 +6,16 @@ import { RestClientV5, WebsocketClient } from '../src/index';
 const key = process.env.API_KEY_COM;
 const secret = process.env.API_SECRET_COM;
 
+/**
+ *
+ *
+ * This example demonstrates how to use Bybit's demo trading functionality, both for REST and WS.
+ *
+ * Refer to the API docs for more information: https://bybit-exchange.github.io/docs/v5/demo
+ *
+ *
+ */
+
 const restClient = new RestClientV5({
   key: key,
   secret: secret,
