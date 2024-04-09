@@ -1,6 +1,6 @@
 import WebSocket from 'isomorphic-ws';
 
-import { APIMarket, CategoryV5, WsKey } from '../types';
+import { APIMarket, CategoryV5, WebsocketClientOptions, WsKey } from '../types';
 import { DefaultLogger } from './logger';
 
 interface NetworkMapV3 {
@@ -398,14 +398,21 @@ export function getWsKeyForTopic(
 
 export function getWsUrl(
   wsKey: WsKey,
-  wsUrl: string | undefined,
-  isTestnet: boolean,
+  wsClientOptions: WebsocketClientOptions,
   logger: typeof DefaultLogger,
 ): string {
+  const wsUrl = wsClientOptions.wsUrl;
   if (wsUrl) {
     return wsUrl;
   }
 
+  // https://bybit-exchange.github.io/docs/v5/demo
+  const isDemoTrading = wsClientOptions.demoTrading;
+  if (isDemoTrading) {
+    return 'wss://stream-demo.bybit.com/v5/private';
+  }
+
+  const isTestnet = wsClientOptions.testnet;
   const networkKey = isTestnet ? 'testnet' : 'livenet';
 
   switch (wsKey) {

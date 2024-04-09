@@ -35,6 +35,7 @@ Check out my related projects:
   - [binance](https://www.npmjs.com/package/binance)
   - [okx-api](https://www.npmjs.com/package/okx-api)
   - [bitget-api](https://www.npmjs.com/package/bitget-api)
+  - [bitmart-api](https://www.npmjs.com/package/bitmart-api)
 - Try my misc utilities:
   - [orderbooks](https://www.npmjs.com/package/orderbooks)
   - [accountstate](https://www.npmjs.com/package/accountstate)
