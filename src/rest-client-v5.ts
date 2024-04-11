@@ -167,7 +167,7 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   requestDemoTradingFunds(): Promise<{}> {
-    return this.postPrivate('/v5/account/demo-apply/money');
+    return this.postPrivate('/v5/account/demo-apply-money');
   }
 
   /**
