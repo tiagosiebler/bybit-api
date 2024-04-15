@@ -163,7 +163,7 @@ export class RestClientV5 extends BaseRestClient {
   getServerTime(): Promise<
     APIResponseV3WithTime<{ timeSecond: string; timeNano: string }>
   > {
-    return this.get('/v3/public/time');
+    return this.get('/v5/market/time');
   }
 
   requestDemoTradingFunds(): Promise<{}> {

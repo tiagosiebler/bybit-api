@@ -33,7 +33,7 @@ export interface RestClientOptions {
   sync_interval_ms?: number | string;
 
   /** Determines whether to perform time synchronization before sending private requests */
-  syncTimeBeforePrivateRequests?: false;
+  syncTimeBeforePrivateRequests?: boolean;
 
   /** Default: false. If true, we'll throw errors if any params are undefined */
   strict_param_validation?: boolean;
