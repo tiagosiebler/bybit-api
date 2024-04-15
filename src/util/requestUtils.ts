@@ -13,6 +13,11 @@ export interface RestClientOptions {
   /** Set to `true` to connect to testnet. Uses the live environment by default. */
   testnet?: boolean;
 
+  /**
+   * Set to `true` to use Bybit's V5 demo trading: https://bybit-exchange.github.io/docs/v5/demo
+   */
+  demoTrading?: boolean;
+
   /** Override the max size of the request window (in ms) */
   recv_window?: number;
 
@@ -92,15 +97,20 @@ export function serializeParams(
 
 export function getRestBaseUrl(
   useTestnet: boolean,
-  restInverseOptions: RestClientOptions,
+  restClientOptions: RestClientOptions,
 ): string {
   const exchangeBaseUrls = {
     livenet: 'https://api.bybit.com',
     testnet: 'https://api-testnet.bybit.com',
+    demoLivenet: 'https://api-demo.bybit.com',
   };
 
-  if (restInverseOptions.baseUrl) {
-    return restInverseOptions.baseUrl;
+  if (restClientOptions.baseUrl) {
+    return restClientOptions.baseUrl;
+  }
+
+  if (restClientOptions.demoTrading) {
+    return exchangeBaseUrls.demoLivenet;
   }
 
   if (useTestnet) {

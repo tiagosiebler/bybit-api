@@ -623,12 +623,7 @@ export class WebsocketClient extends EventEmitter {
       }
 
       const authParams = await this.getAuthParams(wsKey);
-      const url = getWsUrl(
-        wsKey,
-        this.options.wsUrl,
-        this.isTestnet(),
-        this.logger,
-      );
+      const url = getWsUrl(wsKey, this.options, this.logger);
       const ws = this.connectToWsUrl(url + authParams, wsKey);
 
       return this.wsStore.setWs(wsKey, ws);

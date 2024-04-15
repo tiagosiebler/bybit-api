@@ -166,6 +166,10 @@ export class RestClientV5 extends BaseRestClient {
     return this.get('/v3/public/time');
   }
 
+  requestDemoTradingFunds(): Promise<{}> {
+    return this.postPrivate('/v5/account/demo-apply-money');
+  }
+
   /**
    *
    ****** Market APIs

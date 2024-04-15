@@ -89,6 +89,13 @@ export interface WSClientConfigurableOptions {
   testnet?: boolean;
 
   /**
+   * Set to `true` to connect to Bybit's V5 demo trading: https://bybit-exchange.github.io/docs/v5/demo
+   *
+   * Only the "V5" "market" is supported here.
+   */
+  demoTrading?: boolean;
+
+  /**
    * The API group this client should connect to.
    *
    * For the V3 APIs use `v3` as the market (spot/unified margin/usdc/account asset/copy trading)
@@ -109,7 +116,6 @@ export interface WSClientConfigurableOptions {
 }
 
 export interface WebsocketClientOptions extends WSClientConfigurableOptions {
-  testnet?: boolean;
   market: APIMarket;
   pongTimeout: number;
   pingInterval: number;
