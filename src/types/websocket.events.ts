@@ -2,6 +2,7 @@ import {
   CategoryV5,
   ExecTypeV5,
   OCOTriggerTypeV5,
+  OrderCancelTypeV5,
   OrderCreateTypeV5,
   OrderRejectReasonV5,
   OrderSMPTypeV5,
@@ -45,58 +46,60 @@ export interface WSOrderbookEventV5 {
 }
 
 export interface WSAccountOrderV5 {
-  qty: string;
-  price: string;
-  symbol: string;
+  category: CategoryV5;
   orderId: string;
-  orderIv: string;
-  stopLoss: string;
-  smpGroup: number;
+  orderLinkId: string;
+  isLeverage: string;
+  blockTradeId: string;
+  symbol: string;
+  price: string;
+  qty: string;
   side: OrderSideV5;
-  placeType: string;
+  positionIdx: number;
+  orderStatus: OrderStatusV5;
+  createType: OrderCreateTypeV5;
+  cancelType: OrderCancelTypeV5;
+  rejectReason?: OrderRejectReasonV5;
   avgPrice?: string;
   leavesQty?: string;
-  isLeverage: string;
-  cancelType: string;
+  leavesValue?: string;
   cumExecQty: string;
+  cumExecValue: string;
   cumExecFee: string;
-  smpOrderId: string;
+  feeCurrency: string;
+  timeInForce: OrderTimeInForceV5;
+  orderType: OrderTypeV5;
+  stopOrderType: StopOrderTypeV5;
+  ocoTriggerType?: OCOTriggerTypeV5;
+  orderIv: string;
+  marketUnit?: 'baseCoin' | 'quoteCoin';
+  triggerPrice: string;
   takeProfit: string;
-  reduceOnly: boolean;
-  orderLinkId: string;
-  positionIdx: number;
+  stopLoss: string;
+  tpslMode?: TPSLModeV5;
+  tpLimitPrice?: string;
+  slLimitPrice?: string;
   tpTriggerBy: string;
   slTriggerBy: string;
+  triggerDirection: number;
+  triggerBy: OrderTriggerByV5;
+  lastPriceOnCreated: string;
+  reduceOnly: boolean;
+  closeOnTrigger: boolean;
+  placeType: string;
+  smpType: OrderSMPTypeV5;
+  smpGroup: number;
+  smpOrderId: string;
   createdTime: string;
   updatedTime: string;
-  feeCurrency: string;
-  triggerPrice: string;
-  category: CategoryV5;
-  cumExecValue: string;
-  blockTradeId: string;
-  leavesValue?: string;
-  slLimitPrice?: string;
-  tpLimitPrice?: string;
-  tpslMode?: TPSLModeV5;
-  orderType: OrderTypeV5;
-  smpType: OrderSMPTypeV5;
-  closeOnTrigger: boolean;
-  triggerDirection: number;
-  orderStatus: OrderStatusV5;
-  lastPriceOnCreated: string;
-  triggerBy: OrderTriggerByV5;
-  stopOrderType: StopOrderTypeV5;
-  timeInForce: OrderTimeInForceV5;
-  ocoTriggerType?: OCOTriggerTypeV5;
-  rejectReason?: OrderRejectReasonV5;
 }
 
 export interface WSAccountOrderEventV5 {
   id: string;
-  wsKey: WsKey;
   topic: 'order';
   creationTime: number;
   data: WSAccountOrderV5[];
+  wsKey: WsKey;
 }
 
 export interface WSExecutionV5 {
