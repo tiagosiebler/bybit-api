@@ -11,6 +11,7 @@ import {
   OrderTimeInForceV5,
   OrderTriggerByV5,
   OrderTypeV5,
+  PositionIdx,
   StopOrderTypeV5,
   TPSLModeV5,
 } from './v5-shared';
@@ -55,7 +56,7 @@ export interface WSAccountOrderV5 {
   price: string;
   qty: string;
   side: OrderSideV5;
-  positionIdx: number;
+  positionIdx: PositionIdx;
   orderStatus: OrderStatusV5;
   createType: OrderCreateTypeV5;
   cancelType: OrderCancelTypeV5;
