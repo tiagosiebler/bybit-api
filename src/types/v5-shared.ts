@@ -223,7 +223,10 @@ export type ExecTypeV5 =
   | 'AdlTrade'
   | 'Funding'
   | 'BustTrade'
-  | 'Settle';
+  | 'Settle'
+  | 'BlockTrade'
+  | 'MovePosition'
+  | 'UNKNOWN';
 
 /**
  * Withdraw type. 0(default): on chain. 1: off chain. 2: all.
