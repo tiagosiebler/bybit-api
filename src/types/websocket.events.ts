@@ -1,6 +1,8 @@
 import {
   CategoryV5,
+  ExecTypeV5,
   OCOTriggerTypeV5,
+  OrderCreateTypeV5,
   OrderRejectReasonV5,
   OrderSMPTypeV5,
   OrderSideV5,
@@ -95,4 +97,45 @@ export interface WSAccountOrderEventV5 {
   topic: 'order';
   creationTime: number;
   data: WSAccountOrderV5[];
+}
+
+export interface WSExecutionV5 {
+  category: CategoryV5;
+  symbol: string;
+  isLeverage: string;
+  orderId: string;
+  orderLinkId: string;
+  side: OrderSideV5;
+  orderPrice: string;
+  orderQty: string;
+  leavesQty: string;
+  createType: OrderCreateTypeV5;
+  orderType: OrderTypeV5;
+  stopOrderType: StopOrderTypeV5;
+  execFee: string;
+  execId: string;
+  execPrice: string;
+  execQty: string;
+  execType: ExecTypeV5;
+  execValue: string;
+  execTime: string;
+  isMaker: boolean;
+  feeRate: string;
+  tradeIv: string;
+  markIv: string;
+  markPrice: string;
+  indexPrice: string;
+  underlyingPrice: string;
+  blockTradeId: string;
+  closedSize: string;
+  seq: number;
+  marketUnit: string;
+}
+
+export interface WSExecutionEventV5 {
+  id: string;
+  topic: 'execution';
+  creationTime: number;
+  data: WSExecutionV5[];
+  wsKey: WsKey;
 }
