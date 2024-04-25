@@ -2,7 +2,7 @@
  * Use type guards to narrow down types with minimal efforts.
  */
 
-import { WSAccountOrderEventV5, WSExecutionEventV5, WSOrderbookEventV5 } from '../types/websocket.events';
+import { WSAccountOrderEventV5, WSExecutionEventV5, WSOrderbookEventV5, WSPositionEventV5 } from '../types/websocket.events';
 
 /**
  * Type guard to detect a V5 orderbook event (delta & snapshots)
@@ -26,6 +26,26 @@ export function isWsOrderbookEventV5(
     ['delta', 'snapshot'].includes(event['type']) &&
     event['topic'].startsWith('orderbook')
   );
+}
+
+/**
+ * Type guard to detect a V5 position event.
+ * 
+ * @param event
+ * @returns
+ */
+export function isWsPositionEventV5(
+  event: unknown,
+): event is WSPositionEventV5 {
+  if (
+    typeof event !== 'object' ||
+    !event ||
+    typeof event['topic'] !== 'string'
+  ) {
+    return false;
+  }
+
+  return event['topic'] === 'position';
 }
 
 /**
