@@ -12,8 +12,11 @@ import {
   OrderTriggerByV5,
   OrderTypeV5,
   PositionIdx,
+  PositionSideV5,
+  PositionStatusV5,
   StopOrderTypeV5,
   TPSLModeV5,
+  TradeModeV5,
 } from './v5-shared';
 import { WsKey } from './websockets';
 
@@ -43,6 +46,55 @@ export interface WSOrderbookEventV5 {
   /**
    * Internal reference, can be used to determine if this is spot/linear/inverse/etc
    */
+  wsKey: WsKey;
+}
+
+export interface WSPositionV5 {
+  category: string;
+  symbol: string;
+  side: PositionSideV5;
+  size: string;
+  positionIdx: PositionIdx;
+  tradeMode: TradeModeV5;
+  positionValue: string;
+  riskId: number;
+  riskLimitValue: string;
+  entryPrice: string;
+  markPrice: string;
+  leverage: string;
+  positionBalance: string;
+  autoAddMargin: number;
+  positionMM: string;
+  positionIM: string;
+  liqPrice: string;
+  bustPrice: string;
+  tpslMode: string;
+  takeProfit: string;
+  stopLoss: string;
+  trailingStop: string;
+  unrealisedPnl: string;
+  curRealisedPnl: string;
+  sessionAvgPrice: string;
+  delta: string;
+  gamma: string;
+  vega: string;
+  theta: string;
+  cumRealisedPnl: string;
+  positionStatus: PositionStatusV5;
+  adlRankIndicator: number;
+  isReduceOnly: boolean;
+  mmrSysUpdatedTime: string;
+  leverageSysUpdatedTime: string;
+  createdTime: string;
+  updatedTime: string;
+  seq: number;
+}
+
+export interface WSPositionEventV5 {
+  id: string;
+  topic: 'position';
+  creationTime: number;
+  data: WSPositionV5[];
   wsKey: WsKey;
 }
 
