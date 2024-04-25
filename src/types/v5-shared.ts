@@ -95,7 +95,9 @@ export type OrderCreateTypeV5 =
   /** Order created by Ice berg strategy - web/app. */
   | 'CreateByIceBerg'
   /** Order created by arbitrage - web/app. */
-  | 'CreateByArbitrage';
+  | 'CreateByArbitrage'
+  /** Option dynamic delta hedge order - web/app */
+  | 'CreateByDdh';
 
 export type OrderCancelTypeV5 =
   | 'CancelByUser'
