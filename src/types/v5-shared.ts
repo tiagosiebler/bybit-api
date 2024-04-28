@@ -161,7 +161,7 @@ export type PositionIdx = 0 | 1 | 2;
  * - 'Adl' in the auto-deleverage progress
  */
 export type PositionStatusV5 = 'Normal' | 'Liq' | 'Adl';
-export type PositionSideV5 = 'Buy' | 'Sell';
+export type PositionSideV5 = 'Buy' | 'Sell' | 'None' | '';
 
 export type OptionTypeV5 = 'Call' | 'Put';
 
