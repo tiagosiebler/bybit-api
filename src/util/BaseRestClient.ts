@@ -125,15 +125,18 @@ export default abstract class BaseRestClient {
       encodeSerialisedValues: true,
       ...restOptions,
     };
-
+    const headers = { 
+      ...networkOptions.headers, 
+      ...{
+      'x-referer': APIID,
+    }
+    };
     this.globalRequestOptions = {
       // in ms == 5 minutes by default
       timeout: 1000 * 60 * 5,
       // custom request options based on axios specs - see: https://github.com/axios/axios#request-config
       ...networkOptions,
-      headers: {
-        'x-referer': APIID,
-      },
+      headers,
     };
 
     this.baseUrl = getRestBaseUrl(!!this.options.testnet, restOptions);
