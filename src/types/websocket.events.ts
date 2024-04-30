@@ -20,25 +20,15 @@ import {
 } from './v5-shared';
 import { WsKey } from './websockets';
 
-export interface WSOrderbookEventV5 {
-  topic: string;
+export interface WSPublicTopicEventV5<TTopic extends string, TType, TData> {
+  id?: string;
+  topic: TTopic;
+  type: TType;
+  /** Cross sequence */
+  cs?: number;
   /** Event timestamp */
   ts: number;
-  type: 'delta' | 'snapshot';
-  data: {
-    /** Symbol */
-    s: string;
-    /** [price, qty][] */
-    b: [string, string][];
-    /** [price, qty][] */
-    a: [string, string][];
-    /** Update ID */
-    u: number;
-    /**
-     * Cross sequence
-     */
-    seq: number;
-  };
+  data: TData;
   /**
    * matching engine timestamp (correlated with T from public trade channel)
    */
@@ -48,6 +38,29 @@ export interface WSOrderbookEventV5 {
    */
   wsKey: WsKey;
 }
+
+export interface WSPrivateTopicEventV5<TTopic extends string, TData> {
+  id?: string;
+  topic: TTopic;
+  creationTime: number;
+  data: TData;
+  wsKey: WsKey;
+}
+
+export interface WSOrderbookV5 {
+  /** Symbol */
+  s: string;
+  /** [price, qty][] */
+  b: [string, string][];
+  /** [price, qty][] */
+  a: [string, string][];
+  /** Update ID */
+  u: number;
+  /** Cross sequence */
+  seq: number;
+}
+
+export type WSOrderbookEventV5 = WSPublicTopicEventV5<string, 'delta' | 'snapshot', WSOrderbookV5[]>;
 
 export interface WSPositionV5 {
   category: string;
@@ -90,13 +103,7 @@ export interface WSPositionV5 {
   seq: number;
 }
 
-export interface WSPositionEventV5 {
-  id: string;
-  topic: 'position';
-  creationTime: number;
-  data: WSPositionV5[];
-  wsKey: WsKey;
-}
+export type WSPositionEventV5 = WSPrivateTopicEventV5<'position', WSPositionV5[]>;
 
 export interface WSAccountOrderV5 {
   category: CategoryV5;
@@ -147,13 +154,7 @@ export interface WSAccountOrderV5 {
   updatedTime: string;
 }
 
-export interface WSAccountOrderEventV5 {
-  id: string;
-  topic: 'order';
-  creationTime: number;
-  data: WSAccountOrderV5[];
-  wsKey: WsKey;
-}
+export type WSAccountOrderEventV5 = WSPrivateTopicEventV5<'order', WSAccountOrderV5[]>;
 
 export interface WSExecutionV5 {
   category: CategoryV5;
@@ -188,10 +189,4 @@ export interface WSExecutionV5 {
   marketUnit: string;
 }
 
-export interface WSExecutionEventV5 {
-  id: string;
-  topic: 'execution';
-  creationTime: number;
-  data: WSExecutionV5[];
-  wsKey: WsKey;
-}
+export type WSExecutionEventV5 = WSPrivateTopicEventV5<'execution', WSExecutionV5[]>;
