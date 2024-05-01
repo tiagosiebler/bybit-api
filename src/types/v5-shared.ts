@@ -95,7 +95,9 @@ export type OrderCreateTypeV5 =
   /** Order created by Ice berg strategy - web/app. */
   | 'CreateByIceBerg'
   /** Order created by arbitrage - web/app. */
-  | 'CreateByArbitrage';
+  | 'CreateByArbitrage'
+  /** Option dynamic delta hedge order - web/app */
+  | 'CreateByDdh';
 
 export type OrderCancelTypeV5 =
   | 'CancelByUser'
@@ -150,6 +152,16 @@ export type StopOrderTypeV5 =
  * - 2 Sell side of hedge-mode position
  */
 export type PositionIdx = 0 | 1 | 2;
+
+/**
+ * Position status.
+ * 
+ * - 'Normal'
+ * - 'Liq' in the liquidation progress
+ * - 'Adl' in the auto-deleverage progress
+ */
+export type PositionStatusV5 = 'Normal' | 'Liq' | 'Adl';
+export type PositionSideV5 = 'Buy' | 'Sell' | 'None' | '';
 
 export type OptionTypeV5 = 'Call' | 'Put';
 
@@ -221,7 +233,10 @@ export type ExecTypeV5 =
   | 'AdlTrade'
   | 'Funding'
   | 'BustTrade'
-  | 'Settle';
+  | 'Settle'
+  | 'BlockTrade'
+  | 'MovePosition'
+  | 'UNKNOWN';
 
 /**
  * Withdraw type. 0(default): on chain. 1: off chain. 2: all.

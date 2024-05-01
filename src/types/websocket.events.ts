@@ -1,6 +1,9 @@
 import {
   CategoryV5,
+  ExecTypeV5,
   OCOTriggerTypeV5,
+  OrderCancelTypeV5,
+  OrderCreateTypeV5,
   OrderRejectReasonV5,
   OrderSMPTypeV5,
   OrderSideV5,
@@ -8,30 +11,24 @@ import {
   OrderTimeInForceV5,
   OrderTriggerByV5,
   OrderTypeV5,
+  PositionIdx,
+  PositionSideV5,
+  PositionStatusV5,
   StopOrderTypeV5,
   TPSLModeV5,
+  TradeModeV5,
 } from './v5-shared';
 import { WsKey } from './websockets';
 
-export interface WSOrderbookEventV5 {
-  topic: string;
+export interface WSPublicTopicEventV5<TTopic extends string, TType, TData> {
+  id?: string;
+  topic: TTopic;
+  type: TType;
+  /** Cross sequence */
+  cs?: number;
   /** Event timestamp */
   ts: number;
-  type: 'delta' | 'snapshot';
-  data: {
-    /** Symbol */
-    s: string;
-    /** [price, qty][] */
-    b: [string, string][];
-    /** [price, qty][] */
-    a: [string, string][];
-    /** Update ID */
-    u: number;
-    /**
-     * Cross sequence
-     */
-    seq: number;
-  };
+  data: TData;
   /**
    * matching engine timestamp (correlated with T from public trade channel)
    */
@@ -42,57 +39,154 @@ export interface WSOrderbookEventV5 {
   wsKey: WsKey;
 }
 
-export interface WSAccountOrderV5 {
-  qty: string;
-  price: string;
-  symbol: string;
-  orderId: string;
-  orderIv: string;
-  stopLoss: string;
-  smpGroup: number;
-  side: OrderSideV5;
-  placeType: string;
-  avgPrice?: string;
-  leavesQty?: string;
-  isLeverage: string;
-  cancelType: string;
-  cumExecQty: string;
-  cumExecFee: string;
-  smpOrderId: string;
-  takeProfit: string;
-  reduceOnly: boolean;
-  orderLinkId: string;
-  positionIdx: number;
-  tpTriggerBy: string;
-  slTriggerBy: string;
-  createdTime: string;
-  updatedTime: string;
-  feeCurrency: string;
-  triggerPrice: string;
-  category: CategoryV5;
-  cumExecValue: string;
-  blockTradeId: string;
-  leavesValue?: string;
-  slLimitPrice?: string;
-  tpLimitPrice?: string;
-  tpslMode?: TPSLModeV5;
-  orderType: OrderTypeV5;
-  smpType: OrderSMPTypeV5;
-  closeOnTrigger: boolean;
-  triggerDirection: number;
-  orderStatus: OrderStatusV5;
-  lastPriceOnCreated: string;
-  triggerBy: OrderTriggerByV5;
-  stopOrderType: StopOrderTypeV5;
-  timeInForce: OrderTimeInForceV5;
-  ocoTriggerType?: OCOTriggerTypeV5;
-  rejectReason?: OrderRejectReasonV5;
+export interface WSPrivateTopicEventV5<TTopic extends string, TData> {
+  id?: string;
+  topic: TTopic;
+  creationTime: number;
+  data: TData;
+  wsKey: WsKey;
 }
 
-export interface WSAccountOrderEventV5 {
-  id: string;
-  wsKey: WsKey;
-  topic: 'order';
-  creationTime: number;
-  data: WSAccountOrderV5[];
+export interface WSOrderbookV5 {
+  /** Symbol */
+  s: string;
+  /** [price, qty][] */
+  b: [string, string][];
+  /** [price, qty][] */
+  a: [string, string][];
+  /** Update ID */
+  u: number;
+  /** Cross sequence */
+  seq: number;
 }
+
+export type WSOrderbookEventV5 = WSPublicTopicEventV5<string, 'delta' | 'snapshot', WSOrderbookV5[]>;
+
+export interface WSPositionV5 {
+  category: string;
+  symbol: string;
+  side: PositionSideV5;
+  size: string;
+  positionIdx: PositionIdx;
+  tradeMode: TradeModeV5;
+  positionValue: string;
+  riskId: number;
+  riskLimitValue: string;
+  entryPrice: string;
+  markPrice: string;
+  leverage: string;
+  positionBalance: string;
+  autoAddMargin: number;
+  positionMM: string;
+  positionIM: string;
+  liqPrice: string;
+  bustPrice: string;
+  tpslMode: string;
+  takeProfit: string;
+  stopLoss: string;
+  trailingStop: string;
+  unrealisedPnl: string;
+  curRealisedPnl: string;
+  sessionAvgPrice: string;
+  delta: string;
+  gamma: string;
+  vega: string;
+  theta: string;
+  cumRealisedPnl: string;
+  positionStatus: PositionStatusV5;
+  adlRankIndicator: number;
+  isReduceOnly: boolean;
+  mmrSysUpdatedTime: string;
+  leverageSysUpdatedTime: string;
+  createdTime: string;
+  updatedTime: string;
+  seq: number;
+}
+
+export type WSPositionEventV5 = WSPrivateTopicEventV5<'position', WSPositionV5[]>;
+
+export interface WSAccountOrderV5 {
+  category: CategoryV5;
+  orderId: string;
+  orderLinkId: string;
+  isLeverage: string;
+  blockTradeId: string;
+  symbol: string;
+  price: string;
+  qty: string;
+  side: OrderSideV5;
+  positionIdx: PositionIdx;
+  orderStatus: OrderStatusV5;
+  createType: OrderCreateTypeV5;
+  cancelType: OrderCancelTypeV5;
+  rejectReason?: OrderRejectReasonV5;
+  avgPrice?: string;
+  leavesQty?: string;
+  leavesValue?: string;
+  cumExecQty: string;
+  cumExecValue: string;
+  cumExecFee: string;
+  feeCurrency: string;
+  timeInForce: OrderTimeInForceV5;
+  orderType: OrderTypeV5;
+  stopOrderType: StopOrderTypeV5;
+  ocoTriggerType?: OCOTriggerTypeV5;
+  orderIv: string;
+  marketUnit?: 'baseCoin' | 'quoteCoin';
+  triggerPrice: string;
+  takeProfit: string;
+  stopLoss: string;
+  tpslMode?: TPSLModeV5;
+  tpLimitPrice?: string;
+  slLimitPrice?: string;
+  tpTriggerBy: string;
+  slTriggerBy: string;
+  triggerDirection: number;
+  triggerBy: OrderTriggerByV5;
+  lastPriceOnCreated: string;
+  reduceOnly: boolean;
+  closeOnTrigger: boolean;
+  placeType: string;
+  smpType: OrderSMPTypeV5;
+  smpGroup: number;
+  smpOrderId: string;
+  createdTime: string;
+  updatedTime: string;
+}
+
+export type WSAccountOrderEventV5 = WSPrivateTopicEventV5<'order', WSAccountOrderV5[]>;
+
+export interface WSExecutionV5 {
+  category: CategoryV5;
+  symbol: string;
+  isLeverage: string;
+  orderId: string;
+  orderLinkId: string;
+  side: OrderSideV5;
+  orderPrice: string;
+  orderQty: string;
+  leavesQty: string;
+  createType: OrderCreateTypeV5;
+  orderType: OrderTypeV5;
+  stopOrderType: StopOrderTypeV5;
+  execFee: string;
+  execId: string;
+  execPrice: string;
+  execQty: string;
+  execType: ExecTypeV5;
+  execValue: string;
+  execTime: string;
+  isMaker: boolean;
+  feeRate: string;
+  tradeIv: string;
+  markIv: string;
+  markPrice: string;
+  indexPrice: string;
+  underlyingPrice: string;
+  blockTradeId: string;
+  closedSize: string;
+  seq: number;
+  marketUnit: string;
+}
+
+export type WSExecutionEventV5 = WSPrivateTopicEventV5<'execution', WSExecutionV5[]>;
