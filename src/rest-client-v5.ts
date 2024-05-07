@@ -69,6 +69,7 @@ import {
   GetInternalDepositRecordParamsV5,
   GetInternalTransferParamsV5,
   GetKlineParamsV5,
+  GetLongShortRatioParamsV5,
   GetMarkPriceKlineParamsV5,
   GetOpenInterestParamsV5,
   GetOptionDeliveryPriceParamsV5,
@@ -94,6 +95,7 @@ import {
   InternalTransferRecordV5,
   LeverageTokenInfoV5,
   LeveragedTokenMarketResultV5,
+  LongShortRatioV5,
   MMPModifyParamsV5,
   MMPStateV5,
   OHLCKlineV5,
@@ -388,6 +390,12 @@ export class RestClientV5 extends BaseRestClient {
     params: GetDeliveryPriceParamsV5,
   ): Promise<APIResponseV3WithTime<CategoryCursorListV5<DeliveryPriceV5[]>>> {
     return this.get('/v5/market/delivery-price', params);
+  }
+
+  getLongShortRatio(
+    params: GetLongShortRatioParamsV5,
+  ): Promise<APIResponseV3WithTime<{ list: LongShortRatioV5[] }>> {
+    return this.get('/v5/market/account-ratio', params);
   }
 
   /**
