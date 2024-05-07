@@ -17,7 +17,12 @@ const client = new RestClientV5(
     // recv_window: 10000,
   },
   {
+    /**
+     * Axios has a native way of supporting http/https proxies. It works for most proxy services but not all.
+     * If you have issues making any proxied requests this way, take a look at the rest-v5-proxies2.ts example using the https-proxy-agent.
+     */
     proxy: {
+      protocol: 'http', // or 'https'
       host: 'proxyhost',
       port: Number('proxyport'),
       auth: {
