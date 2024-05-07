@@ -132,6 +132,7 @@ export default abstract class BaseRestClient {
       // custom request options based on axios specs - see: https://github.com/axios/axios#request-config
       ...networkOptions,
       headers: {
+        ...networkOptions.headers,
         'x-referer': APIID,
       },
     };

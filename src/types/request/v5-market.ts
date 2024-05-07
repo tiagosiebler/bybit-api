@@ -125,3 +125,10 @@ export interface GetDeliveryPriceParamsV5 {
   limit?: number;
   cursor?: string;
 }
+
+export interface GetLongShortRatioParamsV5 {
+  category: 'linear' | 'inverse';
+  symbol: string;
+  period: OpenInterestIntervalV5;
+  limit?: number;
+}

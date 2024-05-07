@@ -120,7 +120,7 @@ export interface SpotInstrumentInfoV5 {
   riskParameters: {
     limitParameter: string;
     marketParameter: string;
-  }
+  };
 }
 
 type InstrumentInfoV5Mapping = {
@@ -289,4 +289,11 @@ export interface DeliveryPriceV5 {
   symbol: string;
   deliveryPrice: string;
   deliveryTime: string;
+}
+
+export interface LongShortRatioV5 {
+  symbol: string;
+  buyRatio: string;
+  sellRatio: string;
+  timestamp: string;
 }
