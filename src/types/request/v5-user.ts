@@ -39,3 +39,9 @@ export interface UpdateSubApiKeyUpdateParamsV5 {
 export interface DeleteSubMemberParamsV5 {
   subMemberId: string;
 }
+
+export interface GetSubAccountAllApiKeysParamsV5 {
+  subMemberId: string;
+  limit?: number;
+  cursor?: string;
+}
