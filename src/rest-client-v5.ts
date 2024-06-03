@@ -142,6 +142,8 @@ import {
   WalletBalanceV5,
   WithdrawParamsV5,
   WithdrawalRecordV5,
+  SubAccountAllApiKeysResultV5,
+  GetSubAccountAllApiKeysParamsV5,
 } from './types';
 
 import { REST_CLIENT_TYPE_ENUM } from './util';
@@ -1296,6 +1298,17 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Query all api keys information of a sub UID.
+   */
+  getSubAccountAllApiKeys(
+    params: GetSubAccountAllApiKeysParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<SubAccountAllApiKeysResultV5>
+  > {
+    return this.getPrivate('/v5/user/sub-apikeys', params);
+  }
+
+  /**
    * Froze sub uid. Use master user's api key only.
    *
    * TIP: The API key must have one of the permissions to be allowed to call the following API endpoint.
@@ -1361,12 +1374,16 @@ export class RestClientV5 extends BaseRestClient {
    *
    * TIP:
    * The API key must have one of the permissions to be allowed to call the following API endpoint.
-   * - sub API key: "Account Transfer"
+   * - sub API key: "Account Transfer", "Sub Member Transfer"
+   * - master API Key: "Account Transfer", "Sub Member Transfer", "Withdrawal"
    *
-   * DANGER: BE CAREFUL! The API key used to call this interface will be invalid immediately.
+   * DANGER: BE CAREFUL! The sub API key used to call this interface will be invalid immediately.
    */
-  deleteSubApiKey(): Promise<APIResponseV3WithTime<{}>> {
-    return this.postPrivate('/v5/user/delete-sub-api');
+  deleteSubApiKey(apikey?: string): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate(
+      '/v5/user/delete-sub-api',
+      apikey ? { apikey } : undefined,
+    );
   }
 
   /**

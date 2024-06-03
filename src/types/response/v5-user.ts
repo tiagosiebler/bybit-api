@@ -34,7 +34,7 @@ export interface ApiKeyInfoV5 {
   secret: string;
   permissions: PermissionsV5;
   ips?: string[];
-  type: 1 | 2;
+  type: ApiKeyType;
   deadlineDay?: number;
   expiredAt?: string;
   createdAt: string;
@@ -56,4 +56,23 @@ export interface UpdateApiKeyResultV5 {
   secret: string;
   permissions: PermissionsV5;
   ips: string[];
+}
+
+export interface SubAccountAllApiKeysResultV5 {
+  result: {
+    id: string;
+    ips?: string[];
+    apiKey: string;
+    note: string;
+    status: number;
+    expiredAt?: string;
+    createdAt: string;
+    type: ApiKeyType;
+    permissions: PermissionsV5;
+    secret: string;
+    readOnly: 0 | 1;
+    deadlineDay?: number;
+    flag: string;
+  }[],
+  nextPageCursor: string;
 }
