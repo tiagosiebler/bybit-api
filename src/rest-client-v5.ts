@@ -1379,10 +1379,10 @@ export class RestClientV5 extends BaseRestClient {
    *
    * DANGER: BE CAREFUL! The sub API key used to call this interface will be invalid immediately.
    */
-  deleteSubApiKey(apikey?: string): Promise<APIResponseV3WithTime<{}>> {
+  deleteSubApiKey(params?: { apikey?: string; ): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate(
       '/v5/user/delete-sub-api',
-      apikey ? { apikey } : undefined,
+      params,
     );
   }
 
