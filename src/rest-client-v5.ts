@@ -82,6 +82,7 @@ import {
   GetRiskLimitParamsV5,
   GetSettlementRecordParamsV5,
   GetSpotLeveragedTokenOrderHistoryParamsV5,
+  GetSubAccountAllApiKeysParamsV5,
   GetSubAccountDepositRecordParamsV5,
   GetTickersParamsV5,
   GetTransactionLogParamsV5,
@@ -126,6 +127,7 @@ import {
   SettlementRecordV5,
   SpotBorrowCheckResultV5,
   SpotLeveragedTokenOrderHistoryV5,
+  SubAccountAllApiKeysResultV5,
   SubMemberV5,
   SwitchIsolatedMarginParamsV5,
   SwitchPositionModeParamsV5,
@@ -142,8 +144,6 @@ import {
   WalletBalanceV5,
   WithdrawParamsV5,
   WithdrawalRecordV5,
-  SubAccountAllApiKeysResultV5,
-  GetSubAccountAllApiKeysParamsV5,
 } from './types';
 
 import { REST_CLIENT_TYPE_ENUM } from './util';
