@@ -1349,7 +1349,7 @@ export class RestClientV5 extends BaseRestClient {
    * The API key must have one of the below permissions in order to call this endpoint
    *
    *  - sub API key: "Account Transfer", "Sub Member Transfer"
-   *   - master API Key: "Account Transfer", "Sub Member Transfer", "Withdrawal"
+   *  - master API Key: "Account Transfer", "Sub Member Transfer", "Withdrawal"
    */
   updateSubApiKey(
     params: UpdateApiKeyParamsV5,
