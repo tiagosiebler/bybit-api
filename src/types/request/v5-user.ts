@@ -25,6 +25,7 @@ export interface CreateSubApiKeyParamsV5 {
 }
 
 export interface UpdateApiKeyParamsV5 {
+  apikey?: string;
   readOnly?: 0 | 1;
   ips?: string[];
   permissions: PermissionsV5;

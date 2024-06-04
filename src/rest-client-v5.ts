@@ -1345,10 +1345,11 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * This endpoint modifies the settings of a sub API key.
-   * Use the API key pending to be modified to call the endpoint.
-   * Only the API key that calls this interface can be modified.
+   * Use the API key pending to be modified to call the endpoint or use master account api key to manage its sub account api key.
+   * The API key must have one of the below permissions in order to call this endpoint
    *
-   * The API key must own "Account Transfer" permission to be allowed to call this API endpoint.
+   *  - sub API key: "Account Transfer", "Sub Member Transfer"
+   *   - master API Key: "Account Transfer", "Sub Member Transfer", "Withdrawal"
    */
   updateSubApiKey(
     params: UpdateApiKeyParamsV5,
