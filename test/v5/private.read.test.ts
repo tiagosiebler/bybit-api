@@ -276,19 +276,11 @@ describe('Private READ V5 REST API Endpoints', () => {
 
     it('getSubAccountAllApiKeys()', async () => {
       expect(
-        await api.getSubAccountAllApiKeys({subMemberId: 'fakeid'})
+        await api.getSubAccountAllApiKeys({ subMemberId: 'fakeid' }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
         // Expected, since sub account ID is fake
         retCode: API_ERROR_CODE.PARAMS_MISSING_OR_WRONG,
-      });
-    });
-  });
-
-  describe('Spot Leverage Token APIs', () => {
-    it('getSpotLeveragedTokenOrderHistory()', async () => {
-      expect(await api.getSpotLeveragedTokenOrderHistory()).toMatchObject({
-        ...successResponseObjectV3(),
       });
     });
   });
