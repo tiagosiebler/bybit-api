@@ -1,21 +1,38 @@
 # Node.js & JavaScript SDK for Bybit REST API & WebSockets
 
-[![Tests](https://circleci.com/gh/tiagosiebler/bybit-api.svg?style=shield)](https://circleci.com/gh/tiagosiebler/bybit-api)
-[![npm version](https://img.shields.io/npm/v/bybit-api)][1] [![npm size](https://img.shields.io/bundlephobia/min/bybit-api/latest)][1] [![npm downloads](https://img.shields.io/npm/dt/bybit-api)][1]
+[![Build & Test](https://github.com/tiagosiebler/bybit-api/actions/workflows/e2etest.yml/badge.svg?branch=master)](https://github.com/tiagosiebler/bybit-api/actions/workflows/e2etest.yml)
+[![npm version](https://img.shields.io/npm/v/bybit-api)][1]
+[![npm size](https://img.shields.io/bundlephobia/min/bybit-api/latest)][1]
+[![npm downloads](https://img.shields.io/npm/dt/bybit-api)][1]
 [![last commit](https://img.shields.io/github/last-commit/tiagosiebler/bybit-api)][1]
 [![CodeFactor](https://www.codefactor.io/repository/github/tiagosiebler/bybit-api/badge)](https://www.codefactor.io/repository/github/tiagosiebler/bybit-api)
+[![Telegram](https://img.shields.io/badge/chat-on%20telegram-blue.svg)](https://t.me/nodetraders)
 
-[![connector logo](https://github.com/tiagosiebler/bybit-api/blob/master/docs/images/logo1.png?raw=true)][1]
+<p align="center">
+  <a href="https://www.npmjs.com/package/bybit-api">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/tiagosiebler/bybit-api/blob/master/docs/images/logoDarkMode2.svg?raw=true#gh-dark-mode-only">
+      <img alt="SDK Logo" src="https://github.com/tiagosiebler/bybit-api/blob/master/docs/images/logoBrightMode2.svg?raw=true#gh-light-mode-only">
+    </picture>
+  </a>
+</p>
 
 [1]: https://www.npmjs.com/package/bybit-api
 
 Node.js & JavaScript SDK for the Bybit REST APIs and WebSockets:
 
 - Complete integration with all Bybit REST APIs & WebSockets.
+- Actively maintained with a modern, promise-driven interface.
 - TypeScript support (with type declarations for most API requests & responses).
 - Over 450 end-to-end tests making real API calls & WebSocket connections, validating any changes before they reach npm.
 - Robust WebSocket integration with configurable connection heartbeats & automatic reconnect then resubscribe workflows.
-- Browser support (via webpack bundle - see "Browser Usage" below).
+  - Event driven messaging.
+  - Smart websocket persistence
+    - Automatically handle silent websocket disconnections through timed heartbeats, including the scheduled 24hr disconnect.
+    - Automatically handle listenKey persistence and expiration/refresh.
+    - Emit `reconnected` event when dropped connection is restored.
+- Proxy support via axios integration.
+- Active community support & collaboration in telegram: [Node.js Algo Traders](https://t.me/nodetraders).
 
 ## Installation
 
@@ -28,19 +45,20 @@ Node.js & JavaScript SDK for the Bybit REST APIs and WebSockets:
 
 ## Related projects
 
-Check out my related projects:
+Check out my related JavaScript/TypeScript/Node.js projects:
 
-- Try my connectors:
-  - [bybit-api](https://www.npmjs.com/package/bybit-api)
-  - [binance](https://www.npmjs.com/package/binance)
-  - [okx-api](https://www.npmjs.com/package/okx-api)
-  - [bitget-api](https://www.npmjs.com/package/bitget-api)
-  - [bitmart-api](https://www.npmjs.com/package/bitmart-api)
+- Try my REST API & WebSocket SDKs:
+  - [Bybit-api Node.js SDK](https://www.npmjs.com/package/bybit-api)
+  - [Binance Node.js SDK](https://www.npmjs.com/package/binance)
+  - [Okx-api Node.js SDK](https://www.npmjs.com/package/okx-api)
+  - [Gateio-api Node.js SDK](https://www.npmjs.com/package/gateio-api)
+  - [Bitget-api Node.js SDK](https://www.npmjs.com/package/bitget-api)
+  - [Bitmart-api Node.js SDK](https://www.npmjs.com/package/bitmart-api)
 - Try my misc utilities:
-  - [orderbooks](https://www.npmjs.com/package/orderbooks)
-  - [accountstate](https://www.npmjs.com/package/accountstate)
+  - [OrderBooks Node.js](https://www.npmjs.com/package/orderbooks)
+  - [Crypto Exchange Account State Cache](https://www.npmjs.com/package/accountstate)
 - Check out my examples:
-  - [awesome-crypto-examples](https://github.com/tiagosiebler/awesome-crypto-examples)
+  - [awesome-crypto-examples Node.js](https://github.com/tiagosiebler/awesome-crypto-examples)
 
 ## Documentation
 
@@ -406,15 +424,15 @@ The bundle can be found in `dist/`. Altough usage should be largely consistent, 
 
 #### tiagosiebler
 
-If you found this project interesting or useful, create accounts with my referral links:
+Have my projects helped you? Share the love, there are many ways you can show your thanks:
 
-- [Bybit](https://www.bybit.com/en-US/register?affiliate_id=9410&language=en-US&group_id=0&group_type=1)
-- [Binance](https://www.binance.com/en/register?ref=20983262)
+- Star & share my projects.
+- Are my projects useful? Sponsor me on Github and support my effort to maintain & improve them: https://github.com/sponsors/tiagosiebler
+- Have an interesting project? Get in touch & invite me to it.
+- Or buy me all the coffee:
+  - ETH(ERC20): `0xA3Bda8BecaB4DCdA539Dc16F9C54a592553Be06C` <!-- metamask -->
 
-Or buy me a coffee using any of these:
-
-- BTC: `1C6GWZL1XW3jrjpPTS863XtZiXL1aTK7Jk`
-- ETH (ERC20): `0xd773d8e6a50758e1ada699bb6c4f98bb4abf82da`
+For more ways to give thanks & support my efforts, visit [Contributions & Thanks](https://github.com/tiagosiebler/awesome-crypto-examples/wiki/Contributions-&-Thanks)!
 
 #### pixtron
 
@@ -430,4 +448,4 @@ Contributions are encouraged, I will review any incoming pull requests. See the 
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=tiagosiebler/ftx-api,tiagosiebler/bybit-api,tiagosiebler/binance,tiagosiebler/orderbooks,tiagosiebler/okx-api,tiagosiebler/awesome-crypto-examples,tiagosiebler/accountstate&type=Date)](https://star-history.com/#tiagosiebler/ftx-api&tiagosiebler/bybit-api&tiagosiebler/binance&tiagosiebler/orderbooks&tiagosiebler/okx-api&tiagosiebler/awesome-crypto-examples&tiagosiebler/accountstate&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=tiagosiebler/bybit-api,tiagosiebler/binance,tiagosiebler/orderbooks,tiagosiebler/okx-api,tiagosiebler/bitget-api,tiagosiebler/awesome-crypto-examples,tiagosiebler/bitmart-api,tiagosiebler/gateio-api&type=Date)](https://star-history.com/#tiagosiebler/bybit-api&tiagosiebler/binance&tiagosiebler/orderbooks&tiagosiebler/okx-api&tiagosiebler/bitget-api&tiagosiebler/awesome-crypto-examples&tiagosiebler/bitmart-api&tiagosiebler/gateio-api&Date)

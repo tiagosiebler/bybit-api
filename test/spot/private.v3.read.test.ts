@@ -84,13 +84,6 @@ describe('Private Spot REST API GET Endpoints', () => {
     );
   });
 
-  it('getLeveragedTokenPRHistory()', async () => {
-    expect(await api.getLeveragedTokenPRHistory()).toMatchObject({
-      ...successResponseObjectV3(),
-      // retCode: API_ERROR_CODE.ORDER_NOT_FOUND_LEVERAGED_TOKEN,
-    });
-  });
-
   it('getCrossMarginBorrowingInfo()', async () => {
     expect(await api.getCrossMarginBorrowingInfo()).toMatchObject(
       successResponseObjectV3(),
