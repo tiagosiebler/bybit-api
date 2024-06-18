@@ -129,3 +129,28 @@ export interface ClosedPnLV5 {
   createdTime: string;
   updatedTime: string;
 }
+
+export interface MovePositionResultV5 {
+  blockTradeId: string;
+  status: 'Processing' | 'Rejected';
+  rejectParty: '' | 'Taker' | 'Maker' | 'bybit';
+}
+
+export interface MovePositionHistoryV5 {
+  blockTradeId: string;
+  category: 'linear' | 'spot' | 'option';
+  orderId: string;
+  userId: number;
+  symbol: string;
+  side: 'Buy' | 'Sell';
+  price: string;
+  qty: string;
+  execFee: string;
+  status: 'Processing' | 'Filled' | 'Rejected';
+  execId: string;
+  resultCode: number;
+  resultMessage: string;
+  createdAt: number;
+  updatedAt: number;
+  rejectParty: '' | 'Taker' | 'Maker' | 'bybit';
+}

@@ -168,3 +168,9 @@ export interface WithdrawalRecordV5 {
   createTime: string;
   updateTime: string;
 }
+
+
+export interface VaspEntityV5 {
+  vaspEntityId: string;
+  vaspName: string;
+}

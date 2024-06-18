@@ -68,3 +68,24 @@ export interface SpotLeveragedTokenOrderHistoryV5 {
   valueCoin: string;
   serialNo: string;
 }
+
+export interface VIPMarginDataV5 {
+  vipCoinList: {
+    list: {
+      borrowable: boolean;
+      collateralRatio: string;
+      currency: string;
+      hourlyBorrowRate: string;
+      liquidationOrder: string;
+      marginCollateral: boolean;
+      maxBorrowingAmount: string;
+    }[];
+    vipLevel: string;
+  }[];
+}
+
+export interface SpotMarginStateV5 {
+  spotLeverage: string;
+  spotMarginMode: '1' | '0';
+  effectiveLeverage: string;
+}

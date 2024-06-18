@@ -125,3 +125,11 @@ export interface RepayLiabilityResultV5 {
   coin: string;
   repaymentQty: string;
 }
+
+export interface DCPInfoV5 {
+  product: 'SPOT' | 'DERIVATIVES' | 'OPTIONS';
+  dcpStatus: 'ON';
+  timeWindow: string;
+}
+
+
