@@ -1,4 +1,4 @@
-export interface GetExchangeBrokerEarningParamsV5 {
+export interface GetExchangeBrokerEarningsParamsV5 {
   bizType?: 'SPOT' | 'DERIVATIVES' | 'OPTIONS';
   begin?: string;
   end?: string;
@@ -7,7 +7,7 @@ export interface GetExchangeBrokerEarningParamsV5 {
   cursor?: string;
 }
 
-export interface getBrokerSubAccountDepositRecords {
+export interface GetBrokerSubAccountDepositsV5 {
   subMemberId?: string;
   coin?: string;
   startTime?: number;

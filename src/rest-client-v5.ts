@@ -89,7 +89,6 @@ import {
   GetSubAccountAllApiKeysParamsV5,
   GetSubAccountDepositRecordParamsV5,
   GetTickersParamsV5,
-  GetTransactionLogParamsClassicV5,
   GetTransactionLogParamsV5,
   GetUniversalTransferRecordsParamsV5,
   GetVIPMarginDataParamsV5,
@@ -156,15 +155,16 @@ import {
   WalletBalanceV5,
   WithdrawParamsV5,
   WithdrawalRecordV5,
+  getClassicTransactionLogsParamsV5,
 } from './types';
 import {
-  GetExchangeBrokerEarningParamsV5,
-  getBrokerSubAccountDepositRecords,
+  GetBrokerSubAccountDepositsV5,
+  GetExchangeBrokerEarningsParamsV5,
 } from './types/request/v5-broker';
 import {
   ExchangeBrokerAccountInfoV5,
   ExchangeBrokerEarningResultV5,
-  SubAccountDepositRecordV5,
+  ExchangeBrokerSubAccountDepositRecordV5,
 } from './types/response/v5-broker';
 
 import { REST_CLIENT_TYPE_ENUM } from './util';
@@ -937,8 +937,8 @@ export class RestClientV5 extends BaseRestClient {
    *
    * API key permission: "Contract - Position"
    */
-  getTransactionLogClassic(
-    params?: GetTransactionLogParamsClassicV5,
+  getClassicTransactionLogs(
+    params?: getClassicTransactionLogsParamsV5,
   ): Promise<
     APIResponseV3WithTime<{ list: TransactionLogV5[]; nextPageCursor: string }>
   > {
@@ -1359,7 +1359,7 @@ export class RestClientV5 extends BaseRestClient {
    *
    * This endpoint is particularly used for kyc=KOR users. When withdraw funds, you need to fill entity id.
    */
-  getExchangeEntityList(): Promise<
+  getExchangeEntities(): Promise<
     APIResponseV3WithTime<{ vasp: VaspEntityV5[] }>
   > {
     return this.getPrivate('/v5/asset/withdraw/vasp/list');
@@ -1930,8 +1930,8 @@ export class RestClientV5 extends BaseRestClient {
    * begin & end are either entered at the same time or not entered, and latest 7 days data are returned by default
    * API rate limit: 10 req / sec
    */
-  getExchangeBrokerEarning(
-    params?: GetExchangeBrokerEarningParamsV5,
+  getExchangeBrokerEarnings(
+    params?: GetExchangeBrokerEarningsParamsV5,
   ): Promise<APIResponseV3WithTime<ExchangeBrokerEarningResultV5>> {
     return this.getPrivate('/v5/broker/earnings-info', params);
   }
@@ -1959,11 +1959,9 @@ export class RestClientV5 extends BaseRestClient {
    * TIP
    * endTime - startTime should be less than 30 days. Queries for the last 30 days worth of records by default.
    */
-  getBrokerSubAccountDepositRecords(
-    params?: getBrokerSubAccountDepositRecords,
-  ): Promise<
+  getBrokerSubAccountDeposits(params?: GetBrokerSubAccountDepositsV5): Promise<
     APIResponseV3WithTime<{
-      rows: SubAccountDepositRecordV5[];
+      rows: ExchangeBrokerSubAccountDepositRecordV5[];
       nextPageCursor: string;
     }>
   > {
