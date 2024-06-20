@@ -1460,6 +1460,17 @@ export class RestClientV5 extends BaseRestClient {
     return this.getPrivate('/v5/user/query-api');
   }
 
+  getUIDWalletType(params: { memberIds: string }): Promise<
+    APIResponseV3WithTime<{
+      accounts: {
+        uid: string;
+        accountType: string[];
+      }[];
+    }>
+  > {
+    return this.getPrivate('/v5/user/query-api', params);
+  }
+
   /**
    * Modify the settings of a master API key. Use the API key pending to be modified to call the endpoint. Use master user's API key only.
    *
