@@ -174,7 +174,7 @@ export type OptionTypeV5 = 'Call' | 'Put';
 export type TradeModeV5 = 0 | 1;
 
 export type TPSLModeV5 = 'Full' | 'Partial';
-export type AccountMarginModeV5 = 'REGULAR_MARGIN' | 'PORTFOLIO_MARGIN';
+export type AccountMarginModeV5 = 'ISOLATED_MARGIN' | 'REGULAR_MARGIN' | 'PORTFOLIO_MARGIN';
 export type UnifiedUpdateStatusV5 = 'FAIL' | 'PROCESS' | 'SUCCESS';
 
 export type AccountTypeV5 =
