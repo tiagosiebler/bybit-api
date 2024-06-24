@@ -48,47 +48,47 @@ export class CopyTradingClient extends BaseRestClient {
   submitOrder(params: CopyTradingOrderRequest): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/contract/v3/private/copytrading/order/create',
-      params
+      params,
     );
   }
 
   /** Set Trading Stop */
   setTradingStop(
-    params: CopyTradingTradingStopRequest
+    params: CopyTradingTradingStopRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/contract/v3/private/copytrading/order/trading-stop',
-      params
+      params,
     );
   }
 
   /** Query Order List */
   getActiveOrders(
-    params?: CopyTradingOrderListRequest
+    params?: CopyTradingOrderListRequest,
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate(
       '/contract/v3/private/copytrading/order/list',
-      params
+      params,
     );
   }
 
   /** Cancel order */
   cancelOrder(
-    params: CopyTradingCancelOrderRequest
+    params: CopyTradingCancelOrderRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/contract/v3/private/copytrading/order/cancel',
-      params
+      params,
     );
   }
 
   /** Close Order.  This endpoint's rate_limit will decrease by 10 per request; ie, one request to this endpoint consumes 10 from the limit allowed per minute. */
   closeOrder(
-    params: CopyTradingCloseOrderRequest
+    params: CopyTradingCloseOrderRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/contract/v3/private/copytrading/order/close',
-      params
+      params,
     );
   }
 
@@ -104,7 +104,7 @@ export class CopyTradingClient extends BaseRestClient {
   /** Close Position */
   closePosition(
     symbol: string,
-    positionIdx: string
+    positionIdx: string,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate('/contract/v3/private/copytrading/position/close', {
       symbol,
@@ -116,11 +116,11 @@ export class CopyTradingClient extends BaseRestClient {
   setLeverage(
     symbol: string,
     buyLeverage: string,
-    sellLeverage: string
+    sellLeverage: string,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/contract/v3/private/copytrading/position/set-leverage',
-      { symbol, buyLeverage, sellLeverage }
+      { symbol, buyLeverage, sellLeverage },
     );
   }
 
@@ -139,7 +139,7 @@ export class CopyTradingClient extends BaseRestClient {
   transfer(params: CopyTradingTransferRequest): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/contract/v3/private/copytrading/wallet/transfer',
-      params
+      params,
     );
   }
 

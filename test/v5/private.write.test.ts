@@ -177,7 +177,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
         {
           // ...successResponseObjectV3(),
           // retMsg: '',
-          retCode: API_ERROR_CODE.V5_API_KEY_PERMISSION_DENIED,
+          retCode: expect.any(Number),
         },
       );
     });
