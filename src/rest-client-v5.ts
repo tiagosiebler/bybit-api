@@ -57,6 +57,7 @@ import {
   GetAllowedDepositCoinInfoParamsV5,
   GetAssetInfoParamsV5,
   GetBorrowHistoryParamsV5,
+  GetClassicTransactionLogsParamsV5,
   GetClosedPnLParamsV5,
   GetCoinExchangeRecordParamsV5,
   GetDeliveryPriceParamsV5,
@@ -155,7 +156,6 @@ import {
   WalletBalanceV5,
   WithdrawParamsV5,
   WithdrawalRecordV5,
-  GetClassicTransactionLogsParamsV5,
 } from './types';
 import {
   GetBrokerSubAccountDepositsV5,
