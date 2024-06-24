@@ -156,16 +156,12 @@ import {
   WalletBalanceV5,
   WithdrawParamsV5,
   WithdrawalRecordV5,
-} from './types';
-import {
   GetBrokerSubAccountDepositsV5,
   GetExchangeBrokerEarningsParamsV5,
-} from './types/request/v5-broker';
-import {
   ExchangeBrokerAccountInfoV5,
   ExchangeBrokerEarningResultV5,
   ExchangeBrokerSubAccountDepositRecordV5,
-} from './types/response/v5-broker';
+} from './types';
 
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
