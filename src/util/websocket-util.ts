@@ -46,9 +46,9 @@ export const WS_BASE_URL_MAP: Record<
   },
   linear: {
     public: {
-      livenet: 'wss://stream.bybit.com/realtime_public',
+      livenet: 'wss://stream.zoomex.com/realtime_public',
       livenet2: 'wss://stream.bytick.com/realtime_public',
-      testnet: 'wss://stream-testnet.bybit.com/realtime_public',
+      testnet: 'wss://stream-testnet.zoomex.com/realtime_public',
     },
     private: {
       livenet: 'wss://stream.bybit.com/realtime_private',
@@ -172,8 +172,8 @@ export const WS_BASE_URL_MAP: Record<
   },
   v5LinearPublic: {
     public: {
-      livenet: 'wss://stream.bybit.com/v5/public/linear',
-      testnet: 'wss://stream-testnet.bybit.com/v5/public/linear',
+      livenet: 'wss://stream.zoomex.com/v3/public/linear',
+      testnet: 'wss://stream-testnet.zoomex.com/v3/public/linear',
     },
   },
   v5InversePublic: {
