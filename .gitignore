@@ -15,12 +15,11 @@ node_modules/
 .eslintcache
 .node_repl_history
 *.tgz
-*.js
 .yarn-integrity
 .env
 .env.test
 .cache
-lib
+# lib
 bundleReport.html
 .history/
 rawReq.ts
