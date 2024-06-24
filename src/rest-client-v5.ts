@@ -155,7 +155,7 @@ import {
   WalletBalanceV5,
   WithdrawParamsV5,
   WithdrawalRecordV5,
-  getClassicTransactionLogsParamsV5,
+  GetClassicTransactionLogsParamsV5,
 } from './types';
 import {
   GetBrokerSubAccountDepositsV5,
@@ -938,7 +938,7 @@ export class RestClientV5 extends BaseRestClient {
    * API key permission: "Contract - Position"
    */
   getClassicTransactionLogs(
-    params?: getClassicTransactionLogsParamsV5,
+    params?: GetClassicTransactionLogsParamsV5,
   ): Promise<
     APIResponseV3WithTime<{ list: TransactionLogV5[]; nextPageCursor: string }>
   > {
