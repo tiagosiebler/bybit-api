@@ -48,7 +48,7 @@ export interface SetCollateralCoinParamsV5 {
   collateralSwitch: 'ON' | 'OFF';
 }
 
-export interface getClassicTransactionLogsParamsV5 {
+export interface GetClassicTransactionLogsParamsV5 {
   currency?: string;
   baseCoin?: string;
   type?: string;
