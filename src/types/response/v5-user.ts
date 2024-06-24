@@ -76,3 +76,21 @@ export interface SubAccountAllApiKeysResultV5 {
   }[],
   nextPageCursor: string;
 }
+
+
+export interface AffiliateUserInfoV5 {
+  uid: string;
+  vipLevel: string;
+  takerVol30Day: string;
+  makerVol30Day: string;
+  tradeVol30Day: string;
+  depositAmount30Day: string;
+  takerVol365Day: string;
+  makerVol365Day: string;
+  tradeVol365Day: string;
+  depositAmount365Day: string;
+  totalWalletBalance: '1' | '2' | '3' | '4';
+  depositUpdateTime: string;
+  volUpdateTime: string;
+  KycLevel: 0 | 1 | 2;
+}

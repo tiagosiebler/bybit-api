@@ -47,3 +47,13 @@ export interface SetCollateralCoinParamsV5 {
   coin: string;
   collateralSwitch: 'ON' | 'OFF';
 }
+
+export interface GetClassicTransactionLogsParamsV5 {
+  currency?: string;
+  baseCoin?: string;
+  type?: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}

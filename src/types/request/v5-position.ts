@@ -105,3 +105,31 @@ export interface GetClosedPnLParamsV5 {
   limit?: number;
   cursor?: string;
 }
+
+export interface MovePositionParamsV5 {
+  fromUid: string;
+  toUid: string;
+  list: {
+    category: 'linear' | 'spot' | 'option';
+    symbol: string;
+    price: string;
+    side: 'Buy' | 'Sell';
+    qty: string;
+  }[];
+}
+
+export interface GetMovePositionHistoryParamsV5 {
+  category?: 'linear' | 'spot' | 'option';
+  symbol?: string;
+  startTime?: number;
+  endTime?: number;
+  status?: 'Processing' | 'Filled' | 'Rejected';
+  blockTradeId?: string;
+  limit?: string;
+  cursor?: string;
+}
+
+export interface ConfirmNewRiskLimitParamsV5 {
+  category: 'linear' | 'inverse';
+  symbol: string;
+}

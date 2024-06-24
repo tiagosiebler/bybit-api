@@ -21,3 +21,8 @@ export interface GetSpotLeveragedTokenOrderHistoryParamsV5 {
   ltOrderType?: LTOrderTypeV5;
   serialNo?: string;
 }
+
+export interface GetVIPMarginDataParamsV5 {
+  vipLevel?: string;
+  currency?: string;
+}
