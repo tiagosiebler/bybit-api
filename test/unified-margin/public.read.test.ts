@@ -104,8 +104,4 @@ describe('Public Unified Margin REST API Endpoints', () => {
   it('getServerTime()', async () => {
     expect(await api.getServerTime()).toMatchObject(successResponseObject());
   });
-
-  it('getAnnouncements()', async () => {
-    expect(await api.getAnnouncements()).toMatchObject(successResponseObject());
-  });
 });

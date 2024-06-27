@@ -23,3 +23,5 @@ lib
 bundleReport.html
 .history/
 rawReq.ts
+localtest.sh
+
