@@ -60,11 +60,14 @@ export interface CollateralInfoV5 {
   currency: string;
   hourlyBorrowRate: string;
   maxBorrowingAmount: string;
-  freeBorrowingAmount: string;
+  freeBorrowAmount: string;
+  freeBorrowingLimit: string;
   borrowAmount: string;
   availableToBorrow: string;
   borrowable: boolean;
+  borrowUsageRate: string;
   marginCollateral: boolean;
+  collateralSwitch: boolean;
   collateralRatio: string;
 }
 
