@@ -152,8 +152,4 @@ export class CopyTradingClient extends BaseRestClient {
   getServerTime(): Promise<APIResponseWithTime> {
     return this.get('/v2/public/time');
   }
-
-  getAnnouncements(): Promise<APIResponseWithTime<any[]>> {
-    return this.get('/v2/public/announcement');
-  }
 }

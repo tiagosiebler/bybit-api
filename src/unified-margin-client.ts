@@ -57,7 +57,7 @@ export class UnifiedMarginClient extends BaseRestClient {
   getOrderBook(
     symbol: string,
     category: string,
-    limit?: number
+    limit?: number,
   ): Promise<APIResponseV3<any>> {
     return this.get('/derivatives/v3/public/order-book/L2', {
       category,
@@ -74,14 +74,14 @@ export class UnifiedMarginClient extends BaseRestClient {
   /** Get a symbol price/statistics ticker */
   getSymbolTicker(
     category: UMCategory,
-    symbol?: string
+    symbol?: string,
   ): Promise<APIResponseV3<any>> {
     return this.get('/derivatives/v3/public/tickers', { category, symbol });
   }
 
   /** Get trading rules per symbol/contract, incl price/amount/value/leverage filters */
   getInstrumentInfo(
-    params: UMInstrumentInfoRequest
+    params: UMInstrumentInfoRequest,
   ): Promise<APIResponseV3<UMPaginatedResult<UMInstrumentInfo>>> {
     return this.get('/derivatives/v3/public/instruments-info', params);
   }
@@ -101,18 +101,18 @@ export class UnifiedMarginClient extends BaseRestClient {
    * For example, if a request is sent at 12:00 UTC, the funding rate generated earlier that day at 08:00 UTC will be sent.
    */
   getFundingRateHistory(
-    params: UMFundingRateHistoryRequest
+    params: UMFundingRateHistoryRequest,
   ): Promise<APIResponseV3<any>> {
     return this.get(
       '/derivatives/v3/public/funding/history-funding-rate',
-      params
+      params,
     );
   }
 
   /** Get Risk Limit */
   getRiskLimit(
     category: UMCategory,
-    symbol: string
+    symbol: string,
   ): Promise<APIResponseV3<any>> {
     return this.get('/derivatives/v3/public/risk-limit/list', {
       category,
@@ -122,7 +122,7 @@ export class UnifiedMarginClient extends BaseRestClient {
 
   /** Get option delivery price */
   getOptionDeliveryPrice(
-    params: UMOptionDeliveryPriceRequest
+    params: UMOptionDeliveryPriceRequest,
   ): Promise<APIResponseV3<any>> {
     return this.get('/derivatives/v3/public/delivery-price', params);
   }
@@ -170,7 +170,7 @@ export class UnifiedMarginClient extends BaseRestClient {
 
   /** Query order history. As order creation/cancellation is asynchronous, the data returned from the interface may be delayed. To access order information in real-time, call getActiveOrders() */
   getHistoricOrders(
-    params: UMHistoricOrdersRequest
+    params: UMHistoricOrdersRequest,
   ): Promise<APIResponseV3<UMPaginatedResult<UMHistoricOrder>>> {
     return this.getPrivate('/unified/v3/private/order/list', params);
   }
@@ -181,7 +181,7 @@ export class UnifiedMarginClient extends BaseRestClient {
    */
   batchSubmitOrders(
     category: UMCategory,
-    orders: UMBatchOrder[]
+    orders: UMBatchOrder[],
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate('/unified/v3/private/order/create-batch', {
       category,
@@ -197,7 +197,7 @@ export class UnifiedMarginClient extends BaseRestClient {
    */
   batchReplaceOrders(
     category: UMCategory,
-    orders: UMBatchOrderReplace[]
+    orders: UMBatchOrderReplace[],
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate('/unified/v3/private/order/replace-batch', {
       category,
@@ -212,7 +212,7 @@ export class UnifiedMarginClient extends BaseRestClient {
    */
   batchCancelOrders(
     category: UMCategory,
-    orders: UMBatchOrderCancel[]
+    orders: UMBatchOrderCancel[],
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate('/unified/v3/private/order/cancel-batch', {
       category,
@@ -226,7 +226,7 @@ export class UnifiedMarginClient extends BaseRestClient {
    * If both futures and options orders are in one request, only the orders matching the category will be operated according to the category type.
    */
   cancelAllOrders(
-    params: UMCancelAllOrdersRequest
+    params: UMCancelAllOrdersRequest,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate('/unified/v3/private/order/cancel-all', params);
   }
@@ -246,7 +246,7 @@ export class UnifiedMarginClient extends BaseRestClient {
     category: UMCategory,
     symbol: string,
     buyLeverage: number,
-    sellLeverage: number
+    sellLeverage: number,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate('/unified/v3/private/position/set-leverage', {
       category,
@@ -263,7 +263,7 @@ export class UnifiedMarginClient extends BaseRestClient {
   setTPSLMode(
     category: UMCategory,
     symbol: string,
-    tpSlMode: 1 | 0
+    tpSlMode: 1 | 0,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate('/unified/v3/private/position/tpsl/switch-mode', {
       category,
@@ -277,7 +277,7 @@ export class UnifiedMarginClient extends BaseRestClient {
     category: UMCategory,
     symbol: string,
     riskId: number,
-    positionIdx: number
+    positionIdx: number,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate('/unified/v3/private/position/set-risk-limit', {
       category,
@@ -295,7 +295,7 @@ export class UnifiedMarginClient extends BaseRestClient {
   setTPSL(params: UMSetTPSLRequest): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/unified/v3/private/position/trading-stop',
-      params
+      params,
     );
   }
 
@@ -304,21 +304,21 @@ export class UnifiedMarginClient extends BaseRestClient {
    * There might be multiple filled histories for an order.
    */
   get7DayTradingHistory(
-    params: UM7DayTradingHistoryRequest
+    params: UM7DayTradingHistoryRequest,
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate('/unified/v3/private/execution/list', params);
   }
 
   /** Query the settlement history, ranked by time in descending order. */
   getOptionsSettlementHistory(
-    params: UMOptionsSettlementHistoryRequest
+    params: UMOptionsSettlementHistoryRequest,
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate('/unified/v3/private/delivery-record', params);
   }
 
   /** Query session settlement records, only for USDC perpetual */
   getUSDCPerpetualSettlementHistory(
-    params: UMPerpSettlementHistoryRequest
+    params: UMPerpSettlementHistoryRequest,
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate('/unified/v3/private/settlement-record', params);
   }
@@ -338,17 +338,17 @@ export class UnifiedMarginClient extends BaseRestClient {
    */
   upgradeToUnifiedMargin(): Promise<APIResponseV3<any>> {
     return this.postPrivate(
-      '/unified/v3/private/account/upgrade-unified-account'
+      '/unified/v3/private/account/upgrade-unified-account',
     );
   }
 
   /** Query trading history */
   getTransactionLog(
-    params: UMTransactionLogRequest
+    params: UMTransactionLogRequest,
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate(
       '/unified/v3/private/account/transaction-log',
-      params
+      params,
     );
   }
 
@@ -359,21 +359,21 @@ export class UnifiedMarginClient extends BaseRestClient {
 
   /** Exchange Coins */
   getCoinExchangeHistory(
-    params?: UMExchangeCoinsRequest
+    params?: UMExchangeCoinsRequest,
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate(
       '/asset/v2/private/exchange/exchange-order-all',
-      params
+      params,
     );
   }
 
   /** Get Borrow History */
   getBorrowHistory(
-    params?: UMBorrowHistoryRequest
+    params?: UMBorrowHistoryRequest,
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate(
       '/unified/v3/private/account/borrow-history',
-      params
+      params,
     );
   }
 
@@ -392,9 +392,5 @@ export class UnifiedMarginClient extends BaseRestClient {
 
   getServerTime(): Promise<APIResponseWithTime> {
     return this.get('/v2/public/time');
-  }
-
-  getAnnouncements(): Promise<APIResponseV3<any>> {
-    return this.get('/v2/public/announcement');
   }
 }
