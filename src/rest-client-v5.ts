@@ -35,6 +35,11 @@ import {
   CoinInfoV5,
   CollateralInfoV5,
   ConfirmNewRiskLimitParamsV5,
+  ConvertCoinSpecV5,
+  ConvertCoinsParamsV5,
+  ConvertHistoryRecordV5,
+  ConvertQuoteV5,
+  ConvertStatusV5,
   CreateSubApiKeyParamsV5,
   CreateSubApiKeyResultV5,
   CreateSubMemberParamsV5,
@@ -64,6 +69,7 @@ import {
   GetClassicTransactionLogsParamsV5,
   GetClosedPnLParamsV5,
   GetCoinExchangeRecordParamsV5,
+  GetConvertHistoryParamsV5,
   GetDeliveryPriceParamsV5,
   GetDeliveryRecordParamsV5,
   GetDepositRecordParamsV5,
@@ -130,6 +136,7 @@ import {
   RedeemSpotLeveragedTokenResultV5,
   RepayLiabilityParamsV5,
   RepayLiabilityResultV5,
+  RequestConvertQuoteParamsV5,
   RiskLimitV5,
   SetAutoAddMarginParamsV5,
   SetCollateralCoinParamsV5,
@@ -562,6 +569,17 @@ export class RestClientV5 extends BaseRestClient {
       timeWindow,
     });
   }
+
+  // TO CHECK!
+  /* setDisconnectCancelAllWindow(
+    product: 'OPTION' | 'SPOT' | 'DERIVATIVES',
+    timeWindow: number,
+  ): Promise<APIResponseV3<undefined>> {
+    return this.postPrivate('/v5/order/disconnected-cancel-all', {
+      product,
+      timeWindow,
+    });
+  } */
 
   /**
    *
@@ -1383,6 +1401,68 @@ export class RestClientV5 extends BaseRestClient {
     id: string,
   ): Promise<APIResponseV3WithTime<{ status: 0 | 1 }>> {
     return this.postPrivate('/v5/asset/withdraw/cancel', { id });
+  }
+
+  /**
+   * Query the coin list of convert from (to).
+   */
+  getConvertCoins(params: ConvertCoinsParamsV5): Promise<
+    APIResponseV3WithTime<{
+      coins: ConvertCoinSpecV5[];
+    }>
+  > {
+    return this.getPrivate('/v5/asset/exchange/query-coin-list', params);
+  }
+
+  /**
+   * Request a quote for converting coins.
+   */
+  requestConvertQuote(
+    params: RequestConvertQuoteParamsV5,
+  ): Promise<APIResponseV3WithTime<ConvertQuoteV5>> {
+    return this.postPrivate('/v5/asset/exchange/quote-apply', params);
+  }
+
+  /**
+   * Confirm a quote for converting coins.
+   */
+  confirmConvertQuote(params: { quoteTxId: string }): Promise<
+    APIResponseV3WithTime<{
+      quoteTxId: string;
+      exchangeStatus: 'init' | 'processing' | 'success' | 'failure';
+    }>
+  > {
+    return this.postPrivate('/v5/asset/exchange/convert-execute', params);
+  }
+
+  /**
+   * Query the exchange result by sending quoteTxId.
+   */
+  getConvertStatus(params: {
+    quoteTxId?: string;
+    accountType:
+      | 'eb_convert_funding'
+      | 'eb_convert_uta'
+      | 'eb_convert_spot'
+      | 'eb_convert_contract'
+      | 'eb_convert_inverse';
+  }): Promise<
+    APIResponseV3WithTime<{
+      result: ConvertStatusV5;
+    }>
+  > {
+    return this.getPrivate('/v5/asset/exchange/convert-result-query', params);
+  }
+
+  /**
+   * Query the conversion history.
+   */
+  getConvertHistory(params?: GetConvertHistoryParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: ConvertHistoryRecordV5[];
+    }>
+  > {
+    return this.getPrivate('/v5/asset/exchange/query-convert-history', params);
   }
 
   /**

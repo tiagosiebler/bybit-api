@@ -11,6 +11,7 @@ export type InstrumentStatusV5 =
   | 'Settling'
   | 'Delivering'
   | 'Closed';
+  
 
 export type MarginTradingV5 = 'none' | 'both' | 'utaOnly' | 'normalSpotOnly';
 

@@ -89,6 +89,8 @@ export interface FeeRateV5 {
 export interface AccountInfoV5 {
   unifiedMarginStatus: number;
   marginMode: AccountMarginModeV5;
+  isMasterTrader: boolean;
+  spotHedgingStatus: string;
   updatedTime: string;
 }
 
@@ -134,5 +136,3 @@ export interface DCPInfoV5 {
   dcpStatus: 'ON';
   timeWindow: string;
 }
-
-

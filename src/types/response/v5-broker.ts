@@ -1,6 +1,6 @@
 interface EarningDetailV5 {
   userId: string;
-  bizType: 'SPOT' | 'DERIVATIVES' | 'OPTIONS';
+  bizType: 'SPOT' | 'DERIVATIVES' | 'OPTIONS' | 'CONVERT';
   symbol: string;
   coin: string;
   earning: string;
@@ -20,6 +20,7 @@ export interface ExchangeBrokerEarningResultV5 {
     spot: TotalEarningCategoryV5[];
     derivatives: TotalEarningCategoryV5[];
     options: TotalEarningCategoryV5[];
+    convert: TotalEarningCategoryV5[];
     total: TotalEarningCategoryV5[];
   };
   details: EarningDetailV5[];
@@ -36,6 +37,7 @@ export interface ExchangeBrokerAccountInfoV5 {
   markupFeeRebateRate: {
     spot: string;
     derivatives: string;
+    convert: string;
   };
   ts: string;
 }
