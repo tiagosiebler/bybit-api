@@ -124,3 +124,31 @@ export interface WithdrawParamsV5 {
   forceChain?: number;
   accountType?: 'SPOT' | 'FUND';
 }
+
+export interface ConvertCoinsParamsV5 {
+  coin?: string;
+  side?: number;
+  accountType:
+    | 'eb_convert_funding'
+    | 'eb_convert_uta'
+    | 'eb_convert_spot'
+    | 'eb_convert_contract'
+    | 'eb_convert_inverse';
+}
+
+export interface RequestConvertQuoteParamsV5 {
+  fromCoin: string;
+  toCoin: string;
+  fromCoinType?: string;
+  toCoinType?: string;
+  requestCoin: string;
+  requestAmount: string;
+  accountType: 'eb_convert_funding' | 'eb_convert_uta' | 'eb_convert_spot' | 'eb_convert_contract' | 'eb_convert_inverse';
+  requestId?: string;
+}
+
+export interface GetConvertHistoryParamsV5 {
+  accountType?: string;
+  index?: number;
+  limit?: number;
+}

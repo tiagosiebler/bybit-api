@@ -24,4 +24,5 @@ bundleReport.html
 .history/
 rawReq.ts
 localtest.sh
+localtest.ts
 

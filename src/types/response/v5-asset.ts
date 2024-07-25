@@ -169,8 +169,74 @@ export interface WithdrawalRecordV5 {
   updateTime: string;
 }
 
-
 export interface VaspEntityV5 {
   vaspEntityId: string;
   vaspName: string;
+}
+
+export interface ConvertCoinSpecV5 {
+  coin: string;
+  fullName: string;
+  icon: string;
+  iconNight: string;
+  accuracyLength: number;
+  coinType: string;
+  balance: string;
+  uBalance: string;
+  singleFromMinLimit: string;
+  singleFromMaxLimit: string;
+  disableFrom: boolean;
+  disableTo: boolean;
+  timePeriod: number;
+  singleToMinLimit: string;
+  singleToMaxLimit: string;
+  dailyFromMinLimit: string;
+  dailyFromMaxLimit: string;
+  dailyToMinLimit: string;
+  dailyToMaxLimit: string;
+}
+
+export interface ConvertQuoteV5 {
+  quoteTxId: string;
+  exchangeRate: string;
+  fromCoin: string;
+  fromCoinType: string;
+  toCoin: string;
+  toCoinType: string;
+  fromAmount: string;
+  toAmount: string;
+  expiredTime: string;
+  requestId: string;
+}
+
+export interface ConvertStatusV5 {
+  accountType: string;
+  exchangeTxId: string;
+  userId: string;
+  fromCoin: string;
+  fromCoinType: string;
+  toCoin: string;
+  toCoinType: string;
+  fromAmount: string;
+  toAmount: string;
+  exchangeStatus: 'init' | 'processing' | 'success' | 'failure';
+  extInfo: object;
+  convertRate: string;
+  createdAt: string;
+}
+
+export interface ConvertHistoryRecordV5 {
+  accountType: string;
+  exchangeTxId: string;
+  userId: string;
+  fromCoin: string;
+  fromCoinType: string;
+  toCoin: string;
+  toCoinType: string;
+  fromAmount: string;
+  toAmount: string;
+  exchangeStatus: 'init' | 'processing' | 'success' | 'failure';
+  extInfo: object;
+  convertRate: string;
+  createdAt: string;
 }

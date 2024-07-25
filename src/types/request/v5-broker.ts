@@ -1,5 +1,5 @@
 export interface GetExchangeBrokerEarningsParamsV5 {
-  bizType?: 'SPOT' | 'DERIVATIVES' | 'OPTIONS';
+  bizType?: 'SPOT' | 'DERIVATIVES' | 'OPTIONS' | 'CONVERT';
   begin?: string;
   end?: string;
   uid?: string;
