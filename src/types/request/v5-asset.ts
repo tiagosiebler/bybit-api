@@ -123,6 +123,12 @@ export interface WithdrawParamsV5 {
   timestamp: number;
   forceChain?: number;
   accountType?: 'SPOT' | 'FUND';
+  feeType?: 0 | 1;
+  requestId?: string;
+  beneficiary?: {
+    vaspEntityId: string;
+    beneficiaryName?: string;
+  };
 }
 
 export interface ConvertCoinsParamsV5 {
@@ -143,7 +149,12 @@ export interface RequestConvertQuoteParamsV5 {
   toCoinType?: string;
   requestCoin: string;
   requestAmount: string;
-  accountType: 'eb_convert_funding' | 'eb_convert_uta' | 'eb_convert_spot' | 'eb_convert_contract' | 'eb_convert_inverse';
+  accountType:
+    | 'eb_convert_funding'
+    | 'eb_convert_uta'
+    | 'eb_convert_spot'
+    | 'eb_convert_contract'
+    | 'eb_convert_inverse';
   requestId?: string;
 }
 
