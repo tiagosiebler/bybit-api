@@ -582,9 +582,9 @@ export class RestClientV5 extends BaseRestClient {
    *
    * Only for institutional clients!
    */
-  setDisconnectCancelAllWindowV2(params: { 
-    product: 'OPTION' | 'SPOT' | 'DERIVATIVES',
-    timeWindow: number,
+  setDisconnectCancelAllWindowV2(params: {
+    product: 'OPTION' | 'SPOT' | 'DERIVATIVES';
+    timeWindow: number;
   }): Promise<APIResponseV3<undefined>> {
     return this.postPrivate('/v5/order/disconnected-cancel-all', params);
   }
