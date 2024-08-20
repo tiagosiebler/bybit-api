@@ -1767,6 +1767,32 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Get Historical Interest Rate
+   * You can query up to six months borrowing interest rate of Margin trading.
+   * INFO: Need authentication, the api key needs "Spot" permission. Only supports Unified account.
+   */
+  getHistoricalInterestRate(params: {
+    currency: string;
+    vipLevel?: string;
+    startTime?: number;
+    endTime?: number;
+  }): Promise<
+    APIResponseV3WithTime<{
+      list: {
+        timestamp: number;
+        currency: string;
+        hourlyBorrowRate: string;
+        vipLevel: string;
+      }[];
+    }>
+  > {
+    return this.getPrivate(
+      '/v5/spot-margin-trade/interest-rate-history',
+      params,
+    );
+  }
+
+  /**
    * Get Borrowable Coin Info
    */
   getSpotMarginBorrowableCoinInfo(coin?: string): Promise<
@@ -1959,7 +1985,7 @@ export class RestClientV5 extends BaseRestClient {
     startTime?: number;
     endTime?: number;
     limit?: number;
-  }): Promise<APIResponseV3WithTime<{ marginToken: any[] }>> {
+  }): Promise<APIResponseV3WithTime<{ loanInfo: any[] }>> {
     return this.getPrivate('/v5/ins-loan/loan-order', params);
   }
 
