@@ -1,26 +1,9 @@
 
   # Endpoints table for rest-client-v5.ts
 
-  This table includes all endpoints from the official Exchange API docs and corresponding SDK functions for each endpoint that are found in  [rest-client-v5.ts](/src/rest-client-v5.ts). You can find all clients in the [source folder](/src).
+  This table includes all endpoints from the official Exchange API docs and corresponding SDK functions for each endpoint that are found in [rest-client-v5.ts](/src/rest-client-v5.ts). 
   
   If anything is missing or is wrong, please open an issue or let us know in our [Node.js Traders](https://t.me/nodetraders) telegram group!
-
-  ## How to use table
-
-  Table consists of 4 parts:
-
-  - Function name
-  - AUTH
-  - HTTP Method
-  - Endpoint
-
-  **Function name** is the name of the function that can be called through the SDK. Check examples folder in the repo for more help on how to use them!
-
-  **AUTH** is a boolean value that indicates if the function requires authentication - which means you need to pass your API key and secret to the SDK.
-
-  **HTTP Method** shows HTTP method that the function uses to call the endpoint. Sometimes endpoints can have same URL, but different HTTP method so you can use this column to differentiate between them.
-
-  **Endpoint** is the URL that the function uses to call the endpoint. Best way to find exact function you need for the endpoint is to search for URL in this table and find corresponding function name. 
 
   ## All endpoints
   
