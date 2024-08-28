@@ -207,6 +207,8 @@ export interface ConvertQuoteV5 {
   toAmount: string;
   expiredTime: string;
   requestId: string;
+  paramType: string;
+  paramValue: string;
 }
 
 export interface ConvertStatusV5 {
