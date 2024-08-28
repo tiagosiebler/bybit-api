@@ -132,6 +132,9 @@ import {
   OrderbookResponseV5,
   PositionInfoParamsV5,
   PositionV5,
+  PreUpgradeOptionsDelivery,
+  PreUpgradeTransaction,
+  PreUpgradeUSDCSessionSettlement,
   PreupgradeOptionsDelivery,
   PreupgradeTransactionLog,
   PreupgradeUSDCSessionSettlement,
@@ -852,11 +855,11 @@ export class RestClientV5 extends BaseRestClient {
    * INFO
    * USDC Perpeual & Option support the recent 6 months data. Please download older data via GUI
    */
-  getPreUpgradeTransactionLog(
+  getPreUpgradeTransactions(
     params: GetPreUpgradeTransactionLogParamsV5,
   ): Promise<
     APIResponseV3WithTime<{
-      list: PreupgradeTransactionLog[];
+      list: PreUpgradeTransaction[];
       nextPageCursor: string;
     }>
   > {
@@ -872,7 +875,7 @@ export class RestClientV5 extends BaseRestClient {
   getPreUpgradeOptionDeliveryRecord(
     params: GetPreUpgradeOptionDeliveryRecordParamsV5,
   ): Promise<
-    APIResponseV3WithTime<CategoryCursorListV5<PreupgradeOptionsDelivery[]>>
+    APIResponseV3WithTime<CategoryCursorListV5<PreUpgradeOptionsDelivery[]>>
   > {
     return this.getPrivate('/v5/pre-upgrade/asset/delivery-record', params);
   }
@@ -883,11 +886,11 @@ export class RestClientV5 extends BaseRestClient {
    * INFO
    * USDC Perpetual support the recent 6 months data. Please download older data via GUI
    */
-  getPreUpgradeUSDCSessionSettlement(
+  getPreUpgradeUSDCSessionSettlements(
     params: GetPreUpgradeUSDCSessionParamsV5,
   ): Promise<
     APIResponseV3WithTime<
-      CategoryCursorListV5<PreupgradeUSDCSessionSettlement[]>
+      CategoryCursorListV5<PreUpgradeUSDCSessionSettlement[]>
     >
   > {
     return this.getPrivate('/v5/pre-upgrade/asset/settlement-record', params);
@@ -1559,7 +1562,7 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
-   * This endpoint allows you to get a list of all sub UID of master account.
+   * This endpoint allows you to get a list of all sub UID of master account. At most 10k subaccounts.
    */
   getSubUIDList(): Promise<
     APIResponseV3WithTime<{ subMembers: SubMemberV5[] }>
@@ -1567,6 +1570,9 @@ export class RestClientV5 extends BaseRestClient {
     return this.getPrivate('/v5/user/query-sub-members');
   }
 
+  /**
+   * This endpoint allows you to get a list of all sub UID of master account. No limit on the number of subaccounts.
+   */
   getSubUIDListUnlimited(params?: {
     pageSize?: string;
     nextCursor?: string;
