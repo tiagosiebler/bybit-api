@@ -1,5 +1,5 @@
 
-  # Endpoints table 
+  # Endpoints table for rest-client-v5.ts
 
   This table includes all endpoints from the official Exchange API docs and corresponding SDK functions for each endpoint that are found in  [rest-client-v5.ts](/src/rest-client-v5.ts). You can find all clients in the [source folder](/src).
   
