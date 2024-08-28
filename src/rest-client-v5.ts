@@ -91,8 +91,11 @@ import {
   GetOptionDeliveryPriceParamsV5,
   GetOrderbookParamsV5,
   GetPreUpgradeClosedPnlParamsV5,
+  GetPreUpgradeOptionDeliveryRecordParamsV5,
   GetPreUpgradeOrderHistoryParamsV5,
   GetPreUpgradeTradeHistoryParamsV5,
+  GetPreUpgradeTransactionLogParamsV5,
+  GetPreUpgradeUSDCSessionParamsV5,
   GetPremiumIndexPriceKlineParamsV5,
   GetPublicTradingHistoryParamsV5,
   GetRiskLimitParamsV5,
@@ -129,6 +132,9 @@ import {
   OrderbookResponseV5,
   PositionInfoParamsV5,
   PositionV5,
+  PreupgradeOptionsDelivery,
+  PreupgradeTransactionLog,
+  PreupgradeUSDCSessionSettlement,
   PublicTradeV5,
   PurchaseSpotLeveragedTokenParamsV5,
   PurchaseSpotLeveragedTokenResultV5,
@@ -767,7 +773,7 @@ export class RestClientV5 extends BaseRestClient {
    *
    * Unified account covers: USDT perpetual / USDC contract / Spot / Option
    */
-  getMovePositionHistory(params: GetMovePositionHistoryParamsV5): Promise<
+  getMovePositionHistory(params?: GetMovePositionHistoryParamsV5): Promise<
     APIResponseV3WithTime<{
       list: MovePositionHistoryV5[];
       nextPageCursor: string;
@@ -836,6 +842,55 @@ export class RestClientV5 extends BaseRestClient {
     params: GetPreUpgradeClosedPnlParamsV5,
   ): Promise<APIResponseV3WithTime<CategoryCursorListV5<ClosedPnLV5[]>>> {
     return this.getPrivate('/v5/pre-upgrade/position/closed-pnl', params);
+  }
+
+  /**
+   * Query transaction logs which occurred in the USDC Derivatives wallet before the account was upgraded to a Unified account.
+   *
+   * You can get USDC Perpetual, Option records.
+   *
+   * INFO
+   * USDC Perpeual & Option support the recent 6 months data. Please download older data via GUI
+   */
+  getPreUpgradeTransactionLog(
+    params: GetPreUpgradeTransactionLogParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      list: PreupgradeTransactionLog[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/pre-upgrade/account/transaction-log', params);
+  }
+
+  /**
+   * Query delivery records of Option before you upgraded the account to a Unified account, sorted by deliveryTime in descending order.
+   *
+   * INFO
+   * Supports the recent 6 months data. Please download older data via GUI
+   */
+  getPreUpgradeOptionDeliveryRecord(
+    params: GetPreUpgradeOptionDeliveryRecordParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<CategoryCursorListV5<PreupgradeOptionsDelivery[]>>
+  > {
+    return this.getPrivate('/v5/pre-upgrade/asset/delivery-record', params);
+  }
+
+  /**
+   * Query session settlement records of USDC perpetual before you upgrade the account to Unified account.
+   *
+   * INFO
+   * USDC Perpetual support the recent 6 months data. Please download older data via GUI
+   */
+  getPreUpgradeUSDCSessionSettlement(
+    params: GetPreUpgradeUSDCSessionParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<
+      CategoryCursorListV5<PreupgradeUSDCSessionSettlement[]>
+    >
+  > {
+    return this.getPrivate('/v5/pre-upgrade/asset/settlement-record', params);
   }
 
   /**
@@ -1512,6 +1567,18 @@ export class RestClientV5 extends BaseRestClient {
     return this.getPrivate('/v5/user/query-sub-members');
   }
 
+  getSubUIDListUnlimited(params?: {
+    pageSize?: string;
+    nextCursor?: string;
+  }): Promise<
+    APIResponseV3WithTime<{
+      subMembers: SubMemberV5[];
+      nextCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/user/submembers', params);
+  }
+
   /**
    * Query all api keys information of a sub UID.
    */
@@ -1713,6 +1780,32 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Get Historical Interest Rate
+   * You can query up to six months borrowing interest rate of Margin trading.
+   * INFO: Need authentication, the api key needs "Spot" permission. Only supports Unified account.
+   */
+  getHistoricalInterestRate(params: {
+    currency: string;
+    vipLevel?: string;
+    startTime?: number;
+    endTime?: number;
+  }): Promise<
+    APIResponseV3WithTime<{
+      list: {
+        timestamp: number;
+        currency: string;
+        hourlyBorrowRate: string;
+        vipLevel: string;
+      }[];
+    }>
+  > {
+    return this.getPrivate(
+      '/v5/spot-margin-trade/interest-rate-history',
+      params,
+    );
+  }
+
+  /**
    * Turn spot margin trade on / off in your UTA account.
    *
    * CAUTION
@@ -1764,32 +1857,6 @@ export class RestClientV5 extends BaseRestClient {
     return this.getPrivate('/v5/spot-cross-margin-trade/pledge-token', {
       coin,
     });
-  }
-
-  /**
-   * Get Historical Interest Rate
-   * You can query up to six months borrowing interest rate of Margin trading.
-   * INFO: Need authentication, the api key needs "Spot" permission. Only supports Unified account.
-   */
-  getHistoricalInterestRate(params: {
-    currency: string;
-    vipLevel?: string;
-    startTime?: number;
-    endTime?: number;
-  }): Promise<
-    APIResponseV3WithTime<{
-      list: {
-        timestamp: number;
-        currency: string;
-        hourlyBorrowRate: string;
-        vipLevel: string;
-      }[];
-    }>
-  > {
-    return this.getPrivate(
-      '/v5/spot-margin-trade/interest-rate-history',
-      params,
-    );
   }
 
   /**

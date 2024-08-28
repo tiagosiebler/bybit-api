@@ -35,3 +35,28 @@ export interface GetPreUpgradeClosedPnlParamsV5 {
   limit?: number;
   cursor?: string;
 }
+
+export interface GetPreUpgradeTransactionLogParamsV5 {
+  category: 'linear' | 'option';
+  baseCoin?: string;
+  type?: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+
+export interface GetPreUpgradeOptionDeliveryRecordParamsV5 {
+  category: 'option';
+  symbol?: string;
+  expDate?: string;
+  limit?: number;
+  cursor?: string;
+}
+
+export interface GetPreUpgradeUSDCSessionParamsV5 {
+  category: 'linear';
+  symbol?: string;
+  limit?: number;
+  cursor?: string;
+}
