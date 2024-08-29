@@ -10,10 +10,13 @@
   </a>
 </p>
 
-In this folder you can find table of all endpoints and its corresponding functions from the official exchange API documentation. All functions are mapped based on the
-client they are associated with. You can easily search which function uses which URL and what client to use for it.
+Each REST client is a JavaScript class, which provides functions individually mapped to each endpoint available in the exchange's API offering. 
 
-You can find all clients in the [source folder](/src).
+The following table shows all methods available in each REST client, whether the method requires authentication (automatically handled if API keys are provided), as well as the exact endpoint each method is connected to.
+
+This can be used to easily find which method to call, once you have [found which endpoint you're looking to use](https://github.com/tiagosiebler/awesome-crypto-examples/wiki/How-to-find-SDK-functions-that-match-API-docs-endpoint).
+
+All REST clients are in the [/src/](/src) folder. For usage examples, make sure to check the [/examples/](/examples) folder.
 
 - [rest-client-v5](#rest-client-v5ts)
 
