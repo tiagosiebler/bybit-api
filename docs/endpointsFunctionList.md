@@ -15,6 +15,10 @@ client they are associated with. You can easily search which function uses which
 
 You can find all clients in the [source folder](/src).
 
+- [rest-client-v5](#rest-client-v5.ts)
+- [spot-client-v3](#spot-client-v3.ts)
+
+
 If anything is missing or wrong, please open an issue or let us know in our [Node.js Traders](https://t.me/nodetraders) telegram group!
 
 ## How to use table
