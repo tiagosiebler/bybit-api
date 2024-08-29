@@ -57,9 +57,6 @@ This table includes all endpoints from the official Exchange API docs and corres
 | `getPremiumIndexPriceKline()` |  | GET | `/v5/market/premium-index-price-kline` |
 | `getOrderbook()` |  | GET | `/v5/market/orderbook` |
 | `getTickers()` |  | GET | `/v5/market/tickers` |
-| `getTickers()` |  | GET | `/v5/market/tickers` |
-| `getTickers()` |  | GET | `/v5/market/tickers` |
-| `getTickers()` |  | GET | `/v5/market/tickers` |
 | `getFundingRateHistory()` |  | GET | `/v5/market/funding/history` |
 | `getPublicTradingHistory()` |  | GET | `/v5/market/recent-trade` |
 | `getOpenInterest()` |  | GET | `/v5/market/open-interest` |
