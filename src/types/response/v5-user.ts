@@ -22,6 +22,7 @@ export interface SubMemberV5 {
   username: string;
   memberType: number;
   status: number;
+  accountMode: number;
   remark: string;
 }
 export type ApiKeyType = 1 | 2;
@@ -73,10 +74,9 @@ export interface SubAccountAllApiKeysResultV5 {
     readOnly: 0 | 1;
     deadlineDay?: number;
     flag: string;
-  }[],
+  }[];
   nextPageCursor: string;
 }
-
 
 export interface AffiliateUserInfoV5 {
   uid: string;

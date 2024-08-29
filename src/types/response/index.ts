@@ -12,3 +12,4 @@ export * from './v5-trade';
 export * from './v5-user';
 export * from './v5-spot-leverage-token';
 export * from './v5-broker';
+export * from './v5-preupgrade';
