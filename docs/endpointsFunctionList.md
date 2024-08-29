@@ -39,7 +39,7 @@ Table consists of 4 parts:
 
 This table includes all endpoints from the official Exchange API docs and corresponding SDK functions for each endpoint that are found in [rest-client-v5.ts](/src/rest-client-v5.ts). 
 
-| Function | AUTH | HTTP Method | Endpoint |
+| Function | Authentication | HTTP Method | Endpoint |
 | -------- | ------- | ----------- | -------- |
 | `fetchServerTime()` | no :unlock:      | GET | `/v5/market/time` |
 | `getServerTime()` | no :unlock:      | GET | `/v5/market/time` |
@@ -194,7 +194,7 @@ This table includes all endpoints from the official Exchange API docs and corres
 
 This table includes all endpoints from the official Exchange API docs and corresponding SDK functions for each endpoint that are found in [spot-client-v3.ts](/src/spot-client-v3.ts). 
 
-| Function | AUTH | HTTP Method | Endpoint |
+| Function | Authentication | HTTP Method | Endpoint |
 | -------- | ------- | ----------- | -------- |
 | `fetchServerTime()` | no :unlock:      | GET | `/spot/v3/public/symbols` |
 | `getSymbols()` | no :unlock:      | GET | `/spot/v3/public/symbols` |
