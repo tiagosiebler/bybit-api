@@ -16,7 +16,7 @@ The following table shows all methods available in each REST client, whether the
 
 This can be used to easily find which method to call, once you have [found which endpoint you're looking to use](https://github.com/tiagosiebler/awesome-crypto-examples/wiki/How-to-find-SDK-functions-that-match-API-docs-endpoint).
 
-All REST clients are in the [/src/](/src) folder. For usage examples, make sure to check the [/examples/](/examples) folder.
+All REST clients are in the [/src](/src) folder. For usage examples, make sure to check the [/examples](/examples) folder.
 
 - [rest-client-v5](#rest-client-v5ts)
 
