@@ -40,7 +40,7 @@ Table consists of 4 parts:
 This table includes all endpoints from the official Exchange API docs and corresponding SDK functions for each endpoint that are found in [rest-client-v5.ts](/src/rest-client-v5.ts). 
 
 | Function | AUTH | HTTP Method | Endpoint |
-| -------- | ---- | ----------- | -------- |
+| -------- | ------ | ----------- | -------- |
 | `fetchServerTime()` | no 🔓 | GET | `/v5/market/time` |
 | `getServerTime()` | no 🔓 | GET | `/v5/market/time` |
 | `requestDemoTradingFunds()` | YES 🔒 | POST | `/v5/account/demo-apply-money` |
@@ -195,7 +195,7 @@ This table includes all endpoints from the official Exchange API docs and corres
 This table includes all endpoints from the official Exchange API docs and corresponding SDK functions for each endpoint that are found in [spot-client-v3.ts](/src/spot-client-v3.ts). 
 
 | Function | AUTH | HTTP Method | Endpoint |
-| -------- | ---- | ----------- | -------- |
+| -------- | ------ | ----------- | -------- |
 | `fetchServerTime()` | no 🔓 | GET | `/spot/v3/public/symbols` |
 | `getSymbols()` | no 🔓 | GET | `/spot/v3/public/symbols` |
 | `getOrderBook()` | no 🔓 | GET | `/spot/v3/public/quote/depth` |
