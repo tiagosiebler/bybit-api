@@ -18,6 +18,7 @@ This can be used to easily find which method to call, once you have [found which
 
 All REST clients are in the [/src](/src) folder. For usage examples, make sure to check the [/examples](/examples) folder.
 
+List of clients:
 - [rest-client-v5](#rest-client-v5ts)
 
 
