@@ -41,27 +41,27 @@ This table includes all endpoints from the official Exchange API docs and corres
 
 | Function | Authentication | HTTP Method | Endpoint |
 | -------- | :------: | :------: | -------- |
-| `fetchServerTime()` | :unlock: no | GET | `/v5/market/time` |
-| `getServerTime()` | :unlock: no | GET | `/v5/market/time` |
+| `fetchServerTime()` | no | GET | `/v5/market/time` |
+| `getServerTime()` | no | GET | `/v5/market/time` |
 | `requestDemoTradingFunds()` | :closed_lock_with_key: YES  | POST | `/v5/account/demo-apply-money` |
-| `getKline()` | :unlock: no | GET | `/v5/market/kline` |
-| `getMarkPriceKline()` | :unlock: no | GET | `/v5/market/mark-price-kline` |
-| `getIndexPriceKline()` | :unlock: no | GET | `/v5/market/index-price-kline` |
-| `getPremiumIndexPriceKline()` | :unlock: no | GET | `/v5/market/premium-index-price-kline` |
-| `getOrderbook()` | :unlock: no | GET | `/v5/market/orderbook` |
-| `getTickers()` | :unlock: no | GET | `/v5/market/tickers` |
-| `getTickers()` | :unlock: no | GET | `/v5/market/tickers` |
-| `getTickers()` | :unlock: no | GET | `/v5/market/tickers` |
-| `getTickers()` | :unlock: no | GET | `/v5/market/tickers` |
-| `getFundingRateHistory()` | :unlock: no | GET | `/v5/market/funding/history` |
-| `getPublicTradingHistory()` | :unlock: no | GET | `/v5/market/recent-trade` |
-| `getOpenInterest()` | :unlock: no | GET | `/v5/market/open-interest` |
-| `getHistoricalVolatility()` | :unlock: no | GET | `/v5/market/historical-volatility` |
-| `getInsurance()` | :unlock: no | GET | `/v5/market/insurance` |
-| `getRiskLimit()` | :unlock: no | GET | `/v5/market/risk-limit` |
-| `getOptionDeliveryPrice()` | :unlock: no | GET | `/v5/market/delivery-price` |
-| `getDeliveryPrice()` | :unlock: no | GET | `/v5/market/delivery-price` |
-| `getLongShortRatio()` | :unlock: no | GET | `/v5/market/account-ratio` |
+| `getKline()` | no | GET | `/v5/market/kline` |
+| `getMarkPriceKline()` | no | GET | `/v5/market/mark-price-kline` |
+| `getIndexPriceKline()` | no | GET | `/v5/market/index-price-kline` |
+| `getPremiumIndexPriceKline()` | no | GET | `/v5/market/premium-index-price-kline` |
+| `getOrderbook()` | no | GET | `/v5/market/orderbook` |
+| `getTickers()` | no | GET | `/v5/market/tickers` |
+| `getTickers()` | no | GET | `/v5/market/tickers` |
+| `getTickers()` | no | GET | `/v5/market/tickers` |
+| `getTickers()` | no | GET | `/v5/market/tickers` |
+| `getFundingRateHistory()` | no | GET | `/v5/market/funding/history` |
+| `getPublicTradingHistory()` | no | GET | `/v5/market/recent-trade` |
+| `getOpenInterest()` | no | GET | `/v5/market/open-interest` |
+| `getHistoricalVolatility()` | no | GET | `/v5/market/historical-volatility` |
+| `getInsurance()` | no | GET | `/v5/market/insurance` |
+| `getRiskLimit()` | no | GET | `/v5/market/risk-limit` |
+| `getOptionDeliveryPrice()` | no | GET | `/v5/market/delivery-price` |
+| `getDeliveryPrice()` | no | GET | `/v5/market/delivery-price` |
+| `getLongShortRatio()` | no | GET | `/v5/market/account-ratio` |
 | `submitOrder()` | :closed_lock_with_key: YES  | POST | `/v5/order/create` |
 | `amendOrder()` | :closed_lock_with_key: YES  | POST | `/v5/order/amend` |
 | `cancelOrder()` | :closed_lock_with_key: YES  | POST | `/v5/order/cancel` |
@@ -126,7 +126,7 @@ This table includes all endpoints from the official Exchange API docs and corres
 | `enableUniversalTransferForSubUIDs()` | :closed_lock_with_key: YES  | POST | `/v5/asset/transfer/save-transfer-sub-member` |
 | `createUniversalTransfer()` | :closed_lock_with_key: YES  | POST | `/v5/asset/transfer/universal-transfer` |
 | `getUniversalTransferRecords()` | :closed_lock_with_key: YES  | GET | `/v5/asset/transfer/query-universal-transfer-list` |
-| `getAllowedDepositCoinInfo()` | :unlock: no | GET | `/v5/asset/deposit/query-allowed-list` |
+| `getAllowedDepositCoinInfo()` | no | GET | `/v5/asset/deposit/query-allowed-list` |
 | `setDepositAccount()` | :closed_lock_with_key: YES  | POST | `/v5/asset/deposit/deposit-to-account` |
 | `getDepositRecords()` | :closed_lock_with_key: YES  | GET | `/v5/asset/deposit/query-record` |
 | `getSubAccountDepositRecords()` | :closed_lock_with_key: YES  | GET | `/v5/asset/deposit/query-sub-member-record` |
@@ -159,12 +159,12 @@ This table includes all endpoints from the official Exchange API docs and corres
 | `deleteSubApiKey()` | :closed_lock_with_key: YES  | POST | `/v5/user/delete-sub-api` |
 | `deleteSubMember()` | :closed_lock_with_key: YES  | POST | `/v5/user/del-submember` |
 | `getAffiliateUserInfo()` | :closed_lock_with_key: YES  | GET | `/v5/user/aff-customer-info` |
-| `getLeveragedTokenInfo()` | :unlock: no | GET | `/v5/spot-lever-token/info` |
-| `getLeveragedTokenMarket()` | :unlock: no | GET | `/v5/spot-lever-token/reference` |
+| `getLeveragedTokenInfo()` | no | GET | `/v5/spot-lever-token/info` |
+| `getLeveragedTokenMarket()` | no | GET | `/v5/spot-lever-token/reference` |
 | `purchaseSpotLeveragedToken()` | :closed_lock_with_key: YES  | POST | `/v5/spot-lever-token/purchase` |
 | `redeemSpotLeveragedToken()` | :closed_lock_with_key: YES  | POST | `/v5/spot-lever-token/redeem` |
 | `getSpotLeveragedTokenOrderHistory()` | :closed_lock_with_key: YES  | GET | `/v5/spot-lever-token/order-record` |
-| `getVIPMarginData()` | :unlock: no | GET | `/v5/spot-margin-trade/data` |
+| `getVIPMarginData()` | no | GET | `/v5/spot-margin-trade/data` |
 | `getHistoricalInterestRate()` | :closed_lock_with_key: YES  | GET | `/v5/spot-margin-trade/interest-rate-history` |
 | `toggleSpotMarginTrade()` | :closed_lock_with_key: YES  | POST | `/v5/spot-margin-trade/switch-mode` |
 | `setSpotMarginLeverage()` | :closed_lock_with_key: YES  | POST | `/v5/spot-margin-trade/set-leverage` |
@@ -178,9 +178,9 @@ This table includes all endpoints from the official Exchange API docs and corres
 | `getSpotMarginBorrowOrderDetail()` | :closed_lock_with_key: YES  | GET | `/v5/spot-cross-margin-trade/orders` |
 | `getSpotMarginRepaymentOrderDetail()` | :closed_lock_with_key: YES  | GET | `/v5/spot-cross-margin-trade/repay-history` |
 | `toggleSpotCrossMarginTrade()` | :closed_lock_with_key: YES  | POST | `/v5/spot-cross-margin-trade/switch` |
-| `getInstitutionalLendingProductInfo()` | :unlock: no | GET | `/v5/ins-loan/product-infos` |
-| `getInstitutionalLendingMarginCoinInfo()` | :unlock: no | GET | `/v5/ins-loan/ensure-tokens` |
-| `getInstitutionalLendingMarginCoinInfoWithConversionRate()` | :unlock: no | GET | `/v5/ins-loan/ensure-tokens-convert` |
+| `getInstitutionalLendingProductInfo()` | no | GET | `/v5/ins-loan/product-infos` |
+| `getInstitutionalLendingMarginCoinInfo()` | no | GET | `/v5/ins-loan/ensure-tokens` |
+| `getInstitutionalLendingMarginCoinInfoWithConversionRate()` | no | GET | `/v5/ins-loan/ensure-tokens-convert` |
 | `getInstitutionalLendingLoanOrders()` | :closed_lock_with_key: YES  | GET | `/v5/ins-loan/loan-order` |
 | `getInstitutionalLendingRepayOrders()` | :closed_lock_with_key: YES  | GET | `/v5/ins-loan/repaid-history` |
 | `getInstitutionalLendingLTV()` | :closed_lock_with_key: YES  | GET | `/v5/ins-loan/ltv` |
@@ -196,15 +196,15 @@ This table includes all endpoints from the official Exchange API docs and corres
 
 | Function | Authentication | HTTP Method | Endpoint |
 | -------- | :------: | :------: | -------- |
-| `fetchServerTime()` | :unlock: no | GET | `/spot/v3/public/symbols` |
-| `getSymbols()` | :unlock: no | GET | `/spot/v3/public/symbols` |
-| `getOrderBook()` | :unlock: no | GET | `/spot/v3/public/quote/depth` |
-| `getMergedOrderBook()` | :unlock: no | GET | `/spot/v3/public/quote/depth/merged` |
-| `getTrades()` | :unlock: no | GET | `/spot/v3/public/quote/trades` |
-| `getCandles()` | :unlock: no | GET | `/spot/v3/public/quote/kline` |
-| `get24hrTicker()` | :unlock: no | GET | `/spot/v3/public/quote/ticker/24hr` |
-| `getLastTradedPrice()` | :unlock: no | GET | `/spot/v3/public/quote/ticker/price` |
-| `getBestBidAskPrice()` | :unlock: no | GET | `/spot/v3/public/quote/ticker/bookTicker` |
+| `fetchServerTime()` | no | GET | `/spot/v3/public/symbols` |
+| `getSymbols()` | no | GET | `/spot/v3/public/symbols` |
+| `getOrderBook()` | no | GET | `/spot/v3/public/quote/depth` |
+| `getMergedOrderBook()` | no | GET | `/spot/v3/public/quote/depth/merged` |
+| `getTrades()` | no | GET | `/spot/v3/public/quote/trades` |
+| `getCandles()` | no | GET | `/spot/v3/public/quote/kline` |
+| `get24hrTicker()` | no | GET | `/spot/v3/public/quote/ticker/24hr` |
+| `getLastTradedPrice()` | no | GET | `/spot/v3/public/quote/ticker/price` |
+| `getBestBidAskPrice()` | no | GET | `/spot/v3/public/quote/ticker/bookTicker` |
 | `submitOrder()` | :closed_lock_with_key: YES  | POST | `/spot/v3/private/order` |
 | `getOrder()` | :closed_lock_with_key: YES  | GET | `/spot/v3/private/order` |
 | `cancelOrder()` | :closed_lock_with_key: YES  | POST | `/spot/v3/private/cancel-order` |
@@ -214,8 +214,8 @@ This table includes all endpoints from the official Exchange API docs and corres
 | `getPastOrders()` | :closed_lock_with_key: YES  | GET | `/spot/v3/private/history-orders` |
 | `getMyTrades()` | :closed_lock_with_key: YES  | GET | `/spot/v3/private/my-trades` |
 | `getBalances()` | :closed_lock_with_key: YES  | GET | `/spot/v3/private/account` |
-| `getServerTime()` | :unlock: no | GET | `/v2/public/time` |
-| `getLeveragedTokenAssetInfos()` | :unlock: no | GET | `/spot/v3/public/infos` |
+| `getServerTime()` | no | GET | `/v2/public/time` |
+| `getLeveragedTokenAssetInfos()` | no | GET | `/spot/v3/public/infos` |
 | `getLeveragedTokenMarketInfo()` | :closed_lock_with_key: YES  | GET | `/spot/v3/private/reference` |
 | `purchaseLeveragedToken()` | :closed_lock_with_key: YES  | POST | `/spot/v3/private/purchase` |
 | `redeemLeveragedToken()` | :closed_lock_with_key: YES  | POST | `/spot/v3/private/redeem` |
