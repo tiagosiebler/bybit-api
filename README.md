@@ -65,6 +65,7 @@ Check out my related JavaScript/TypeScript/Node.js projects:
 Most methods accept JS objects. These can be populated using parameters specified by Bybit's API documentation, or check the type definition in each class within the github repository (see table below for convenient links to each class).
 
 - [Bybit API Docs](https://bybit-exchange.github.io/docs/v5/intro)
+- [REST Endpoint Function List](./docs/endpointFunctionList.md)
 - [TSDoc Documentation (generated using typedoc via npm module)](https://tsdocs.dev/docs/bybit-api)
 
 ## Structure
