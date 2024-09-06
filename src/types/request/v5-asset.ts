@@ -36,10 +36,13 @@ export interface GetAllCoinsBalanceParamsV5 {
 
 export interface GetAccountCoinBalanceParamsV5 {
   memberId?: string;
+  toMemberId?: string;
   accountType: AccountTypeV5;
   coin: string;
+  toAccountType?: AccountTypeV5;
   withBonus?: number;
   withTransferSafeAmount?: 0 | 1;
+  withLtvTransferSafeAmount?: 0 | 1;
 }
 
 export interface GetInternalTransferParamsV5 {
