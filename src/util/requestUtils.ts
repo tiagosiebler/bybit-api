@@ -29,6 +29,19 @@ export interface RestClientOptions {
    */
   enable_time_sync?: boolean;
 
+  /**
+   * Enable keep alive for REST API requests (via axios).
+   * See: https://github.com/tiagosiebler/bybit-api/issues/368
+   */
+  keepAlive?: boolean;
+
+  /**
+   * When using HTTP KeepAlive, how often to send TCP KeepAlive packets over sockets being kept alive. Default = 1000.
+   * Only relevant if keepAlive is set to true.
+   * Default: 1000 (defaults comes from https agent)
+   */
+  keepAliveMsecs?: number;
+
   /** How often to sync time drift with bybit servers */
   sync_interval_ms?: number | string;
 
