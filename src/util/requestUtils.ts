@@ -51,6 +51,8 @@ export interface RestClientOptions {
    **/
   baseUrl?: string;
 
+  apiRegion?: 'default' | 'bytick' | 'NL' | 'HK' | 'TK';
+
   /** Default: true. whether to try and post-process request exceptions. */
   parse_exceptions?: boolean;
 
@@ -100,7 +102,13 @@ export function getRestBaseUrl(
   restClientOptions: RestClientOptions,
 ): string {
   const exchangeBaseUrls = {
-    livenet: 'https://api.bybit.com',
+    livenet: {
+      default: 'https://api.bybit.com',
+      bytick: 'https://api.bytick.com',
+      NL: 'https://api.bybit.nl',
+      HK: 'https://api.byhkbit.com',
+      TK: 'https://api.bybit-tr.com',
+    },
     testnet: 'https://api-testnet.bybit.com',
     demoLivenet: 'https://api-demo.bybit.com',
   };
@@ -117,7 +125,19 @@ export function getRestBaseUrl(
     return exchangeBaseUrls.testnet;
   }
 
-  return exchangeBaseUrls.livenet;
+  if (restClientOptions.apiRegion) {
+    const regionalBaseURL =
+      exchangeBaseUrls.livenet[restClientOptions.apiRegion];
+
+    if (!regionalBaseURL) {
+      throw new Error(
+        `No base URL found for region "${restClientOptions.apiRegion}". Check that your "apiRegion" value is valid.`,
+      );
+    }
+    return regionalBaseURL;
+  }
+
+  return exchangeBaseUrls.livenet.default;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
