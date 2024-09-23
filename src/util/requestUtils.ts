@@ -29,6 +29,19 @@ export interface RestClientOptions {
    */
   enable_time_sync?: boolean;
 
+  /**
+   * Enable keep alive for REST API requests (via axios).
+   * See: https://github.com/tiagosiebler/bybit-api/issues/368
+   */
+  keepAlive?: boolean;
+
+  /**
+   * When using HTTP KeepAlive, how often to send TCP KeepAlive packets over sockets being kept alive. Default = 1000.
+   * Only relevant if keepAlive is set to true.
+   * Default: 1000 (defaults comes from https agent)
+   */
+  keepAliveMsecs?: number;
+
   /** How often to sync time drift with bybit servers */
   sync_interval_ms?: number | string;
 
@@ -50,6 +63,8 @@ export interface RestClientOptions {
    * e.g baseUrl: 'https://api.bytick.com'
    **/
   baseUrl?: string;
+
+  apiRegion?: 'default' | 'bytick' | 'NL' | 'HK' | 'TK';
 
   /** Default: true. whether to try and post-process request exceptions. */
   parse_exceptions?: boolean;
@@ -100,7 +115,13 @@ export function getRestBaseUrl(
   restClientOptions: RestClientOptions,
 ): string {
   const exchangeBaseUrls = {
-    livenet: 'https://api.bybit.com',
+    livenet: {
+      default: 'https://api.bybit.com',
+      bytick: 'https://api.bytick.com',
+      NL: 'https://api.bybit.nl',
+      HK: 'https://api.byhkbit.com',
+      TK: 'https://api.bybit-tr.com',
+    },
     testnet: 'https://api-testnet.bybit.com',
     demoLivenet: 'https://api-demo.bybit.com',
   };
@@ -117,7 +138,19 @@ export function getRestBaseUrl(
     return exchangeBaseUrls.testnet;
   }
 
-  return exchangeBaseUrls.livenet;
+  if (restClientOptions.apiRegion) {
+    const regionalBaseURL =
+      exchangeBaseUrls.livenet[restClientOptions.apiRegion];
+
+    if (!regionalBaseURL) {
+      throw new Error(
+        `No base URL found for region "${restClientOptions.apiRegion}". Check that your "apiRegion" value is valid.`,
+      );
+    }
+    return regionalBaseURL;
+  }
+
+  return exchangeBaseUrls.livenet.default;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
