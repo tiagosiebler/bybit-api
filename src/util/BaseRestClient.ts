@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
+import https from 'https';
 
 import {
   APIID,
@@ -136,6 +137,16 @@ export default abstract class BaseRestClient {
         'x-referer': APIID,
       },
     };
+
+    // If enabled, configure a https agent with keepAlive enabled
+    if (this.options.keepAlive) {
+      // For more advanced configuration, raise an issue on GitHub or use the "networkOptions"
+      // parameter to define a custom httpsAgent with the desired properties
+      this.globalRequestOptions.httpsAgent = new https.Agent({
+        keepAlive: true,
+        keepAliveMsecs: this.options.keepAliveMsecs,
+      });
+    }
 
     this.baseUrl = getRestBaseUrl(!!this.options.testnet, restOptions);
     this.key = this.options.key;

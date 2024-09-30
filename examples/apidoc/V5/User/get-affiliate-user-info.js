@@ -7,7 +7,7 @@ const client = new RestClientV5({
 });
 
 client
-  .deleteSubApiKey()
+  .getAffiliateUserInfo({ uid: '1513500' })
   .then((response) => {
     console.log(response);
   })

@@ -1248,6 +1248,10 @@ export class RestClientV5 extends BaseRestClient {
    * Use this endpoint to enable a subaccount to take part in a universal transfer.
    * It is a one-time switch which, once thrown, enables a subaccount permanently.
    * If not set, your subaccount cannot use universal transfers.
+   *
+   * @deprecated - You no longer need to configure transferable sub UIDs.
+   * Now, all sub UIDs are automatically enabled for universal transfer.
+   *
    */
   enableUniversalTransferForSubUIDs(
     subMemberIds: string[],
@@ -2031,6 +2035,7 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * Get Margin Coin Info
+   * @deprecated
    */
   getInstitutionalLendingMarginCoinInfo(
     productId?: string,
@@ -2072,6 +2077,7 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * Get LTV
+   * @deprecated
    */
   getInstitutionalLendingLTV(): Promise<
     APIResponseV3WithTime<{ ltvInfo: any[] }>
