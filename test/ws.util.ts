@@ -31,13 +31,13 @@ export const WS_OPEN_EVENT_PARTIAL = {
 export function waitForSocketEvent(
   wsClient: WebsocketClient,
   event: WsClientEvent,
-  timeoutMs: number = 4.5 * 1000
+  timeoutMs: number = 4.5 * 1000,
 ) {
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => {
       reject(
         // eslint-disable-next-line max-len
-        `Failed to receive "${event}" event before timeout. Check that these are correct: topic, api keys (if private), signature process (if private)`
+        `Failed to receive "${event}" event before timeout. Check that these are correct: topic, api keys (if private), signature process (if private)`,
       );
     }, timeoutMs);
 
