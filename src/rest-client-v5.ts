@@ -23,6 +23,8 @@ import {
   BatchOrderParamsV5,
   BatchOrdersResponseV5,
   BorrowHistoryRecordV5,
+  BrokerIssuedVoucherV5,
+  BrokerVoucherSpec,
   CancelAllOrdersParamsV5,
   CancelOrderParamsV5,
   CategoryCursorListV5,
@@ -65,6 +67,7 @@ import {
   GetAllowedDepositCoinInfoParamsV5,
   GetAssetInfoParamsV5,
   GetBorrowHistoryParamsV5,
+  GetBrokerIssuedVoucherParamsV5,
   GetBrokerSubAccountDepositsV5,
   GetClassicTransactionLogsParamsV5,
   GetClosedPnLParamsV5,
@@ -114,6 +117,7 @@ import {
   InsuranceResponseV5,
   InternalDepositRecordV5,
   InternalTransferRecordV5,
+  IssueVoucherParamsV5,
   LeverageTokenInfoV5,
   LeveragedTokenMarketResultV5,
   LongShortRatioV5,
@@ -2166,5 +2170,38 @@ export class RestClientV5 extends BaseRestClient {
       '/v5/broker/asset/query-sub-member-deposit-record',
       params,
     );
+  }
+
+  /**
+   * Query Voucher Spec
+   */
+  getBrokerVoucherSpec(params: {
+    id: string;
+  }): Promise<APIResponseV3WithTime<BrokerVoucherSpec>> {
+    return this.postPrivate('/v5/broker/award/info', params);
+  }
+
+  /**
+   * Issue a voucher to a user
+   *
+   * INFO
+   * Use exchange broker master account to issue
+   */
+  issueBrokerVoucher(
+    params: IssueVoucherParamsV5,
+  ): Promise<APIResponseV3<any>> {
+    return this.postPrivate('/v5/broker/award/distribute-award', params);
+  }
+
+  /**
+   * Query an issued voucher
+   *
+   * INFO
+   * Use exchange broker master account to query
+   */
+  getBrokerIssuedVoucher(
+    params: GetBrokerIssuedVoucherParamsV5,
+  ): Promise<APIResponseV3<BrokerIssuedVoucherV5>> {
+    return this.postPrivate('/v5/broker/award/distribution-record', params);
   }
 }

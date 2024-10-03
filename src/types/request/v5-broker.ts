@@ -15,3 +15,18 @@ export interface GetBrokerSubAccountDepositsV5 {
   limit?: number;
   cursor?: string;
 }
+
+export interface IssueVoucherParamsV5 {
+  accountId: string;
+  awardId: string;
+  specCode: string;
+  amount: string;
+  brokerId: string;
+}
+
+export interface GetBrokerIssuedVoucherParamsV5 {
+  accountId: string;
+  awardId: string;
+  specCode: string;
+  withUsedAmount?: boolean;
+}
