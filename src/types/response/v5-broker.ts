@@ -60,7 +60,7 @@ export interface ExchangeBrokerSubAccountDepositRecordV5 {
   depositType: string;
 }
 
-export interface BrokerVoucherSpec {
+export interface BrokerVoucherSpecV5 {
   id: string;
   coin: string;
   amountUnit: 'AWARD_AMOUNT_UNIT_USD' | 'AWARD_AMOUNT_UNIT_COIN';

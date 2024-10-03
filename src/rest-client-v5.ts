@@ -24,7 +24,7 @@ import {
   BatchOrdersResponseV5,
   BorrowHistoryRecordV5,
   BrokerIssuedVoucherV5,
-  BrokerVoucherSpec,
+  BrokerVoucherSpecV5,
   CancelAllOrdersParamsV5,
   CancelOrderParamsV5,
   CategoryCursorListV5,
@@ -2177,7 +2177,7 @@ export class RestClientV5 extends BaseRestClient {
    */
   getBrokerVoucherSpec(params: {
     id: string;
-  }): Promise<APIResponseV3WithTime<BrokerVoucherSpec>> {
+  }): Promise<APIResponseV3WithTime<BrokerVoucherSpecV5>> {
     return this.postPrivate('/v5/broker/award/info', params);
   }
 
