@@ -2189,7 +2189,7 @@ export class RestClientV5 extends BaseRestClient {
    */
   issueBrokerVoucher(
     params: IssueVoucherParamsV5,
-  ): Promise<APIResponseV3<any>> {
+  ): Promise<APIResponseV3<undefined>> {
     return this.postPrivate('/v5/broker/award/distribute-award', params);
   }
 
