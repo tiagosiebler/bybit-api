@@ -59,3 +59,28 @@ export interface ExchangeBrokerSubAccountDepositRecordV5 {
   batchReleaseLimit: string;
   depositType: string;
 }
+
+export interface BrokerVoucherSpecV5 {
+  id: string;
+  coin: string;
+  amountUnit: 'AWARD_AMOUNT_UNIT_USD' | 'AWARD_AMOUNT_UNIT_COIN';
+  productLine: string;
+  subProductLine: string;
+  totalAmount: {
+    [key: string]: string;
+  };
+  usedAmount: string;
+}
+
+export interface BrokerIssuedVoucherV5 {
+  accountId: string;
+  awardId: string;
+  specCode: string;
+  amount: string;
+  isClaimed: boolean;
+  startAt: string;
+  endAt: string;
+  effectiveAt: string;
+  ineffectiveAt: string;
+  usedAmount: string;
+}
