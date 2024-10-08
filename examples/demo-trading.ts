@@ -50,7 +50,7 @@ function setWsClientEventListeners(
   websocketClient: WebsocketClient,
   accountRef: string,
 ): Promise<void> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     websocketClient.on('update', (data) => {
       console.log(new Date(), accountRef, 'data ', JSON.stringify(data));
       // console.log('raw message received ', JSON.stringify(data, null, 2));
