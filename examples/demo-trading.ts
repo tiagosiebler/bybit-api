@@ -1,4 +1,4 @@
-import { RestClientV5, WebsocketClient } from '../src/index';
+import { DefaultLogger, RestClientV5, WebsocketClient } from '../src/index';
 
 // or
 // import { RestClientV5 } from 'bybit-api';
@@ -26,65 +26,97 @@ const restClient = new RestClientV5({
   demoTrading: true,
 });
 
-const wsClient = new WebsocketClient({
-  market: 'v5',
-  /**
-   * Set this to true to enable demo trading for the private account data WS
-   * Topics: order,execution,position,wallet,greeks
-   */
-  demoTrading: true,
-});
+// Optional, uncomment the "silly" override to log a lot more info about what the WS client is doing
+const customLogger = {
+  ...DefaultLogger,
+  // silly: (...params) => console.log('trace', ...params),
+};
+
+const wsClient = new WebsocketClient(
+  {
+    key: key,
+    secret: secret,
+    market: 'v5',
+    /**
+     * Set this to true to enable demo trading for the private account data WS
+     * Topics: order,execution,position,wallet,greeks
+     */
+    demoTrading: true,
+  },
+  customLogger,
+);
 
 function setWsClientEventListeners(
   websocketClient: WebsocketClient,
   accountRef: string,
-): void {
-  websocketClient.on('update', (data) => {
-    console.log(new Date(), accountRef, 'data ', JSON.stringify(data));
-    // console.log('raw message received ', JSON.stringify(data, null, 2));
-  });
+): Promise<void> {
+  return new Promise((resolve) => {
+    websocketClient.on('update', (data) => {
+      console.log(new Date(), accountRef, 'data ', JSON.stringify(data));
+      // console.log('raw message received ', JSON.stringify(data, null, 2));
+    });
 
-  websocketClient.on('open', (data) => {
-    console.log(new Date(), accountRef, 'connection opened open:', data.wsKey);
-  });
-  websocketClient.on('response', (data) => {
-    console.log(
-      new Date(),
-      accountRef,
-      'log response: ',
-      JSON.stringify(data, null, 2),
-    );
-  });
-  websocketClient.on('reconnect', ({ wsKey }) => {
-    console.log(
-      new Date(),
-      accountRef,
-      'ws automatically reconnecting.... ',
-      wsKey,
-    );
-  });
-  websocketClient.on('reconnected', (data) => {
-    console.log(new Date(), accountRef, 'ws has reconnected ', data?.wsKey);
-  });
-  websocketClient.on('error', (data) => {
-    console.error(new Date(), accountRef, 'ws exception: ', data);
+    websocketClient.on('open', (data) => {
+      console.log(
+        new Date(),
+        accountRef,
+        'connection opened open:',
+        data.wsKey,
+      );
+    });
+    websocketClient.on('response', (data) => {
+      console.log(
+        new Date(),
+        accountRef,
+        'log response: ',
+        JSON.stringify(data, null, 2),
+      );
+
+      if (typeof data.req_id === 'string') {
+        const topics = data.req_id.split(',');
+        if (topics.length) {
+          console.log(new Date(), accountRef, 'Subscribed to topics: ', topics);
+          return resolve();
+        }
+      }
+    });
+    websocketClient.on('reconnect', ({ wsKey }) => {
+      console.log(
+        new Date(),
+        accountRef,
+        'ws automatically reconnecting.... ',
+        wsKey,
+      );
+    });
+    websocketClient.on('reconnected', (data) => {
+      console.log(new Date(), accountRef, 'ws has reconnected ', data?.wsKey);
+    });
+    websocketClient.on('error', (data) => {
+      console.error(new Date(), accountRef, 'ws exception: ', data);
+    });
   });
 }
 
 (async () => {
   try {
-    setWsClientEventListeners(wsClient, 'demoAcc');
+    const onSubscribed = setWsClientEventListeners(wsClient, 'demoAcc');
 
+    wsClient.subscribeV5(['position', 'execution', 'wallet'], 'linear');
+
+    // Simple promise to ensure we're subscribed before trying anything else
+    await onSubscribed;
+
+    // Start trading
     const balResponse1 = await restClient.getWalletBalance({
-      accountType: 'CONTRACT',
+      accountType: 'UNIFIED',
     });
     console.log('balResponse1: ', JSON.stringify(balResponse1, null, 2));
 
     const demoFunds = await restClient.requestDemoTradingFunds();
-    console.log(`requested demo funds: `, demoFunds);
+    console.log('requested demo funds: ', demoFunds);
 
     const balResponse2 = await restClient.getWalletBalance({
-      accountType: 'CONTRACT',
+      accountType: 'UNIFIED',
     });
     console.log('balResponse2: ', JSON.stringify(balResponse2, null, 2));
 
@@ -116,7 +148,7 @@ function setWsClientEventListeners(
     console.log('sellOrderResult:', sellOrderResult);
 
     const balResponse3 = await restClient.getWalletBalance({
-      accountType: 'CONTRACT',
+      accountType: 'UNIFIED',
     });
     console.log('balResponse2: ', JSON.stringify(balResponse3, null, 2));
   } catch (e) {
