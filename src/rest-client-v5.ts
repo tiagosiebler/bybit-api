@@ -179,6 +179,22 @@ import {
   WithdrawParamsV5,
   WithdrawalRecordV5,
 } from './types';
+import {
+  BorrowCryptoLoanParamsV5,
+  GetCompletedLoanOrderHistoryParamsV5,
+  GetLoanLTVAdjustmentHistoryParamsV5,
+  GetRepaymentHistoryParamsV5,
+  GetUnpaidLoanOrdersParamsV5,
+} from './types/request/v5-crypto-loan';
+import {
+  AccountBorrowCollateralLimitV5,
+  CompletedLoanOrderV5,
+  LoanLTVAdjustmentHistoryV5,
+  RepaymentHistoryV5,
+  UnpaidLoanOrderV5,
+  VipBorrowableCoinListV5,
+  VipCollateralCoinListV5,
+} from './types/response/v5-crypto-loan';
 
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
@@ -2020,6 +2036,206 @@ export class RestClientV5 extends BaseRestClient {
     switch: 1 | 0;
   }): Promise<APIResponseV3WithTime<{ switchStatus: '1' | '0' }>> {
     return this.postPrivate('/v5/spot-cross-margin-trade/switch', params);
+  }
+
+  /**
+   *
+   ****** Crypto Loan
+   *
+   */
+
+  /**
+   * Get Collateral Coins
+   *
+   * INFO: Do not need authentication
+   */
+  getCollateralCoins(params?: {
+    vipLevel?: string;
+    currency?: string;
+  }): Promise<
+    APIResponseV3WithTime<{
+      vipCoinList: VipCollateralCoinListV5[];
+    }>
+  > {
+    return this.get('/v5/crypto-loan/collateral-data', params);
+  }
+
+  /**
+   * Get Borrowable Coins
+   *
+   * INFO: Do not need authentication
+   */
+  getBorrowableCoins(params?: {
+    vipLevel?: string;
+    currency?: string;
+  }): Promise<
+    APIResponseV3WithTime<{
+      vipCoinList: VipBorrowableCoinListV5[];
+    }>
+  > {
+    return this.get('/v5/crypto-loan/loanable-data', params);
+  }
+
+  /**
+   * Get Account Borrow/Collateral Limit
+   * Query the account borrowable/collateral limit
+   *
+   * Permission: "Spot trade"
+   */
+  getAccountBorrowCollateralLimit(params: {
+    loanCurrency: string;
+    collateralCurrency: string;
+  }): Promise<APIResponseV3WithTime<AccountBorrowCollateralLimitV5>> {
+    return this.getPrivate(
+      '/v5/crypto-loan/borrowable-collateralisable-number',
+      params,
+    );
+  }
+
+  /**
+   * Borrow Crypto Loan
+   *
+   * Permission: "Spot trade"
+   *
+   * INFO:
+   * The loan funds are released to the Funding account
+   * The collateral funds are deducted from the Funding account, so make sure you have enough collateral amount in the funding wallet
+   */
+  borrowCryptoLoan(params: BorrowCryptoLoanParamsV5): Promise<
+    APIResponseV3WithTime<{
+      orderId: string;
+    }>
+  > {
+    return this.postPrivate('/v5/crypto-loan/borrow', params);
+  }
+
+  /**
+   * Repay Crypto Loan
+   *
+   * You can repay partial loan. If there is interest occurred, interest will be repaid in priority
+   *
+   * Permission: "Spot trade"
+   *
+   * INFO:
+   * The repaid amount will be deducted from Funding account
+   * The collateral amount will not be auto returned when you don't fully repay the debt, but you can also adjust collateral amount
+   */
+  repayCryptoLoan(params: { orderId: string; amount: string }): Promise<
+    APIResponseV3WithTime<{
+      repayId: string;
+    }>
+  > {
+    return this.postPrivate('/v5/crypto-loan/repay', params);
+  }
+
+  /**
+   * Get Unpaid Loan Orders
+   * Query the ongoing loan orders, which are not fully repaid
+   *
+   * Permission: "Spot trade"
+   */
+  getUnpaidLoanOrders(params?: GetUnpaidLoanOrdersParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: UnpaidLoanOrderV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan/ongoing-orders', params);
+  }
+
+  /**
+   * Get Repayment Transaction History
+   * Query repaid transaction history
+   *
+   * Permission: "Spot trade"
+   *
+   * INFO:
+   * Support querying last 6 months completed loan orders
+   * Only successful repayments can be queried
+   */
+  getRepaymentHistory(params?: GetRepaymentHistoryParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: RepaymentHistoryV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan/repayment-history', params);
+  }
+
+  /**
+   * Get Completed Loan Order History
+   * Query the completed loan orders
+   *
+   * Permission: "Spot trade"
+   *
+   * INFO:
+   * Support querying last 6 months completed loan orders
+   */
+  getCompletedLoanOrderHistory(
+    params?: GetCompletedLoanOrderHistoryParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      list: CompletedLoanOrderV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan/borrow-history', params);
+  }
+
+  /**
+   * Get Max. Allowed Reduction Collateral Amount
+   * Query the maximum allowed reduction collateral amount
+   *
+   * Permission: "Spot trade"
+   */
+  getMaxAllowedReductionCollateralAmount(params: { orderId: string }): Promise<
+    APIResponseV3WithTime<{
+      maxCollateralAmount: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan/max-collateral-amount', params);
+  }
+
+  /**
+   * Adjust Collateral Amount
+   * You can increase or reduce collateral amount. When you reduce, please follow the max. allowed reduction amount.
+   *
+   * Permission: "Spot trade"
+   *
+   * INFO:
+   * The adjusted collateral amount will be returned to or deducted from Funding account
+   */
+  adjustCollateralAmount(params: {
+    orderId: string;
+    amount: string;
+    direction: '0' | '1';
+  }): Promise<
+    APIResponseV3WithTime<{
+      adjustId: string;
+    }>
+  > {
+    return this.postPrivate('/v5/crypto-loan/adjust-ltv', params);
+  }
+
+  /**
+   * Get Loan LTV Adjustment History
+   * Query the transaction history of collateral amount adjustment
+   *
+   * Permission: "Spot trade"
+   *
+   * INFO:
+   * Support querying last 6 months adjustment transactions
+   * Only the ltv adjustment transactions launched by the user can be queried
+   */
+  getLoanLTVAdjustmentHistory(
+    params?: GetLoanLTVAdjustmentHistoryParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      list: LoanLTVAdjustmentHistoryV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan/adjustment-history', params);
   }
 
   /**
