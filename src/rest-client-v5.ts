@@ -185,8 +185,8 @@ import {
   UpdateApiKeyResultV5,
   VIPMarginDataV5,
   VaspEntityV5,
-  VipBorrowableCoinListV5,
-  VipCollateralCoinListV5,
+  VipBorrowableCoinsV5,
+  VipCollateralCoinsV5,
   WalletBalanceV5,
   WithdrawParamsV5,
   WithdrawalRecordV5,
@@ -2050,7 +2050,7 @@ export class RestClientV5 extends BaseRestClient {
     currency?: string;
   }): Promise<
     APIResponseV3WithTime<{
-      vipCoinList: VipCollateralCoinListV5[];
+      vipCoinList: VipCollateralCoinsV5[];
     }>
   > {
     return this.get('/v5/crypto-loan/collateral-data', params);
@@ -2066,7 +2066,7 @@ export class RestClientV5 extends BaseRestClient {
     currency?: string;
   }): Promise<
     APIResponseV3WithTime<{
-      vipCoinList: VipBorrowableCoinListV5[];
+      vipCoinList: VipBorrowableCoinsV5[];
     }>
   > {
     return this.get('/v5/crypto-loan/loanable-data', params);

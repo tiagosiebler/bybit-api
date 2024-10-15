@@ -7,7 +7,7 @@ export interface CollateralCoinV5 {
   maxLimit: string;
 }
 
-export interface VipCollateralCoinListV5 {
+export interface VipCollateralCoinsV5 {
   list: CollateralCoinV5[];
   vipLevel: string;
 }
@@ -25,7 +25,7 @@ export interface BorrowableCoinV5 {
   minBorrowingAmount: string;
 }
 
-export interface VipBorrowableCoinListV5 {
+export interface VipBorrowableCoinsV5 {
   list: BorrowableCoinV5[];
   vipLevel: string;
 }
@@ -81,12 +81,12 @@ export interface CompletedLoanOrderV5 {
   status: number;
 }
 export interface LoanLTVAdjustmentHistoryV5 {
-    collateralCurrency: string;
-    orderId: string;
-    adjustId: string;
-    adjustTime: string;
-    preLTV: string;
-    afterLTV: string;
-    direction: number;
-    amount: string;
-  }
+  collateralCurrency: string;
+  orderId: string;
+  adjustId: string;
+  adjustTime: string;
+  preLTV: string;
+  afterLTV: string;
+  direction: number;
+  amount: string;
+}
