@@ -182,6 +182,17 @@ This table includes all endpoints from the official Exchange API docs and corres
 | `getSpotMarginBorrowOrderDetail()` | :closed_lock_with_key:  | GET | `/v5/spot-cross-margin-trade/orders` |
 | `getSpotMarginRepaymentOrderDetail()` | :closed_lock_with_key:  | GET | `/v5/spot-cross-margin-trade/repay-history` |
 | `toggleSpotCrossMarginTrade()` | :closed_lock_with_key:  | POST | `/v5/spot-cross-margin-trade/switch` |
+| `getCollateralCoins()` |  | GET | `/v5/crypto-loan/collateral-data` |
+| `getBorrowableCoins()` |  | GET | `/v5/crypto-loan/loanable-data` |
+| `getAccountBorrowCollateralLimit()` | :closed_lock_with_key:  | GET | `/v5/crypto-loan/borrowable-collateralisable-number` |
+| `borrowCryptoLoan()` | :closed_lock_with_key:  | POST | `/v5/crypto-loan/borrow` |
+| `repayCryptoLoan()` | :closed_lock_with_key:  | POST | `/v5/crypto-loan/repay` |
+| `getUnpaidLoanOrders()` | :closed_lock_with_key:  | GET | `/v5/crypto-loan/ongoing-orders` |
+| `getRepaymentHistory()` | :closed_lock_with_key:  | GET | `/v5/crypto-loan/repayment-history` |
+| `getCompletedLoanOrderHistory()` | :closed_lock_with_key:  | GET | `/v5/crypto-loan/borrow-history` |
+| `getMaxAllowedReductionCollateralAmount()` | :closed_lock_with_key:  | GET | `/v5/crypto-loan/max-collateral-amount` |
+| `adjustCollateralAmount()` | :closed_lock_with_key:  | POST | `/v5/crypto-loan/adjust-ltv` |
+| `getLoanLTVAdjustmentHistory()` | :closed_lock_with_key:  | GET | `/v5/crypto-loan/adjustment-history` |
 | `getInstitutionalLendingProductInfo()` |  | GET | `/v5/ins-loan/product-infos` |
 | `getInstitutionalLendingMarginCoinInfo()` |  | GET | `/v5/ins-loan/ensure-tokens` |
 | `getInstitutionalLendingMarginCoinInfoWithConversionRate()` |  | GET | `/v5/ins-loan/ensure-tokens-convert` |
@@ -193,3 +204,6 @@ This table includes all endpoints from the official Exchange API docs and corres
 | `getExchangeBrokerEarnings()` | :closed_lock_with_key:  | GET | `/v5/broker/earnings-info` |
 | `getExchangeBrokerAccountInfo()` | :closed_lock_with_key:  | GET | `/v5/broker/account-info` |
 | `getBrokerSubAccountDeposits()` | :closed_lock_with_key:  | GET | `/v5/broker/asset/query-sub-member-deposit-record` |
+| `getBrokerVoucherSpec()` | :closed_lock_with_key:  | POST | `/v5/broker/award/info` |
+| `issueBrokerVoucher()` | :closed_lock_with_key:  | POST | `/v5/broker/award/distribute-award` |
+| `getBrokerIssuedVoucher()` | :closed_lock_with_key:  | POST | `/v5/broker/award/distribution-record` |

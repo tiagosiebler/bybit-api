@@ -2,6 +2,7 @@
 import {
   APIResponseV3,
   APIResponseV3WithTime,
+  AccountBorrowCollateralLimitV5,
   AccountCoinBalanceV5,
   AccountInfoV5,
   AccountMarginModeV5,
@@ -22,6 +23,7 @@ import {
   BatchCreateOrderResultV5,
   BatchOrderParamsV5,
   BatchOrdersResponseV5,
+  BorrowCryptoLoanParamsV5,
   BorrowHistoryRecordV5,
   BrokerIssuedVoucherV5,
   BrokerVoucherSpecV5,
@@ -36,6 +38,7 @@ import {
   CoinGreeksV5,
   CoinInfoV5,
   CollateralInfoV5,
+  CompletedLoanOrderV5,
   ConfirmNewRiskLimitParamsV5,
   ConvertCoinSpecV5,
   ConvertCoinsParamsV5,
@@ -72,6 +75,7 @@ import {
   GetClassicTransactionLogsParamsV5,
   GetClosedPnLParamsV5,
   GetCoinExchangeRecordParamsV5,
+  GetCompletedLoanOrderHistoryParamsV5,
   GetConvertHistoryParamsV5,
   GetDeliveryPriceParamsV5,
   GetDeliveryRecordParamsV5,
@@ -87,6 +91,7 @@ import {
   GetInternalDepositRecordParamsV5,
   GetInternalTransferParamsV5,
   GetKlineParamsV5,
+  GetLoanLTVAdjustmentHistoryParamsV5,
   GetLongShortRatioParamsV5,
   GetMarkPriceKlineParamsV5,
   GetMovePositionHistoryParamsV5,
@@ -101,6 +106,7 @@ import {
   GetPreUpgradeUSDCSessionParamsV5,
   GetPremiumIndexPriceKlineParamsV5,
   GetPublicTradingHistoryParamsV5,
+  GetRepaymentHistoryParamsV5,
   GetRiskLimitParamsV5,
   GetSettlementRecordParamsV5,
   GetSpotLeveragedTokenOrderHistoryParamsV5,
@@ -109,6 +115,7 @@ import {
   GetTickersParamsV5,
   GetTransactionLogParamsV5,
   GetUniversalTransferRecordsParamsV5,
+  GetUnpaidLoanOrdersParamsV5,
   GetVIPMarginDataParamsV5,
   GetWalletBalanceParamsV5,
   GetWithdrawalRecordsParamsV5,
@@ -120,6 +127,7 @@ import {
   IssueVoucherParamsV5,
   LeverageTokenInfoV5,
   LeveragedTokenMarketResultV5,
+  LoanLTVAdjustmentHistoryV5,
   LongShortRatioV5,
   MMPModifyParamsV5,
   MMPStateV5,
@@ -146,6 +154,7 @@ import {
   RedeemSpotLeveragedTokenResultV5,
   RepayLiabilityParamsV5,
   RepayLiabilityResultV5,
+  RepaymentHistoryV5,
   RequestConvertQuoteParamsV5,
   RiskLimitV5,
   SetAutoAddMarginParamsV5,
@@ -171,10 +180,13 @@ import {
   UnifiedAccountUpgradeResultV5,
   UniversalTransferParamsV5,
   UniversalTransferRecordV5,
+  UnpaidLoanOrderV5,
   UpdateApiKeyParamsV5,
   UpdateApiKeyResultV5,
   VIPMarginDataV5,
   VaspEntityV5,
+  VipBorrowableCoinsV5,
+  VipCollateralCoinsV5,
   WalletBalanceV5,
   WithdrawParamsV5,
   WithdrawalRecordV5,
@@ -2020,6 +2032,206 @@ export class RestClientV5 extends BaseRestClient {
     switch: 1 | 0;
   }): Promise<APIResponseV3WithTime<{ switchStatus: '1' | '0' }>> {
     return this.postPrivate('/v5/spot-cross-margin-trade/switch', params);
+  }
+
+  /**
+   *
+   ****** Crypto Loan
+   *
+   */
+
+  /**
+   * Get Collateral Coins
+   *
+   * INFO: Do not need authentication
+   */
+  getCollateralCoins(params?: {
+    vipLevel?: string;
+    currency?: string;
+  }): Promise<
+    APIResponseV3WithTime<{
+      vipCoinList: VipCollateralCoinsV5[];
+    }>
+  > {
+    return this.get('/v5/crypto-loan/collateral-data', params);
+  }
+
+  /**
+   * Get Borrowable Coins
+   *
+   * INFO: Do not need authentication
+   */
+  getBorrowableCoins(params?: {
+    vipLevel?: string;
+    currency?: string;
+  }): Promise<
+    APIResponseV3WithTime<{
+      vipCoinList: VipBorrowableCoinsV5[];
+    }>
+  > {
+    return this.get('/v5/crypto-loan/loanable-data', params);
+  }
+
+  /**
+   * Get Account Borrow/Collateral Limit
+   * Query the account borrowable/collateral limit
+   *
+   * Permission: "Spot trade"
+   */
+  getAccountBorrowCollateralLimit(params: {
+    loanCurrency: string;
+    collateralCurrency: string;
+  }): Promise<APIResponseV3WithTime<AccountBorrowCollateralLimitV5>> {
+    return this.getPrivate(
+      '/v5/crypto-loan/borrowable-collateralisable-number',
+      params,
+    );
+  }
+
+  /**
+   * Borrow Crypto Loan
+   *
+   * Permission: "Spot trade"
+   *
+   * INFO:
+   * The loan funds are released to the Funding account
+   * The collateral funds are deducted from the Funding account, so make sure you have enough collateral amount in the funding wallet
+   */
+  borrowCryptoLoan(params: BorrowCryptoLoanParamsV5): Promise<
+    APIResponseV3WithTime<{
+      orderId: string;
+    }>
+  > {
+    return this.postPrivate('/v5/crypto-loan/borrow', params);
+  }
+
+  /**
+   * Repay Crypto Loan
+   *
+   * You can repay partial loan. If there is interest occurred, interest will be repaid in priority
+   *
+   * Permission: "Spot trade"
+   *
+   * INFO:
+   * The repaid amount will be deducted from Funding account
+   * The collateral amount will not be auto returned when you don't fully repay the debt, but you can also adjust collateral amount
+   */
+  repayCryptoLoan(params: { orderId: string; amount: string }): Promise<
+    APIResponseV3WithTime<{
+      repayId: string;
+    }>
+  > {
+    return this.postPrivate('/v5/crypto-loan/repay', params);
+  }
+
+  /**
+   * Get Unpaid Loan Orders
+   * Query the ongoing loan orders, which are not fully repaid
+   *
+   * Permission: "Spot trade"
+   */
+  getUnpaidLoanOrders(params?: GetUnpaidLoanOrdersParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: UnpaidLoanOrderV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan/ongoing-orders', params);
+  }
+
+  /**
+   * Get Repayment Transaction History
+   * Query repaid transaction history
+   *
+   * Permission: "Spot trade"
+   *
+   * INFO:
+   * Support querying last 6 months completed loan orders
+   * Only successful repayments can be queried
+   */
+  getRepaymentHistory(params?: GetRepaymentHistoryParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: RepaymentHistoryV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan/repayment-history', params);
+  }
+
+  /**
+   * Get Completed Loan Order History
+   * Query the completed loan orders
+   *
+   * Permission: "Spot trade"
+   *
+   * INFO:
+   * Support querying last 6 months completed loan orders
+   */
+  getCompletedLoanOrderHistory(
+    params?: GetCompletedLoanOrderHistoryParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      list: CompletedLoanOrderV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan/borrow-history', params);
+  }
+
+  /**
+   * Get Max. Allowed Reduction Collateral Amount
+   * Query the maximum allowed reduction collateral amount
+   *
+   * Permission: "Spot trade"
+   */
+  getMaxAllowedReductionCollateralAmount(params: { orderId: string }): Promise<
+    APIResponseV3WithTime<{
+      maxCollateralAmount: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan/max-collateral-amount', params);
+  }
+
+  /**
+   * Adjust Collateral Amount
+   * You can increase or reduce collateral amount. When you reduce, please follow the max. allowed reduction amount.
+   *
+   * Permission: "Spot trade"
+   *
+   * INFO:
+   * The adjusted collateral amount will be returned to or deducted from Funding account
+   */
+  adjustCollateralAmount(params: {
+    orderId: string;
+    amount: string;
+    direction: '0' | '1';
+  }): Promise<
+    APIResponseV3WithTime<{
+      adjustId: string;
+    }>
+  > {
+    return this.postPrivate('/v5/crypto-loan/adjust-ltv', params);
+  }
+
+  /**
+   * Get Loan LTV Adjustment History
+   * Query the transaction history of collateral amount adjustment
+   *
+   * Permission: "Spot trade"
+   *
+   * INFO:
+   * Support querying last 6 months adjustment transactions
+   * Only the ltv adjustment transactions launched by the user can be queried
+   */
+  getLoanLTVAdjustmentHistory(
+    params?: GetLoanLTVAdjustmentHistoryParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      list: LoanLTVAdjustmentHistoryV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan/adjustment-history', params);
   }
 
   /**
