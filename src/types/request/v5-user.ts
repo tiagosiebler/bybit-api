@@ -1,6 +1,5 @@
 import { PermissionsV5 } from '../v5-shared';
 
-
 export interface CreateSubMemberParamsV5 {
   username: string;
   password?: string;
@@ -20,7 +19,7 @@ export interface CreateSubApiKeyParamsV5 {
   subuid: number;
   note?: string;
   readOnly: 0 | 1;
-  ips?: string[];
+  ips?: string;
   permissions: PermissionsV5;
 }
 
