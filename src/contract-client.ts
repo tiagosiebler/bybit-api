@@ -32,6 +32,10 @@ import BaseRestClient from './util/BaseRestClient';
 
 /**
  * REST API client for Derivatives V3 Contract APIs
+ * @deprecated WARNING
+ * These endpoints are being switched off gradually and are expected to be completely turned off by the end of 2024.
+ * They may stop working at any point before then.
+ * Please update your code as soon as possible to use the V5 APIs instead.
  */
 export class ContractClient extends BaseRestClient {
   getClientType() {
