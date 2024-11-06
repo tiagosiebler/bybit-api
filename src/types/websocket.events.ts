@@ -126,6 +126,7 @@ export interface WSAccountOrderV5 {
   cumExecQty: string;
   cumExecValue: string;
   cumExecFee: string;
+  closedPnl: string;
   feeCurrency: string;
   timeInForce: OrderTimeInForceV5;
   orderType: OrderTypeV5;
