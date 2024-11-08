@@ -133,12 +133,12 @@ export interface LinearSetMarginSwitchRequest {
 
 export interface LinearSetPositionModeRequest {
   symbol: string;
-  mode: typeof linearPositionModeEnum[keyof typeof linearPositionModeEnum];
+  mode: (typeof linearPositionModeEnum)[keyof typeof linearPositionModeEnum];
 }
 
 export interface LinearSetPositionTpSlModeRequest {
   symbol: string;
-  tp_sl_mode: typeof positionTpSlModeEnum[keyof typeof positionTpSlModeEnum];
+  tp_sl_mode: (typeof positionTpSlModeEnum)[keyof typeof positionTpSlModeEnum];
 }
 
 export interface LinearSetAddReduceMarginRequest {

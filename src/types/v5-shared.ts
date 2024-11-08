@@ -11,7 +11,6 @@ export type InstrumentStatusV5 =
   | 'Settling'
   | 'Delivering'
   | 'Closed';
-  
 
 export type MarginTradingV5 = 'none' | 'both' | 'utaOnly' | 'normalSpotOnly';
 
@@ -156,7 +155,7 @@ export type PositionIdx = 0 | 1 | 2;
 
 /**
  * Position status.
- * 
+ *
  * - 'Normal'
  * - 'Liq' in the liquidation progress
  * - 'Adl' in the auto-deleverage progress
@@ -175,7 +174,10 @@ export type OptionTypeV5 = 'Call' | 'Put';
 export type TradeModeV5 = 0 | 1;
 
 export type TPSLModeV5 = 'Full' | 'Partial';
-export type AccountMarginModeV5 = 'ISOLATED_MARGIN' | 'REGULAR_MARGIN' | 'PORTFOLIO_MARGIN';
+export type AccountMarginModeV5 =
+  | 'ISOLATED_MARGIN'
+  | 'REGULAR_MARGIN'
+  | 'PORTFOLIO_MARGIN';
 export type UnifiedUpdateStatusV5 = 'FAIL' | 'PROCESS' | 'SUCCESS';
 
 export type AccountTypeV5 =

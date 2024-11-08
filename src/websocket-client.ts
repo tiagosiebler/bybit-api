@@ -4,18 +4,12 @@
 import { EventEmitter } from 'events';
 import WebSocket from 'isomorphic-ws';
 
+import { ContractClient } from './contract-client';
 import { InverseClient } from './inverse-client';
 import { LinearClient } from './linear-client';
-import { SpotClientV3 } from './spot-client-v3';
+import { RestClientV5 } from './rest-client-v5';
 import { SpotClient } from './spot-client';
-import { USDCOptionClient } from './usdc-option-client';
-import { USDCPerpetualClient } from './usdc-perpetual-client';
-import { UnifiedMarginClient } from './unified-margin-client';
-import { ContractClient } from './contract-client';
-
-import { signMessage } from './util/node-support';
-import WsStore from './util/WsStore';
-
+import { SpotClientV3 } from './spot-client-v3';
 import {
   APIMarket,
   CategoryV5,
@@ -26,7 +20,10 @@ import {
   WsKey,
   WsTopic,
 } from './types';
-
+import { WebsocketTopicSubscriptionConfirmationEvent } from './types/ws-events/topic-subscription-confirmation';
+import { UnifiedMarginClient } from './unified-margin-client';
+import { USDCOptionClient } from './usdc-option-client';
+import { USDCPerpetualClient } from './usdc-perpetual-client';
 import {
   DefaultLogger,
   PUBLIC_WS_KEYS,
@@ -44,8 +41,8 @@ import {
   safeTerminateWs,
   serializeParams,
 } from './util';
-import { RestClientV5 } from './rest-client-v5';
-import { WebsocketTopicSubscriptionConfirmationEvent } from './types/ws-events/topic-subscription-confirmation';
+import { signMessage } from './util/node-support';
+import WsStore from './util/WsStore';
 
 const loggerCategory = { category: 'bybit-ws' };
 
