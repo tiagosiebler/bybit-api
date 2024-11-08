@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   APIResponseV3,
@@ -133,7 +134,10 @@ export class USDCPerpetualClient extends BaseRestClient {
     );
   }
 
-  /** Active order parameters (such as quantity, price) and stop order parameters cannot be modified in one request at the same time. Please request modification separately. */
+  /**
+   * Active order parameters (such as quantity, price) and stop order parameters cannot be modified in one request at the same time.
+   * Please request modification separately.
+   */
   modifyOrder(params: USDCPerpModifyOrderRequest): Promise<APIResponseV3<any>> {
     return this.postPrivate(
       '/perpetual/usdc/openapi/private/v1/replace-order',

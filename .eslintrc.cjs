@@ -7,7 +7,7 @@ module.exports = {
   },
   plugins: [
     '@typescript-eslint/eslint-plugin',
-    'simple-import-sort',
+    // 'simple-import-sort',
     // 'require-extensions',
   ],
   extends: [
@@ -78,7 +78,7 @@ module.exports = {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
-    'simple-import-sort/imports': 'error',
-    'simple-import-sort/exports': 'error',
+    // 'simple-import-sort/imports': 'error',
+    // 'simple-import-sort/exports': 'error',
   },
 };

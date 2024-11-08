@@ -86,7 +86,10 @@ export class CopyTradingClient extends BaseRestClient {
     );
   }
 
-  /** Close Order.  This endpoint's rate_limit will decrease by 10 per request; ie, one request to this endpoint consumes 10 from the limit allowed per minute. */
+  /** Close Order.
+   * This endpoint's rate_limit will decrease by 10 per request;
+   * ie, one request to this endpoint consumes 10 from the limit allowed per minute.
+   */
   closeOrder(
     params: CopyTradingCloseOrderRequest,
   ): Promise<APIResponseV3<any>> {
