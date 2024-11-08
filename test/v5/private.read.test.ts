@@ -1,6 +1,6 @@
 import { API_ERROR_CODE, RestClientV5 } from '../../src';
-import { successResponseObjectV3 } from '../response.util';
 import { getTestProxy } from '../proxy.util';
+import { successResponseObjectV3 } from '../response.util';
 
 describe('Private READ V5 REST API Endpoints', () => {
   const API_KEY = process.env.API_KEY_COM;
