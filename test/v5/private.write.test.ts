@@ -199,7 +199,8 @@ describe('Private WRITE V5 REST API Endpoints', () => {
       });
     });
 
-    it('switchIsolatedMargin()', async () => {
+    // Not compatible with account mode
+    it.skip('switchIsolatedMargin()', async () => {
       expect(
         await api.switchIsolatedMargin({
           category: 'linear',
@@ -211,7 +212,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
         }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
-        // retMsg: '',
+        retMsg: '',
         retCode: API_ERROR_CODE.V5_CROSS_ISOLATED_MARGIN_NOT_CHANGED,
       });
     });
@@ -275,7 +276,8 @@ describe('Private WRITE V5 REST API Endpoints', () => {
       });
     });
 
-    it('setAutoAddMargin()', async () => {
+    // Not compatible with account mode
+    it.skip('setAutoAddMargin()', async () => {
       expect(
         await api.setAutoAddMargin({
           category: 'linear',
@@ -284,8 +286,8 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           positionIdx: 0,
         }),
       ).toMatchObject({
-        // ...successResponseObjectV3(),
-        // retMsg: '',
+        ...successResponseObjectV3(),
+        retMsg: '',
         retCode: API_ERROR_CODE.V5_AUTO_ADD_MARGIN_NOT_CHANGED,
       });
     });
@@ -294,9 +296,9 @@ describe('Private WRITE V5 REST API Endpoints', () => {
   describe('Account APIs', () => {
     it('setMarginMode()', async () => {
       expect(await api.setMarginMode('REGULAR_MARGIN')).toMatchObject({
-        // ...successResponseObjectV3(),
+        ...successResponseObjectV3(),
         // retMsg: '',
-        retCode: API_ERROR_CODE.V5_MARGIN_MODE_NOT_CHANGED,
+        // retCode: API_ERROR_CODE.V5_MARGIN_MODE_NOT_CHANGED,
       });
     });
 
@@ -468,17 +470,17 @@ describe('Private WRITE V5 REST API Endpoints', () => {
   describe('Spot Margin APIs', () => {
     it('toggleSpotMarginTrade()', async () => {
       expect(await api.toggleSpotMarginTrade('1')).toMatchObject({
-        // ...successResponseObjectV3(),
+        ...successResponseObjectV3(),
         // retMsg: '',
-        retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
+        // retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
       });
     });
 
     it('setSpotMarginLeverage()', async () => {
       expect(await api.setSpotMarginLeverage('2')).toMatchObject({
-        // ...successResponseObjectV3(),
+        ...successResponseObjectV3(),
         // retMsg: '',
-        retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
+        // retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
       });
     });
   });

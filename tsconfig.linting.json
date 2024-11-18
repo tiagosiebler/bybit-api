@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "esnext",
+    "rootDir": "../",
+    "allowJs": true
+  },
+  "include": [
+    "src/**/*.*",
+    "test/**/*.*",
+    "examples/**/*.*",
+    ".eslintrc.cjs",
+    "jest.config.ts"
+  ]
+}

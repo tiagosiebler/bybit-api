@@ -1,6 +1,6 @@
 import { API_ERROR_CODE, RestClientV5 } from '../../src';
-import { successResponseObjectV3 } from '../response.util';
 import { getTestProxy } from '../proxy.util';
+import { successResponseObjectV3 } from '../response.util';
 
 describe('Private READ V5 REST API Endpoints', () => {
   const API_KEY = process.env.API_KEY_COM;
@@ -22,6 +22,7 @@ describe('Private READ V5 REST API Endpoints', () => {
 
   const settleCoin = 'USDT';
   const linearSymbol = 'BTCUSDT';
+  const accountType = 'UNIFIED';
 
   describe('misc endpoints', () => {
     it('fetchServerTime()', async () => {
@@ -84,21 +85,19 @@ describe('Private READ V5 REST API Endpoints', () => {
   describe('Account APIs', () => {
     it('getWalletBalance()', async () => {
       expect(
-        await api.getWalletBalance({ accountType: 'CONTRACT' }),
+        await api.getWalletBalance({ accountType: accountType }),
       ).toMatchObject({ ...successResponseObjectV3() });
     });
 
     it('getBorrowHistory()', async () => {
       expect(await api.getBorrowHistory()).toMatchObject({
         ...successResponseObjectV3(),
-        retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
       });
     });
 
     it('getCollateralInfo()', async () => {
       expect(await api.getCollateralInfo()).toMatchObject({
         ...successResponseObjectV3(),
-        retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
       });
     });
 
@@ -127,7 +126,7 @@ describe('Private READ V5 REST API Endpoints', () => {
     it('getTransactionLog()', async () => {
       expect(await api.getTransactionLog()).toMatchObject({
         ...successResponseObjectV3(),
-        retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
+        // retMsg: '',
       });
     });
 
@@ -151,7 +150,7 @@ describe('Private READ V5 REST API Endpoints', () => {
       expect(await api.getDeliveryRecord({ category: 'option' })).toMatchObject(
         {
           ...successResponseObjectV3(),
-          retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
+          // retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
         },
       );
     });
@@ -161,7 +160,7 @@ describe('Private READ V5 REST API Endpoints', () => {
         await api.getSettlementRecords({ category: 'linear' }),
       ).toMatchObject({
         ...successResponseObjectV3(),
-        retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
+        // retCode: API_ERROR_CODE.INCORRECT_API_KEY_PERMISSIONS,
       });
     });
 
@@ -173,13 +172,19 @@ describe('Private READ V5 REST API Endpoints', () => {
 
     it('getAllCoinsBalance()', async () => {
       expect(
-        await api.getAllCoinsBalance({ accountType: 'SPOT' }),
-      ).toMatchObject({ ...successResponseObjectV3() });
+        await api.getAllCoinsBalance({ accountType: accountType }),
+      ).toMatchObject({
+        ...successResponseObjectV3(),
+        // retMsg: '',
+      });
     });
 
     it('getCoinBalance()', async () => {
       expect(
-        await api.getCoinBalance({ accountType: 'SPOT', coin: settleCoin }),
+        await api.getCoinBalance({
+          accountType: accountType,
+          coin: settleCoin,
+        }),
       ).toMatchObject({ ...successResponseObjectV3() });
     });
 
