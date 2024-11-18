@@ -60,7 +60,11 @@ export interface WSOrderbookV5 {
   seq: number;
 }
 
-export type WSOrderbookEventV5 = WSPublicTopicEventV5<string, 'delta' | 'snapshot', WSOrderbookV5[]>;
+export type WSOrderbookEventV5 = WSPublicTopicEventV5<
+  string,
+  'delta' | 'snapshot',
+  WSOrderbookV5[]
+>;
 
 export interface WSPositionV5 {
   category: string;
@@ -103,7 +107,10 @@ export interface WSPositionV5 {
   seq: number;
 }
 
-export type WSPositionEventV5 = WSPrivateTopicEventV5<'position', WSPositionV5[]>;
+export type WSPositionEventV5 = WSPrivateTopicEventV5<
+  'position',
+  WSPositionV5[]
+>;
 
 export interface WSAccountOrderV5 {
   category: CategoryV5;
@@ -126,6 +133,7 @@ export interface WSAccountOrderV5 {
   cumExecQty: string;
   cumExecValue: string;
   cumExecFee: string;
+  closedPnl: string;
   feeCurrency: string;
   timeInForce: OrderTimeInForceV5;
   orderType: OrderTypeV5;
@@ -154,7 +162,10 @@ export interface WSAccountOrderV5 {
   updatedTime: string;
 }
 
-export type WSAccountOrderEventV5 = WSPrivateTopicEventV5<'order', WSAccountOrderV5[]>;
+export type WSAccountOrderEventV5 = WSPrivateTopicEventV5<
+  'order',
+  WSAccountOrderV5[]
+>;
 
 export interface WSExecutionV5 {
   category: CategoryV5;
@@ -189,4 +200,7 @@ export interface WSExecutionV5 {
   marketUnit: string;
 }
 
-export type WSExecutionEventV5 = WSPrivateTopicEventV5<'execution', WSExecutionV5[]>;
+export type WSExecutionEventV5 = WSPrivateTopicEventV5<
+  'execution',
+  WSExecutionV5[]
+>;

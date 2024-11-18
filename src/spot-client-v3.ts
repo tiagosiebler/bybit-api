@@ -17,6 +17,10 @@ import BaseRestClient from './util/BaseRestClient';
 
 /**
  * REST API client for newer Spot V3 APIs.
+ * @deprecated WARNING
+ * These endpoints are being switched off gradually and are expected to be completely turned off by the end of 2024.
+ * They may stop working at any point before then.
+ * Please update your code as soon as possible to use the V5 APIs instead.
  */
 export class SpotClientV3 extends BaseRestClient {
   getClientType() {
@@ -49,7 +53,7 @@ export class SpotClientV3 extends BaseRestClient {
   getMergedOrderBook(
     symbol: string,
     scale?: number,
-    limit?: number
+    limit?: number,
   ): Promise<APIResponseV3<any>> {
     return this.get('/spot/v3/public/quote/depth/merged', {
       symbol,
@@ -69,7 +73,7 @@ export class SpotClientV3 extends BaseRestClient {
     interval: KlineInterval,
     limit?: number,
     startTime?: number,
-    endTime?: number
+    endTime?: number,
   ): Promise<APIResponseV3<any>> {
     return this.get('/spot/v3/public/quote/kline', {
       symbol,
@@ -120,7 +124,7 @@ export class SpotClientV3 extends BaseRestClient {
 
   /** Batch cancel orders */
   cancelOrderBatch(
-    params: SpotCancelOrderBatchRequest
+    params: SpotCancelOrderBatchRequest,
   ): Promise<APIResponseV3<any>> {
     const orderTypes = params.orderTypes
       ? params.orderTypes.join(',')
@@ -145,7 +149,7 @@ export class SpotClientV3 extends BaseRestClient {
     symbol?: string,
     orderId?: string,
     limit?: number,
-    orderCategory?: 0 | 1
+    orderCategory?: 0 | 1,
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate('/spot/v3/private/open-orders', {
       symbol,
@@ -160,7 +164,7 @@ export class SpotClientV3 extends BaseRestClient {
     symbol?: string,
     orderId?: string,
     limit?: number,
-    orderCategory?: 0 | 1
+    orderCategory?: 0 | 1,
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate('/spot/v3/private/history-orders', {
       symbol,
@@ -220,7 +224,7 @@ export class SpotClientV3 extends BaseRestClient {
   purchaseLeveragedToken(
     ltCode: string,
     ltAmount: string,
-    serialNo?: string
+    serialNo?: string,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate('/spot/v3/private/purchase', {
       ltCode,
@@ -233,7 +237,7 @@ export class SpotClientV3 extends BaseRestClient {
   redeemLeveragedToken(
     ltCode: string,
     ltAmount: string,
-    serialNo?: string
+    serialNo?: string,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate('/spot/v3/private/redeem', {
       ltCode,
@@ -244,7 +248,7 @@ export class SpotClientV3 extends BaseRestClient {
 
   /** Get leveraged token purchase/redemption history */
   getLeveragedTokenPRHistory(
-    params?: SpotLeveragedTokenPRHistoryRequest
+    params?: SpotLeveragedTokenPRHistoryRequest,
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate('/spot/v3/private/record', params);
   }
@@ -258,7 +262,7 @@ export class SpotClientV3 extends BaseRestClient {
   /** Borrow margin loan */
   borrowCrossMarginLoan(
     coin: string,
-    qty: string
+    qty: string,
   ): Promise<APIResponseV3<any>> {
     return this.postPrivate('/spot/v3/private/cross-margin-loan', {
       coin,
@@ -276,7 +280,7 @@ export class SpotClientV3 extends BaseRestClient {
 
   /** Query borrowing info */
   getCrossMarginBorrowingInfo(
-    params?: SpotCrossMarginBorrowingInfoRequest
+    params?: SpotCrossMarginBorrowingInfoRequest,
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate('/spot/v3/private/cross-margin-orders', params);
   }
@@ -293,11 +297,11 @@ export class SpotClientV3 extends BaseRestClient {
 
   /** Query repayment history */
   getCrossMarginRepaymentHistory(
-    params?: SpotCrossMarginRepaymentHistoryRequest
+    params?: SpotCrossMarginRepaymentHistoryRequest,
   ): Promise<APIResponseV3<any>> {
     return this.getPrivate(
       '/spot/v3/private/cross-margin-repay-history',
-      params
+      params,
     );
   }
 }

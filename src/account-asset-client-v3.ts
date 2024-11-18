@@ -43,6 +43,10 @@ import BaseRestClient from './util/BaseRestClient';
 
 /**
  * REST API client for Account Asset V3 APIs
+ * @deprecated WARNING
+ * These endpoints are being switched off gradually and are expected to be completely turned off by the end of 2024.
+ * They may stop working at any point before then.
+ * Please update your code as soon as possible to use the V5 APIs instead.
  */
 export class AccountAssetClientV3 extends BaseRestClient {
   getClientType() {
@@ -67,20 +71,20 @@ export class AccountAssetClientV3 extends BaseRestClient {
    */
 
   createInternalTransfer(
-    params: InternalTransferRequestV3
+    params: InternalTransferRequestV3,
   ): Promise<APIResponseWithTime<{ transferId: string }>> {
     return this.postPrivate(
       '/asset/v3/private/transfer/inter-transfer',
-      params
+      params,
     );
   }
 
   getInternalTransfers(
-    params: QueryInternalTransfersRequestV3
+    params: QueryInternalTransfersRequestV3,
   ): Promise<APIResponseWithTime<QueryInternalTransferSResponseV3>> {
     return this.getPrivate(
       '/asset/v3/private/transfer/inter-transfer/list/query',
-      params
+      params,
     );
   }
 
@@ -93,16 +97,16 @@ export class AccountAssetClientV3 extends BaseRestClient {
   }): Promise<APIResponseWithTime<{ transferId: string }>> {
     return this.postPrivate(
       '/asset/v3/private/transfer/sub-member-transfer',
-      params
+      params,
     );
   }
 
   getSubAccountTransfers(
-    params?: SubAccountTransferRequestV3
+    params?: SubAccountTransferRequestV3,
   ): Promise<APIResponseWithTime<SubAccountTransferResponseV3>> {
     return this.getPrivate(
       '/asset/v3/private/transfer/sub-member-transfer/list/query',
-      params
+      params,
     );
   }
 
@@ -120,61 +124,61 @@ export class AccountAssetClientV3 extends BaseRestClient {
   }): Promise<APIResponseWithTime<any>> {
     return this.postPrivate(
       '/asset/v3/private/transfer/transfer-sub-member-save',
-      params
+      params,
     );
   }
 
   createUniversalTransfer(
-    params: UniversalTransferRequestV3
+    params: UniversalTransferRequestV3,
   ): Promise<APIResponseWithTime<UniversalTransferCreateResponse>> {
     return this.postPrivate(
       '/asset/v3/private/transfer/universal-transfer',
-      params
+      params,
     );
   }
 
   getUniversalTransfers(
-    params: UniversalTransferListRequestV3
+    params: UniversalTransferListRequestV3,
   ): Promise<APIResponseWithTime<UniversalTransferListResponseV3>> {
     return this.getPrivate(
       '/asset/v3/private/transfer/universal-transfer/list/query',
-      params
+      params,
     );
   }
 
   getTransferableCoinList(
-    params: TransferCoinListRequestV3
+    params: TransferCoinListRequestV3,
   ): Promise<APIResponseWithTime<{ list: string[] }>> {
     return this.getPrivate(
       '/asset/v3/private/transfer/transfer-coin/list/query',
-      params
+      params,
     );
   }
 
   getAccountCoinBalance(
-    params: SingleAccountCoinBalanceRequestV3
+    params: SingleAccountCoinBalanceRequestV3,
   ): Promise<APIResponseWithTime<AccountCoinBalanceResponseV3>> {
     return this.getPrivate(
       '/asset/v3/private/transfer/account-coin/balance/query',
-      params
+      params,
     );
   }
 
   getAccountCoinBalances(
-    params: AccountCoinBalancesRequestV3
+    params: AccountCoinBalancesRequestV3,
   ): Promise<APIResponseWithTime<AccountCoinBalancesResponseV3>> {
     return this.getPrivate(
       '/asset/v3/private/transfer/account-coins/balance/query',
-      params
+      params,
     );
   }
 
   getAssetInfo(
-    params?: AssetInfoRequestV3
+    params?: AssetInfoRequestV3,
   ): Promise<APIResponseWithTime<AssetInfoResponseV3>> {
     return this.getPrivate(
       '/asset/v3/private/transfer/asset-info/query',
-      params
+      params,
     );
   }
 
@@ -186,49 +190,49 @@ export class AccountAssetClientV3 extends BaseRestClient {
 
   /** Get Deposit Spec */
   getSupportedDepositList(
-    params?: SupportedDepositListRequestV3
+    params?: SupportedDepositListRequestV3,
   ): Promise<APIResponseWithTime<SupportedDepositListResponseV3>> {
     return this.get(
       '/asset/v3/public/deposit/allowed-deposit-list/query',
-      params
+      params,
     );
   }
 
   getDepositRecords(
-    params?: DepositRecordQueryRequestV3
+    params?: DepositRecordQueryRequestV3,
   ): Promise<APIResponseWithTime<DepositRecordQueryResponseV3>> {
     return this.getPrivate('/asset/v3/private/deposit/record/query', params);
   }
 
   getSubDepositRecords(
-    params: SubDepositRecordQueryRequestV3
+    params: SubDepositRecordQueryRequestV3,
   ): Promise<APIResponseWithTime<DepositRecordQueryResponseV3>> {
     return this.getPrivate(
       '/asset/v3/private/deposit/sub-member-record/query',
-      params
+      params,
     );
   }
 
   getWithdrawRecords(
-    params?: WithdrawRecordQueryRequestV3
+    params?: WithdrawRecordQueryRequestV3,
   ): Promise<APIResponseWithTime<WithdrawRecordsQueryResponseV3>> {
     return this.getPrivate('/asset/v3/private/withdraw/record/query', params);
   }
 
   getCoinInformation(
-    coin?: string
+    coin?: string,
   ): Promise<APIResponseWithTime<CoinInfoQueryResponseV3>> {
     return this.getPrivate('/asset/v3/private/coin-info/query', { coin });
   }
 
   submitWithdrawal(
-    params: WithdrawCreateRequestV3
+    params: WithdrawCreateRequestV3,
   ): Promise<APIResponseWithTime<{ id: string }>> {
     return this.postPrivate('/asset/v3/private/withdraw/create', params);
   }
 
   cancelWithdrawal(
-    withdrawalId: number
+    withdrawalId: number,
   ): Promise<APIResponseWithTime<{ status: 1 | 0 }>> {
     return this.postPrivate('/asset/v3/private/withdraw/create', {
       withdrawalId,
@@ -236,28 +240,28 @@ export class AccountAssetClientV3 extends BaseRestClient {
   }
 
   getMasterAccountDepositAddress(
-    params?: QueryDepositAddressRequestV3
+    params?: QueryDepositAddressRequestV3,
   ): Promise<APIResponseWithTime<DepositAddressResponseV3>> {
     return this.getPrivate('/asset/v3/private/deposit/address/query', params);
   }
 
   getSubAccountDepositAddress(
-    params: QuerySubAccountDepositAddressRequestV3
+    params: QuerySubAccountDepositAddressRequestV3,
   ): Promise<APIResponseWithTime<DepositAddressResponseV3>> {
     return this.getPrivate(
       '/asset/v3/private/deposit/sub-member-address/query',
-      params
+      params,
     );
   }
 
   createSubMember(
-    params: CreateSubMemberRequestV3
+    params: CreateSubMemberRequestV3,
   ): Promise<APIResponseWithTime<CreateSubMemberResponseV3>> {
     return this.postPrivate('/user/v3/private/create-sub-member', params);
   }
 
   createSubAPIKey(
-    params: CreateSubAPIKeyRequestV3
+    params: CreateSubAPIKeyRequestV3,
   ): Promise<APIResponseWithTime<CreateSubAPIKeyResponseV3>> {
     return this.postPrivate('/user/v3/private/create-sub-api', params);
   }
@@ -274,7 +278,7 @@ export class AccountAssetClientV3 extends BaseRestClient {
    */
   freezeSubMember(
     subuid: number,
-    frozenStatus: 0 | 1
+    frozenStatus: 0 | 1,
   ): Promise<APIResponseWithTime<{}>> {
     return this.postPrivate('/user/v3/private/frozen-sub-member', {
       subuid,
@@ -287,13 +291,13 @@ export class AccountAssetClientV3 extends BaseRestClient {
   }
 
   modifyMasterAPIKey(
-    params: ModifyAPIKeyRequestV3
+    params: ModifyAPIKeyRequestV3,
   ): Promise<APIResponseWithTime<APIKeyInfoV3>> {
     return this.postPrivate('/user/v3/private/update-api', params);
   }
 
   modifySubAPIKey(
-    params: ModifyAPIKeyRequestV3
+    params: ModifyAPIKeyRequestV3,
   ): Promise<APIResponseWithTime<APIKeyInfoV3>> {
     return this.postPrivate('/user/v3/private/update-sub-api', params);
   }
