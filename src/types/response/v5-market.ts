@@ -293,6 +293,7 @@ export interface RiskLimitV5 {
   section: any;
   isLowestRisk: 0 | 1;
   maxLeverage: string;
+  mmDeduction: string;
 }
 
 /** @deprecated use DeliveryPriceV5 instead */
