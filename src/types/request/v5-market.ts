@@ -130,5 +130,8 @@ export interface GetLongShortRatioParamsV5 {
   category: 'linear' | 'inverse';
   symbol: string;
   period: OpenInterestIntervalV5;
+  startTime?: string;
+  endTime?: string;
   limit?: number;
+  cursor?: string;
 }
