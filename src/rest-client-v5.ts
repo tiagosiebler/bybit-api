@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   APIResponseV3,
@@ -242,7 +243,7 @@ export class RestClientV5 extends BaseRestClient {
     console.log(result);
 
     console.log(
-      `Your approximate latency to exchange server: 
+      `Your approximate latency to exchange server:
       One way: ${estimatedOneWayLatency}ms.
       Round trip: ${roundTripTime}ms.
       `,

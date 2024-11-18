@@ -14,6 +14,10 @@ import BaseRestClient from './util/BaseRestClient';
 
 /**
  * REST API client for USDC Perpetual APIs
+ * @deprecated WARNING
+ * These endpoints are being switched off gradually and are expected to be completely turned off by the end of 2024.
+ * They may stop working at any point before then.
+ * Please update your code as soon as possible to use the V5 APIs instead.
  */
 export class CopyTradingClient extends BaseRestClient {
   getClientType() {
@@ -82,7 +86,10 @@ export class CopyTradingClient extends BaseRestClient {
     );
   }
 
-  /** Close Order.  This endpoint's rate_limit will decrease by 10 per request; ie, one request to this endpoint consumes 10 from the limit allowed per minute. */
+  /** Close Order.
+   * This endpoint's rate_limit will decrease by 10 per request;
+   * ie, one request to this endpoint consumes 10 from the limit allowed per minute.
+   */
   closeOrder(
     params: CopyTradingCloseOrderRequest,
   ): Promise<APIResponseV3<any>> {
