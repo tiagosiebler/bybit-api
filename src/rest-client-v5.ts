@@ -510,7 +510,7 @@ export class RestClientV5 extends BaseRestClient {
 
   getLongShortRatio(
     params: GetLongShortRatioParamsV5,
-  ): Promise<APIResponseV3WithTime<{ list: LongShortRatioV5[] }>> {
+  ): Promise<APIResponseV3WithTime<CursorListV5<LongShortRatioV5[]>>> {
     return this.get('/v5/market/account-ratio', params);
   }
 
