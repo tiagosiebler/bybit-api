@@ -17,6 +17,7 @@ import {
   RESTClient,
   WSClientConfigurableOptions,
   WebsocketClientOptions,
+  WebsocketTopicSubscriptionConfirmationEvent,
   WsKey,
   WsTopic,
 } from './types';
@@ -29,6 +30,7 @@ import {
   WS_AUTH_ON_CONNECT_KEYS,
   WS_KEY_MAP,
   WsConnectionStateEnum,
+  WsStore,
   getMaxTopicsPerSubscribeEvent,
   getWsKeyForTopic,
   getWsUrl,
@@ -41,8 +43,6 @@ import {
   serializeParams,
 } from './util';
 import { signMessage } from './util/node-support';
-import { WsStore } from './util/WsStore';
-import { WebsocketTopicSubscriptionConfirmationEvent } from './types/websockets/ws-confirmations';
 
 const loggerCategory = { category: 'bybit-ws' };
 
@@ -104,7 +104,7 @@ export class WebsocketClient extends EventEmitter {
 
   private options: WebsocketClientOptions;
 
-  private wsStore: WsStore;
+  private wsStore: WsStore<WsKey, string>;
 
   private pendingTopicsSubscriptions: TopicsPendingSubscriptions[] = [];
 
@@ -139,7 +139,7 @@ export class WebsocketClient extends EventEmitter {
   }
 
   /** Get the WsStore that tracks websockets & topics */
-  public getWsStore(): WsStore {
+  public getWsStore(): WsStore<WsKey, string> {
     return this.wsStore;
   }
 
