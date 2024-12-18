@@ -7,7 +7,7 @@ import {
   MarginTradingV5,
   OptionTypeV5,
   OrderSideV5,
-} from '../v5-shared';
+} from '../shared-v5';
 
 /**
  * OHLCVT candle used by v5 APIs

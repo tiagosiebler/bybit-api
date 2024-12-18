@@ -20,7 +20,6 @@ import {
   WsKey,
   WsTopic,
 } from './types';
-import { WebsocketTopicSubscriptionConfirmationEvent } from './types/ws-events/topic-subscription-confirmation';
 import { UnifiedMarginClient } from './unified-margin-client';
 import { USDCOptionClient } from './usdc-option-client';
 import { USDCPerpetualClient } from './usdc-perpetual-client';
@@ -42,7 +41,8 @@ import {
   serializeParams,
 } from './util';
 import { signMessage } from './util/node-support';
-import WsStore from './util/WsStore';
+import { WsStore } from './util/WsStore';
+import { WebsocketTopicSubscriptionConfirmationEvent } from './types/websockets/ws-confirmations';
 
 const loggerCategory = { category: 'bybit-ws' };
 

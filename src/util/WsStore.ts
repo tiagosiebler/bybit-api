@@ -38,7 +38,7 @@ interface WsStoredState {
   subscribedTopics: WsTopicList;
 }
 
-export default class WsStore {
+export class WsStore {
   private wsState: Record<string, WsStoredState>;
 
   private logger: typeof DefaultLogger;

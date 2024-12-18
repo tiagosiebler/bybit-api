@@ -17,8 +17,8 @@ import {
   StopOrderTypeV5,
   TPSLModeV5,
   TradeModeV5,
-} from './v5-shared';
-import { WsKey } from './websockets';
+} from '../shared-v5';
+import { WsKey } from '.';
 
 export interface WSPublicTopicEventV5<TTopic extends string, TType, TData> {
   id?: string;

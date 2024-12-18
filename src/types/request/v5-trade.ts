@@ -8,7 +8,7 @@ import {
   OrderTriggerByV5,
   OrderTypeV5,
   PositionIdx,
-} from '../v5-shared';
+} from '../shared-v5';
 
 export interface OrderParamsV5 {
   category: CategoryV5;

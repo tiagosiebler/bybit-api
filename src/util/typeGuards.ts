@@ -7,7 +7,7 @@ import {
   WSExecutionEventV5,
   WSOrderbookEventV5,
   WSPositionEventV5,
-} from '../types/websocket.events';
+} from '../types/websockets/ws-events';
 
 /**
  * Type guard to detect a V5 orderbook event (delta & snapshots)

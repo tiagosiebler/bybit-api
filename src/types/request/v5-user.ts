@@ -1,4 +1,4 @@
-import { PermissionsV5 } from '../v5-shared';
+import { PermissionsV5 } from '../shared-v5';
 
 export interface CreateSubMemberParamsV5 {
   username: string;

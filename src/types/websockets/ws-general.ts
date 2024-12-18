@@ -1,4 +1,4 @@
-import { RestClientOptions, WS_KEY_MAP } from '../util';
+import { RestClientOptions, WS_KEY_MAP } from '../../util';
 
 /** For spot markets, spotV3 is recommended */
 export type APIMarket =

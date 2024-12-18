@@ -4,7 +4,7 @@ import {
   CategoryV5,
   TransactionTypeV5,
   UnifiedUpdateStatusV5,
-} from '../v5-shared';
+} from '../shared-v5';
 
 export interface WalletBalanceV5Coin {
   coin: string;

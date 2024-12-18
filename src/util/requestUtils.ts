@@ -1,7 +1,9 @@
 import { AxiosResponse } from 'axios';
 import { APIRateLimit } from '../types';
-import { WebsocketSucceededTopicSubscriptionConfirmationEvent } from '../types/ws-events/succeeded-topic-subscription-confirmation';
-import { WebsocketTopicSubscriptionConfirmationEvent } from '../types/ws-events/topic-subscription-confirmation';
+import {
+  WebsocketSucceededTopicSubscriptionConfirmationEvent,
+  WebsocketTopicSubscriptionConfirmationEvent,
+} from '../types/websockets/ws-confirmations';
 
 export interface RestClientOptions {
   /** Your API key */

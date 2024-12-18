@@ -9,7 +9,7 @@ import {
   StopOrderTypeV5,
   TPSLModeV5,
   TradeModeV5,
-} from '../v5-shared';
+} from '../shared-v5';
 
 export interface PositionV5 {
   positionIdx: PositionIdx;

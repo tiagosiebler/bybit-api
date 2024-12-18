@@ -1,5 +1,5 @@
 import { KlineIntervalV3 } from '../shared';
-import { CategoryV5, InstrumentStatusV5, OptionTypeV5 } from '../v5-shared';
+import { CategoryV5, InstrumentStatusV5, OptionTypeV5 } from '../shared-v5';
 
 export interface GetKlineParamsV5 {
   category: 'spot' | 'linear' | 'inverse';
