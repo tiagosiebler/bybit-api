@@ -997,19 +997,18 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
- * Query the available amount to transfer of a specific coin in the Unified wallet.
- * 
- * @param coinName Coin name, uppercase only
- */
-  getTransferableAmount(params: {
-    coinName: string;
-  }): Promise<APIResponseV3WithTime<{
-    availableWithdrawal: string;
-  }>> {
+   * Query the available amount to transfer of a specific coin in the Unified wallet.
+   *
+   * @param coinName Coin name, uppercase only
+   */
+  getTransferableAmount(params: { coinName: string }): Promise<
+    APIResponseV3WithTime<{
+      availableWithdrawal: string;
+    }>
+  > {
     return this.getPrivate('/v5/account/withdrawal', params);
   }
 
-  /**
   /**
    * Upgrade to unified account.
    *
@@ -1608,11 +1607,11 @@ export class RestClientV5 extends BaseRestClient {
   getConvertStatus(params: {
     quoteTxId?: string;
     accountType:
-    | 'eb_convert_funding'
-    | 'eb_convert_uta'
-    | 'eb_convert_spot'
-    | 'eb_convert_contract'
-    | 'eb_convert_inverse';
+      | 'eb_convert_funding'
+      | 'eb_convert_uta'
+      | 'eb_convert_spot'
+      | 'eb_convert_contract'
+      | 'eb_convert_inverse';
   }): Promise<
     APIResponseV3WithTime<{
       result: ConvertStatusV5;
@@ -1804,24 +1803,21 @@ export class RestClientV5 extends BaseRestClient {
    */
 
   /**
-* Get Affiliate User List.
-* To use this endpoint, you should have an affiliate account and only tick "affiliate" permission while creating the API key.
-* 
-* TIP:
-* - Use master UID only
-* - The api key can only have "Affiliate" permission
-*/
-  getAffiliateUserList(params?: {
-    size?: number;
-    cursor?: string;
-  }): Promise<APIResponseV3WithTime<{
-    list: AffiliateUserListItemV5[];
-    nextPageCursor: string;
-  }>> {
+   * Get Affiliate User List.
+   * To use this endpoint, you should have an affiliate account and only tick "affiliate" permission while creating the API key.
+   *
+   * TIP:
+   * - Use master UID only
+   * - The api key can only have "Affiliate" permission
+   */
+  getAffiliateUserList(params?: { size?: number; cursor?: string }): Promise<
+    APIResponseV3WithTime<{
+      list: AffiliateUserListItemV5[];
+      nextPageCursor: string;
+    }>
+  > {
     return this.getPrivate('/v5/affiliate/aff-user-list', params);
   }
-
-
 
   /**
    * Get Affiliate User Info.
