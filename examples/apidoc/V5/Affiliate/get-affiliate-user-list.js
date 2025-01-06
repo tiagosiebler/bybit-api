@@ -1,3 +1,5 @@
+// https://api.bybit.com/v5/broker/account-info
+
 const { RestClientV5 } = require('bybit-api');
 
 const client = new RestClientV5({
@@ -7,7 +9,7 @@ const client = new RestClientV5({
 });
 
 client
-  .getAffiliateUserInfo({ uid: '1513500' })
+  .getAffiliateUserList()
   .then((response) => {
     console.log(response);
   })
