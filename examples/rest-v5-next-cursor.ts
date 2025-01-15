@@ -10,7 +10,7 @@ const client = new RestClientV5({
 });
 
 async function getAllUniversalTransfers() {
-  let allTransfers: UniversalTransferRecordV5[] = [];
+  const allTransfers: UniversalTransferRecordV5[] = [];
   let nextCursor = '';
   let pages = 0;
 
@@ -23,7 +23,7 @@ async function getAllUniversalTransfers() {
     });
 
     if (response.result.list && response.result.list.length > 0) {
-      allTransfers = [...allTransfers, ...response.result.list];
+      allTransfers.push(...response.result.list);
     }
 
     nextCursor = response.result.nextPageCursor;
