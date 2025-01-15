@@ -172,7 +172,10 @@ describe('Private READ V5 REST API Endpoints', () => {
 
     it('getAllCoinsBalance()', async () => {
       expect(
-        await api.getAllCoinsBalance({ accountType: accountType }),
+        await api.getAllCoinsBalance({
+          accountType: accountType,
+          coin: settleCoin,
+        }),
       ).toMatchObject({
         ...successResponseObjectV3(),
         // retMsg: '',
