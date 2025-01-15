@@ -75,6 +75,10 @@ export interface LinearInverseInstrumentInfoV5 {
   copyTrading: CopyTradingV5;
   upperFundingRate: string;
   lowerFundingRate: string;
+  riskParameters: {
+    priceLimitRatioX: string;
+    priceLimitRatioY: string;
+  };
   isPreListing: boolean;
   preListingInfo: {
     curAuctionPhase: string;
@@ -97,7 +101,7 @@ export interface OptionInstrumentInfoV5 {
   status: InstrumentStatusV5;
   baseCoin: string;
   quoteCoin: string;
-  settleCoin: boolean;
+  settleCoin: string;
   launchTime: string;
   deliveryTime: string;
   deliveryFeeRate: string;
@@ -120,6 +124,7 @@ export interface SpotInstrumentInfoV5 {
   innovation: '0' | '1';
   status: InstrumentStatusV5;
   marginTrading: MarginTradingV5;
+  stTag: '0' | '1';
   lotSizeFilter: {
     basePrecision: string;
     quotePrecision: string;
@@ -132,8 +137,8 @@ export interface SpotInstrumentInfoV5 {
     tickSize: string;
   };
   riskParameters: {
-    limitParameter: string;
-    marketParameter: string;
+    priceLimitRatioX: string;
+    priceLimitRatioY: string;
   };
 }
 
