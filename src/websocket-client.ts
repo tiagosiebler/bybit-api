@@ -717,6 +717,7 @@ export class WebsocketClient extends BaseWebsocketClient<WsKey> {
             results.push({
               eventType: 'exception',
               event: parsed,
+              isWSAPIResponse: true,
             });
             return results;
           }
@@ -743,6 +744,7 @@ export class WebsocketClient extends BaseWebsocketClient<WsKey> {
           results.push({
             eventType: 'response',
             event: parsed,
+            isWSAPIResponse: true,
           });
 
           return results;

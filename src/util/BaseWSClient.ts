@@ -57,6 +57,7 @@ interface WSClientEventMap<WsKey extends string> {
 export interface EmittableEvent<TEvent = any> {
   eventType: 'response' | 'update' | 'exception' | 'authenticated';
   event: TEvent;
+  isWSAPIResponse?: boolean;
 }
 
 // Type safety for on and emit handlers: https://stackoverflow.com/a/61609010/880837
