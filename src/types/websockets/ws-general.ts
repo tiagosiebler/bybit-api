@@ -82,10 +82,23 @@ export type WsTopic = WsPublicTopics | WsPrivateTopic;
 
 /** This is used to differentiate between each of the available websocket streams (as bybit has multiple websockets) */
 export type WsKey = (typeof WS_KEY_MAP)[keyof typeof WS_KEY_MAP];
+export type WsMarket = 'all';
 
 export interface WSClientConfigurableOptions {
+  /** Your API key */
   key?: string;
+
+  /** Your API secret */
   secret?: string;
+
+  /**
+   * Set to `true` to connect to Bybit's testnet environment.
+   *
+   * Notes:
+   *
+   * - If demo trading, `testnet` should be set to false!
+   * - If testing a strategy, use demo trading instead. Testnet market data is very different from real market conditions.
+   */
   testnet?: boolean;
 
   /**
@@ -96,28 +109,54 @@ export interface WSClientConfigurableOptions {
   demoTrading?: boolean;
 
   /**
-   * The API group this client should connect to.
+   * The API group this client should connect to. The V5 market is currently used by default.
    *
    * For the V3 APIs use `v3` as the market (spot/unified margin/usdc/account asset/copy trading)
    */
-  market: APIMarket;
+  market?: APIMarket;
 
-  pongTimeout?: number;
-  pingInterval?: number;
-  reconnectTimeout?: number;
-  /** Override the recv window for authenticating over websockets (default: 5000 ms) */
+  /** Define a recv window when preparing a private websocket signature. This is in milliseconds, so 5000 == 5 seconds */
   recvWindow?: number;
+
+  /** How often to check if the connection is alive */
+  pingInterval?: number;
+
+  /** How long to wait for a pong (heartbeat reply) before assuming the connection is dead */
+  pongTimeout?: number;
+
+  /** Delay in milliseconds before respawning the connection */
+  reconnectTimeout?: number;
+
   restOptions?: RestClientOptions;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   requestOptions?: any;
   wsUrl?: string;
-  /** If true, fetch server time before trying to authenticate (disabled by default) */
-  fetchTimeOffsetBeforeAuth?: boolean;
+
+  /**
+   * Allows you to provide a custom "signMessage" function, e.g. to use node's much faster createHmac method
+   *
+   * Look in the examples folder for a demonstration on using node's createHmac instead.
+   */
+  customSignMessageFn?: (message: string, secret: string) => Promise<string>;
+
+  /**
+   * If you authenticated the WS API before, automatically try to
+   * re-authenticate the WS API if you're disconnected/reconnected for any reason.
+   */
+  reauthWSAPIOnReconnect?: boolean;
 }
 
+/**
+ * WS configuration that's always defined, regardless of user configuration
+ * (usually comes from defaults if there's no user-provided values)
+ */
 export interface WebsocketClientOptions extends WSClientConfigurableOptions {
   market: APIMarket;
   pongTimeout: number;
   pingInterval: number;
   reconnectTimeout: number;
+  recvWindow: number;
+  authPrivateConnectionsOnConnect: boolean;
+  authPrivateRequests: boolean;
+  reauthWSAPIOnReconnect: boolean;
 }

@@ -32,8 +32,9 @@ export function isDeepObjectMatch(object1: unknown, object2: unknown): boolean {
   return true;
 }
 
-const DEFERRED_PROMISE_REF = {
+export const DEFERRED_PROMISE_REF = {
   CONNECTION_IN_PROGRESS: 'CONNECTION_IN_PROGRESS',
+  AUTHENTICATION_IN_PROGRESS: 'AUTHENTICATION_IN_PROGRESS',
 } as const;
 
 type DeferredPromiseRef =
@@ -266,6 +267,15 @@ export class WsStore<
     );
   }
 
+  getAuthenticationInProgressPromise(
+    wsKey: WsKey,
+  ): DeferredPromise<WSConnectedResult & { event: any }> | undefined {
+    return this.getDeferredPromise(
+      wsKey,
+      DEFERRED_PROMISE_REF.AUTHENTICATION_IN_PROGRESS,
+    );
+  }
+
   /**
    * Create a deferred promise designed to track a connection attempt in progress.
    *
@@ -282,11 +292,29 @@ export class WsStore<
     );
   }
 
+  createAuthenticationInProgressPromise(
+    wsKey: WsKey,
+    throwIfExists: boolean,
+  ): DeferredPromise<WSConnectedResult & { event: any }> {
+    return this.createDeferredPromise(
+      wsKey,
+      DEFERRED_PROMISE_REF.AUTHENTICATION_IN_PROGRESS,
+      throwIfExists,
+    );
+  }
+
   /** Remove promise designed to track a connection attempt in progress */
   removeConnectingInProgressPromise(wsKey: WsKey): void {
     return this.removeDeferredPromise(
       wsKey,
       DEFERRED_PROMISE_REF.CONNECTION_IN_PROGRESS,
+    );
+  }
+
+  removeAuthenticationInProgressPromise(wsKey: WsKey): void {
+    return this.removeDeferredPromise(
+      wsKey,
+      DEFERRED_PROMISE_REF.AUTHENTICATION_IN_PROGRESS,
     );
   }
 

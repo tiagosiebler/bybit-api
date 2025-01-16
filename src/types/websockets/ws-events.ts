@@ -1,3 +1,5 @@
+import WebSocket from 'isomorphic-ws';
+
 import {
   CategoryV5,
   ExecTypeV5,
@@ -18,7 +20,23 @@ import {
   TPSLModeV5,
   TradeModeV5,
 } from '../shared-v5';
-import { WsKey } from '.';
+
+import { WsKey } from './ws-general';
+
+export interface MessageEventLike {
+  target: WebSocket;
+  type: 'message';
+  data: string;
+}
+
+export function isMessageEvent(msg: unknown): msg is MessageEventLike {
+  if (typeof msg !== 'object' || !msg) {
+    return false;
+  }
+
+  const message = msg as MessageEventLike;
+  return message['type'] === 'message' && typeof message['data'] === 'string';
+}
 
 export interface WSPublicTopicEventV5<TTopic extends string, TType, TData> {
   id?: string;

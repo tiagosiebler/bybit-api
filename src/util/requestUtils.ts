@@ -4,6 +4,7 @@ import {
   WebsocketSucceededTopicSubscriptionConfirmationEvent,
   WebsocketTopicSubscriptionConfirmationEvent,
 } from '../types/websockets/ws-confirmations';
+import { WSAPIResponse, WS_API_Operations } from '../types/websockets/ws-api';
 
 export interface RestClientOptions {
   /** Your API key */
@@ -197,6 +198,20 @@ export function isTopicSubscriptionConfirmation(
   }
 
   return true;
+}
+
+export function isWSAPIResponse(
+  msg: unknown,
+): msg is Omit<WSAPIResponse, 'wsKey'> {
+  if (typeof msg !== 'object' || !msg) {
+    return false;
+  }
+
+  if (typeof msg['op'] !== 'string') {
+    return false;
+  }
+
+  return (WS_API_Operations as string[]).includes(msg['op']);
 }
 
 export function isTopicSubscriptionSuccess(
