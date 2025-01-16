@@ -78,6 +78,14 @@ export interface SubAccountAllApiKeysResultV5 {
   nextPageCursor: string;
 }
 
+export interface AffiliateUserListItemV5 {
+  userId: string;
+  registerTime: string;
+  source: string;
+  remarks: string;
+  isKyc: boolean;
+}
+
 export interface AffiliateUserInfoV5 {
   uid: string;
   vipLevel: string;
