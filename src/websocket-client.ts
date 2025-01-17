@@ -696,6 +696,7 @@ export class WebsocketClient extends BaseWebsocketClient<WsKey> {
 
           // WS API Exception
           if (isError) {
+            console.log('wsAPI error: ', parsed);
             try {
               this.getWsStore().rejectDeferredPromise(
                 wsKey,
@@ -908,19 +909,16 @@ export class WebsocketClient extends BaseWebsocketClient<WsKey> {
 
   // This overload allows the caller to omit the 3rd param, if it isn't required (e.g. for the login call)
   async sendWSAPIRequest<
-    TWSKey extends keyof WsAPIWsKeyTopicMap,
+    TWSKey extends keyof WsAPIWsKeyTopicMap = keyof WsAPIWsKeyTopicMap,
     TWSOperation extends
       WsAPIWsKeyTopicMap[TWSKey] = WsAPIWsKeyTopicMap[TWSKey],
     TWSParams extends
       WsAPITopicRequestParamMap[TWSOperation] = WsAPITopicRequestParamMap[TWSOperation],
-    TWSAPIResponse extends
-      | WsAPIOperationResponseMap[TWSOperation]
-      | object = WsAPIOperationResponseMap[TWSOperation],
   >(
     wsKey: TWSKey,
     operation: TWSOperation,
     ...params: TWSParams extends undefined ? [] : [TWSParams]
-  ): Promise<TWSAPIResponse>;
+  ): Promise<WsAPIOperationResponseMap[TWSOperation]>;
 
   async sendWSAPIRequest<
     TWSKey extends keyof WsAPIWsKeyTopicMap = keyof WsAPIWsKeyTopicMap,
@@ -929,13 +927,12 @@ export class WebsocketClient extends BaseWebsocketClient<WsKey> {
     TWSParams extends
       WsAPITopicRequestParamMap[TWSOperation] = WsAPITopicRequestParamMap[TWSOperation],
     TWSAPIResponse extends
-      | WsAPIOperationResponseMap[TWSOperation]
-      | object = WsAPIOperationResponseMap[TWSOperation],
+      WsAPIOperationResponseMap[TWSOperation] = WsAPIOperationResponseMap[TWSOperation],
   >(
     wsKey: WsKey = WS_KEY_MAP.v5PrivateTrade,
     operation: TWSOperation,
     params: TWSParams,
-  ): Promise<any> {
+  ): Promise<WsAPIOperationResponseMap[TWSOperation]> {
     this.logger.trace(`sendWSAPIRequest(): assert "${wsKey}" is connected`);
     await this.assertIsConnected(wsKey);
     this.logger.trace('sendWSAPIRequest()->assertIsConnected() ok');

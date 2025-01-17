@@ -4,6 +4,7 @@ import {
   CancelOrderParamsV5,
   OrderParamsV5,
 } from '../request';
+import { OrderResultV5 } from '../response';
 import { WsKey } from './ws-general';
 
 export type WSAPIOperation = 'order.create' | 'order.amend' | 'order.cancel';
@@ -58,9 +59,6 @@ export interface WsAPITopicRequestParamMap {
   // ping: undefined;
 }
 
-export type WsAPITopicRequestParams =
-  WsAPITopicRequestParamMap[keyof WsAPITopicRequestParamMap];
-
 export interface WSAPIResponse<
   TResponseData extends object = object,
   TOperation extends WSAPIOperation = WSAPIOperation,
@@ -71,7 +69,7 @@ export interface WSAPIResponse<
   retCode: 0 | number;
   retMsg: 'OK' | string;
   op: TOperation;
-  data: [TResponseData];
+  data: TResponseData;
   header?: {
     'X-Bapi-Limit': string;
     'X-Bapi-Limit-Status': string;
@@ -88,12 +86,10 @@ export interface WSAPIResponse<
 //   string: object;
 // }
 
-export interface WsAPIOperationResponseMap<
-  TResponseType extends object = object,
-> {
-  'order.create': WSAPIResponse<TResponseType, 'order.cancel'>;
-  'order.amend': WSAPIResponse<TResponseType, 'order.amend'>;
-  'order.cancel': WSAPIResponse<TResponseType, 'order.cancel'>;
+export interface WsAPIOperationResponseMap {
+  'order.create': WSAPIResponse<OrderResultV5, 'order.create'>;
+  'order.amend': WSAPIResponse<OrderResultV5, 'order.amend'>;
+  'order.cancel': WSAPIResponse<OrderResultV5, 'order.cancel'>;
   ping: {
     retCode: 0 | number;
     retMsg: 'OK' | string;
