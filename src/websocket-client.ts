@@ -17,6 +17,7 @@ import {
   WS_KEY_MAP,
   WsTopicRequest,
   getMaxTopicsPerSubscribeEvent,
+  getNormalisedTopicRequests,
   getPromiseRefForWSAPIRequest,
   getWsKeyForTopic,
   getWsUrl,
@@ -28,7 +29,11 @@ import {
   neverGuard,
 } from './util';
 import { signMessage } from './util/node-support';
-import { BaseWebsocketClient, EmittableEvent } from './util/BaseWSClient';
+import {
+  BaseWebsocketClient,
+  EmittableEvent,
+  MidflightWsRequestEvent,
+} from './util/BaseWSClient';
 import {
   WSAPIRequest,
   WsAPIOperationResponseMap,
@@ -41,7 +46,10 @@ import {
 const WS_LOGGER_CATEGORY = { category: 'bybit-ws' };
 
 // export class WebsocketClient extends EventEmitter {
-export class WebsocketClient extends BaseWebsocketClient<WsKey> {
+export class WebsocketClient extends BaseWebsocketClient<
+  WsKey,
+  WsRequestOperationBybit<WsTopic>
+> {
   /**
    * Request connection of all dependent (public & private) websockets, instead of waiting for automatic connection by library
    */
@@ -72,7 +80,18 @@ export class WebsocketClient extends BaseWebsocketClient<WsKey> {
     }
   }
 
-  public connectPublic(): Promise<WebSocket | undefined>[] {
+  /**
+   * Ensures the WS API connection is active and ready.
+   *
+   * You do not need to call this, but if you call this before making any WS API requests,
+   * it can accelerate the first request (by preparing the connection in advance).
+   */
+  public connectWSAPI(): Promise<unknown> {
+    /** This call automatically ensures the connection is active AND authenticated before resolving */
+    return this.assertIsAuthenticated(WS_KEY_MAP.v5PrivateTrade);
+  }
+
+  public connectPublic(): Promise<WSConnectedResult | undefined>[] {
     switch (this.options.market) {
       case 'v5':
       default: {
@@ -153,8 +172,133 @@ export class WebsocketClient extends BaseWebsocketClient<WsKey> {
   }
 
   /**
+   *
+   * Subscribe to V5 topics & track/persist them.
+   * @param wsTopics - topic or list of topics
+   * @param category - the API category this topic is for (e.g. "linear"). The value is only important when connecting to public topics and will be ignored for private topics.
+   * @param isPrivateTopic - optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
+   */
+  public subscribeV5(
+    wsTopics: WsTopic[] | WsTopic,
+    category: CategoryV5,
+    isPrivateTopic?: boolean,
+  ): Promise<unknown>[] {
+    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
+
+    const perWsKeyTopics: { [key in WsKey]?: WsTopicRequest<WsTopic>[] } = {};
+
+    // Sort into per-WsKey batches, in case there is a mix of topics here
+    for (const topic of topics) {
+      const derivedWsKey = getWsKeyForTopic(
+        this.options.market,
+        topic,
+        isPrivateTopic,
+        category,
+      );
+
+      const wsRequest: WsTopicRequest<WsTopic> = {
+        topic: topic,
+        category: category,
+      };
+
+      if (
+        !perWsKeyTopics[derivedWsKey] ||
+        !Array.isArray(perWsKeyTopics[derivedWsKey])
+      ) {
+        perWsKeyTopics[derivedWsKey] = [];
+      }
+
+      perWsKeyTopics[derivedWsKey].push(wsRequest);
+    }
+
+    const promises: Promise<unknown>[] = [];
+
+    // Batch sub topics per ws key
+    for (const wsKey in perWsKeyTopics) {
+      const wsKeyTopicRequests = perWsKeyTopics[wsKey as WsKey];
+      if (wsKeyTopicRequests?.length) {
+        const requestPromise = this.subscribeTopicsForWsKey(
+          wsKeyTopicRequests,
+          wsKey as WsKey,
+        );
+
+        if (Array.isArray(requestPromise)) {
+          promises.push(...requestPromise);
+        } else {
+          promises.push(requestPromise);
+        }
+      }
+    }
+
+    // Return promise to resolve midflight WS request (only works if already connected before request)
+    return promises;
+  }
+
+  /**
+   * Unsubscribe from V5 topics & remove them from memory. They won't be re-subscribed to if the connection reconnects.
+   * @param wsTopics - topic or list of topics
+   * @param category - the API category this topic is for (e.g. "linear"). The value is only important when connecting to public topics and will be ignored for private topics.
+   * @param isPrivateTopic - optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
+   */
+  public unsubscribeV5(
+    wsTopics: WsTopic[] | WsTopic,
+    category: CategoryV5,
+    isPrivateTopic?: boolean,
+  ): Promise<unknown>[] {
+    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
+
+    const perWsKeyTopics: { [key in WsKey]?: WsTopicRequest<WsTopic>[] } = {};
+
+    // Sort into per-WsKey batches, in case there is a mix of topics here
+    for (const topic of topics) {
+      const derivedWsKey = getWsKeyForTopic(
+        this.options.market,
+        topic,
+        isPrivateTopic,
+        category,
+      );
+
+      const wsRequest: WsTopicRequest<WsTopic> = {
+        topic: topic,
+        category: category,
+      };
+
+      if (
+        !perWsKeyTopics[derivedWsKey] ||
+        !Array.isArray(perWsKeyTopics[derivedWsKey])
+      ) {
+        perWsKeyTopics[derivedWsKey] = [];
+      }
+
+      perWsKeyTopics[derivedWsKey].push(wsRequest);
+    }
+
+    const promises: Promise<unknown>[] = [];
+
+    // Batch sub topics per ws key
+    for (const wsKey in perWsKeyTopics) {
+      const wsKeyTopicRequests = perWsKeyTopics[wsKey as WsKey];
+      if (wsKeyTopicRequests?.length) {
+        const requestPromise = this.unsubscribeTopicsForWsKey(
+          wsKeyTopicRequests,
+          wsKey as WsKey,
+        );
+
+        if (Array.isArray(requestPromise)) {
+          promises.push(...requestPromise);
+        } else {
+          promises.push(requestPromise);
+        }
+      }
+    }
+
+    // Return promise to resolve midflight WS request (only works if already connected before request)
+    return promises;
+  }
+
+  /**
    * Request subscription to one or more topics. Pass topics as either an array of strings, or array of objects (if the topic has parameters).
-   * Objects should be formatted as {topic: string, params: object}.
+   * Objects should be formatted as {topic: string, params: object, category: CategoryV5}.
    *
    * - Subscriptions are automatically routed to the correct websocket connection.
    * - Authentication/connection is automatic.
@@ -166,15 +310,42 @@ export class WebsocketClient extends BaseWebsocketClient<WsKey> {
     requests:
       | (WsTopicRequest<WsTopic> | WsTopic)
       | (WsTopicRequest<WsTopic> | WsTopic)[],
-    wsKey: WsKey,
+    wsKey?: WsKey,
   ) {
-    if (!Array.isArray(requests)) {
-      this.subscribeTopicsForWsKey([requests], wsKey);
-      return;
+    const topicRequests = Array.isArray(requests) ? requests : [requests];
+    const normalisedTopicRequests = getNormalisedTopicRequests(topicRequests);
+
+    const isPrivateTopic = undefined;
+
+    const perWsKeyTopics: { [key in WsKey]?: WsTopicRequest<WsTopic>[] } = {};
+
+    // Sort into per wsKey arrays, in case topics are mixed together for different wsKeys
+    for (const topicRequest of normalisedTopicRequests) {
+      const derivedWsKey =
+        wsKey ||
+        getWsKeyForTopic(
+          this.options.market,
+          topicRequest.topic,
+          isPrivateTopic,
+          topicRequest.category,
+        );
+
+      if (
+        !perWsKeyTopics[derivedWsKey] ||
+        !Array.isArray(perWsKeyTopics[derivedWsKey])
+      ) {
+        perWsKeyTopics[derivedWsKey] = [];
+      }
+
+      perWsKeyTopics[derivedWsKey].push(topicRequest);
     }
 
-    if (requests.length) {
-      this.subscribeTopicsForWsKey(requests, wsKey);
+    // Batch sub topics per ws key
+    for (const wsKey in perWsKeyTopics) {
+      const wsKeyTopicRequests = perWsKeyTopics[wsKey];
+      if (wsKeyTopicRequests?.length) {
+        this.subscribeTopicsForWsKey(wsKeyTopicRequests, wsKey as WsKey);
+      }
     }
   }
 
@@ -188,15 +359,42 @@ export class WebsocketClient extends BaseWebsocketClient<WsKey> {
     requests:
       | (WsTopicRequest<WsTopic> | WsTopic)
       | (WsTopicRequest<WsTopic> | WsTopic)[],
-    wsKey: WsKey,
+    wsKey?: WsKey,
   ) {
-    if (!Array.isArray(requests)) {
-      this.unsubscribeTopicsForWsKey([requests], wsKey);
-      return;
+    const topicRequests = Array.isArray(requests) ? requests : [requests];
+    const normalisedTopicRequests = getNormalisedTopicRequests(topicRequests);
+
+    const isPrivateTopic = undefined;
+
+    const perWsKeyTopics: { [key in WsKey]?: WsTopicRequest<WsTopic>[] } = {};
+
+    // Sort into per wsKey arrays, in case topics are mixed together for different wsKeys
+    for (const topicRequest of normalisedTopicRequests) {
+      const derivedWsKey =
+        wsKey ||
+        getWsKeyForTopic(
+          this.options.market,
+          topicRequest.topic,
+          isPrivateTopic,
+          topicRequest.category,
+        );
+
+      if (
+        !perWsKeyTopics[derivedWsKey] ||
+        !Array.isArray(perWsKeyTopics[derivedWsKey])
+      ) {
+        perWsKeyTopics[derivedWsKey] = [];
+      }
+
+      perWsKeyTopics[derivedWsKey].push(topicRequest);
     }
 
-    if (requests.length) {
-      this.unsubscribeTopicsForWsKey(requests, wsKey);
+    // Batch sub topics per ws key
+    for (const wsKey in perWsKeyTopics) {
+      const wsKeyTopicRequests = perWsKeyTopics[wsKey];
+      if (wsKeyTopicRequests?.length) {
+        this.unsubscribeTopicsForWsKey(wsKeyTopicRequests, wsKey as WsKey);
+      }
     }
   }
 
@@ -215,78 +413,6 @@ export class WebsocketClient extends BaseWebsocketClient<WsKey> {
    */
 
   /**
-   *
-   * Subscribe to V5 topics & track/persist them.
-   * @param wsTopics - topic or list of topics
-   * @param category - the API category this topic is for (e.g. "linear"). The value is only important when connecting to public topics and will be ignored for private topics.
-   * @param isPrivateTopic - optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
-   */
-  public subscribeV5(
-    wsTopics: WsTopic[] | WsTopic,
-    category: CategoryV5,
-    isPrivateTopic?: boolean,
-  ) {
-    // TODO: sort into WS key then bulk sub per wskey
-    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
-
-    return new Promise<void>((resolver, rejector) => {
-      topics.forEach((topic) => {
-        const wsKey = getWsKeyForTopic(
-          this.options.market,
-          topic,
-          isPrivateTopic,
-          category,
-        );
-
-        // TODO: move this to base client
-        this.upsertPendingTopicsSubscriptions(wsKey, topic, resolver, rejector);
-
-        const wsRequest: WsTopicRequest<WsTopic> = {
-          topic: topic,
-          category: category,
-        };
-
-        // Persist topic for reconnects
-        this.subscribeTopicsForWsKey([wsRequest], wsKey);
-      });
-    });
-  }
-
-  /**
-   * Unsubscribe from V5 topics & remove them from memory. They won't be re-subscribed to if the connection reconnects.
-   * @param wsTopics - topic or list of topics
-   * @param category - the API category this topic is for (e.g. "linear"). The value is only important when connecting to public topics and will be ignored for private topics.
-   * @param isPrivateTopic - optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
-   */
-  public unsubscribeV5(
-    wsTopics: WsTopic[] | WsTopic,
-    category: CategoryV5,
-    isPrivateTopic?: boolean,
-  ) {
-    // TODO: sort into WS key then bulk sub per wskey
-    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
-
-    topics.forEach((topic) => {
-      const wsKey = getWsKeyForTopic(
-        this.options.market,
-        topic,
-        isPrivateTopic,
-        category,
-      );
-
-      const wsRequest: WsTopicRequest<WsTopic> = {
-        topic: topic,
-        category: category,
-      };
-
-      this.removeTopicPendingSubscription(wsKey, topic);
-
-      // Remove topic from persistence for reconnects and unsubscribe
-      this.unsubscribeTopicsForWsKey([wsRequest], wsKey);
-    });
-  }
-
-  /**
    * Subscribe to V1-V3 topics & track/persist them.
    *
    * Note: for public V5 topics use the `subscribeV5()` method.
@@ -298,7 +424,7 @@ export class WebsocketClient extends BaseWebsocketClient<WsKey> {
   public subscribeV3(
     wsTopics: WsTopic[] | WsTopic,
     isPrivateTopic?: boolean,
-  ): Promise<void> {
+  ): Promise<unknown>[] {
     const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
     if (this.options.market === 'v5') {
       topics.forEach((topic) => {
@@ -310,25 +436,27 @@ export class WebsocketClient extends BaseWebsocketClient<WsKey> {
       });
     }
 
-    return new Promise<void>((resolver, rejector) => {
-      topics.forEach((topic) => {
-        const wsKey = getWsKeyForTopic(
-          this.options.market,
-          topic,
-          isPrivateTopic,
-        );
+    const promises: Promise<unknown>[] = [];
 
-        // TODO: move to base client
-        this.upsertPendingTopicsSubscriptions(wsKey, topic, resolver, rejector);
+    topics.forEach((topic) => {
+      const wsKey = getWsKeyForTopic(
+        this.options.market,
+        topic,
+        isPrivateTopic,
+      );
 
-        const wsRequest: WsTopicRequest<WsTopic> = {
-          topic: topic,
-        };
+      const wsRequest: WsTopicRequest<WsTopic> = {
+        topic: topic,
+      };
 
-        // Persist topic for reconnects
-        this.subscribeTopicsForWsKey([wsRequest], wsKey);
-      });
+      // Persist topic for reconnects
+      const requestPromise = this.subscribeTopicsForWsKey([wsRequest], wsKey);
+
+      promises.push(requestPromise);
     });
+
+    // Return promise to resolve midflight WS request (only works if already connected before request)
+    return promises;
   }
 
   /**
@@ -360,9 +488,6 @@ export class WebsocketClient extends BaseWebsocketClient<WsKey> {
         topic,
         isPrivateTopic,
       );
-
-      // TODO: move to base client
-      this.removeTopicPendingSubscription(wsKey, topic);
 
       const wsRequest: WsTopicRequest<WsTopic> = {
         topic: topic,
@@ -484,8 +609,10 @@ export class WebsocketClient extends BaseWebsocketClient<WsKey> {
     requests: WsTopicRequest<string>[],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
     wsKey: WsKey,
-  ): Promise<WsRequestOperationBybit<WsTopic>[]> {
-    const wsRequestEvents: WsRequestOperationBybit<WsTopic>[] = [];
+  ): Promise<MidflightWsRequestEvent<WsRequestOperationBybit<WsTopic>>[]> {
+    const wsRequestEvents: MidflightWsRequestEvent<
+      WsRequestOperationBybit<WsTopic>
+    >[] = [];
     const wsRequestBuildingErrors: unknown[] = [];
 
     switch (market) {
@@ -496,8 +623,15 @@ export class WebsocketClient extends BaseWebsocketClient<WsKey> {
           args: requests.map((r) => r.topic),
         };
 
+        const midflightWsEvent: MidflightWsRequestEvent<
+          WsRequestOperationBybit<WsTopic>
+        > = {
+          requestKey: wsEvent.req_id,
+          requestEvent: wsEvent,
+        };
+
         wsRequestEvents.push({
-          ...wsEvent,
+          ...midflightWsEvent,
         });
         break;
       }
@@ -625,11 +759,14 @@ export class WebsocketClient extends BaseWebsocketClient<WsKey> {
       //   parsed: JSON.stringify(parsed),
       // });
 
-      if (isTopicSubscriptionConfirmation(parsed)) {
+      // Only applies to the V5 WS topics
+      if (isTopicSubscriptionConfirmation(parsed) && parsed.req_id) {
         const isTopicSubscriptionSuccessEvent =
           isTopicSubscriptionSuccess(parsed);
+
         this.updatePendingTopicSubscriptionStatus(
           wsKey,
+          parsed.req_id,
           parsed,
           isTopicSubscriptionSuccessEvent,
         );

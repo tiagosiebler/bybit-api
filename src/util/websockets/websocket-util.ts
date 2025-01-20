@@ -633,3 +633,30 @@ export function getPromiseRefForWSAPIRequest(
   const promiseRef = [requestEvent.op, requestEvent.reqId].join('_');
   return promiseRef;
 }
+
+/**
+ * Users can conveniently pass topics as strings or objects (object has topic name + optional params).
+ *
+ * This method normalises topics into objects (object has topic name + optional params).
+ */
+export function getNormalisedTopicRequests(
+  wsTopicRequests: WsTopicRequestOrStringTopic<string>[],
+): WsTopicRequest<string>[] {
+  const normalisedTopicRequests: WsTopicRequest<string>[] = [];
+
+  for (const wsTopicRequest of wsTopicRequests) {
+    // passed as string, convert to object
+    if (typeof wsTopicRequest === 'string') {
+      const topicRequest: WsTopicRequest<string> = {
+        topic: wsTopicRequest,
+        payload: undefined,
+      };
+      normalisedTopicRequests.push(topicRequest);
+      continue;
+    }
+
+    // already a normalised object, thanks to user
+    normalisedTopicRequests.push(wsTopicRequest);
+  }
+  return normalisedTopicRequests;
+}
