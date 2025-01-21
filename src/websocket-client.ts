@@ -45,6 +45,46 @@ import {
 
 const WS_LOGGER_CATEGORY = { category: 'bybit-ws' };
 
+/**
+ * Groups topics in request into per-wsKey groups
+ * @param normalisedTopicRequests
+ * @param wsKey
+ * @param isPrivateTopic
+ * @returns
+ */
+function getTopicsPerWSKey(
+  normalisedTopicRequests: WsTopicRequest[],
+  wsKey?: WsKey,
+  isPrivateTopic?: boolean,
+): {
+  [key in WsKey]?: WsTopicRequest<WsTopic>[];
+} {
+  const perWsKeyTopics: { [key in WsKey]?: WsTopicRequest<WsTopic>[] } = {};
+
+  // Sort into per wsKey arrays, in case topics are mixed together for different wsKeys
+  for (const topicRequest of normalisedTopicRequests) {
+    const derivedWsKey =
+      wsKey ||
+      getWsKeyForTopic(
+        this.options.market,
+        topicRequest.topic,
+        isPrivateTopic,
+        topicRequest.category,
+      );
+
+    if (
+      !perWsKeyTopics[derivedWsKey] ||
+      !Array.isArray(perWsKeyTopics[derivedWsKey])
+    ) {
+      perWsKeyTopics[derivedWsKey] = [];
+    }
+
+    perWsKeyTopics[derivedWsKey]!.push(topicRequest);
+  }
+
+  return perWsKeyTopics;
+}
+
 // export class WebsocketClient extends EventEmitter {
 export class WebsocketClient extends BaseWebsocketClient<
   WsKey,
@@ -183,12 +223,12 @@ export class WebsocketClient extends BaseWebsocketClient<
     category: CategoryV5,
     isPrivateTopic?: boolean,
   ): Promise<unknown>[] {
-    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
+    const topicRequests = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
 
     const perWsKeyTopics: { [key in WsKey]?: WsTopicRequest<WsTopic>[] } = {};
 
     // Sort into per-WsKey batches, in case there is a mix of topics here
-    for (const topic of topics) {
+    for (const topic of topicRequests) {
       const derivedWsKey = getWsKeyForTopic(
         this.options.market,
         topic,
@@ -208,7 +248,7 @@ export class WebsocketClient extends BaseWebsocketClient<
         perWsKeyTopics[derivedWsKey] = [];
       }
 
-      perWsKeyTopics[derivedWsKey].push(wsRequest);
+      perWsKeyTopics[derivedWsKey]!.push(wsRequest);
     }
 
     const promises: Promise<unknown>[] = [];
@@ -245,12 +285,12 @@ export class WebsocketClient extends BaseWebsocketClient<
     category: CategoryV5,
     isPrivateTopic?: boolean,
   ): Promise<unknown>[] {
-    const topics = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
+    const topicRequests = Array.isArray(wsTopics) ? wsTopics : [wsTopics];
 
     const perWsKeyTopics: { [key in WsKey]?: WsTopicRequest<WsTopic>[] } = {};
 
     // Sort into per-WsKey batches, in case there is a mix of topics here
-    for (const topic of topics) {
+    for (const topic of topicRequests) {
       const derivedWsKey = getWsKeyForTopic(
         this.options.market,
         topic,
@@ -270,7 +310,7 @@ export class WebsocketClient extends BaseWebsocketClient<
         perWsKeyTopics[derivedWsKey] = [];
       }
 
-      perWsKeyTopics[derivedWsKey].push(wsRequest);
+      perWsKeyTopics[derivedWsKey]!.push(wsRequest);
     }
 
     const promises: Promise<unknown>[] = [];
@@ -315,30 +355,7 @@ export class WebsocketClient extends BaseWebsocketClient<
     const topicRequests = Array.isArray(requests) ? requests : [requests];
     const normalisedTopicRequests = getNormalisedTopicRequests(topicRequests);
 
-    const isPrivateTopic = undefined;
-
-    const perWsKeyTopics: { [key in WsKey]?: WsTopicRequest<WsTopic>[] } = {};
-
-    // Sort into per wsKey arrays, in case topics are mixed together for different wsKeys
-    for (const topicRequest of normalisedTopicRequests) {
-      const derivedWsKey =
-        wsKey ||
-        getWsKeyForTopic(
-          this.options.market,
-          topicRequest.topic,
-          isPrivateTopic,
-          topicRequest.category,
-        );
-
-      if (
-        !perWsKeyTopics[derivedWsKey] ||
-        !Array.isArray(perWsKeyTopics[derivedWsKey])
-      ) {
-        perWsKeyTopics[derivedWsKey] = [];
-      }
-
-      perWsKeyTopics[derivedWsKey].push(topicRequest);
-    }
+    const perWsKeyTopics = getTopicsPerWSKey(normalisedTopicRequests, wsKey);
 
     // Batch sub topics per ws key
     for (const wsKey in perWsKeyTopics) {
@@ -364,30 +381,7 @@ export class WebsocketClient extends BaseWebsocketClient<
     const topicRequests = Array.isArray(requests) ? requests : [requests];
     const normalisedTopicRequests = getNormalisedTopicRequests(topicRequests);
 
-    const isPrivateTopic = undefined;
-
-    const perWsKeyTopics: { [key in WsKey]?: WsTopicRequest<WsTopic>[] } = {};
-
-    // Sort into per wsKey arrays, in case topics are mixed together for different wsKeys
-    for (const topicRequest of normalisedTopicRequests) {
-      const derivedWsKey =
-        wsKey ||
-        getWsKeyForTopic(
-          this.options.market,
-          topicRequest.topic,
-          isPrivateTopic,
-          topicRequest.category,
-        );
-
-      if (
-        !perWsKeyTopics[derivedWsKey] ||
-        !Array.isArray(perWsKeyTopics[derivedWsKey])
-      ) {
-        perWsKeyTopics[derivedWsKey] = [];
-      }
-
-      perWsKeyTopics[derivedWsKey].push(topicRequest);
-    }
+    const perWsKeyTopics = getTopicsPerWSKey(normalisedTopicRequests, wsKey);
 
     // Batch sub topics per ws key
     for (const wsKey in perWsKeyTopics) {
@@ -811,7 +805,6 @@ export class WebsocketClient extends BaseWebsocketClient<
 
         // WS API Exception
         if (isError) {
-          // console.log('wsAPI error: ', parsed);
           try {
             this.getWsStore().rejectDeferredPromise(
               wsKey,
