@@ -415,6 +415,8 @@ export class WebsocketClient extends BaseWebsocketClient<
   /**
    * Subscribe to V1-V3 topics & track/persist them.
    *
+   * @deprecated The V1-V3 websockets are very old and may not work properly anymore. Support for them will be removed soon. Use subcribeV5/unsubscribeV5 or subscribe/unsubscribe instead.
+   *
    * Note: for public V5 topics use the `subscribeV5()` method.
    *
    * Topics will be automatically resubscribed to if the connection resets/drops/reconnects.
@@ -461,6 +463,8 @@ export class WebsocketClient extends BaseWebsocketClient<
 
   /**
    * Unsubscribe from V1-V3 topics & remove them from memory. They won't be re-subscribed to if the connection reconnects.
+   *
+   * @deprecated The V1-V3 websockets are very old and may not work properly anymore. Support for them will be removed soon. Use subcribeV5/unsubscribeV5 or subscribe/unsubscribe instead.
    *
    * Note: For public V5 topics, use `unsubscribeV5()` instead!
    *
@@ -750,6 +754,7 @@ export class WebsocketClient extends BaseWebsocketClient<
     event: MessageEventLike,
   ): EmittableEvent[] {
     const results: EmittableEvent[] = [];
+    // const isWSAPIResponseEvent = wsKey === WS_KEY_MAP.v5PrivateTrade;
 
     try {
       const parsed = JSON.parse(event.data);
@@ -784,11 +789,89 @@ export class WebsocketClient extends BaseWebsocketClient<
       const eventTopic = parsed?.topic;
       const eventOperation = parsed?.op;
 
+      // WS API response
+      if (isWSAPIResponse(parsed)) {
+        const retCode = parsed.retCode;
+        const reqId = parsed.reqId;
+
+        const isError = retCode !== 0;
+
+        const promiseRef = [parsed.op, reqId].join('_');
+
+        if (!reqId) {
+          this.logger.error(
+            'WS API response is missing reqId - promisified workflow could get stuck. If this happens, please get in touch with steps to reproduce. Trace:',
+            {
+              wsKey,
+              promiseRef,
+              parsedEvent: parsed,
+            },
+          );
+        }
+
+        // WS API Exception
+        if (isError) {
+          // console.log('wsAPI error: ', parsed);
+          try {
+            this.getWsStore().rejectDeferredPromise(
+              wsKey,
+              promiseRef,
+              {
+                wsKey,
+                ...parsed,
+              },
+              true,
+            );
+          } catch (e) {
+            this.logger.error('Exception trying to reject WSAPI promise', {
+              wsKey,
+              promiseRef,
+              parsedEvent: parsed,
+            });
+          }
+
+          results.push({
+            eventType: 'exception',
+            event: parsed,
+            isWSAPIResponse: true,
+          });
+          return results;
+        }
+
+        // WS API Success
+        try {
+          this.getWsStore().resolveDeferredPromise(
+            wsKey,
+            promiseRef,
+            {
+              wsKey,
+              ...parsed,
+            },
+            true,
+          );
+        } catch (e) {
+          this.logger.error('Exception trying to resolve WSAPI promise', {
+            wsKey,
+            promiseRef,
+            parsedEvent: parsed,
+          });
+        }
+
+        results.push({
+          eventType: 'response',
+          event: parsed,
+          isWSAPIResponse: true,
+        });
+
+        return results;
+      }
+
       // Messages for a subscribed topic all include the "topic" property
       if (typeof eventTopic === 'string') {
         results.push({
           eventType: 'update',
           event: parsed,
+          // isWSAPIResponse: isWSAPIResponseEvent,
         });
         return results;
       }
@@ -800,6 +883,7 @@ export class WebsocketClient extends BaseWebsocketClient<
           results.push({
             eventType: 'exception',
             event: parsed,
+            // isWSAPIResponse: isWSAPIResponseEvent,
           });
           return results;
         }
@@ -809,6 +893,7 @@ export class WebsocketClient extends BaseWebsocketClient<
           results.push({
             eventType: 'response',
             event: parsed,
+            // isWSAPIResponse: isWSAPIResponseEvent,
           });
           return results;
         }
@@ -818,94 +903,10 @@ export class WebsocketClient extends BaseWebsocketClient<
           results.push({
             eventType: 'authenticated',
             event: parsed,
+            // isWSAPIResponse: isWSAPIResponseEvent,
           });
           return results;
         }
-
-        // WS API response
-        if (isWSAPIResponse(parsed)) {
-          const retCode = parsed.retCode;
-          const reqId = parsed.reqId;
-
-          const isError = retCode !== 0;
-
-          const promiseRef = [parsed.op, reqId].join('_');
-
-          // WS API Exception
-          if (isError) {
-            console.log('wsAPI error: ', parsed);
-            try {
-              this.getWsStore().rejectDeferredPromise(
-                wsKey,
-                promiseRef,
-                {
-                  wsKey,
-                  ...parsed,
-                },
-                true,
-              );
-            } catch (e) {
-              this.logger.error('Exception trying to reject WSAPI promise', {
-                wsKey,
-                promiseRef,
-                parsedEvent: parsed,
-              });
-            }
-
-            results.push({
-              eventType: 'exception',
-              event: parsed,
-              isWSAPIResponse: true,
-            });
-            return results;
-          }
-
-          // WS API Success
-          try {
-            this.getWsStore().resolveDeferredPromise(
-              wsKey,
-              promiseRef,
-              {
-                wsKey,
-                ...parsed,
-              },
-              true,
-            );
-          } catch (e) {
-            this.logger.error('Exception trying to resolve WSAPI promise', {
-              wsKey,
-              promiseRef,
-              parsedEvent: parsed,
-            });
-          }
-
-          results.push({
-            eventType: 'response',
-            event: parsed,
-            isWSAPIResponse: true,
-          });
-
-          return results;
-        }
-
-        // const wsAPIExample = {
-        //   reqId: '1',
-        //   retCode: 0,
-        //   retMsg: 'OK',
-        //   op: 'order.create',
-        //   data: {
-        //     orderId: '454c62ab-cb89-4f19-b70e-6123d3a53817',
-        //     orderLinkId: '',
-        //   },
-        //   header: {
-        //     'X-Bapi-Limit': '10',
-        //     'X-Bapi-Limit-Status': '9',
-        //     'X-Bapi-Limit-Reset-Timestamp': '1737041109260',
-        //     Traceid: '7e34e1105f093eff75dd7de0f1a59771',
-        //     Timenow: '1737041109263',
-        //   },
-        //   connId: 'ctb9l5v88smdae1fivmg-5esl',
-        // };
 
         this.logger.error(
           `!! Unhandled string operation type "${eventOperation}". Defaulting to "update" channel...`,
@@ -917,77 +918,6 @@ export class WebsocketClient extends BaseWebsocketClient<
           parsed,
         );
       }
-
-      // TODO: WS API
-      // const eventChannel = parsed.op;
-      // const requestId = parsed?.request_id;
-      // const promiseRef = [eventChannel, requestId].join('_');
-      // if (eventType === 'api') {
-      //   const isError = eventStatusCode !== '200';
-
-      //   // WS API Exception
-      //   if (isError) {
-      //     try {
-      //       this.getWsStore().rejectDeferredPromise(
-      //         wsKey,
-      //         promiseRef,
-      //         {
-      //           wsKey,
-      //           ...parsed,
-      //         },
-      //         true,
-      //       );
-      //     } catch (e) {
-      //       this.logger.error('Exception trying to reject WSAPI promise', {
-      //         wsKey,
-      //         promiseRef,
-      //         parsedEvent: parsed,
-      //       });
-      //     }
-
-      //     results.push({
-      //       eventType: 'exception',
-      //       event: parsed,
-      //     });
-      //     return results;
-      //   }
-
-      //   // WS API Success
-      //   try {
-      //     this.getWsStore().resolveDeferredPromise(
-      //       wsKey,
-      //       promiseRef,
-      //       {
-      //         wsKey,
-      //         ...parsed,
-      //       },
-      //       true,
-      //     );
-      //   } catch (e) {
-      //     this.logger.error('Exception trying to resolve WSAPI promise', {
-      //       wsKey,
-      //       promiseRef,
-      //       parsedEvent: parsed,
-      //     });
-      //   }
-
-      //   if (eventChannel.includes('.login')) {
-      //     results.push({
-      //       eventType: 'authenticated',
-      //       event: {
-      //         ...parsed,
-      //         isWSAPI: true,
-      //         WSAPIAuthChannel: eventChannel,
-      //       },
-      //     });
-      //   }
-
-      //   results.push({
-      //     eventType: 'response',
-      //     event: parsed,
-      //   });
-      //   return results;
-      // }
 
       // In case of catastrophic failure, fallback to noisy emit update
       results.push({

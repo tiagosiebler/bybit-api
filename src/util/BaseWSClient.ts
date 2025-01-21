@@ -33,14 +33,22 @@ interface WSClientEventMap<WsKey extends string> {
   /** Connection closed */
   close: (evt: { wsKey: WsKey; event: any }) => void;
   /** Received reply to websocket command (e.g. after subscribing to topics) */
-  response: (response: any & { wsKey: WsKey }) => void;
+  response: (
+    response: any & { wsKey: WsKey; isWSAPIResponse?: boolean },
+  ) => void;
   /** Received data for topic */
   update: (response: any & { wsKey: WsKey }) => void;
   /** Exception from ws client OR custom listeners (e.g. if you throw inside your event handler) */
-  exception: (response: any & { wsKey: WsKey }) => void;
+  exception: (
+    response: any & { wsKey: WsKey; isWSAPIResponse?: boolean },
+  ) => void;
   error: (response: any & { wsKey: WsKey }) => void;
   /** Confirmation that a connection successfully authenticated */
-  authenticated: (event: { wsKey: WsKey; event: any }) => void;
+  authenticated: (event: {
+    wsKey: WsKey;
+    event: any;
+    isWSAPIResponse?: boolean;
+  }) => void;
 }
 
 export interface EmittableEvent<TEvent = any> {
@@ -662,7 +670,7 @@ export abstract class BaseWebsocketClient<
   /** Get a signature, build the auth request and send it */
   private async sendAuthRequest(wsKey: TWSKey): Promise<unknown> {
     try {
-      this.logger.info('Sending auth request...', {
+      this.logger.trace('Sending auth request...', {
         ...WS_LOGGER_CATEGORY,
         wsKey,
       });
@@ -1160,6 +1168,11 @@ export abstract class BaseWebsocketClient<
             });
             continue;
           }
+          const emittableFinalEvent = {
+            ...emittable.event,
+            wsKey,
+            isWSAPIResponse: emittable.isWSAPIResponse,
+          };
 
           if (emittable.eventType === 'authenticated') {
             this.logger.trace('Successfully authenticated', {
@@ -1167,12 +1180,12 @@ export abstract class BaseWebsocketClient<
               wsKey,
               emittable,
             });
-            this.emit(emittable.eventType, { ...emittable.event, wsKey });
+            this.emit(emittable.eventType, emittableFinalEvent);
             this.onWsAuthenticated(wsKey, emittable.event);
             continue;
           }
 
-          this.emit(emittable.eventType, { ...emittable.event, wsKey });
+          this.emit(emittable.eventType, emittableFinalEvent);
         }
 
         return;
@@ -1202,6 +1215,9 @@ export abstract class BaseWebsocketClient<
       ...WS_LOGGER_CATEGORY,
       wsKey,
     });
+
+    const wsState = this.wsStore.get(wsKey, true);
+    wsState.isAuthenticated = false;
 
     if (
       this.wsStore.getConnectionState(wsKey) !== WsConnectionStateEnum.CLOSING
@@ -1249,26 +1265,18 @@ export abstract class BaseWebsocketClient<
 
       // Already in progress? Await shared promise and retry
       if (inProgressPromise) {
-        this.logger.trace(
-          'assertIsConnected(): Awaiting EXISTING connection promise...',
-        );
+        this.logger.trace('assertIsConnected(): awaiting...');
         await inProgressPromise.promise;
-        this.logger.trace(
-          'assertIsConnected(): EXISTING connection promise resolved!',
-        );
+        this.logger.trace('assertIsConnected(): connected!');
         return inProgressPromise.promise;
       }
 
       // Start connection, it should automatically store/return a promise.
-      this.logger.trace(
-        'assertIsConnected(): Not connected yet...queue await connection...',
-      );
+      this.logger.trace('assertIsConnected(): connecting...');
 
       await this.connect(wsKey);
 
-      this.logger.trace(
-        'assertIsConnected(): New connection promise resolved! ',
-      );
+      this.logger.trace('assertIsConnected(): newly connected!');
     }
   }
 
@@ -1282,9 +1290,7 @@ export abstract class BaseWebsocketClient<
     );
 
     if (!isConnected) {
-      this.logger.trace(
-        'assertIsAuthenticated(): Not connected yet, asseting connection first',
-      );
+      this.logger.trace('assertIsAuthenticated(): connecting...');
       await this.assertIsConnected(wsKey);
     }
 
@@ -1293,25 +1299,23 @@ export abstract class BaseWebsocketClient<
 
     // Already in progress? Await shared promise and retry
     if (inProgressPromise) {
-      this.logger.trace(
-        'assertIsAuthenticated(): Awaiting EXISTING authentication promise...',
-      );
+      this.logger.trace('assertIsAuthenticated(): awaiting...');
       await inProgressPromise.promise;
-      this.logger.trace(
-        'assertIsAuthenticated(): EXISTING authentication promise resolved!',
-      );
+      this.logger.trace('assertIsAuthenticated(): authenticated!');
+      return;
+    }
+
+    const isAuthenticated = this.wsStore.get(wsKey)?.isAuthenticated;
+    if (isAuthenticated) {
+      this.logger.trace('assertIsAuthenticated(): ok');
       return;
     }
 
     // Start authentication, it should automatically store/return a promise.
-    this.logger.trace(
-      'assertIsAuthenticated(): Not authenticated yet...queue await authentication...',
-    );
+    this.logger.trace('assertIsAuthenticated(): authenticating...');
 
     await this.sendAuthRequest(wsKey);
 
-    this.logger.trace(
-      'assertIsAuthenticated(): Authentication promise resolved! ',
-    );
+    this.logger.trace('assertIsAuthenticated(): newly authenticated!');
   }
 }
