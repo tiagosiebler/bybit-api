@@ -132,13 +132,14 @@ export abstract class BaseWebsocketClient<
 
   private timeOffsetMs: number = 0;
 
-  private pendingTopicSubscriptionRequests: {
-    [key in TWSKey]?: {
-      [requestKey: string]:
-        | undefined
-        | WsKeyPendingTopicSubscriptions<TWSRequestEvent>;
-    };
-  } = {};
+  /**
+   * A nested wsKey->request key store.
+   * pendingTopicSubscriptionRequests[wsKey][requestKey] = WsKeyPendingTopicSubscriptions<TWSRequestEvent>
+   */
+  private pendingTopicSubscriptionRequests: Record<
+    string,
+    Record<string, undefined | WsKeyPendingTopicSubscriptions<TWSRequestEvent>>
+  > = {};
 
   constructor(
     options?: WSClientConfigurableOptions,
@@ -281,9 +282,9 @@ export abstract class BaseWebsocketClient<
     const requestKey = requestData.requestKey;
 
     // Should not be possible to see a requestKey collision in the current design, since the req ID increments automatically with every request, so this should never be true, but just in case a future mistake happens...
-    const existingWsKeyPendingRequests =
-      this.getWsKeyPendingSubscriptionStore(wsKey);
-    if (existingWsKeyPendingRequests[requestKey]) {
+
+    const pendingSubReqs = this.getWsKeyPendingSubscriptionStore(wsKey);
+    if (pendingSubReqs[requestKey]) {
       throw new Error(
         'Implementation error: attempted to upsert pending topics with duplicate request ID!',
       );
@@ -294,8 +295,8 @@ export abstract class BaseWebsocketClient<
         resolver: TopicsPendingSubscriptionsResolver<TWSRequestEvent>,
         rejector: TopicsPendingSubscriptionsRejector<TWSRequestEvent>,
       ) => {
-        const store = this.getWsKeyPendingSubscriptionStore(wsKey);
-        store[requestKey] = {
+        const pendingSubReqs = this.getWsKeyPendingSubscriptionStore(wsKey);
+        pendingSubReqs[requestKey] = {
           requestData: requestData.requestEvent,
           resolver,
           rejector,
@@ -305,8 +306,8 @@ export abstract class BaseWebsocketClient<
   }
 
   protected removeTopicPendingSubscription(wsKey: TWSKey, requestKey: string) {
-    const store = this.getWsKeyPendingSubscriptionStore(wsKey);
-    delete store[requestKey];
+    const pendingSubReqs = this.getWsKeyPendingSubscriptionStore(wsKey);
+    delete pendingSubReqs[requestKey];
   }
 
   private clearTopicsPendingSubscriptions(
@@ -315,9 +316,10 @@ export abstract class BaseWebsocketClient<
     rejectReason: string,
   ) {
     if (rejectAll) {
-      const wsKeyPendingRequests = this.getWsKeyPendingSubscriptionStore(wsKey);
-      for (const requestKey in wsKeyPendingRequests) {
-        const request = wsKeyPendingRequests[requestKey];
+      const pendingSubReqs = this.getWsKeyPendingSubscriptionStore(wsKey);
+
+      for (const requestKey in pendingSubReqs) {
+        const request = pendingSubReqs[requestKey];
         request?.rejector(request.requestData, rejectReason);
       }
     }
