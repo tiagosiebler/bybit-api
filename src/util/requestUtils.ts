@@ -77,6 +77,13 @@ export interface RestClientOptions {
 
   /** Default: false. Enable to throw error if rate limit parser fails */
   throwOnFailedRateLimitParse?: boolean;
+
+  /**
+   * Allows you to provide a custom "signMessage" function, e.g. to use node's much faster createHmac method
+   *
+   * Look in the examples folder for a demonstration on using node's createHmac instead.
+   */
+  customSignMessageFn?: (message: string, secret: string) => Promise<string>;
 }
 
 /**

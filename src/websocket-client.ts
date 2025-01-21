@@ -28,7 +28,6 @@ import {
   isWsPong,
   neverGuard,
 } from './util';
-import { signMessage } from './util/node-support';
 import {
   BaseWebsocketClient,
   EmittableEvent,
@@ -42,6 +41,7 @@ import {
   WsOperation,
   WsRequestOperationBybit,
 } from './types/websockets/ws-api';
+import { SignAlgorithm, signMessage } from './util/webCryptoAPI';
 
 const WS_LOGGER_CATEGORY = { category: 'bybit-ws' };
 
@@ -527,6 +527,18 @@ export class WebsocketClient extends BaseWebsocketClient<
     return '';
   }
 
+  private async signMessage(
+    paramsStr: string,
+    secret: string,
+    method: 'hex' | 'base64',
+    algorithm: SignAlgorithm,
+  ): Promise<string> {
+    if (typeof this.options.customSignMessageFn === 'function') {
+      return this.options.customSignMessageFn(paramsStr, secret);
+    }
+    return await signMessage(paramsStr, secret, method, algorithm);
+  }
+
   protected async getWsAuthRequestEvent(wsKey: WsKey): Promise<any> {
     try {
       const { signature, expiresAt } = await this.getWsAuthSignature(wsKey);
@@ -566,9 +578,11 @@ export class WebsocketClient extends BaseWebsocketClient<
 
     const signatureExpiresAt = Date.now() + this.getTimeOffsetMs() + recvWindow;
 
-    const signature = await signMessage(
+    const signature = await this.signMessage(
       'GET/realtime' + signatureExpiresAt,
       secret,
+      'hex',
+      'SHA-256',
     );
 
     return {
@@ -951,7 +965,7 @@ export class WebsocketClient extends BaseWebsocketClient<
    *
    * Returned promise is rejected if an exception is detected in the reply OR the connection disconnects for any reason (even if automatic reconnect will happen).
    *
-   * After a fresh connection, you should always send a login request first.
+   * Authentication is automatic. If you didn't request authentication yourself, there might be a small delay after your first request, while the SDK automatically authenticates.
    *
    * If you authenticated once and you're reconnected later (e.g. connection temporarily lost), the SDK will by default automatically:
    * - Detect you were authenticated to the WS API before

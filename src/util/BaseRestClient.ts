@@ -11,7 +11,7 @@ import {
   parseRateLimitHeaders,
   serializeParams,
 } from './requestUtils';
-import { signMessage } from './node-support';
+import { SignAlgorithm, SignEncodeMethod, signMessage } from './webCryptoAPI';
 
 const ENABLE_HTTP_TRACE =
   typeof process === 'object' &&
@@ -394,6 +394,18 @@ export default abstract class BaseRestClient {
     };
   }
 
+  private async signMessage(
+    paramsStr: string,
+    secret: string,
+    method: SignEncodeMethod,
+    algorithm: SignAlgorithm,
+  ): Promise<string> {
+    if (typeof this.options.customSignMessageFn === 'function') {
+      return this.options.customSignMessageFn(paramsStr, secret);
+    }
+    return await signMessage(paramsStr, secret, method, algorithm);
+  }
+
   /**
    * @private sign request and set recv window
    */
@@ -441,7 +453,13 @@ export default abstract class BaseRestClient {
 
       const paramsStr = timestamp + key + recvWindow + signRequestParams;
 
-      res.sign = await signMessage(paramsStr, this.secret);
+      res.sign = await this.signMessage(
+        paramsStr,
+        this.secret,
+        'hex',
+        'SHA-256',
+      );
+
       res.serializedParams = signRequestParams;
 
       // console.log('sign req: ', {
@@ -473,7 +491,12 @@ export default abstract class BaseRestClient {
         sortProperties,
         encodeValues,
       );
-      res.sign = await signMessage(res.serializedParams, this.secret);
+      res.sign = await this.signMessage(
+        res.serializedParams,
+        this.secret,
+        'hex',
+        'SHA-256',
+      );
 
       // @ts-ignore
       res.paramsWithSign = {

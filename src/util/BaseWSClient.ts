@@ -167,8 +167,6 @@ export abstract class BaseWebsocketClient<
       authPrivateConnectionsOnConnect: true,
       // Individual requests do not require a signature, so this is disabled.
       authPrivateRequests: false,
-      // Automatically re-authenticate the WS API connection, if previously authenticated. TODO:
-      reauthWSAPIOnReconnect: true,
       ...options,
     };
 
