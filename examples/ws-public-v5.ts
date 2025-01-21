@@ -68,6 +68,17 @@ wsClient.on('reconnected', (data) => {
 // Option v5
 // wsClient.subscribeV5('publicTrade.BTC', 'option');
 
+const topics = ['kline.5.XRPUSDT', 'kline.5.BTCUSDT', 'kline.5.ETHUSDT'];
+
+// Use the subscribeV5() call for most subscribe calls with v5 websockets
+wsClient.subscribeV5(topics, 'spot');
+
+// Alternatively, you can also use objects in the wsClient.subscribe() call
+// wsClient.subscribe({
+//   topic: 'orderook.50.BTCUSDT',
+//   category: 'spot',
+// });
+
 /**
  * For private V5 topics, just call the same subscribeV5() method on the ws client or use the original subscribe() method.
  *
@@ -78,10 +89,6 @@ wsClient.on('reconnected', (data) => {
 // wsClient.subscribeV5('position', 'linear');
 // wsClient.subscribeV5('execution', 'linear');
 // wsClient.subscribeV5(['order', 'wallet', 'greek'], 'linear');
-
-const topics = ['kline.5.XRPUSDT', 'kline.5.BTCUSDT', 'kline.5.ETHUSDT'];
-
-wsClient.subscribeV5(topics, 'spot');
 
 // To unsubscribe from topics (after a 5 second delay, in this example):
 setTimeout(() => {

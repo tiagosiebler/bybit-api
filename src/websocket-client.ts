@@ -248,7 +248,7 @@ export class WebsocketClient extends BaseWebsocketClient<
         perWsKeyTopics[derivedWsKey] = [];
       }
 
-      perWsKeyTopics[derivedWsKey]!.push(wsRequest);
+      perWsKeyTopics[derivedWsKey].push(wsRequest);
     }
 
     const promises: Promise<unknown>[] = [];
