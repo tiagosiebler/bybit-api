@@ -39,10 +39,7 @@ interface WSClientEventMap<WsKey extends string> {
   /** Received data for topic */
   update: (response: any & { wsKey: WsKey }) => void;
   /** Exception from ws client OR custom listeners (e.g. if you throw inside your event handler) */
-  exception: (
-    response: any & { wsKey: WsKey; isWSAPIResponse?: boolean },
-  ) => void;
-  error: (response: any & { wsKey: WsKey }) => void;
+  error: (response: any & { wsKey: WsKey; isWSAPIResponse?: boolean }) => void;
   /** Confirmation that a connection successfully authenticated */
   authenticated: (event: {
     wsKey: WsKey;
@@ -52,7 +49,7 @@ interface WSClientEventMap<WsKey extends string> {
 }
 
 export interface EmittableEvent<TEvent = any> {
-  eventType: 'response' | 'update' | 'exception' | 'authenticated';
+  eventType: 'response' | 'update' | 'error' | 'authenticated';
   event: TEvent;
   isWSAPIResponse?: boolean;
 }
@@ -594,7 +591,7 @@ export abstract class BaseWebsocketClient<
     if (!error.message) {
       this.logger.error(`${context} due to unexpected error: `, error);
       this.emit('response', { ...error, wsKey });
-      this.emit('exception', { ...error, wsKey });
+      this.emit('error', { ...error, wsKey });
       return;
     }
 
@@ -627,7 +624,7 @@ export abstract class BaseWebsocketClient<
     }
 
     this.emit('response', { ...error, wsKey });
-    this.emit('exception', { ...error, wsKey });
+    this.emit('error', { ...error, wsKey });
   }
 
   /** Get a signature, build the auth request and send it */

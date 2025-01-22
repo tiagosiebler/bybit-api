@@ -22,15 +22,10 @@ export const WS_API_Operations: WSAPIOperation[] = [
   'order.cancel',
 ];
 
-export interface WsRequestOperationBybit<
-  TWSTopic extends string,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  // TWSPayload = any,
-> {
+export interface WsRequestOperationBybit<TWSTopic extends string> {
   req_id: string;
   op: WsOperation;
   args?: (TWSTopic | string | number)[];
-  // payload?: TWSPayload;
 }
 
 export interface WSAPIRequest<
@@ -46,17 +41,6 @@ export interface WSAPIRequest<
     Referer: typeof APIID;
   };
   args: [TRequestParams];
-}
-
-export interface WsAPIWsKeyTopicMap {
-  [WS_KEY_MAP.v5PrivateTrade]: WSAPIOperation;
-}
-
-export interface WsAPITopicRequestParamMap {
-  'order.create': OrderParamsV5;
-  'order.amend': AmendOrderParamsV5;
-  'order.cancel': CancelOrderParamsV5;
-  // ping: undefined;
 }
 
 export interface WSAPIResponse<
@@ -80,12 +64,32 @@ export interface WSAPIResponse<
   connId: string;
 }
 
-// export interface WsAPIResponseMap<TChannel extends WSAPITopic = WSAPITopic> {
-//   'spot.login': WSAPIResponse<WSAPILoginResponse, TChannel>;
-//   'futures.login': WSAPIResponse<WSAPILoginResponse, TChannel>;
-//   string: object;
-// }
+export type Exact<T> = {
+  // This part says: if there's any key that's not in T, it's an error
+  [K: string]: never;
+} & {
+  [K in keyof T]: T[K];
+};
 
+/**
+ * List of operations supported for this WsKey (connection)
+ */
+export interface WsAPIWsKeyTopicMap {
+  [WS_KEY_MAP.v5PrivateTrade]: WSAPIOperation;
+}
+
+/**
+ * Request parameters expected per operation
+ */
+export interface WsAPITopicRequestParamMap {
+  'order.create': OrderParamsV5;
+  'order.amend': AmendOrderParamsV5;
+  'order.cancel': CancelOrderParamsV5;
+}
+
+/**
+ * Response structure expected for each operation
+ */
 export interface WsAPIOperationResponseMap {
   'order.create': WSAPIResponse<OrderResultV5, 'order.create'>;
   'order.amend': WSAPIResponse<OrderResultV5, 'order.amend'>;
@@ -97,36 +101,4 @@ export interface WsAPIOperationResponseMap {
     data: [string];
     connId: string;
   };
-
-  // 'spot.login': WSAPIResponse<WSAPILoginResponse, 'spot.login'>;
-  // 'futures.login': WSAPIResponse<WSAPILoginResponse, 'futures.login'>;
-
-  // 'spot.order_place': WSAPIResponse<TResponseType, 'spot.order_place'>;
-  // 'spot.order_cancel': WSAPIResponse<TResponseType, 'spot.order_cancel'>;
-  // 'spot.order_cancel_ids': WSAPIResponse<
-  //   TResponseType,
-  //   'spot.order_cancel_ids'
-  // >;
-  // 'spot.order_cancel_cp': WSAPIResponse<TResponseType, 'spot.order_cancel_cp'>;
-  // 'spot.order_amend': WSAPIResponse<TResponseType, 'spot.order_amend'>;
-  // 'spot.order_status': WSAPIResponse<
-  //   WSAPIOrderStatusResponse,
-  //   'spot.order_status'
-  // >;
-  // 'futures.order_place': WSAPIResponse<TResponseType[], 'futures.order_place'>;
-  // 'futures.order_batch_place': WSAPIResponse<
-  //   TResponseType[],
-  //   'futures.order_batch_place'
-  // >;
-  // 'futures.order_cancel': WSAPIResponse<TResponseType, 'futures.order_cancel'>;
-  // 'futures.order_cancel_cp': WSAPIResponse<
-  //   TResponseType,
-  //   'futures.order_cancel_cp'
-  // >;
-  // 'futures.order_amend': WSAPIResponse<TResponseType, 'futures.order_amend'>;
-  // 'futures.order_list': WSAPIResponse<TResponseType[], 'futures.order_list'>;
-  // 'futures.order_status': WSAPIResponse<
-  //   WSAPIOrderStatusResponse,
-  //   'futures.order_status'
-  // >;
 }

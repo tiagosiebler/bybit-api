@@ -26,10 +26,9 @@ const wsClient = new WebsocketClient(
   {
     key: key,
     secret: secret,
-    market: 'v5',
     testnet: true,
   },
-  logger
+  logger,
 );
 
 wsClient.on('update', (data) => {

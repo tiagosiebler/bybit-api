@@ -34,6 +34,7 @@ import {
   MidflightWsRequestEvent,
 } from './util/BaseWSClient';
 import {
+  Exact,
   WSAPIRequest,
   WsAPIOperationResponseMap,
   WsAPITopicRequestParamMap,
@@ -838,7 +839,7 @@ export class WebsocketClient extends BaseWebsocketClient<
           }
 
           results.push({
-            eventType: 'exception',
+            eventType: 'error',
             event: parsed,
             isWSAPIResponse: true,
           });
@@ -888,7 +889,7 @@ export class WebsocketClient extends BaseWebsocketClient<
         // Failed request
         if (parsed.success === false) {
           results.push({
-            eventType: 'exception',
+            eventType: 'error',
             event: parsed,
             // isWSAPIResponse: isWSAPIResponseEvent,
           });
@@ -938,7 +939,7 @@ export class WebsocketClient extends BaseWebsocketClient<
           exception: e,
           eventData: event.data,
         },
-        eventType: 'exception',
+        eventType: 'error',
       });
 
       this.logger.error('Failed to parse event data due to exception: ', {
@@ -963,43 +964,59 @@ export class WebsocketClient extends BaseWebsocketClient<
   /**
    * Send a Websocket API event on a connection. Returns a promise that resolves on reply.
    *
-   * Returned promise is rejected if an exception is detected in the reply OR the connection disconnects for any reason (even if automatic reconnect will happen).
-   *
    * Authentication is automatic. If you didn't request authentication yourself, there might be a small delay after your first request, while the SDK automatically authenticates.
+   *
+   * Returned promise is rejected if:
+   * - an exception is detected in the reply, OR
+   * - the connection disconnects for any reason (even if automatic reconnect will happen).
    *
    * If you authenticated once and you're reconnected later (e.g. connection temporarily lost), the SDK will by default automatically:
    * - Detect you were authenticated to the WS API before
    * - Try to re-authenticate (up to 5 times, in case something (bad timestamp) goes wrong)
    * - If it succeeds, it will emit the 'authenticated' event.
-   * - If it fails and gives up, it will emit an 'exception' event (type: 'wsapi.auth', reason: detailed text).
+   * - If it fails and gives up, it will emit an 'exception' event.
    *
-   * You can turn off the automatic re-auth WS API logic using `reauthWSAPIOnReconnect: false` in the WSClient config.
-   *
-   * @param wsKey - The connection this event is for (e.g. "spotV4" | "perpFuturesUSDTV4" | "perpFuturesBTCV4" | "deliveryFuturesUSDTV4" | "deliveryFuturesBTCV4" | "optionsV4")
-   * @param channel - The channel this event is for (e.g. "spot.login" to authenticate)
-   * @param params - Any request parameters for the payload (contents of req_param in the docs). Signature generation is automatic, only send parameters such as order ID as per the docs.
+   * @param wsKey - The connection this event is for. Currently only "v5PrivateTrade" is supported, since that is the dedicated WS API connection.
+   * @param operation - The command being sent, e.g. "order.create" to submit a new order.
+   * @param params - Any request parameters for the command. E.g. `OrderParamsV5` to submit a new order. Only send parameters for the request body. Everything else is automatically handled.
    * @returns Promise - tries to resolve with async WS API response. Rejects if disconnected or exception is seen in async WS API response
    */
 
-  // This overload allows the caller to omit the 3rd param, if it isn't required (e.g. for the login call)
-  async sendWSAPIRequest<
-    TWSKey extends keyof WsAPIWsKeyTopicMap = keyof WsAPIWsKeyTopicMap,
-    TWSOperation extends
-      WsAPIWsKeyTopicMap[TWSKey] = WsAPIWsKeyTopicMap[TWSKey],
-    TWSParams extends
-      WsAPITopicRequestParamMap[TWSOperation] = WsAPITopicRequestParamMap[TWSOperation],
+  // This overload allows the caller to omit the 3rd param, if it isn't required
+  sendWSAPIRequest<
+    TWSKey extends keyof WsAPIWsKeyTopicMap,
+    TWSOperation extends WsAPIWsKeyTopicMap[TWSKey],
+    TWSParams extends Exact<WsAPITopicRequestParamMap[TWSOperation]>,
   >(
     wsKey: TWSKey,
     operation: TWSOperation,
     ...params: TWSParams extends undefined ? [] : [TWSParams]
   ): Promise<WsAPIOperationResponseMap[TWSOperation]>;
 
+  // These overloads give stricter types than mapped generics, since generic constraints do not trigger excess property checks
+  // Without these overloads, TypeScript won't complain if you include an unexpected property with your request (if it doesn't clash with an existing property)
+  sendWSAPIRequest(
+    wsKey: typeof WS_KEY_MAP.v5PrivateTrade,
+    operation: 'order.create',
+    params: WsAPITopicRequestParamMap['order.create'],
+  ): Promise<WsAPIOperationResponseMap['order.create']>;
+
+  sendWSAPIRequest(
+    wsKey: typeof WS_KEY_MAP.v5PrivateTrade,
+    operation: 'order.amend',
+    params: WsAPITopicRequestParamMap['order.amend'],
+  ): Promise<WsAPIOperationResponseMap['order.amend']>;
+
+  sendWSAPIRequest(
+    wsKey: typeof WS_KEY_MAP.v5PrivateTrade,
+    operation: 'order.cancel',
+    params: WsAPITopicRequestParamMap['order.cancel'],
+  ): Promise<WsAPIOperationResponseMap['order.cancel']>;
+
   async sendWSAPIRequest<
-    TWSKey extends keyof WsAPIWsKeyTopicMap = keyof WsAPIWsKeyTopicMap,
-    TWSOperation extends
-      WsAPIWsKeyTopicMap[TWSKey] = WsAPIWsKeyTopicMap[TWSKey],
-    TWSParams extends
-      WsAPITopicRequestParamMap[TWSOperation] = WsAPITopicRequestParamMap[TWSOperation],
+    TWSKey extends keyof WsAPIWsKeyTopicMap,
+    TWSOperation extends WsAPIWsKeyTopicMap[TWSKey],
+    TWSParams extends Exact<WsAPITopicRequestParamMap[TWSOperation]>,
     TWSAPIResponse extends
       WsAPIOperationResponseMap[TWSOperation] = WsAPIOperationResponseMap[TWSOperation],
   >(

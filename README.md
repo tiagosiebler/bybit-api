@@ -19,19 +19,31 @@
 
 [1]: https://www.npmjs.com/package/bybit-api
 
-Node.js & JavaScript SDK for the Bybit REST APIs and WebSockets:
+Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs and WebSockets:
 
-- Complete integration with all Bybit REST APIs & WebSockets.
+- Complete integration with all Bybit REST APIs & WebSockets, including the WebSocket API.
 - Actively maintained with a modern, promise-driven interface.
 - TypeScript support (with type declarations for most API requests & responses).
-- Over 450 end-to-end tests making real API calls & WebSocket connections, validating any changes before they reach npm.
+- Thorough end-to-end tests making real API calls & WebSocket connections, validating any changes before they reach npm.
+- Proxy support via axios integration.
 - Robust WebSocket integration with configurable connection heartbeats & automatic reconnect then resubscribe workflows.
   - Event driven messaging.
   - Smart websocket persistence
     - Automatically handle silent websocket disconnections through timed heartbeats, including the scheduled 24hr disconnect.
     - Automatically handle listenKey persistence and expiration/refresh.
     - Emit `reconnected` event when dropped connection is restored.
-- Proxy support via axios integration.
+- WebSocket API integration, with two design patterns to choose from:
+  - Asynchronous event-driven responses:
+      - Subscribe to `response` and `error` events from WebsocketClient's event emitter.
+      - Send commands with the sendWSAPIRequest(...) method.
+      - Responses to commands will arrive via the `response` and `error` events.
+      - See example for more details: [examples/ws-api-events.ts](./examples/ws-api-events.ts)
+  - Asynchronous promise-driven responses:
+      - This behaves very much like a REST API. No need to subscribe to asynchronous events.
+      - Send commands with the await sendWSAPIRequest(...) method.
+      - Await responses to commands directly in the fully typed sendWSAPIRequest() call.
+      - The method directly returns a promise. Use a try/catch block for convenient error handling without the complexity of asynchronous WebSockets.
+      - See example for more details: [examples/ws-api-promises.ts](./examples/ws-api-promises.ts)
 - Active community support & collaboration in telegram: [Node.js Algo Traders](https://t.me/nodetraders).
 
 ## Installation
@@ -88,23 +100,17 @@ The version on npm is the output from the `build` command and can be used in pro
 
 ## REST API Clients
 
-Bybit has several API groups (originally one per product). Each generation is labelled with the version number (e.g. v1/v2/v3/v5). New projects & developments should use the newest available API generation (e.g. use the V5 APIs instead of V3).
+Bybit used to have several API groups (originally one per product). You should be using the V5 APIs. If you aren't, you should upgrade your project to use the V5 APIs as soon as possible.
 
-Refer to the [V5 interface mapping page](https://bybit-exchange.github.io/docs/v5/intro#v5-and-v3-interface-mapping-list) for more information on which V5 endpoints can be used instead of previous V3 endpoints.
+Refer to the [V5 interface mapping page](https://bybit-exchange.github.io/docs/v5/intro#v5-and-v3-interface-mapping-list) for more information on which V5 endpoints can be used instead of previous V3 endpoints. To learn more about the V5 API, please read the [V5 upgrade guideline](https://bybit-exchange.github.io/docs/v5/upgrade-guide).
 
 Here are the available REST clients and the corresponding API groups described in the documentation:
 
-|                         Class                          |                                                                                                      Description                                                                                                      |
-| :----------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|                     [ **V5 API** ]                     | The new unified V5 APIs (successor to previously fragmented APIs for all API groups). To learn more about the V5 API, please read the [V5 upgrade guideline](https://bybit-exchange.github.io/docs/v5/upgrade-guide). |
-|         [RestClientV5](src/rest-client-v5.ts)          |                                                       Unified V5 all-in-one REST client for all [V5 REST APIs](https://bybit-exchange.github.io/docs/v5/intro)                                                        |
-|       [WebsocketClient](src/websocket-client.ts)       |                                                                            All WebSocket Events (Public & Private for all API categories)                                                                             |
-|                 [ **Derivatives v3** ]                 |                                                                              The Derivatives v3 APIs (successor to the Futures V2 APIs)                                                                               |
-|  [UnifiedMarginClient](src/unified-margin-client.ts)   |                                                     [Derivatives (v3) Unified Margin APIs](https://bybit-exchange.github.io/docs/derivatives/unified/place-order)                                                     |
-|        [ContractClient](src/contract-client.ts)        |                                                       [Derivatives (v3) Contract APIs](https://bybit-exchange.github.io/docs/derivatives/contract/place-order).                                                       |
-|                     [ **Other** ]                      |                                                                                              Other standalone API groups                                                                                              |
-|    [CopyTradingClient](src/copy-trading-client.ts)     |                                                                    [Copy Trading APIs](https://bybit-exchange.github.io/docs/category/copy-trade)                                                                     |
-| [AccountAssetClientV3](src/account-asset-client-v3.ts) |                                                            [Account Asset V3 APIs](https://bybit-exchange.github.io/docs/account-asset/internal-transfer)                                                             |
+|                         Class                          |                                                                                                      Description                       |
+| :----------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------: |
+|                     [ **V5 API** ]                     | The new unified V5 APIs (successor to previously fragmented APIs for all API groups).                                                  |
+|         [RestClientV5](src/rest-client-v5.ts)          |   Unified V5 all-in-one REST client for all [V5 REST APIs](https://bybit-exchange.github.io/docs/v5/intro)                             |
+|       [WebsocketClient](src/websocket-client.ts)       |   All WebSocket Events (Public & Private for all API categories)                                                                       |
 
 ---
 
@@ -112,11 +118,16 @@ Here are the available REST clients and the corresponding API groups described i
 
 The following API clients are for previous generation REST APIs and will be removed in the next major release. Some have already stopped working (because bybit stopped supporting them). You should use the V5 APIs for all new development.
 
+Each generation is labelled with the version number (e.g. v1/v2/v3/v5). New projects & developments should use the newest available API generation (e.g. use the V5 APIs instead of V3).
+
 <details>
   <summary>Click me to see the list of APIs</summary>
 
 |                                                Class                                                 |                                                 Description                                                  |
 | :--------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------: |
+|                 [ **Derivatives v3** ]                                                               |                                The Derivatives v3 APIs (successor to the Futures V2 APIs)                    |
+|                                  [UnifiedMarginClient](src/unified-margin-client.ts)                 |[Derivatives (v3) Unified Margin APIs](https://bybit-exchange.github.io/docs/derivatives/unified/place-order) |
+|                            [ContractClient](src/contract-client.ts)                                  | [Derivatives (v3) Contract APIs](https://bybit-exchange.github.io/docs/derivatives/contract/place-order).    |
 |                                          [ **Futures v2** ]                                          |                                             The Futures v2 APIs                                              |
 |                              [~~InverseClient~~](src/inverse-client.ts)                              |       [Inverse Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/inverse/)        |
 |                               [~~LinearClient~~](src/linear-client.ts)                               |  [USDT Perpetual Futures (v2) APIs](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-introduction)  |
@@ -127,7 +138,10 @@ The following API clients are for previous generation REST APIs and will be remo
 |                                        [ **USDC Contract** ]                                         |                                            The USDC Contract APIs                                            |
 |                         [USDCPerpetualClient](src/usdc-perpetual-client.ts)                          |     [USDC Perpetual APIs](https://bybit-exchange.github.io/docs/usdc/option/?console#t-querydeliverylog)     |
 |                            [USDCOptionClient](src/usdc-option-client.ts)                             |            [USDC Option APIs](https://bybit-exchange.github.io/docs/usdc/option/#t-introduction)             |
-| [~~AccountAssetClient~~](src/account-asset-client.ts) (deprecated, AccountAssetClientV3 recommended) |       [Account Asset V1 APIs](https://bybit-exchange.github.io/docs/account_asset/v1/#t-introduction)        |
+| [~~AccountAssetClient~~](src/account-asset-client.ts)                                                |       [Account Asset V1 APIs](https://bybit-exchange.github.io/docs/account_asset/v1/#t-introduction)        |
+|                                         [ **Other** ]                                                |                                        Other standalone API groups                                           |
+|                          [CopyTradingClient](src/copy-trading-client.ts)                             |              [Copy Trading APIs](https://bybit-exchange.github.io/docs/category/copy-trade)                  |
+|                        [AccountAssetClientV3](src/account-asset-client-v3.ts)                        |      [Account Asset V3 APIs](https://bybit-exchange.github.io/docs/account-asset/internal-transfer)          |
 
 </details>
 
@@ -318,12 +332,6 @@ const wsConfig = {
 
 const ws = new WebsocketClient(wsConfig);
 
-// (before v5) subscribe to multiple topics at once
-ws.subscribe(['position', 'execution', 'trade']);
-
-// (before v5) and/or subscribe to individual topics on demand
-ws.subscribe('kline.BTCUSD.1m');
-
 // (v5) subscribe to multiple topics at once
 ws.subscribeV5(['orderbook.50.BTCUSDT', 'orderbook.50.ETHUSDT'], 'linear');
 
@@ -351,7 +359,7 @@ ws.on('close', () => {
   console.log('connection closed');
 });
 
-// Optional: Listen to raw error events. Recommended.
+// Listen to raw error events. Recommended.
 ws.on('error', (err) => {
   console.error('error', err);
 });
@@ -370,13 +378,13 @@ Pass a custom logger (or mutate the imported DefaultLogger class) which supports
 ```javascript
 const { WebsocketClient, DefaultLogger } = require('bybit-api');
 
-// Disable all logging on the silly level
+// Enable all logging on the trace level (disabled by default)
 const customLogger = {
   ...DefaultLogger,
-  silly: () => {},
+  trace: (...params) => console.log('silly', ...params),
 };
 
-const ws = new WebsocketClient({ key: 'xxx', secret: 'yyy' }, customLogger);
+const wsClient = new WebsocketClient({ key: 'xxx', secret: 'yyy' }, customLogger);
 ```
 
 ### Debug HTTP requests
@@ -391,16 +399,13 @@ This is the "modern" way, allowing the package to be directly imported into fron
 
 1. Install these dependencies
    ```sh
-   npm install crypto-browserify stream-browserify
+   npm install stream-browserify
    ```
 2. Add this to your `tsconfig.json`
    ```json
    {
      "compilerOptions": {
        "paths": {
-         "crypto": [
-           "./node_modules/crypto-browserify"
-         ],
          "stream": [
            "./node_modules/stream-browserify"
          ]
