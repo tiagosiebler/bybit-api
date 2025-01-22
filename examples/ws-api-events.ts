@@ -12,19 +12,12 @@ const logger = {
 const key = process.env.API_KEY;
 const secret = process.env.API_SECRET;
 
-const testnetCreds = {
-  key: 'KdClhWyRVjDsnER6RW',
-  secret: 'rLeppmdAMZsHpdgeyFsJDjhd5mnIul3ZMet2',
-  testnet: true,
-};
-
 const wsClient = new WebsocketClient(
   {
     key: key,
     secret: secret,
     // testnet: true, // Whether to use the testnet environment: https://testnet.bybit.com/app/user/api-management
     // demoTrading: false, // note: As of Jan 2025, demo trading does NOT support the WS API
-    ...testnetCreds,
   },
   logger, // Optional: inject a custom logger
 );
