@@ -203,9 +203,11 @@ export class WsStore<
     removeAfter: boolean,
   ): void {
     const promise = this.getDeferredPromise(wsKey, promiseRef);
+
     if (promise?.reject) {
       promise.reject(value);
     }
+
     if (removeAfter) {
       this.removeDeferredPromise(wsKey, promiseRef);
     }
