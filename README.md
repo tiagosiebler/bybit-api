@@ -162,7 +162,7 @@ const restClientOptions = {
   // keepAlive: true,
 
   /**
-   * When using HTTP KeepAlive, how often to send TCP KeepAlive packets over sockets being kept alive. Default = 1000.
+   * When using HTTP KeepAlive, how often to send TCP KeepAlive packets over sockets being kept alive.
    * Only relevant if keepAlive is set to true.
    * Default: 1000 (defaults comes from https agent)
    */
@@ -179,7 +179,8 @@ const restClientOptions = {
   // parseAPIRateLimits: true,
 
   /**
-   * Allows you to provide a custom "signMessage" function, e.g. to use node's much faster createHmac method
+   * Allows you to provide a custom "signMessage" function,
+   * e.g. to use node crypto's much faster createHmac method
    *
    * Look at examples/fasterHmacSign.ts for a demonstration:
    */
@@ -285,7 +286,8 @@ const wsConfig = {
   /**
    * The API group this client should connect to. The V5 market is currently used by default.
    *
-   * For the V3 APIs use `v3` as the market (spot/unified margin/usdc/account asset/copy trading). Note that older API groups are deprecated and may stop working soon.
+   * For the V3 APIs use `v3` as the market (spot/unified margin/usdc/account asset/copy trading).
+   * Note that older API groups are deprecated and may stop working soon.
    */
   // market: 'v5',
 
@@ -426,14 +428,20 @@ const wsClient = new WebsocketClient(
 
 // This example is wrapped in an async function, so "await" can be used
 async function main() {
-  // Optional. Can be used to prepare a connection before sending commands (e.g. as part of your startup process)
-  // This is not necessary and will happen automatically when sending a command, if you aren't connected/authenticated yet
+  /**
+   * Optional. Can be used to prepare a connection before sending
+   * commands (e.g. as part of your startup process).
+   *
+   * This is not necessary and will happen automatically when
+   * sending a command, if you aren't connected/authenticated yet.
+   */
   // await wsClient.connectWSAPI();
 
   try {
     console.log('Step 1: Create an order');
 
-    // The type for `wsAPISubmitOrderResult` is automatically resolved to `WSAPIResponse<OrderResultV5, "order.create">`
+    // The type for `wsAPISubmitOrderResult` is automatically
+    // resolved to `WSAPIResponse<OrderResultV5, "order.create">`
     const wsAPISubmitOrderResult = await wsClient.sendWSAPIRequest(
       WS_KEY_MAP.v5PrivateTrade,
       'order.create',
