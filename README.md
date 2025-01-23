@@ -257,58 +257,6 @@ client.getOrderbook({ category: 'linear', symbol: 'BTCUSDT' })
 
 The WebsocketClient will automatically use the latest V5 WebSocket endpoints by default. To use a different endpoint, use the `market` parameter. Except for the WebSocket API - this can be accessed without any special configuration.
 
-### Specifying other markets
-
-The WebsocketClient can be configured to a specific API group using the market parameter. These are the currently available API groups:
-| API Category | Market | Description |
-|:----------------------------: |:-------------------: |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| V5 Subscriptions | `market: 'v5'` | The [v5](https://bybit-exchange.github.io/docs/v5/ws/connect) websocket topics for all categories under one market. Use the subscribeV5 method when subscribing to v5 topics. |
-
-
-### Balancing load across multiple connections
-
-The WebsocketClient will automatically prepare one connection per API group, for all topics in that API group. Any topics that you subscribe to on that WebSocket client will automatically be added to the same connection.
-
-To spread your subscribed topics over multiple connections, e.g. to reduce the throughput of an individual connectionk, you can make one instance of the WebsocketClient per connection group.
-
-```typescript
-const wsClientGroup1 = new WebsocketClient();
-const wsClientGroup2 = new WebsocketClient();
-
-// Attach event listeners to each WS Client
-// Divide your desired topics into separate groups
-```
-
-Important: do not subscribe to the same topics on both clients or you will receive duplicate messages (once per WS client).
-
----
-
-### Older Websocket APIs
-
-The following API groups are still available in the WebsocketClient but are deprecated and may no longer work. They will be removed in the next major release:
-
-<details>
-  <summary>Click me to see the table</summary>
-
-|           API Category           |           Market            | Description                                                                                                                                                                                                                                             |
-| :------------------------------: | :-------------------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|   ~~Unified Margin - Options~~   |  `market: 'unifiedOption'`  | The [derivatives v3](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket) category for unified margin. Note: public topics only support options topics. If you need USDC/USDT perps, use `unifiedPerp` instead.             |
-|    ~~Unified Margin - Perps~~    |   `market: 'unifiedPerp'`   | The [derivatives v3](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket) category for unified margin. Note: public topics only support USDT/USDC perpetual topics - use `unifiedOption` if you need public options topics. |
-|  ~~Futures v2 - Inverse Perps~~  |     `market: 'inverse'`     | The [inverse v2 perps](https://bybit-exchange.github.io/docs/futuresV2/inverse/#t-websocket) category.                                                                                                                                                  |
-|   ~~Futures v2 - USDT Perps~~    |     `market: 'linear'`      | The [USDT/linear v2 perps](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-websocket) category.                                                                                                                                               |
-| ~~Futures v2 - Inverse Futures~~ |     `market: 'inverse'`     | The [inverse futures v2](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-websocket) category uses the same market as inverse perps.                                                                                                  |
-|           ~~Spot v3~~            |     `market: 'spotv3'`      | The [spot v3](https://bybit-exchange.github.io/docs/spot/v3/#t-websocket) category.                                                                                                                                                                     |
-|           ~~Spot v1~~            |      `market: 'spot'`       | The older [spot v1](https://bybit-exchange.github.io/docs/spot/v1/#t-websocket) category. Use the `spotv3` market if possible, as the v1 category does not have automatic re-subscribe if reconnected.                                                  |
-|         ~~Copy Trading~~         |     `market: 'linear'`      | The [copy trading](https://bybit-exchange.github.io/docs/copy_trading/#t-websocket) category. Use the linear market to listen to all copy trading topics.                                                                                               |
-|          ~~USDC Perps~~          |     `market: 'usdcPerp`     | The [USDC perps](https://bybit-exchange.github.io/docs/usdc/perpetual/#t-websocket) category.                                                                                                                                                           |
-|         ~~USDC Options~~         |   `market: 'usdcOption'`    | The [USDC options](https://bybit-exchange.github.io/docs/usdc/option/#t-websocket) category.                                                                                                                                                            |
-|       ~~Contract v3 USDT~~       |  `market: 'contractUSDT'`   | The [Contract V3](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket) category (USDT perps)                                                                                                                                      |
-|     ~~Contract v3 Inverse~~      | `market: 'contractInverse'` | The [Contract V3](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket) category (inverse perps)                                                                                                                                   |
-
-</details
-
----
-
 ### WebSocket Examples
 
 #### Consuming events
@@ -514,6 +462,60 @@ main();
 
 
 See [websocket-client.ts](./src/websocket-client.ts) for further information.
+
+---
+
+
+
+### Specifying other markets
+
+The WebsocketClient can be configured to a specific API group using the market parameter. These are the currently available API groups:
+| API Category | Market | Description |
+|:----------------------------: |:-------------------: |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| V5 Subscriptions | `market: 'v5'` | The [v5](https://bybit-exchange.github.io/docs/v5/ws/connect) websocket topics for all categories under one market. Use the subscribeV5 method when subscribing to v5 topics. |
+
+
+### Balancing load across multiple connections
+
+The WebsocketClient will automatically prepare one connection per API group, for all topics in that API group. Any topics that you subscribe to on that WebSocket client will automatically be added to the same connection.
+
+To spread your subscribed topics over multiple connections, e.g. to reduce the throughput of an individual connectionk, you can make one instance of the WebsocketClient per connection group.
+
+```typescript
+const wsClientGroup1 = new WebsocketClient();
+const wsClientGroup2 = new WebsocketClient();
+
+// Attach event listeners to each WS Client
+// Divide your desired topics into separate groups
+```
+
+Important: do not subscribe to the same topics on both clients or you will receive duplicate messages (once per WS client).
+
+---
+
+### Older Websocket APIs
+
+The following API groups are still available in the WebsocketClient but are deprecated and may no longer work. They will be removed in the next major release:
+
+<details>
+  <summary>Click me to see the table</summary>
+
+|           API Category           |           Market            | Description                                                                                                                                                                                                                                             |
+| :------------------------------: | :-------------------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|   ~~Unified Margin - Options~~   |  `market: 'unifiedOption'`  | The [derivatives v3](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket) category for unified margin. Note: public topics only support options topics. If you need USDC/USDT perps, use `unifiedPerp` instead.             |
+|    ~~Unified Margin - Perps~~    |   `market: 'unifiedPerp'`   | The [derivatives v3](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket) category for unified margin. Note: public topics only support USDT/USDC perpetual topics - use `unifiedOption` if you need public options topics. |
+|  ~~Futures v2 - Inverse Perps~~  |     `market: 'inverse'`     | The [inverse v2 perps](https://bybit-exchange.github.io/docs/futuresV2/inverse/#t-websocket) category.                                                                                                                                                  |
+|   ~~Futures v2 - USDT Perps~~    |     `market: 'linear'`      | The [USDT/linear v2 perps](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-websocket) category.                                                                                                                                               |
+| ~~Futures v2 - Inverse Futures~~ |     `market: 'inverse'`     | The [inverse futures v2](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-websocket) category uses the same market as inverse perps.                                                                                                  |
+|           ~~Spot v3~~            |     `market: 'spotv3'`      | The [spot v3](https://bybit-exchange.github.io/docs/spot/v3/#t-websocket) category.                                                                                                                                                                     |
+|           ~~Spot v1~~            |      `market: 'spot'`       | The older [spot v1](https://bybit-exchange.github.io/docs/spot/v1/#t-websocket) category. Use the `spotv3` market if possible, as the v1 category does not have automatic re-subscribe if reconnected.                                                  |
+|         ~~Copy Trading~~         |     `market: 'linear'`      | The [copy trading](https://bybit-exchange.github.io/docs/copy_trading/#t-websocket) category. Use the linear market to listen to all copy trading topics.                                                                                               |
+|          ~~USDC Perps~~          |     `market: 'usdcPerp`     | The [USDC perps](https://bybit-exchange.github.io/docs/usdc/perpetual/#t-websocket) category.                                                                                                                                                           |
+|         ~~USDC Options~~         |   `market: 'usdcOption'`    | The [USDC options](https://bybit-exchange.github.io/docs/usdc/option/#t-websocket) category.                                                                                                                                                            |
+|       ~~Contract v3 USDT~~       |  `market: 'contractUSDT'`   | The [Contract V3](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket) category (USDT perps)                                                                                                                                      |
+|     ~~Contract v3 Inverse~~      | `market: 'contractInverse'` | The [Contract V3](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket) category (inverse perps)                                                                                                                                   |
+
+</details
 
 ---
 
