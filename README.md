@@ -146,7 +146,8 @@ const restClientOptions = {
   // testnet: true,
 
   /**
-   * Set to `true` to use Bybit's V5 demo trading: https://bybit-exchange.github.io/docs/v5/demo
+   * Set to `true` to use Bybit's V5 demo trading:
+   * https://bybit-exchange.github.io/docs/v5/demo
    *
    * Note: to use demo trading, you should have `testnet` disabled
    */
@@ -162,8 +163,8 @@ const restClientOptions = {
   // keepAlive: true,
 
   /**
-   * When using HTTP KeepAlive, how often to send TCP KeepAlive packets over sockets being kept alive.
-   * Only relevant if keepAlive is set to true.
+   * When using HTTP KeepAlive, how often to send TCP KeepAlive packets over
+   * sockets being kept alive. Only relevant if keepAlive is set to true.
    * Default: 1000 (defaults comes from https agent)
    */
   // keepAliveMsecs: 1000, // 1000 = 1 second
@@ -258,9 +259,7 @@ Each generation is labelled with the version number (e.g. v1/v2/v3/v5). New proj
 
 The WebsocketClient will automatically use the latest V5 WebSocket endpoints by default. To use a different endpoint, use the `market` parameter. Except for the WebSocket API - this can be accessed without any special configuration.
 
-### WebSocket Examples
-
-#### Subscriptions - Consuming events
+## WebSocket Subscriptions - Consuming events
 
 Here's a minimal example for using the websocket client. For more complete examples, look into the ws-\* examples in the [examples](./examples/) folder in the repo on GitHub.
 
@@ -274,7 +273,8 @@ const PRIVATE_KEY = 'yyy';
 
 const wsConfig = {
   /**
-   * API credentials are optional. They are only required if you plan on using any account-specific topics or the WS API
+   * API credentials are optional. They are only required if you plan on using
+   * any account-specific topics or the WS API
    */
   key: 'yourAPIKeyHere',
   secret: 'yourAPISecretHere',
@@ -286,7 +286,8 @@ const wsConfig = {
   /**
    * The API group this client should connect to. The V5 market is currently used by default.
    *
-   * For the V3 APIs use `v3` as the market (spot/unified margin/usdc/account asset/copy trading).
+   * For the V3 APIs use `v3` as the market (spot/unified margin/usdc/account
+   *  asset/copy trading).
    * Note that older API groups are deprecated and may stop working soon.
    */
   // market: 'v5',
@@ -294,24 +295,30 @@ const wsConfig = {
   /**
    * Set to `true` to connect to Bybit's testnet environment.
    * - If demo trading, `testnet` should be set to false!
-   * - If testing a strategy, use demo trading instead. Testnet market data is very different from real market conditions.
+   * - If testing a strategy, use demo trading instead. Testnet market
+   * data is very different from real market conditions.
    */
   // testnet: true
 
   /**
-   * Set to `true` to connect to Bybit's V5 demo trading: https://bybit-exchange.github.io/docs/v5/demo
+   * Set to `true` to connect to Bybit's V5 demo trading:
+   * https://bybit-exchange.github.io/docs/v5/demo
    *
    * Only the "V5" "market" is supported here.
    */
   // demoTrading; true;
 
-  // recv window size for websocket authentication (higher latency connections (VPN) can cause authentication to fail if the recv window is too small)
+  // recv window size for websocket authentication (higher latency connections
+  // (VPN) can cause authentication to fail if the recv window is too small)
   // recvWindow: 5000,
 
   /** How often to check if the connection is alive (in ms) */
   // pingInterval: 10000,
 
-  /** How long to wait (in ms) for a pong (heartbeat reply) before assuming the connection is dead */
+  /**
+   * How long to wait (in ms) for a pong (heartbeat reply) before assuming the
+   * connection is dead
+   */
   // pongTimeout: 1000,
 
   /** Delay in milliseconds before respawning the connection */
@@ -321,7 +328,8 @@ const wsConfig = {
   // wsUrl: 'wss://stream.bytick.com/realtime'
 
   /**
-   * Allows you to provide a custom "signMessage" function, e.g. to use node's much faster createHmac method
+   * Allows you to provide a custom "signMessage" function, e.g. to use node's
+   * much faster createHmac method
    *
    * Look at examples/fasterHmacSign.ts for a demonstration:
    */
@@ -337,7 +345,8 @@ ws.subscribeV5(['orderbook.50.BTCUSDT', 'orderbook.50.ETHUSDT'], 'linear');
 ws.subscribeV5('kline.5.BTCUSDT', 'linear');
 ws.subscribeV5('kline.5.ETHUSDT', 'linear');
 
-// Private/public topics can be used in the same WS client instance, even for different API groups (linear, options, spot, etc)
+// Private/public topics can be used in the same WS client instance, even for
+// different API groups (linear, options, spot, etc)
 ws.subscribeV5('position', 'linear');
 ws.subscribeV5('publicTrade.BTC', 'option');
 
@@ -358,17 +367,20 @@ ws.on('update', (data) => {
   console.log('data received', JSON.stringify(data, null, 2));
 });
 
-// Optional: Listen to websocket connection open event (automatic after subscribing to one or more topics)
+// Optional: Listen to websocket connection open event
+// (automatic after subscribing to one or more topics)
 ws.on('open', ({ wsKey, event }) => {
   console.log('connection open for websocket with ID: ', wsKey);
 });
 
-// Optional: Listen to responses to websocket queries (e.g. the response after subscribing to a topic)
+// Optional: Listen to responses to websocket queries
+// (e.g. the response after subscribing to a topic)
 ws.on('response', (response) => {
   console.log('response', response);
 });
 
-// Optional: Listen to connection close event. Unexpected connection closes are automatically reconnected.
+// Optional: Listen to connection close event.
+// Unexpected connection closes are automatically reconnected.
 ws.on('close', () => {
   console.log('connection closed');
 });
@@ -387,7 +399,7 @@ ws.on('reconnected', (data) => {
 });
 ```
 
-#### Websocket API - Sending orders via WebSockets
+## Websocket API - Sending orders via WebSockets
 
 Bybit supports sending, amending and cancelling orders over a WebSocket connection. The [WebsocketClient](./src/WebsocketClient.ts) fully supports Bybit's WebSocket API.
 
@@ -416,13 +428,21 @@ const { WS_KEY_MAP, WebsocketClient } = require('bybit-api');
 // or
 // import { WS_KEY_MAP, WebsocketClient } from 'bybit-api';
 
-// Create an instance of the WebsocketClient. This will automatically handle connectivity and authentication for you.
+// Create an instance of the WebsocketClient.
+// This will automatically handle connectivity and authentication for you.
 const wsClient = new WebsocketClient(
   {
     key: 'yourApiKeyHere',
     secret: 'yourApiSecretHere',
-    // testnet: true, // Whether to use the testnet environment. Create API keys here: https://testnet.bybit.com/app/user/api-management
-    // demoTrading: false, // note: As of Jan 2025, demo trading does NOT support the WS API
+
+    // Whether to use the testnet environment.
+    // Create testnet API keys here: https://testnet.bybit.com/app/user/api-management
+    // testnet: true,
+
+    // Whether to use the livenet demo trading environment
+    // Note: As of Jan 2025, demo trading only supports consuming events, it does
+    // NOT support the WS API.
+    // demoTrading: false,
   }
 );
 
