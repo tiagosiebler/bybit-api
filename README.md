@@ -265,7 +265,7 @@ The WebsocketClient can be configured to a specific API group using the market p
 | V5 Subscriptions | `market: 'v5'` | The [v5](https://bybit-exchange.github.io/docs/v5/ws/connect) websocket topics for all categories under one market. Use the subscribeV5 method when subscribing to v5 topics. |
 
 
-### Balancing consumer load across multiple connections
+### Balancing load across multiple connections
 
 The WebsocketClient will automatically prepare one connection per API group, for all topics in that API group. Any topics that you subscribe to on that WebSocket client will automatically be added to the same connection.
 
