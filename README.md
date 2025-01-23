@@ -259,7 +259,7 @@ The WebsocketClient will automatically use the latest V5 WebSocket endpoints by 
 
 ### WebSocket Examples
 
-#### Consuming events
+#### Subscriptions - Consuming events
 
 Here's a minimal example for using the websocket client. For more complete examples, look into the ws-\* examples in the [examples](./examples/) folder in the repo on GitHub.
 
