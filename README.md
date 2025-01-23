@@ -385,7 +385,7 @@ ws.on('reconnected', (data) => {
 });
 ```
 
-#### Websocket API - Sending orders over WS
+#### Websocket API - Sending orders via WebSockets
 
 Bybit supports sending, amending and cancelling orders over a WebSocket connection. Links for reference:
 - [Bybit WebSocket API Documentation](https://bybit-exchange.github.io/docs/v5/websocket/trade/guideline)
@@ -398,14 +398,16 @@ Note: as of January 2024, the demo trading environment does not support the Webs
 The [WebsocketClient](./src/WebsocketClient.ts) supports this Bybit's Websocket API. There are two ways to use the WS API, depending on individual preference:
 
 - event-driven:
-  - send requests via `client.sendWSAPIRequest(wsKey, channel, params)`, fire and forget, don't use await
+  - send requests via `client.sendWSAPIRequest(wsKey, operation, params)`, fire and forget, don't use await
   - handle async replies via event handlers on `client.on('exception', cb)` and `client.on('response', cb)`
 - promise-driven:
-  - send requests via `const result = await client.sendWSAPIRequest(wsKey, channel, params)`, which returns a promise
+  - send requests via `const result = await client.sendWSAPIRequest(wsKey, operation, params)`, which returns a promise
   - await each call
   - use try/catch blocks to handle promise rejections
 
-The below example demonstrates the promise-driven approach, which behaves similar to a REST API. For more detailed examples, refer to the [examples](./examples/) folder (e.g the [examples/ws-api-promises.ts](./examples/ws-api-promises.ts) example).
+The below example demonstrates the promise-driven approach, which behaves similar to a REST API. The WebSocket API even accepts the same parameters as the corresponding REST API endpoints, so this approach should be compatible with existing REST implementations.
+
+For more detailed examples, refer to the [examples](./examples/) folder (e.g the [examples/ws-api-promises.ts](./examples/ws-api-promises.ts) example).
 
 ```javascript
 const { WS_KEY_MAP, WebsocketClient } = require('bybit-api');
@@ -413,7 +415,7 @@ const { WS_KEY_MAP, WebsocketClient } = require('bybit-api');
 // or
 // import { WS_KEY_MAP, WebsocketClient } from 'bybit-api';
 
-// Create an instance of the WebsocketClient
+// Create an instance of the WebsocketClient. This will automatically handle connectivity and authentication for you.
 const wsClient = new WebsocketClient(
   {
     key: 'yourApiKeyHere',
@@ -459,13 +461,9 @@ main();
 
 ```
 
-
-
-See [websocket-client.ts](./src/websocket-client.ts) for further information.
+See the [examples/ws-api-promises.ts](./examples/ws-api-promises.ts) example for a more detailed explanation.
 
 ---
-
-
 
 ### Specifying other markets
 
