@@ -130,6 +130,7 @@ export interface WSClientConfigurableOptions {
   restOptions?: RestClientOptions;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   requestOptions?: any;
+
   wsUrl?: string;
 
   /**

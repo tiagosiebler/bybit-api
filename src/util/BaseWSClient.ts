@@ -167,19 +167,10 @@ export abstract class BaseWebsocketClient<
       ...options,
     };
 
-    this.options.restOptions = {
-      ...this.options.restOptions,
-      testnet: this.options.testnet,
-    };
-
-    // this.prepareRESTClient();
-
     // add default error handling so this doesn't crash node (if the user didn't set a handler)
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     this.on('error', () => {});
   }
-
-  // protected abstract prepareRESTClient(): void;
 
   /**
    * Return true if this wsKey connection should automatically authenticate immediately after connecting

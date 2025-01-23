@@ -26,7 +26,8 @@ const wsClient = new WebsocketClient(
   {
     key: key,
     secret: secret,
-    testnet: true,
+    // testnet: false,
+    // demoTrading: false, // set testnet to false, if you plan on using demo trading
   },
   logger,
 );

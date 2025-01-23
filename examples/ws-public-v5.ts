@@ -19,7 +19,8 @@ const logger = {
  */
 const wsClient = new WebsocketClient(
   {
-    market: 'v5',
+    // Previously required, this parameter is now optional:
+    // market: 'v5',
   },
   logger,
 );
