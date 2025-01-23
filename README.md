@@ -46,6 +46,40 @@ Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs and WebSockets:
       - See example for more details: [examples/ws-api-events.ts](./examples/ws-api-events.ts)
 - Active community support & collaboration in telegram: [Node.js Algo Traders](https://t.me/nodetraders).
 
+# Table of Contents
+
+## Overview
+- [Installation](#installation)
+- [Issues & Discussion](#issues--discussion)
+- [Related Projects](#related-projects)
+- [Documentation](#documentation)
+
+## Structure & Usage
+- [Structure](#structure)
+- [API Clients](#api-clients)
+- [Usage](#usage)
+
+## WebSocket Integration
+- [WebSockets](#websockets)
+- [WebSocket Subscriptions - Consuming Events](#websocket-subscriptions---consuming-events)
+- [Websocket API - Sending Orders via WebSockets](#websocket-api---sending-orders-via-websockets)
+- [Specifying Other Markets](#specifying-other-markets)
+- [Load Balancing](#balancing-load-across-multiple-connections)
+- [Older Websocket APIs](#older-websocket-apis)
+
+## Additional Features
+- [Logging](#logging)
+  - [Customise Logging](#customise-logging)
+  - [Debug HTTP Requests](#debug-http-requests)
+- [Browser Usage](#browser-usage)
+  - [Import](#import)
+  - [Webpack](#webpack)
+
+## Contributing
+- [Contributions & Thanks](#contributions--thanks)
+
+------
+
 ## Installation
 
 `npm install --save bybit-api`
