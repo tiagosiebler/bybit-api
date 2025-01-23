@@ -125,10 +125,11 @@ Here are the available REST clients and the corresponding API groups described i
 
 The following API clients are for previous generation REST APIs and will be removed in the next major release. Some have already stopped working (because bybit stopped supporting them). You should use the V5 APIs for all new development.
 
+<details>
+  <summary>Click me to read more</summary>
+
 Each generation is labelled with the version number (e.g. v1/v2/v3/v5). New projects & developments should use the newest available API generation (e.g. use the V5 APIs instead of V3).
 
-<details>
-  <summary>Click me to see the list of APIs</summary>
 
 |                                                Class                                                 |                                                 Description                                                  |
 | :--------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------: |
@@ -256,9 +257,19 @@ client.getOrderbook({ category: 'linear', symbol: 'BTCUSDT' })
 
 The WebsocketClient will automatically use the latest V5 WebSocket endpoints by default. To use a different endpoint, use the `market` parameter. Except for the WebSocket API - this can be accessed without any special configuration.
 
-### Topics over muliple connections
+### Specifying other markets
 
-The WebsocketClient will automatically prepare one connection per API group, for all topics in that API group. Any topics that you subscribe to on that WebSocket client will automatically be added to the same connection. To spread your subscriptions over multiple topics, e.g. to reduce the throughput of an individual connection, you can make one instance of the WebsocketClient per connection group.
+The WebsocketClient can be configured to a specific API group using the market parameter. These are the currently available API groups:
+| API Category | Market | Description |
+|:----------------------------: |:-------------------: |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| V5 Subscriptions | `market: 'v5'` | The [v5](https://bybit-exchange.github.io/docs/v5/ws/connect) websocket topics for all categories under one market. Use the subscribeV5 method when subscribing to v5 topics. |
+
+
+### Balancing consumer load across multiple connections
+
+The WebsocketClient will automatically prepare one connection per API group, for all topics in that API group. Any topics that you subscribe to on that WebSocket client will automatically be added to the same connection.
+
+To spread your subscribed topics over multiple connections, e.g. to reduce the throughput of an individual connectionk, you can make one instance of the WebsocketClient per connection group.
 
 ```typescript
 const wsClientGroup1 = new WebsocketClient();
@@ -268,14 +279,7 @@ const wsClientGroup2 = new WebsocketClient();
 // Divide your desired topics into separate groups
 ```
 
-Each WebsocketClient maintains a separate state, so if you do this, it's important that you ensure you don't subscribe to the same topics on both clients, or you will receive duplicate messages.
-
-### Specifying other markets
-
-The WebsocketClient can be configured to a specific API group using the market parameter. These are the currently available API groups:
-| API Category | Market | Description |
-|:----------------------------: |:-------------------: |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| V5 Subscriptions | `market: 'v5'` | The [v5](https://bybit-exchange.github.io/docs/v5/ws/connect) websocket topics for all categories under one market. Use the subscribeV5 method when subscribing to v5 topics. |
+Important: do not subscribe to the same topics on both clients or you will receive duplicate messages (once per WS client).
 
 ---
 
