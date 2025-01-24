@@ -1,10 +1,5 @@
 import { AxiosResponse } from 'axios';
 import { APIRateLimit } from '../types';
-import {
-  WebsocketSucceededTopicSubscriptionConfirmationEvent,
-  WebsocketTopicSubscriptionConfirmationEvent,
-} from '../types/websockets/ws-confirmations';
-import { WSAPIResponse, WS_API_Operations } from '../types/websockets/ws-api';
 
 export interface RestClientOptions {
   /** Your API key */
@@ -186,25 +181,6 @@ export function isWsPong(msg: any): boolean {
     msg.ret_msg === 'pong' &&
     msg.success === true
   );
-}
-
-export function isTopicSubscriptionConfirmation(
-  msg: unknown,
-): msg is WebsocketTopicSubscriptionConfirmationEvent {
-  if (typeof msg !== 'object') {
-    return false;
-  }
-  if (!msg) {
-    return false;
-  }
-  if (typeof msg['op'] !== 'string') {
-    return false;
-  }
-  if (msg['op'] !== 'subscribe') {
-    return false;
-  }
-
-  return true;
 }
 
 export const APIID = 'bybitapinode';

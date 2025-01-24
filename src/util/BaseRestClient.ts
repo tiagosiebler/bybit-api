@@ -51,8 +51,6 @@ interface SignedRequestContext {
   timestamp?: number;
   api_key?: string;
   recv_window?: number;
-  // spot v1 is diff from the rest...
-  recvWindow?: number;
 }
 
 interface SignedRequest<T> {
@@ -72,7 +70,7 @@ interface UnsignedRequest<T> {
   recvWindow?: number;
 }
 
-type SignMethod = 'v2auth' | 'v5auth';
+type SignMethod = 'v5auth';
 
 export default abstract class BaseRestClient {
   private timeOffset: number | null = null;
@@ -440,40 +438,6 @@ export default abstract class BaseRestClient {
       //   req: paramsStr,
       //   sign: res.sign,
       // });
-      return res;
-    }
-
-    // spot/v2 derivatives
-    if (signMethod === 'v2auth') {
-      res.originalParams.api_key = key;
-      res.originalParams.timestamp = timestamp;
-
-      // Optional, set to 5000 by default. Increase if timestamp/recv_window errors are seen.
-      if (recvWindow) {
-        res.originalParams.recv_window = recvWindow;
-      }
-      const sortProperties = true;
-      const encodeValues = false;
-
-      res.serializedParams = serializeParams(
-        res.originalParams,
-        strictParamValidation,
-        sortProperties,
-        encodeValues,
-      );
-      res.sign = await this.signMessage(
-        res.serializedParams,
-        this.secret,
-        'hex',
-        'SHA-256',
-      );
-
-      // @ts-ignore
-      res.paramsWithSign = {
-        ...res.originalParams,
-        sign: res.sign,
-      };
-
       return res;
     }
 

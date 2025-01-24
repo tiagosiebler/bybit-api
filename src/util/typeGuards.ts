@@ -2,7 +2,10 @@
  * Use type guards to narrow down types with minimal efforts.
  */
 
-import { WebsocketSucceededTopicSubscriptionConfirmationEvent } from '../types';
+import {
+  WebsocketSucceededTopicSubscriptionConfirmationEvent,
+  WebsocketTopicSubscriptionConfirmationEvent,
+} from '../types';
 import { WSAPIResponse, WS_API_Operations } from '../types/websockets/ws-api';
 import {
   WSAccountOrderEventV5,
@@ -10,7 +13,6 @@ import {
   WSOrderbookEventV5,
   WSPositionEventV5,
 } from '../types/websockets/ws-events';
-import { isTopicSubscriptionConfirmation } from './requestUtils';
 
 /**
  * Type guard to detect a V5 orderbook event (delta & snapshots)
@@ -119,4 +121,23 @@ export function isTopicSubscriptionSuccess(
 ): msg is WebsocketSucceededTopicSubscriptionConfirmationEvent {
   if (!isTopicSubscriptionConfirmation(msg)) return false;
   return msg.success === true;
+}
+
+export function isTopicSubscriptionConfirmation(
+  msg: unknown,
+): msg is WebsocketTopicSubscriptionConfirmationEvent {
+  if (typeof msg !== 'object') {
+    return false;
+  }
+  if (!msg) {
+    return false;
+  }
+  if (typeof msg['op'] !== 'string') {
+    return false;
+  }
+  if (msg['op'] !== 'subscribe') {
+    return false;
+  }
+
+  return true;
 }
