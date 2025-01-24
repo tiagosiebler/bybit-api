@@ -2,12 +2,15 @@
  * Use type guards to narrow down types with minimal efforts.
  */
 
+import { WebsocketSucceededTopicSubscriptionConfirmationEvent } from '../types';
+import { WSAPIResponse, WS_API_Operations } from '../types/websockets/ws-api';
 import {
   WSAccountOrderEventV5,
   WSExecutionEventV5,
   WSOrderbookEventV5,
   WSPositionEventV5,
 } from '../types/websockets/ws-events';
+import { isTopicSubscriptionConfirmation } from './requestUtils';
 
 /**
  * Type guard to detect a V5 orderbook event (delta & snapshots)
@@ -91,4 +94,29 @@ export function isWsExecutionEventV5(
   }
 
   return event['topic'] === 'execution';
+}
+
+export function neverGuard(x: never, msg: string): Error {
+  return new Error(`Unhandled value exception "${x}", ${msg}`);
+}
+
+export function isWSAPIResponse(
+  msg: unknown,
+): msg is Omit<WSAPIResponse, 'wsKey'> {
+  if (typeof msg !== 'object' || !msg) {
+    return false;
+  }
+
+  if (typeof msg['op'] !== 'string') {
+    return false;
+  }
+
+  return (WS_API_Operations as string[]).includes(msg['op']);
+}
+
+export function isTopicSubscriptionSuccess(
+  msg: unknown,
+): msg is WebsocketSucceededTopicSubscriptionConfirmationEvent {
+  if (!isTopicSubscriptionConfirmation(msg)) return false;
+  return msg.success === true;
 }

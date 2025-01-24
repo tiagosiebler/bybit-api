@@ -9,6 +9,7 @@ import {
 
 import { DefaultLogger } from '../logger';
 import { WSAPIRequest } from '../../types/websockets/ws-api';
+import { neverGuard } from '../typeGuards';
 
 export const WS_LOGGER_CATEGORY = { category: 'bybit-ws' };
 
@@ -300,10 +301,6 @@ export const WS_ERROR_ENUM = {
   API_SIGN_AUTH_FAILED: '10003',
   USDC_OPTION_AUTH_FAILED: '3303006',
 };
-
-export function neverGuard(x: never, msg: string): Error {
-  return new Error(`Unhandled value exception "${x}", ${msg}`);
-}
 
 /**
  * #305: ws.terminate() is undefined in browsers.

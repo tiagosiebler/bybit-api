@@ -164,10 +164,6 @@ export default abstract class BaseRestClient {
     }
   }
 
-  private isSpotV1Client() {
-    return this.clientType === REST_CLIENT_TYPE_ENUM.spot;
-  }
-
   get(endpoint: string, params?: any) {
     return this._call('GET', endpoint, params, true);
   }
@@ -263,56 +259,34 @@ export default abstract class BaseRestClient {
       };
     }
 
-    // USDC endpoints, unified margin and a few others use a different way of authenticating requests (headers instead of params)
-    if (this.clientType === REST_CLIENT_TYPE_ENUM.v3) {
-      const signResult = await this.prepareSignParams(
-        method,
-        'v5auth',
-        params,
-        isPublicApi,
-      );
-
-      const headers: AxiosRequestConfig['headers'] = {
-        'X-BAPI-SIGN-TYPE': 2,
-        'X-BAPI-API-KEY': this.key,
-        'X-BAPI-TIMESTAMP': signResult.timestamp,
-        'X-BAPI-SIGN': signResult.sign,
-        'X-BAPI-RECV-WINDOW': signResult.recvWindow,
-        ...options.headers,
-      };
-
-      if (method === 'GET') {
-        return {
-          ...options,
-          headers,
-          params: signResult.originalParams,
-        };
-      }
-
-      return {
-        ...options,
-        headers,
-        data: signResult.originalParams,
-      };
-    }
-
     const signResult = await this.prepareSignParams(
       method,
-      'v2auth',
+      'v5auth',
       params,
       isPublicApi,
     );
 
-    if (method === 'GET' || this.isSpotV1Client()) {
+    const headers: AxiosRequestConfig['headers'] = {
+      'X-BAPI-SIGN-TYPE': 2,
+      'X-BAPI-API-KEY': this.key,
+      'X-BAPI-TIMESTAMP': signResult.timestamp,
+      'X-BAPI-SIGN': signResult.sign,
+      'X-BAPI-RECV-WINDOW': signResult.recvWindow,
+      ...options.headers,
+    };
+
+    if (method === 'GET') {
       return {
         ...options,
-        params: signResult.paramsWithSign,
+        headers,
+        params: signResult.originalParams,
       };
     }
 
     return {
       ...options,
-      data: signResult.paramsWithSign,
+      headers,
+      data: signResult.originalParams,
     };
   }
 
@@ -476,11 +450,7 @@ export default abstract class BaseRestClient {
 
       // Optional, set to 5000 by default. Increase if timestamp/recv_window errors are seen.
       if (recvWindow) {
-        if (this.isSpotV1Client()) {
-          res.originalParams.recvWindow = recvWindow;
-        } else {
-          res.originalParams.recv_window = recvWindow;
-        }
+        res.originalParams.recv_window = recvWindow;
       }
       const sortProperties = true;
       const encodeValues = false;

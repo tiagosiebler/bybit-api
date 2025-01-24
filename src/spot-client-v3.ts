@@ -12,8 +12,8 @@ import BaseRestClient from './util/BaseRestClient';
  */
 export class SpotClientV3 extends BaseRestClient {
   getClientType() {
-    // Follows the same authentication mechanism as other v3 APIs (e.g. USDC)
-    return REST_CLIENT_TYPE_ENUM.v3;
+    // Doesn't really matter here, since the only remaining endpoint does not require auth.
+    return REST_CLIENT_TYPE_ENUM.v5;
   }
 
   async fetchServerTime(): Promise<number> {
