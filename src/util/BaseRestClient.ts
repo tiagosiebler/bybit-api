@@ -4,7 +4,6 @@ import https from 'https';
 
 import {
   APIID,
-  REST_CLIENT_TYPE_ENUM,
   RestClientOptions,
   RestClientType,
   getRestBaseUrl,
