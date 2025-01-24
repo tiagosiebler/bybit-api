@@ -555,7 +555,7 @@ export class WebsocketClient extends BaseWebsocketClient<
         // Previously used to track topics in a request. Keeping this for subscribe/unsubscribe requests, no need for incremental values
         const req_id =
           ['subscribe', 'unsubscribe'].includes(operation) && topics.length
-            ? topics.join('_')
+            ? topics.join(',')
             : this.getNewRequestId();
 
         const wsEvent: WsRequestOperationBybit<WsTopic> = {
