@@ -63,7 +63,6 @@ Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs and WebSockets:
 - [WebSockets](#websockets)
 - [WebSocket Subscriptions - Consuming Events](#websocket-subscriptions---consuming-events)
 - [Websocket API - Sending Orders via WebSockets](#websocket-api---sending-orders-via-websockets)
-- [Specifying Other Markets](#specifying-other-markets)
 - [Consumer Load Balancing](#balancing-load-across-multiple-connections)
 
 ## Additional Features
@@ -484,14 +483,6 @@ main();
 See the [examples/ws-api-promises.ts](./examples/ws-api-promises.ts) example for a more detailed explanation.
 
 ---
-
-### Specifying other markets
-
-The WebsocketClient can be configured to a specific API group using the market parameter. These are the currently available API groups:
-| API Category | Market | Description |
-|:----------------------------: |:-------------------: |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| V5 Subscriptions | `market: 'v5'` | The [v5](https://bybit-exchange.github.io/docs/v5/ws/connect) websocket topics for all categories under one market. Use the subscribeV5 method when subscribing to v5 topics. |
-
 
 ### Balancing load across multiple connections
 

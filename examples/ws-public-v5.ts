@@ -5,7 +5,7 @@ import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../src';
 
 const logger = {
   ...DefaultLogger,
-  silly: (...params) => console.log('silly', ...params),
+  trace: (...params) => console.log('trace', ...params),
 };
 
 /**
@@ -17,13 +17,7 @@ const logger = {
  * - Heartbeats/ping/pong/reconnects are all handled automatically.
  *    If a connection drops, the client will clean it up, respawn a fresh connection and resubscribe for you.
  */
-const wsClient = new WebsocketClient(
-  {
-    // Previously required, this parameter is now optional:
-    // market: 'v5',
-  },
-  logger,
-);
+const wsClient = new WebsocketClient({}, logger);
 
 wsClient.on('update', (data) => {
   console.log('raw message received ', JSON.stringify(data));

@@ -1,9 +1,7 @@
 import { WebsocketClient } from '../../src';
 
 describe.skip('Public V5 Websocket client', () => {
-  const api = new WebsocketClient({
-    market: 'v5',
-  });
+  const api = new WebsocketClient({});
 
   const linearSymbol = 'BTCUSDT';
   const linearCategory = 'linear';
