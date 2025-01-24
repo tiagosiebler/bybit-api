@@ -50,28 +50,13 @@ export class WebsocketClient extends BaseWebsocketClient<
   WsRequestOperationBybit<WsTopic>
 > {
   /**
-   * Request connection of all dependent (public & private) websockets, instead of waiting for automatic connection by library
+   * Request connection of all dependent (public & private) websockets, instead of waiting
+   * for automatic connection by SDK.
    */
   public connectAll(): Promise<WSConnectedResult | undefined>[] {
     switch (this.options.market) {
-      case 'inverse': {
-        // only one for inverse
-        return [...this.connectPublic()];
-      }
-      // these all have separate public & private ws endpoints
-      case 'linear':
-      case 'spot':
-      case 'spotv3':
-      case 'usdcOption':
-      case 'usdcPerp':
-      case 'unifiedPerp':
-      case 'unifiedOption':
-      case 'contractUSDT':
-      case 'contractInverse': {
-        return [...this.connectPublic(), this.connectPrivate()];
-      }
       case 'v5': {
-        return [this.connectPrivate()];
+        return [...this.connectPublic(), this.connectPrivate()];
       }
       default: {
         throw neverGuard(this.options.market, 'connectAll(): Unhandled market');
@@ -101,37 +86,6 @@ export class WebsocketClient extends BaseWebsocketClient<
           this.connect(WS_KEY_MAP.v5OptionPublic),
         ];
       }
-      case 'inverse': {
-        return [this.connect(WS_KEY_MAP.inverse)];
-      }
-      case 'linear': {
-        return [this.connect(WS_KEY_MAP.linearPublic)];
-      }
-      case 'spot': {
-        return [this.connect(WS_KEY_MAP.spotPublic)];
-      }
-      case 'spotv3': {
-        return [this.connect(WS_KEY_MAP.spotV3Public)];
-      }
-      case 'usdcOption': {
-        return [this.connect(WS_KEY_MAP.usdcOptionPublic)];
-      }
-      case 'usdcPerp': {
-        return [this.connect(WS_KEY_MAP.usdcPerpPublic)];
-      }
-      case 'unifiedOption': {
-        return [this.connect(WS_KEY_MAP.unifiedOptionPublic)];
-      }
-      case 'unifiedPerp': {
-        return [
-          this.connect(WS_KEY_MAP.unifiedPerpUSDTPublic),
-          this.connect(WS_KEY_MAP.unifiedPerpUSDCPublic),
-        ];
-      }
-      case 'contractUSDT':
-        return [this.connect(WS_KEY_MAP.contractUSDTPublic)];
-      case 'contractInverse':
-        return [this.connect(WS_KEY_MAP.contractInversePublic)];
     }
   }
 
@@ -141,40 +95,16 @@ export class WebsocketClient extends BaseWebsocketClient<
       default: {
         return this.connect(WS_KEY_MAP.v5Private);
       }
-      case 'inverse': {
-        return this.connect(WS_KEY_MAP.inverse);
-      }
-      case 'linear': {
-        return this.connect(WS_KEY_MAP.linearPrivate);
-      }
-      case 'spot': {
-        return this.connect(WS_KEY_MAP.spotPrivate);
-      }
-      case 'spotv3': {
-        return this.connect(WS_KEY_MAP.spotV3Private);
-      }
-      case 'usdcOption': {
-        return this.connect(WS_KEY_MAP.usdcOptionPrivate);
-      }
-      case 'usdcPerp': {
-        return this.connect(WS_KEY_MAP.usdcPerpPrivate);
-      }
-      case 'unifiedPerp':
-      case 'unifiedOption': {
-        return this.connect(WS_KEY_MAP.unifiedPrivate);
-      }
-      case 'contractUSDT':
-        return this.connect(WS_KEY_MAP.contractUSDTPrivate);
-      case 'contractInverse':
-        return this.connect(WS_KEY_MAP.contractInversePrivate);
     }
   }
 
   /**
    * Subscribe to V5 topics & track/persist them.
    * @param wsTopics - topic or list of topics
-   * @param category - the API category this topic is for (e.g. "linear"). The value is only important when connecting to public topics and will be ignored for private topics.
-   * @param isPrivateTopic - optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
+   * @param category - the API category this topic is for (e.g. "linear").
+   * The value is only important when connecting to public topics and will be ignored for private topics.
+   * @param isPrivateTopic - optional - the library will try to detect private topics, you can use this
+   * to mark a topic as private (if the topic isn't recognised yet)
    */
   public subscribeV5(
     wsTopics: WsTopic[] | WsTopic,
@@ -233,10 +163,14 @@ export class WebsocketClient extends BaseWebsocketClient<
   }
 
   /**
-   * Unsubscribe from V5 topics & remove them from memory. They won't be re-subscribed to if the connection reconnects.
+   * Unsubscribe from V5 topics & remove them from memory. They won't be re-subscribed to if the
+   * connection reconnects.
+   *
    * @param wsTopics - topic or list of topics
-   * @param category - the API category this topic is for (e.g. "linear"). The value is only important when connecting to public topics and will be ignored for private topics.
-   * @param isPrivateTopic - optional - the library will try to detect private topics, you can use this to mark a topic as private (if the topic isn't recognised yet)
+   * @param category - the API category this topic is for (e.g. "linear"). The value is only
+   * important when connecting to public topics and will be ignored for private topics.
+   * @param isPrivateTopic - optional - the library will try to detect private topics, you can
+   * use this to mark a topic as private (if the topic isn't recognised yet)
    */
   public unsubscribeV5(
     wsTopics: WsTopic[] | WsTopic,
@@ -297,7 +231,9 @@ export class WebsocketClient extends BaseWebsocketClient<
   /**
    * Note: subscribeV5() might be simpler to use. The end result is the same.
    *
-   * Request subscription to one or more topics. Pass topics as either an array of strings, or array of objects (if the topic has parameters).
+   * Request subscription to one or more topics. Pass topics as either an array of strings,
+   * or array of objects (if the topic has parameters).
+   *
    * Objects should be formatted as {topic: string, params: object, category: CategoryV5}.
    *
    * - Subscriptions are automatically routed to the correct websocket connection.
@@ -315,7 +251,11 @@ export class WebsocketClient extends BaseWebsocketClient<
     const topicRequests = Array.isArray(requests) ? requests : [requests];
     const normalisedTopicRequests = getNormalisedTopicRequests(topicRequests);
 
-    const perWsKeyTopics = getTopicsPerWSKey(normalisedTopicRequests, wsKey);
+    const perWsKeyTopics = getTopicsPerWSKey(
+      this.options.market,
+      normalisedTopicRequests,
+      wsKey,
+    );
 
     // Batch sub topics per ws key
     for (const wsKey in perWsKeyTopics) {
@@ -342,7 +282,11 @@ export class WebsocketClient extends BaseWebsocketClient<
     const topicRequests = Array.isArray(requests) ? requests : [requests];
     const normalisedTopicRequests = getNormalisedTopicRequests(topicRequests);
 
-    const perWsKeyTopics = getTopicsPerWSKey(normalisedTopicRequests, wsKey);
+    const perWsKeyTopics = getTopicsPerWSKey(
+      this.options.market,
+      normalisedTopicRequests,
+      wsKey,
+    );
 
     // Batch sub topics per ws key
     for (const wsKey in perWsKeyTopics) {
@@ -374,11 +318,14 @@ export class WebsocketClient extends BaseWebsocketClient<
    * - an exception is detected in the reply, OR
    * - the connection disconnects for any reason (even if automatic reconnect will happen).
    *
-   * Authentication is automatic. If you didn't request authentication yourself, there might be a small delay after your first request, while the SDK automatically authenticates.
+   * Authentication is automatic. If you didn't request authentication yourself, there might
+   * be a small delay after your first request, while the SDK automatically authenticates.
    *
-   * @param wsKey - The connection this event is for. Currently only "v5PrivateTrade" is supported for Bybit, since that is the dedicated WS API connection.
+   * @param wsKey - The connection this event is for. Currently only "v5PrivateTrade" is supported
+   * for Bybit, since that is the dedicated WS API connection.
    * @param operation - The command being sent, e.g. "order.create" to submit a new order.
-   * @param params - Any request parameters for the command. E.g. `OrderParamsV5` to submit a new order. Only send parameters for the request body. Everything else is automatically handled.
+   * @param params - Any request parameters for the command. E.g. `OrderParamsV5` to submit a new
+   * order. Only send parameters for the request body. Everything else is automatically handled.
    * @returns Promise - tries to resolve with async WS API response. Rejects if disconnected or exception is seen in async WS API response
    */
 
@@ -393,8 +340,10 @@ export class WebsocketClient extends BaseWebsocketClient<
     ...params: TWSParams extends undefined ? [] : [TWSParams]
   ): Promise<WsAPIOperationResponseMap[TWSOperation]>;
 
-  // These overloads give stricter types than mapped generics, since generic constraints do not trigger excess property checks
-  // Without these overloads, TypeScript won't complain if you include an unexpected property with your request (if it doesn't clash with an existing property)
+  // These overloads give stricter types than mapped generics, since generic constraints
+  // do not trigger excess property checks
+  // Without these overloads, TypeScript won't complain if you include an
+  // unexpected property with your request (if it doesn't clash with an existing property)
   sendWSAPIRequest<TWSOpreation extends WSAPIOperation = 'order.create'>(
     wsKey: typeof WS_KEY_MAP.v5PrivateTrade,
     operation: TWSOpreation,
@@ -483,7 +432,7 @@ export class WebsocketClient extends BaseWebsocketClient<
     const wsBaseURL = getWsUrl(wsKey, this.options, this.logger);
 
     // If auth is needed for this wsKey URL, this returns a suffix
-    const authParams = await this.getWsAuthURLSuffix(wsKey);
+    const authParams = await this.getWsAuthURLSuffix();
     if (!authParams) {
       return wsBaseURL;
     }
@@ -494,8 +443,7 @@ export class WebsocketClient extends BaseWebsocketClient<
   /**
    * Return params required to make authorized request
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  private async getWsAuthURLSuffix(wsKey: WsKey): Promise<string> {
+  private async getWsAuthURLSuffix(): Promise<string> {
     return '';
   }
 
@@ -581,7 +529,6 @@ export class WebsocketClient extends BaseWebsocketClient<
   }
 
   /** Force subscription requests to be sent in smaller batches, if a number is returned */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected getMaxTopicsPerSubscribeEvent(wsKey: WsKey): number | null {
     return getMaxTopicsPerSubscribeEvent(this.options.market, wsKey);
   }
@@ -648,17 +595,7 @@ export class WebsocketClient extends BaseWebsocketClient<
   }
 
   protected getPrivateWSKeys(): WsKey[] {
-    return [
-      WS_KEY_MAP.linearPrivate,
-      WS_KEY_MAP.spotPrivate,
-      WS_KEY_MAP.spotV3Private,
-      WS_KEY_MAP.usdcOptionPrivate,
-      WS_KEY_MAP.usdcPerpPrivate,
-      WS_KEY_MAP.unifiedPrivate,
-      WS_KEY_MAP.contractUSDTPrivate,
-      WS_KEY_MAP.contractInversePrivate,
-      WS_KEY_MAP.v5Private,
-    ];
+    return WS_AUTH_ON_CONNECT_KEYS;
   }
 
   protected isAuthOnConnectWsKey(wsKey: WsKey): boolean {
@@ -668,11 +605,7 @@ export class WebsocketClient extends BaseWebsocketClient<
   /**
    * Determines if a topic is for a private channel, using a hardcoded list of strings
    */
-  protected isPrivateTopicRequest(
-    request: WsTopicRequest<string>,
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-    wsKey: WsKey,
-  ): boolean {
+  protected isPrivateTopicRequest(request: WsTopicRequest<string>): boolean {
     const topicName = request?.topic?.toLowerCase();
     if (!topicName) {
       return false;
