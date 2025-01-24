@@ -4,6 +4,7 @@ import {
   CategoryV5,
   WebsocketClientOptions,
   WsKey,
+  WsTopic,
 } from '../../types';
 
 import { DefaultLogger } from '../logger';
@@ -659,4 +660,44 @@ export function getNormalisedTopicRequests(
     normalisedTopicRequests.push(wsTopicRequest);
   }
   return normalisedTopicRequests;
+}
+
+/**
+ * Groups topics in request into per-wsKey groups
+ * @param normalisedTopicRequests
+ * @param wsKey
+ * @param isPrivateTopic
+ * @returns
+ */
+export function getTopicsPerWSKey(
+  normalisedTopicRequests: WsTopicRequest[],
+  wsKey?: WsKey,
+  isPrivateTopic?: boolean,
+): {
+  [key in WsKey]?: WsTopicRequest<WsTopic>[];
+} {
+  const perWsKeyTopics: { [key in WsKey]?: WsTopicRequest<WsTopic>[] } = {};
+
+  // Sort into per wsKey arrays, in case topics are mixed together for different wsKeys
+  for (const topicRequest of normalisedTopicRequests) {
+    const derivedWsKey =
+      wsKey ||
+      getWsKeyForTopic(
+        this.options.market,
+        topicRequest.topic,
+        isPrivateTopic,
+        topicRequest.category,
+      );
+
+    if (
+      !perWsKeyTopics[derivedWsKey] ||
+      !Array.isArray(perWsKeyTopics[derivedWsKey])
+    ) {
+      perWsKeyTopics[derivedWsKey] = [];
+    }
+
+    perWsKeyTopics[derivedWsKey]!.push(topicRequest);
+  }
+
+  return perWsKeyTopics;
 }

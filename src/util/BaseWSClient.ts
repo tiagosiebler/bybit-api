@@ -908,7 +908,11 @@ export abstract class BaseWebsocketClient<
   /**
    * Try sending a string event on a WS connection (identified by the WS Key)
    */
-  public tryWsSend(wsKey: TWSKey, wsMessage: string) {
+  public tryWsSend(
+    wsKey: TWSKey,
+    wsMessage: string,
+    throwExceptions?: boolean,
+  ) {
     try {
       this.logger.trace('Sending upstream ws message: ', {
         ...WS_LOGGER_CATEGORY,
@@ -934,6 +938,9 @@ export abstract class BaseWebsocketClient<
         wsKey,
         exception: e,
       });
+      if (throwExceptions) {
+        throw e;
+      }
     }
   }
 
