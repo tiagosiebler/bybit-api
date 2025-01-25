@@ -6,18 +6,31 @@ const client = new RestClientV5({
   secret: 'apisecret',
 });
 
+// Submit a market order
 client
   .submitOrder({
     category: 'spot',
     symbol: 'BTCUSDT',
     side: 'Buy',
     orderType: 'Market',
-    qty: '0.1',
-    price: '15600',
-    timeInForce: 'PostOnly',
-    orderLinkId: 'spot-test-postonly',
-    isLeverage: 0,
-    orderFilter: 'Order',
+    qty: '1',
+  })
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+
+// Submit a limit order
+client
+  .submitOrder({
+    category: 'spot',
+    symbol: 'BTCUSDT',
+    side: 'Buy',
+    orderType: 'Limit',
+    qty: '1',
+    price: '55000',
   })
   .then((response) => {
     console.log(response);
