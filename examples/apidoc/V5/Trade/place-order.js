@@ -16,10 +16,10 @@ client
     qty: '1',
   })
   .then((response) => {
-    console.log(response);
+    console.log('Market order result', response);
   })
   .catch((error) => {
-    console.error(error);
+    console.error('Market order error', error);
   });
 
 // Submit a limit order
@@ -33,8 +33,8 @@ client
     price: '55000',
   })
   .then((response) => {
-    console.log(response);
+    console.log('Limit order result', response);
   })
   .catch((error) => {
-    console.error(error);
+    console.error('Limit order error', error);
   });
