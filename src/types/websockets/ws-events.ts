@@ -202,6 +202,7 @@ export interface WSExecutionV5 {
   execId: string;
   execPrice: string;
   execQty: string;
+  execPnl: string;
   execType: ExecTypeV5;
   execValue: string;
   execTime: string;
