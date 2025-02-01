@@ -20,6 +20,7 @@ const logger = {
 const wsClient = new WebsocketClient(
   {
     market: 'v5',
+    // demoTrading: true,
   },
   logger,
 );
