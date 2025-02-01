@@ -406,12 +406,7 @@ export function getWsUrl(
     return wsUrl;
   }
 
-  // https://bybit-exchange.github.io/docs/v5/demo
   const isDemoTrading = wsClientOptions.demoTrading;
-  if (isDemoTrading) {
-    return 'wss://stream-demo.bybit.com/v5/private';
-  }
-
   const isTestnet = wsClientOptions.testnet;
   const networkKey = isTestnet ? 'testnet' : 'livenet';
 
@@ -475,6 +470,11 @@ export function getWsUrl(
       return WS_BASE_URL_MAP.contractUSDT.public[networkKey];
     }
     case WS_KEY_MAP.v5Private: {
+      // https://bybit-exchange.github.io/docs/v5/demo
+      if (isDemoTrading) {
+        return 'wss://stream-demo.bybit.com/v5/private';
+      }
+
       return WS_BASE_URL_MAP.v5.private[networkKey];
     }
     case WS_KEY_MAP.v5SpotPublic: {
