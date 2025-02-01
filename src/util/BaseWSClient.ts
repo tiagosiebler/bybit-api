@@ -38,8 +38,17 @@ interface WSClientEventMap<WsKey extends string> {
   ) => void;
   /** Received data for topic */
   update: (response: any & { wsKey: WsKey }) => void;
-  /** Exception from ws client OR custom listeners (e.g. if you throw inside your event handler) */
+  /**
+   * Exception from ws client OR custom listeners (e.g. if you throw inside your event handler)
+   * @deprecated Use 'exception' instead. The 'error' event had the unintended consequence of throwing an unhandled promise rejection.
+   */
   error: (response: any & { wsKey: WsKey; isWSAPIResponse?: boolean }) => void;
+  /**
+   * Exception from ws client OR custom listeners (e.g. if you throw inside your event handler)
+   */
+  exception: (
+    response: any & { wsKey: WsKey; isWSAPIResponse?: boolean },
+  ) => void;
   /** Confirmation that a connection successfully authenticated */
   authenticated: (event: {
     wsKey: WsKey;
@@ -70,14 +79,6 @@ export interface BaseWebsocketClient<
     ...args: Parameters<WSClientEventMap<TWSKey>[U]>
   ): boolean;
 }
-
-// interface TopicsPendingSubscriptions {
-//   wsKey: string;
-//   failedTopicsSubscriptions: Set<string>;
-//   pendingTopicsSubscriptions: Set<string>;
-//   resolver: TopicsPendingSubscriptionsResolver;
-//   rejector: TopicsPendingSubscriptionsRejector;
-// }
 
 /**
  * A midflight WS request event (e.g. subscribe to these topics).
@@ -168,8 +169,10 @@ export abstract class BaseWebsocketClient<
     };
 
     // add default error handling so this doesn't crash node (if the user didn't set a handler)
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    this.on('error', () => {});
+    // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars, no-unused-vars
+    this.on('error', (e) => {
+      // console.log('basewserr: ', e);
+    });
   }
 
   /**
@@ -339,10 +342,18 @@ export abstract class BaseWebsocketClient<
         pendingSubscriptionRequest.requestData,
       );
     } else {
-      pendingSubscriptionRequest.rejector(
-        pendingSubscriptionRequest.requestData,
+      this.logger.trace(
+        `updatePendingTopicSubscriptionStatus.reject(${wsKey}, ${requestKey}, ${msg}, ${isTopicSubscriptionSuccessEvent}): `,
         msg,
       );
+      try {
+        pendingSubscriptionRequest.rejector(
+          pendingSubscriptionRequest.requestData,
+          msg,
+        );
+      } catch (e) {
+        console.error('Exception rejecting promise: ', e);
+      }
     }
 
     this.removeTopicPendingSubscription(wsKey, requestKey);
@@ -613,6 +624,8 @@ export abstract class BaseWebsocketClient<
         }
         break;
     }
+
+    this.logger.error(`parseWsError(${context}, ${error}, ${wsKey}) `, error);
 
     this.emit('response', { ...error, wsKey });
     this.emit('error', { ...error, wsKey });
@@ -1008,12 +1021,28 @@ export abstract class BaseWebsocketClient<
     );
 
     // Request sub to public topics, if any
-    this.requestSubscribeTopics(wsKey, publicReqs);
+    try {
+      await this.requestSubscribeTopics(wsKey, publicReqs);
+    } catch (e) {
+      this.logger.error(
+        `onWsOpen(): exception in public requestSubscribeTopics(${wsKey}): `,
+        publicReqs,
+        e,
+      );
+    }
 
     // Request sub to private topics, if auth on connect isn't needed
     // Else, this is automatic after authentication is successfully confirmed
     if (!this.options.authPrivateConnectionsOnConnect) {
-      this.requestSubscribeTopics(wsKey, privateReqs);
+      try {
+        this.requestSubscribeTopics(wsKey, privateReqs);
+      } catch (e) {
+        this.logger.error(
+          `onWsOpen(): exception in private requestSubscribeTopics(${wsKey}: `,
+          privateReqs,
+          e,
+        );
+      }
     }
 
     // Some websockets require an auth packet to be sent after opening the connection
@@ -1114,10 +1143,6 @@ export abstract class BaseWebsocketClient<
         }
 
         for (const emittable of emittableEvents) {
-          // if (emittable.event?.op) {
-          //   console.log('emittable: ', emittable);
-          // }
-
           if (this.isWsPong(emittable)) {
             this.logger.trace('Received pong2', {
               ...WS_LOGGER_CATEGORY,
@@ -1143,7 +1168,22 @@ export abstract class BaseWebsocketClient<
             continue;
           }
 
-          this.emit(emittable.eventType, emittableFinalEvent);
+          // this.logger.trace(
+          //   `onWsMessage().emit(${emittable.eventType})`,
+          //   emittableFinalEvent,
+          // );
+          try {
+            this.emit(emittable.eventType, emittableFinalEvent);
+          } catch (e) {
+            this.logger.error(
+              `Exception in onWsMessage().emit(${emittable.eventType}) handler:`,
+              e,
+            );
+          }
+          // this.logger.trace(
+          //   `onWsMessage().emit(${emittable.eventType}).done()`,
+          //   emittableFinalEvent,
+          // );
         }
 
         return;
