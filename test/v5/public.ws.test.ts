@@ -9,13 +9,17 @@ describe.skip('Public V5 Websocket client', () => {
   describe('Topics subscription confirmation', () => {
     it('can subscribeV5 to LINEAR with valid topic', async () => {
       await expect(
-        api.subscribeV5(`publicTrade.${linearSymbol}`, linearCategory),
-      ).resolves.toBeUndefined();
+        Promise.allSettled(
+          api.subscribeV5(`publicTrade.${linearSymbol}`, linearCategory),
+        ),
+      ).resolves.toStrictEqual([]);
     });
 
     it('cannot subscribeV5 to LINEAR with valid topic', async () => {
       try {
-        await api.subscribeV5(`publicTrade.${linearSymbol}X`, linearCategory);
+        await Promise.allSettled(
+          api.subscribeV5(`publicTrade.${linearSymbol}X`, linearCategory),
+        );
       } catch (e) {
         expect(e).toBeDefined();
         expect(e).toMatch(`(publicTrade.${linearSymbol}X) failed to subscribe`);

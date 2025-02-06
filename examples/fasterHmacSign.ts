@@ -117,7 +117,7 @@ function setWsClientEventListeners(
     websocketClient.on('reconnected', (data) => {
       console.log(new Date(), accountRef, 'ws has reconnected ', data?.wsKey);
     });
-    websocketClient.on('error', (data) => {
+    websocketClient.on('exception', (data) => {
       console.error(new Date(), accountRef, 'ws exception: ', data);
     });
   });

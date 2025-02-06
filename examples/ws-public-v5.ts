@@ -17,12 +17,8 @@ const logger = {
  * - Heartbeats/ping/pong/reconnects are all handled automatically.
  *    If a connection drops, the client will clean it up, respawn a fresh connection and resubscribe for you.
  */
-const wsClient = new WebsocketClient(
-  {
-    // demoTrading: true,
-  },
-  logger,
-);
+
+const wsClient = new WebsocketClient();
 
 wsClient.on('update', (data) => {
   console.log('raw message received ', JSON.stringify(data));
@@ -40,9 +36,10 @@ wsClient.on('reconnect', ({ wsKey }) => {
 wsClient.on('reconnected', (data) => {
   console.log('ws has reconnected ', data?.wsKey);
 });
-// wsClient.on('error', (data) => {
-//   console.error('ws exception: ', data);
-// });
+
+wsClient.on('exception', (data) => {
+  console.error('ws exception: ', data);
+});
 
 /**
  * For public V5 topics, use the subscribeV5 method and include the API category this topic is for.

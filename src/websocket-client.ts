@@ -136,7 +136,7 @@ export class WebsocketClient extends BaseWebsocketClient<
         perWsKeyTopics[derivedWsKey] = [];
       }
 
-      perWsKeyTopics[derivedWsKey].push(wsRequest);
+      perWsKeyTopics[derivedWsKey]!.push(wsRequest);
     }
 
     const promises: Promise<unknown>[] = [];
@@ -755,7 +755,7 @@ export class WebsocketClient extends BaseWebsocketClient<
           }
 
           results.push({
-            eventType: 'error',
+            eventType: 'exception',
             event: parsed,
             isWSAPIResponse: true,
           });
@@ -804,7 +804,7 @@ export class WebsocketClient extends BaseWebsocketClient<
         // Failed request
         if (parsed.success === false) {
           results.push({
-            eventType: 'error',
+            eventType: 'exception',
             event: parsed,
           });
           return results;
@@ -851,7 +851,7 @@ export class WebsocketClient extends BaseWebsocketClient<
           exception: e,
           eventData: event.data,
         },
-        eventType: 'error',
+        eventType: 'exception',
       });
 
       this.logger.error('Failed to parse event data due to exception: ', {

@@ -23,6 +23,8 @@ import {
 } from './websockets';
 import { WsOperation } from '../types/websockets/ws-api';
 
+type UseTheExceptionEventInstead = never;
+
 interface WSClientEventMap<WsKey extends string> {
   /** Connection opened. If this connection was previously opened and reconnected, expect the reconnected event instead */
   open: (evt: { wsKey: WsKey; event: any }) => void;
@@ -39,10 +41,10 @@ interface WSClientEventMap<WsKey extends string> {
   /** Received data for topic */
   update: (response: any & { wsKey: WsKey }) => void;
   /**
-   * Exception from ws client OR custom listeners (e.g. if you throw inside your event handler)
-   * @deprecated Use 'exception' instead. The 'error' event had the unintended consequence of throwing an unhandled promise rejection.
+   * See for more information: https://github.com/tiagosiebler/bybit-api/issues/413
+   * @deprecated Use the 'exception' event instead. The 'error' event had the unintended consequence of throwing an unhandled promise rejection.
    */
-  error: (response: any & { wsKey: WsKey; isWSAPIResponse?: boolean }) => void;
+  error: UseTheExceptionEventInstead;
   /**
    * Exception from ws client OR custom listeners (e.g. if you throw inside your event handler)
    */
@@ -55,12 +57,6 @@ interface WSClientEventMap<WsKey extends string> {
     event: any;
     isWSAPIResponse?: boolean;
   }) => void;
-}
-
-export interface EmittableEvent<TEvent = any> {
-  eventType: 'response' | 'update' | 'error' | 'authenticated';
-  event: TEvent;
-  isWSAPIResponse?: boolean;
 }
 
 // Type safety for on and emit handlers: https://stackoverflow.com/a/61609010/880837
@@ -78,6 +74,12 @@ export interface BaseWebsocketClient<
     event: U,
     ...args: Parameters<WSClientEventMap<TWSKey>[U]>
   ): boolean;
+}
+
+export interface EmittableEvent<TEvent = any> {
+  eventType: 'response' | 'update' | 'exception' | 'authenticated';
+  event: TEvent;
+  isWSAPIResponse?: boolean;
 }
 
 /**
@@ -167,12 +169,6 @@ export abstract class BaseWebsocketClient<
       authPrivateRequests: false,
       ...options,
     };
-
-    // add default error handling so this doesn't crash node (if the user didn't set a handler)
-    // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars, no-unused-vars
-    this.on('error', (e) => {
-      // console.log('basewserr: ', e);
-    });
   }
 
   /**
@@ -593,7 +589,7 @@ export abstract class BaseWebsocketClient<
     if (!error.message) {
       this.logger.error(`${context} due to unexpected error: `, error);
       this.emit('response', { ...error, wsKey });
-      this.emit('error', { ...error, wsKey });
+      this.emit('exception', { ...error, wsKey });
       return;
     }
 
@@ -628,7 +624,7 @@ export abstract class BaseWebsocketClient<
     this.logger.error(`parseWsError(${context}, ${error}, ${wsKey}) `, error);
 
     this.emit('response', { ...error, wsKey });
-    this.emit('error', { ...error, wsKey });
+    this.emit('exception', { ...error, wsKey });
   }
 
   /** Get a signature, build the auth request and send it */
