@@ -18,7 +18,7 @@ const logger = {
  *    If a connection drops, the client will clean it up, respawn a fresh connection and resubscribe for you.
  */
 
-const wsClient = new WebsocketClient();
+const wsClient = new WebsocketClient({}, logger);
 
 wsClient.on('update', (data) => {
   console.log('raw message received ', JSON.stringify(data));
