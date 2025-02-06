@@ -241,7 +241,7 @@ export function getWsUrl(
   }
 
   // https://bybit-exchange.github.io/docs/v5/demo
-  const demoTradingPrivateEndpoint = 'wss://stream-demo.bybit.com/v5/private';
+  const DEMO_TRADING_ENDPOINT = 'wss://stream-demo.bybit.com/v5/private';
 
   const isDemoTrading = wsClientOptions.demoTrading;
   const isTestnet = wsClientOptions.testnet;
@@ -250,13 +250,13 @@ export function getWsUrl(
   switch (wsKey) {
     case WS_KEY_MAP.v5Private: {
       if (isDemoTrading) {
-        return demoTradingPrivateEndpoint;
+        return DEMO_TRADING_ENDPOINT;
       }
       return WS_BASE_URL_MAP.v5.private[networkKey];
     }
     case WS_KEY_MAP.v5PrivateTrade: {
       if (isDemoTrading) {
-        return demoTradingPrivateEndpoint;
+        return DEMO_TRADING_ENDPOINT;
       }
       return WS_BASE_URL_MAP[wsKey].private[networkKey];
     }

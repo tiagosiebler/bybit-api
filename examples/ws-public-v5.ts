@@ -17,7 +17,12 @@ const logger = {
  * - Heartbeats/ping/pong/reconnects are all handled automatically.
  *    If a connection drops, the client will clean it up, respawn a fresh connection and resubscribe for you.
  */
-const wsClient = new WebsocketClient({}, logger);
+const wsClient = new WebsocketClient(
+  {
+    // demoTrading: true,
+  },
+  logger,
+);
 
 wsClient.on('update', (data) => {
   console.log('raw message received ', JSON.stringify(data));
