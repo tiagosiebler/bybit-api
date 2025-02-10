@@ -1,16 +1,12 @@
-name: 'Build & Test'
+name: E2ETests  # Changed to match KuCoin naming
 
-on: [push]
-
-# on:
-#   # pull_request:
-#   #   branches:
-#   #     - "master"
-#   push:
-#     branches:
+on:
+  push:
+  pull_request:  # Added pull_request trigger
+  workflow_dispatch:  # Added manual trigger option
 
 jobs:
-  build:
+  E2ETests:  # Changed job ID to match KuCoin
     name: 'Build & Test'
     runs-on: ubuntu-latest
 
@@ -30,8 +26,11 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Test
-        run: npm run test
+      - name: Test Public API Calls  # Split test command into public and private
+        run: npm run test -- public.test.ts
+
+      - name: Test Private API Calls  # Added separate step for private API tests
+        run: npm run test -- private.test.ts
         env:
           API_KEY_COM: ${{ secrets.API_KEY_COM }}
           API_SECRET_COM: ${{ secrets.API_SECRET_COM }}
