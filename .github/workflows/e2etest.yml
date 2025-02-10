@@ -26,11 +26,18 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Test Public API Calls  # Split test command into public and private
-        run: npm run test -- public.test.ts
+      - name: Test Public Read API Calls  
+        run: npm run test -- public.read.test.ts
 
-      - name: Test Private API Calls  # Added separate step for private API tests
-        run: npm run test -- private.test.ts
+      - name: Test Private Read API Calls  
+        run: npm run test -- private.read.test.ts
+
+      - name: Test Private Write API Calls 
+        run: npm run test -- private.write.test.ts
+
+      - name: Test Public WS  
+        run: npm run test -- public.ws.test.ts
+
         env:
           API_KEY_COM: ${{ secrets.API_KEY_COM }}
           API_SECRET_COM: ${{ secrets.API_SECRET_COM }}
