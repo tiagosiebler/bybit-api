@@ -1,12 +1,12 @@
-name: E2ETests  # Changed to match KuCoin naming
+name: E2ETests 
 
 on:
   push:
-  pull_request:  # Added pull_request trigger
-  workflow_dispatch:  # Added manual trigger option
+  pull_request: 
+  workflow_dispatch: 
 
 jobs:
-  E2ETests:  # Changed job ID to match KuCoin
+  E2ETests:  
     name: 'Build & Test'
     runs-on: ubuntu-latest
 
