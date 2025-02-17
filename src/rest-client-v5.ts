@@ -551,7 +551,9 @@ export class RestClientV5 extends BaseRestClient {
 
   cancelAllOrders(
     params: CancelAllOrdersParamsV5,
-  ): Promise<APIResponseV3WithTime<{ list: OrderResultV5[] }>> {
+  ): Promise<
+    APIResponseV3WithTime<{ list: OrderResultV5[]; success: string }>
+  > {
     return this.postPrivate('/v5/order/cancel-all', params);
   }
 
@@ -564,6 +566,18 @@ export class RestClientV5 extends BaseRestClient {
     params: GetAccountHistoricOrdersParamsV5,
   ): Promise<APIResponseV3WithTime<CategoryCursorListV5<AccountOrderV5[]>>> {
     return this.getPrivate('/v5/order/history', params);
+  }
+
+  /**
+   * Query users' execution records, sorted by execTime in descending order
+   *
+   * Unified account covers: Spot / Linear contract / Options
+   * Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures
+   */
+  getExecutionList(
+    params: GetExecutionListParamsV5,
+  ): Promise<APIResponseV3WithTime<CategoryCursorListV5<ExecutionV5[]>>> {
+    return this.getPrivate('/v5/execution/list', params);
   }
 
   /**
@@ -675,7 +689,7 @@ export class RestClientV5 extends BaseRestClient {
    * Only for institutional clients!
    */
   setDisconnectCancelAllWindowV2(params: {
-    product: 'OPTION' | 'SPOT' | 'DERIVATIVES';
+    product?: 'OPTION' | 'SPOT' | 'DERIVATIVES';
     timeWindow: number;
   }): Promise<APIResponseV3<undefined>> {
     return this.postPrivate('/v5/order/disconnected-cancel-all', params);
@@ -809,18 +823,6 @@ export class RestClientV5 extends BaseRestClient {
     params: AddOrReduceMarginParamsV5,
   ): Promise<APIResponseV3WithTime<AddOrReduceMarginResultV5>> {
     return this.postPrivate('/v5/position/add-margin', params);
-  }
-
-  /**
-   * Query users' execution records, sorted by execTime in descending order
-   *
-   * Unified account covers: Spot / Linear contract / Options
-   * Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures
-   */
-  getExecutionList(
-    params: GetExecutionListParamsV5,
-  ): Promise<APIResponseV3WithTime<CategoryCursorListV5<ExecutionV5[]>>> {
-    return this.getPrivate('/v5/execution/list', params);
   }
 
   /**

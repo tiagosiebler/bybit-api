@@ -108,6 +108,7 @@ export interface ExecutionV5 {
   underlyingPrice?: string;
   blockTradeId?: string;
   closedSize?: string;
+  seq: number;
 }
 
 export interface ClosedPnLV5 {

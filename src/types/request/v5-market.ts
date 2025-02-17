@@ -108,6 +108,7 @@ export interface GetInsuranceParamsV5 {
 export interface GetRiskLimitParamsV5 {
   category?: 'linear' | 'inverse';
   symbol?: string;
+  cursor?: string;
 }
 
 export interface GetOptionDeliveryPriceParamsV5 {
