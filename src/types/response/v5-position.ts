@@ -29,6 +29,7 @@ export interface PositionV5 {
   bustPrice?: string;
   positionIM?: string;
   positionMM?: string;
+  positionBalance?: string;
   tpslMode?: TPSLModeV5;
   takeProfit?: string;
   stopLoss?: string;

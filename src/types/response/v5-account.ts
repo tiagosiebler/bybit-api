@@ -14,7 +14,7 @@ export interface WalletBalanceV5Coin {
   free: string; // spot only
   locked: string; // spot only
   borrowAmount: string;
-  availableToBorrow: string;
+  availableToBorrow: string; // deprecated field
   availableToWithdraw: string;
   accruedInterest: string;
   totalOrderIM: string;
@@ -23,6 +23,8 @@ export interface WalletBalanceV5Coin {
   unrealisedPnl: string;
   cumRealisedPnl: string;
   bonus: string;
+  marginCollateral: boolean;
+  collateralSwitch: boolean;
 }
 
 export interface WalletBalanceV5 {
@@ -54,6 +56,9 @@ export interface BorrowHistoryRecordV5 {
   hourlyBorrowRate: string;
   InterestBearingBorrowSize: string;
   costExemption: string;
+  borrowAmount: string;
+  unrealisedLoss: string;
+  freeBorrowedAmount: string;
 }
 
 export interface CollateralInfoV5 {
@@ -110,6 +115,7 @@ export interface TransactionLogV5 {
   change: string;
   cashBalance: string;
   feeRate: string;
+  bonusChange: string;
   tradeId: string;
   orderId: string;
   orderLinkId: string;

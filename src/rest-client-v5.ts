@@ -747,6 +747,7 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * @deprecated
    * This endpoint sets the take profit/stop loss (TP/SL) mode to full or partial.
    *
    * Unified account covers: Linear contract; normal account covers: USDT perpetual, inverse perpetual, inverse futures.
@@ -775,6 +776,7 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * @deprecated
    * The risk limit will limit the maximum position value you can hold under different margin requirements.
    * If you want to hold a bigger position size, you need more margin.
    *
@@ -1102,6 +1104,19 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Query the DCP configuration of the account's contracts (USDT perpetual, USDC perpetual and USDC Futures) / spot / options.
+   *
+   * Only the configured main / sub account can query information from this API. Calling this API by an account always returns empty.
+   *
+   * INFO
+   * support linear contract (USDT, USDC Perp & USDC Futures) / Spot / Options only
+   * Unified account only
+   */
+  getDCPInfo(): Promise<APIResponseV3WithTime<{ dcpInfos: DCPInfoV5[] }>> {
+    return this.getPrivate('/v5/account/query-dcp-info');
+  }
+
+  /**
    * Query transaction logs in Unified account.
    */
   getTransactionLog(
@@ -1183,19 +1198,6 @@ export class RestClientV5 extends BaseRestClient {
     baseCoin: string,
   ): Promise<APIResponseV3WithTime<{ result: MMPStateV5[] }>> {
     return this.getPrivate('/v5/account/mmp-state', { baseCoin });
-  }
-
-  /**
-   * Query the DCP configuration of the account's contracts (USDT perpetual, USDC perpetual and USDC Futures) / spot / options.
-   *
-   * Only the configured main / sub account can query information from this API. Calling this API by an account always returns empty.
-   *
-   * INFO
-   * support linear contract (USDT, USDC Perp & USDC Futures) / Spot / Options only
-   * Unified account only
-   */
-  getDCPInfo(): Promise<APIResponseV3WithTime<{ dcpInfos: DCPInfoV5[] }>> {
-    return this.getPrivate('/v5/account/query-dcp-info');
   }
 
   /**
