@@ -191,6 +191,7 @@ import {
   VipCollateralCoinsV5,
   WalletBalanceV5,
   WithdrawParamsV5,
+  WithdrawableAmountV5,
   WithdrawalRecordV5,
 } from './types';
 
@@ -1207,20 +1208,6 @@ export class RestClientV5 extends BaseRestClient {
    */
 
   /**
-   * Query the coin exchange records.
-   *
-   * CAUTION: You may experience long delays with this endpoint.
-   */
-  getCoinExchangeRecords(params?: GetCoinExchangeRecordParamsV5): Promise<
-    APIResponseV3WithTime<{
-      orderBody: CoinExchangeRecordV5[];
-      nextPageCursor?: string;
-    }>
-  > {
-    return this.getPrivate('/v5/asset/exchange/order-record', params);
-  }
-
-  /**
    * Query option delivery records, sorted by deliveryTime in descending order.
    *
    * Covers: Option
@@ -1242,6 +1229,46 @@ export class RestClientV5 extends BaseRestClient {
     APIResponseV3WithTime<CategoryCursorListV5<SettlementRecordV5[]>>
   > {
     return this.getPrivate('/v5/asset/settlement-record', params);
+  }
+
+  /**
+   * Query the coin exchange records.
+   *
+   * CAUTION: You may experience long delays with this endpoint.
+   */
+  getCoinExchangeRecords(params?: GetCoinExchangeRecordParamsV5): Promise<
+    APIResponseV3WithTime<{
+      orderBody: CoinExchangeRecordV5[];
+      nextPageCursor?: string;
+    }>
+  > {
+    return this.getPrivate('/v5/asset/exchange/order-record', params);
+  }
+
+  /**
+   * Query coin information, including chain information, withdraw and deposit status.
+   */
+  getCoinInfo(
+    coin?: string,
+  ): Promise<APIResponseV3WithTime<{ rows: CoinInfoV5[] }>> {
+    return this.getPrivate(
+      '/v5/asset/coin/query-info',
+      coin ? { coin } : undefined,
+    );
+  }
+
+  /**
+   * Query the sub UIDs under a main UID
+   *
+   * CAUTION: Can query by the master UID's api key only
+   */
+  getSubUID(): Promise<
+    APIResponseV3WithTime<{
+      subMemberIds: string[];
+      transferableSubMemberIds: string[];
+    }>
+  > {
+    return this.getPrivate('/v5/asset/transfer/query-sub-member-list');
   }
 
   /**
@@ -1285,6 +1312,15 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Query withdrawable amount.
+   */
+  getWithdrawableAmount(params: {
+    coin: string;
+  }): Promise<APIResponseV3<{ rows: WithdrawableAmountV5[] }>> {
+    return this.getPrivate('/v5/asset/withdraw/withdrawable-amount', params);
+  }
+
+  /**
    * Query the transferable coin list between each account type.
    */
   getTransferableCoinList(
@@ -1309,7 +1345,7 @@ export class RestClientV5 extends BaseRestClient {
     amount: string,
     fromAccountType: AccountTypeV5,
     toAccountType: AccountTypeV5,
-  ): Promise<APIResponseV3WithTime<{ transferId: string }>> {
+  ): Promise<APIResponseV3WithTime<{ transferId: string; status: string }>> {
     return this.postPrivate('/v5/asset/transfer/inter-transfer', {
       transferId,
       coin,
@@ -1329,20 +1365,6 @@ export class RestClientV5 extends BaseRestClient {
       '/v5/asset/transfer/query-inter-transfer-list',
       params,
     );
-  }
-
-  /**
-   * Query the sub UIDs under a main UID
-   *
-   * CAUTION: Can query by the master UID's api key only
-   */
-  getSubUID(): Promise<
-    APIResponseV3WithTime<{
-      subMemberIds: string[];
-      transferableSubMemberIds: string[];
-    }>
-  > {
-    return this.getPrivate('/v5/asset/transfer/query-sub-member-list');
   }
 
   /**
@@ -1369,7 +1391,7 @@ export class RestClientV5 extends BaseRestClient {
    */
   createUniversalTransfer(
     params: UniversalTransferParamsV5,
-  ): Promise<APIResponseV3WithTime<{ transferId: string }>> {
+  ): Promise<APIResponseV3WithTime<{ transferId: string; status: string }>> {
     return this.postPrivate('/v5/asset/transfer/universal-transfer', params);
   }
 
@@ -1400,7 +1422,7 @@ export class RestClientV5 extends BaseRestClient {
       nextPageCursor: string;
     }>
   > {
-    return this.get('/v5/asset/deposit/query-allowed-list', params);
+    return this.getPrivate('/v5/asset/deposit/query-allowed-list', params);
   }
 
   /**
@@ -1491,6 +1513,7 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * @deprecated - duplicate function, use getSubDepositAddress() instead
    * Query the deposit address information of SUB account.
    *
    * CAUTION
@@ -1509,33 +1532,12 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
-   * Query coin information, including chain information, withdraw and deposit status.
-   */
-  getCoinInfo(
-    coin?: string,
-  ): Promise<APIResponseV3WithTime<{ rows: CoinInfoV5[] }>> {
-    return this.getPrivate(
-      '/v5/asset/coin/query-info',
-      coin ? { coin } : undefined,
-    );
-  }
-
-  /**
    * Query withdrawal records.
    */
   getWithdrawalRecords(
     params?: GetWithdrawalRecordsParamsV5,
   ): Promise<APIResponseV3<CursorRowsV5<WithdrawalRecordV5[]>>> {
     return this.getPrivate('/v5/asset/withdraw/query-record', params);
-  }
-
-  /**
-   * Query withdrawable amount.
-   */
-  getWithdrawableAmount(params: {
-    coin: string;
-  }): Promise<APIResponseV3<{ rows: WithdrawalRecordV5[] }>> {
-    return this.getPrivate('/v5/asset/withdraw/withdrawable-amount', params);
   }
 
   /**
@@ -1609,7 +1611,7 @@ export class RestClientV5 extends BaseRestClient {
    * Query the exchange result by sending quoteTxId.
    */
   getConvertStatus(params: {
-    quoteTxId?: string;
+    quoteTxId: string;
     accountType:
       | 'eb_convert_funding'
       | 'eb_convert_uta'

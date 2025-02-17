@@ -18,6 +18,8 @@ export interface GetDeliveryRecordParamsV5 {
 export interface GetSettlementRecordParamsV5 {
   category: CategoryV5;
   symbol?: string;
+  startTime?: number;
+  endTime?: number;
   limit?: number;
   cursor?: string;
 }
@@ -100,6 +102,7 @@ export interface GetSubAccountDepositRecordParamsV5 {
 }
 
 export interface GetInternalDepositRecordParamsV5 {
+  txID?: string;
   startTime?: number;
   endTime?: number;
   coin?: string;
@@ -109,6 +112,7 @@ export interface GetInternalDepositRecordParamsV5 {
 
 export interface GetWithdrawalRecordsParamsV5 {
   withdrawID?: string;
+  txID?: string;
   coin?: string;
   withdrawType?: number;
   startTime?: number;
@@ -129,7 +133,7 @@ export interface WithdrawParamsV5 {
   feeType?: 0 | 1;
   requestId?: string;
   beneficiary?: {
-    vaspEntityId: string;
+    vaspEntityId?: string;
     beneficiaryName?: string;
   };
 }
