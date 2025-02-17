@@ -1,18 +1,7 @@
 import { RestClientOptions, WS_KEY_MAP } from '../../util';
 
 /** For spot markets, spotV3 is recommended */
-export type APIMarket =
-  | 'inverse'
-  | 'linear'
-  | 'spot'
-  | 'spotv3'
-  | 'usdcOption'
-  | 'usdcPerp'
-  | 'unifiedPerp'
-  | 'unifiedOption'
-  | 'contractUSDT'
-  | 'contractInverse'
-  | 'v5';
+export type APIMarket = 'v5';
 
 // Same as inverse futures
 export type WsPublicInverseTopic =
@@ -111,7 +100,7 @@ export interface WSClientConfigurableOptions {
   /**
    * The API group this client should connect to. The V5 market is currently used by default.
    *
-   * For the V3 APIs use `v3` as the market (spot/unified margin/usdc/account asset/copy trading)
+   * Only the "V5" "market" is supported here.
    */
   market?: APIMarket;
 
@@ -128,10 +117,20 @@ export interface WSClientConfigurableOptions {
   reconnectTimeout?: number;
 
   restOptions?: RestClientOptions;
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   requestOptions?: any;
 
   wsUrl?: string;
+
+  /**
+   * Default: false.
+   *
+   * When enabled, any calls to the subscribe method will return a promise.
+   * Note: internally, subscription requests are sent in batches. This may not behave as expected when
+   * subscribing to a large number of topics, especially if you are not yet connected when subscribing.
+   */
+  promiseSubscribeRequests?: boolean;
 
   /**
    * Allows you to provide a custom "signMessage" function, e.g. to use node's much faster createHmac method

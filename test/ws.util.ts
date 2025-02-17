@@ -1,31 +1,30 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { WebsocketClient, WsClientEvent } from '../src';
+import { DefaultLogger, WebsocketClient } from '../src';
 
-export function getSilentLogger(_logHint?: string) {
+export function getSilentLogger(_logHint?: string): typeof DefaultLogger {
   return {
-    silly: () => {},
-    debug: () => {},
-    notice: () => {},
+    trace: () => {},
     info: () => {},
-    warning: () => {},
     error: () => {},
   };
 }
 
-export const fullLogger = {
-  silly: (...params) => console.log('silly', ...params),
-  debug: (...params) => console.log('debug', ...params),
-  notice: (...params) => console.log('notice', ...params),
+export const fullLogger: typeof DefaultLogger = {
+  trace: (...params) => console.log('trace', ...params),
   info: (...params) => console.info('info', ...params),
-  warning: (...params) => console.warn('warning', ...params),
   error: (...params) => console.error('error', ...params),
 };
 
-export const WS_OPEN_EVENT_PARTIAL = {
-  type: 'open',
-};
+export type WsClientEvent =
+  | 'open'
+  | 'update'
+  | 'close'
+  | 'error'
+  | 'reconnect'
+  | 'reconnected'
+  | 'response';
 
 /** Resolves a promise if an event is seen before a timeout (defaults to 4.5 seconds) */
 export function waitForSocketEvent(
@@ -63,7 +62,7 @@ export function waitForSocketEvent(
     }
 
     wsClient.on(event, (e) => resolver(e));
-    wsClient.on('error', (e) => rejector(e));
+    wsClient.on('exception', (e) => rejector(e));
 
     // if (event !== 'close') {
     //   wsClient.on('close', (event) => {
@@ -79,21 +78,21 @@ export function waitForSocketEvent(
 
 export function listenToSocketEvents(wsClient: WebsocketClient) {
   const retVal: Record<
-    'update' | 'open' | 'response' | 'close' | 'error',
+    'update' | 'open' | 'response' | 'close' | 'exception',
     typeof jest.fn
   > = {
     open: jest.fn(),
     response: jest.fn(),
     update: jest.fn(),
     close: jest.fn(),
-    error: jest.fn(),
+    exception: jest.fn(),
   };
 
   wsClient.on('open', retVal.open);
   wsClient.on('response', retVal.response);
   wsClient.on('update', retVal.update);
   wsClient.on('close', retVal.close);
-  wsClient.on('error', retVal.error);
+  wsClient.on('exception', retVal.exception);
 
   return {
     ...retVal,
@@ -102,7 +101,7 @@ export function listenToSocketEvents(wsClient: WebsocketClient) {
       wsClient.removeListener('response', retVal.response);
       wsClient.removeListener('update', retVal.update);
       wsClient.removeListener('close', retVal.close);
-      wsClient.removeListener('error', retVal.error);
+      wsClient.removeListener('exception', retVal.exception);
     },
   };
 }

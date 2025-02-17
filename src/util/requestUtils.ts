@@ -1,10 +1,5 @@
 import { AxiosResponse } from 'axios';
 import { APIRateLimit } from '../types';
-import {
-  WebsocketSucceededTopicSubscriptionConfirmationEvent,
-  WebsocketTopicSubscriptionConfirmationEvent,
-} from '../types/websockets/ws-confirmations';
-import { WSAPIResponse, WS_API_Operations } from '../types/websockets/ws-api';
 
 export interface RestClientOptions {
   /** Your API key */
@@ -188,58 +183,13 @@ export function isWsPong(msg: any): boolean {
   );
 }
 
-export function isTopicSubscriptionConfirmation(
-  msg: unknown,
-): msg is WebsocketTopicSubscriptionConfirmationEvent {
-  if (typeof msg !== 'object') {
-    return false;
-  }
-  if (!msg) {
-    return false;
-  }
-  if (typeof msg['op'] !== 'string') {
-    return false;
-  }
-  if (msg['op'] !== 'subscribe') {
-    return false;
-  }
-
-  return true;
-}
-
-export function isWSAPIResponse(
-  msg: unknown,
-): msg is Omit<WSAPIResponse, 'wsKey'> {
-  if (typeof msg !== 'object' || !msg) {
-    return false;
-  }
-
-  if (typeof msg['op'] !== 'string') {
-    return false;
-  }
-
-  return (WS_API_Operations as string[]).includes(msg['op']);
-}
-
-export function isTopicSubscriptionSuccess(
-  msg: unknown,
-): msg is WebsocketSucceededTopicSubscriptionConfirmationEvent {
-  if (!isTopicSubscriptionConfirmation(msg)) return false;
-  return msg.success === true;
-}
-
 export const APIID = 'bybitapinode';
 
 /**
  * Used to switch how authentication/requests work under the hood (primarily for SPOT since it's different there)
  */
 export const REST_CLIENT_TYPE_ENUM = {
-  accountAsset: 'accountAsset',
-  inverse: 'inverse',
-  inverseFutures: 'inverseFutures',
-  linear: 'linear',
-  spot: 'spot',
-  v3: 'v3',
+  v5: 'v5',
 } as const;
 
 export type RestClientType =

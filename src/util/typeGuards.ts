@@ -3,6 +3,11 @@
  */
 
 import {
+  WebsocketSucceededTopicSubscriptionConfirmationEvent,
+  WebsocketTopicSubscriptionConfirmationEvent,
+} from '../types';
+import { WSAPIResponse, WS_API_Operations } from '../types/websockets/ws-api';
+import {
   WSAccountOrderEventV5,
   WSExecutionEventV5,
   WSOrderbookEventV5,
@@ -91,4 +96,48 @@ export function isWsExecutionEventV5(
   }
 
   return event['topic'] === 'execution';
+}
+
+export function neverGuard(x: never, msg: string): Error {
+  return new Error(`Unhandled value exception "${x}", ${msg}`);
+}
+
+export function isWSAPIResponse(
+  msg: unknown,
+): msg is Omit<WSAPIResponse, 'wsKey'> {
+  if (typeof msg !== 'object' || !msg) {
+    return false;
+  }
+
+  if (typeof msg['op'] !== 'string') {
+    return false;
+  }
+
+  return (WS_API_Operations as string[]).includes(msg['op']);
+}
+
+export function isTopicSubscriptionSuccess(
+  msg: unknown,
+): msg is WebsocketSucceededTopicSubscriptionConfirmationEvent {
+  if (!isTopicSubscriptionConfirmation(msg)) return false;
+  return msg.success === true;
+}
+
+export function isTopicSubscriptionConfirmation(
+  msg: unknown,
+): msg is WebsocketTopicSubscriptionConfirmationEvent {
+  if (typeof msg !== 'object') {
+    return false;
+  }
+  if (!msg) {
+    return false;
+  }
+  if (typeof msg['op'] !== 'string') {
+    return false;
+  }
+  if (msg['op'] !== 'subscribe') {
+    return false;
+  }
+
+  return true;
 }

@@ -29,14 +29,14 @@ const restClient = new RestClientV5({
 // Optional, uncomment the "silly" override to log a lot more info about what the WS client is doing
 const customLogger = {
   ...DefaultLogger,
-  // silly: (...params) => console.log('trace', ...params),
+  // trace: (...params) => console.log('trace', ...params),
 };
 
 const wsClient = new WebsocketClient(
   {
     key: key,
     secret: secret,
-    market: 'v5',
+
     /**
      * Set this to true to enable demo trading for the private account data WS
      * Topics: order,execution,position,wallet,greeks
@@ -91,7 +91,7 @@ function setWsClientEventListeners(
     websocketClient.on('reconnected', (data) => {
       console.log(new Date(), accountRef, 'ws has reconnected ', data?.wsKey);
     });
-    websocketClient.on('error', (data) => {
+    websocketClient.on('exception', (data) => {
       console.error(new Date(), accountRef, 'ws exception: ', data);
     });
   });

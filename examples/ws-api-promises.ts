@@ -40,8 +40,8 @@ wsClient.on('reconnected', (data) => {
 wsClient.on('authenticated', (data) => {
   console.log('ws has authenticated ', data?.wsKey);
 });
-wsClient.on('error', (data) => {
-  console.error('ws error: ', data);
+wsClient.on('exception', (data) => {
+  console.error('ws exception: ', data);
 });
 
 async function main() {

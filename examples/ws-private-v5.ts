@@ -4,10 +4,10 @@ import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../src';
 // or
 // import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from 'bybit-api';
 
-// Create & inject a custom logger to disable the silly logging level (empty function)
+// Create & inject a custom logger to enable the trace logging level (empty function)
 const logger = {
   ...DefaultLogger,
-  silly: () => {},
+  // trace: (...params) => console.log('trace', ...params),
 };
 
 const key = process.env.API_KEY;

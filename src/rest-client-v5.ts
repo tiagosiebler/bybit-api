@@ -57,7 +57,7 @@ import {
   DeleteSubMemberParamsV5,
   DeliveryPriceV5,
   DeliveryRecordV5,
-  DepositAddressResultV5,
+  DepositAddressChainV5,
   DepositRecordV5,
   ExchangeBrokerAccountInfoV5,
   ExchangeBrokerEarningResultV5,
@@ -272,7 +272,7 @@ export class RestClientV5 extends BaseRestClient {
    */
 
   getClientType() {
-    return REST_CLIENT_TYPE_ENUM.v3;
+    return REST_CLIENT_TYPE_ENUM.v5;
   }
 
   async fetchServerTime(): Promise<number> {
@@ -1489,7 +1489,12 @@ export class RestClientV5 extends BaseRestClient {
   getMasterDepositAddress(
     coin: string,
     chainType?: string,
-  ): Promise<APIResponseV3WithTime<DepositAddressResultV5>> {
+  ): Promise<
+    APIResponseV3WithTime<{
+      coin: string;
+      chains: DepositAddressChainV5[];
+    }>
+  > {
     return this.getPrivate('/v5/asset/deposit/query-address', {
       coin,
       chainType,
@@ -1503,7 +1508,12 @@ export class RestClientV5 extends BaseRestClient {
     coin: string,
     chainType: string,
     subMemberId: string,
-  ): Promise<APIResponseV3WithTime<DepositAddressResultV5>> {
+  ): Promise<
+    APIResponseV3WithTime<{
+      coin: string;
+      chains: DepositAddressChainV5;
+    }>
+  > {
     return this.getPrivate('/v5/asset/deposit/query-sub-member-address', {
       coin,
       chainType,
@@ -1514,6 +1524,7 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * @deprecated - duplicate function, use getSubDepositAddress() instead
    * Query the deposit address information of SUB account.
+   * @deprecated Duplicate endpoint - Use getSubDepositAddress() instead
    *
    * CAUTION
    * Can use master UID's api key only
@@ -1522,7 +1533,12 @@ export class RestClientV5 extends BaseRestClient {
     coin: string,
     chainType: string,
     subMemberId: string,
-  ): Promise<APIResponseV3<DepositAddressResultV5>> {
+  ): Promise<
+    APIResponseV3<{
+      coin: string;
+      chains: DepositAddressChainV5;
+    }>
+  > {
     return this.getPrivate('/v5/asset/deposit/query-sub-member-address', {
       coin,
       chainType,

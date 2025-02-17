@@ -23,6 +23,8 @@ import {
 } from './websockets';
 import { WsOperation } from '../types/websockets/ws-api';
 
+type UseTheExceptionEventInstead = never;
+
 interface WSClientEventMap<WsKey extends string> {
   /** Connection opened. If this connection was previously opened and reconnected, expect the reconnected event instead */
   open: (evt: { wsKey: WsKey; event: any }) => void;
@@ -38,20 +40,23 @@ interface WSClientEventMap<WsKey extends string> {
   ) => void;
   /** Received data for topic */
   update: (response: any & { wsKey: WsKey }) => void;
-  /** Exception from ws client OR custom listeners (e.g. if you throw inside your event handler) */
-  error: (response: any & { wsKey: WsKey; isWSAPIResponse?: boolean }) => void;
+  /**
+   * See for more information: https://github.com/tiagosiebler/bybit-api/issues/413
+   * @deprecated Use the 'exception' event instead. The 'error' event had the unintended consequence of throwing an unhandled promise rejection.
+   */
+  error: UseTheExceptionEventInstead;
+  /**
+   * Exception from ws client OR custom listeners (e.g. if you throw inside your event handler)
+   */
+  exception: (
+    response: any & { wsKey: WsKey; isWSAPIResponse?: boolean },
+  ) => void;
   /** Confirmation that a connection successfully authenticated */
   authenticated: (event: {
     wsKey: WsKey;
     event: any;
     isWSAPIResponse?: boolean;
   }) => void;
-}
-
-export interface EmittableEvent<TEvent = any> {
-  eventType: 'response' | 'update' | 'error' | 'authenticated';
-  event: TEvent;
-  isWSAPIResponse?: boolean;
 }
 
 // Type safety for on and emit handlers: https://stackoverflow.com/a/61609010/880837
@@ -71,13 +76,11 @@ export interface BaseWebsocketClient<
   ): boolean;
 }
 
-// interface TopicsPendingSubscriptions {
-//   wsKey: string;
-//   failedTopicsSubscriptions: Set<string>;
-//   pendingTopicsSubscriptions: Set<string>;
-//   resolver: TopicsPendingSubscriptionsResolver;
-//   rejector: TopicsPendingSubscriptionsRejector;
-// }
+export interface EmittableEvent<TEvent = any> {
+  eventType: 'response' | 'update' | 'exception' | 'authenticated';
+  event: TEvent;
+  isWSAPIResponse?: boolean;
+}
 
 /**
  * A midflight WS request event (e.g. subscribe to these topics).
@@ -160,16 +163,17 @@ export abstract class BaseWebsocketClient<
       reconnectTimeout: 500,
       recvWindow: 5000,
 
+      // Calls to subscribeV5() are wrapped in a promise, allowing you to await a subscription request.
+      // Note: due to internal complexity, it's only recommended if you connect before subscribing.
+      promiseSubscribeRequests: false,
+
       // Automatically send an authentication op/request after a connection opens, for private connections.
       authPrivateConnectionsOnConnect: true,
       // Individual requests do not require a signature, so this is disabled.
       authPrivateRequests: false,
+
       ...options,
     };
-
-    // add default error handling so this doesn't crash node (if the user didn't set a handler)
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    this.on('error', () => {});
   }
 
   /**
@@ -306,6 +310,9 @@ export abstract class BaseWebsocketClient<
 
       for (const requestKey in pendingSubReqs) {
         const request = pendingSubReqs[requestKey];
+        this.logger.trace(
+          `clearTopicsPendingSubscriptions(${wsKey}, ${rejectAll}, ${rejectReason}, ${requestKey}): rejecting promise for: ${JSON.stringify(request?.requestData || {})}`,
+        );
         request?.rejector(request.requestData, rejectReason);
       }
     }
@@ -339,10 +346,18 @@ export abstract class BaseWebsocketClient<
         pendingSubscriptionRequest.requestData,
       );
     } else {
-      pendingSubscriptionRequest.rejector(
-        pendingSubscriptionRequest.requestData,
+      this.logger.trace(
+        `updatePendingTopicSubscriptionStatus.reject(${wsKey}, ${requestKey}, ${msg}, ${isTopicSubscriptionSuccessEvent}): `,
         msg,
       );
+      try {
+        pendingSubscriptionRequest.rejector(
+          pendingSubscriptionRequest.requestData,
+          msg,
+        );
+      } catch (e) {
+        console.error('Exception rejecting promise: ', e);
+      }
     }
 
     this.removeTopicPendingSubscription(wsKey, requestKey);
@@ -582,7 +597,7 @@ export abstract class BaseWebsocketClient<
     if (!error.message) {
       this.logger.error(`${context} due to unexpected error: `, error);
       this.emit('response', { ...error, wsKey });
-      this.emit('error', { ...error, wsKey });
+      this.emit('exception', { ...error, wsKey });
       return;
     }
 
@@ -614,8 +629,10 @@ export abstract class BaseWebsocketClient<
         break;
     }
 
+    this.logger.error(`parseWsError(${context}, ${error}, ${wsKey}) `, error);
+
     this.emit('response', { ...error, wsKey });
-    this.emit('error', { ...error, wsKey });
+    this.emit('exception', { ...error, wsKey });
   }
 
   /** Get a signature, build the auth request and send it */
@@ -845,9 +862,11 @@ export abstract class BaseWebsocketClient<
     for (const midflightRequest of subscribeWsMessages) {
       const wsMessage = midflightRequest.requestEvent;
 
-      promises.push(
-        this.upsertPendingTopicSubscribeRequests(wsKey, midflightRequest),
-      );
+      if (this.options.promiseSubscribeRequests) {
+        promises.push(
+          this.upsertPendingTopicSubscribeRequests(wsKey, midflightRequest),
+        );
+      }
 
       this.logger.trace(
         `Sending batch via message: "${JSON.stringify(wsMessage)}"`,
@@ -890,9 +909,11 @@ export abstract class BaseWebsocketClient<
     for (const midflightRequest of subscribeWsMessages) {
       const wsMessage = midflightRequest.requestEvent;
 
-      promises.push(
-        this.upsertPendingTopicSubscribeRequests(wsKey, midflightRequest),
-      );
+      if (this.options.promiseSubscribeRequests) {
+        promises.push(
+          this.upsertPendingTopicSubscribeRequests(wsKey, midflightRequest),
+        );
+      }
 
       this.logger.trace(`Sending batch via message: "${wsMessage}"`);
       this.tryWsSend(wsKey, JSON.stringify(wsMessage));
@@ -908,7 +929,11 @@ export abstract class BaseWebsocketClient<
   /**
    * Try sending a string event on a WS connection (identified by the WS Key)
    */
-  public tryWsSend(wsKey: TWSKey, wsMessage: string) {
+  public tryWsSend(
+    wsKey: TWSKey,
+    wsMessage: string,
+    throwExceptions?: boolean,
+  ) {
     try {
       this.logger.trace('Sending upstream ws message: ', {
         ...WS_LOGGER_CATEGORY,
@@ -934,6 +959,9 @@ export abstract class BaseWebsocketClient<
         wsKey,
         exception: e,
       });
+      if (throwExceptions) {
+        throw e;
+      }
     }
   }
 
@@ -988,6 +1016,7 @@ export abstract class BaseWebsocketClient<
     } catch (e) {
       this.logger.error(
         'Exception trying to resolve "connectionInProgress" promise',
+        e,
       );
     }
 
@@ -1001,12 +1030,28 @@ export abstract class BaseWebsocketClient<
     );
 
     // Request sub to public topics, if any
-    this.requestSubscribeTopics(wsKey, publicReqs);
+    try {
+      await this.requestSubscribeTopics(wsKey, publicReqs);
+    } catch (e) {
+      this.logger.error(
+        `onWsOpen(): exception in public requestSubscribeTopics(${wsKey}): `,
+        publicReqs,
+        e,
+      );
+    }
 
     // Request sub to private topics, if auth on connect isn't needed
     // Else, this is automatic after authentication is successfully confirmed
     if (!this.options.authPrivateConnectionsOnConnect) {
-      this.requestSubscribeTopics(wsKey, privateReqs);
+      try {
+        this.requestSubscribeTopics(wsKey, privateReqs);
+      } catch (e) {
+        this.logger.error(
+          `onWsOpen(): exception in private requestSubscribeTopics(${wsKey}: `,
+          privateReqs,
+          e,
+        );
+      }
     }
 
     // Some websockets require an auth packet to be sent after opening the connection
@@ -1041,6 +1086,7 @@ export abstract class BaseWebsocketClient<
     } catch (e) {
       this.logger.error(
         'Exception trying to resolve "connectionInProgress" promise',
+        e,
       );
     }
 
@@ -1107,10 +1153,6 @@ export abstract class BaseWebsocketClient<
         }
 
         for (const emittable of emittableEvents) {
-          // if (emittable.event?.op) {
-          //   console.log('emittable: ', emittable);
-          // }
-
           if (this.isWsPong(emittable)) {
             this.logger.trace('Received pong2', {
               ...WS_LOGGER_CATEGORY,
@@ -1136,7 +1178,22 @@ export abstract class BaseWebsocketClient<
             continue;
           }
 
-          this.emit(emittable.eventType, emittableFinalEvent);
+          // this.logger.trace(
+          //   `onWsMessage().emit(${emittable.eventType})`,
+          //   emittableFinalEvent,
+          // );
+          try {
+            this.emit(emittable.eventType, emittableFinalEvent);
+          } catch (e) {
+            this.logger.error(
+              `Exception in onWsMessage().emit(${emittable.eventType}) handler:`,
+              e,
+            );
+          }
+          // this.logger.trace(
+          //   `onWsMessage().emit(${emittable.eventType}).done()`,
+          //   emittableFinalEvent,
+          // );
         }
 
         return;
@@ -1173,6 +1230,9 @@ export abstract class BaseWebsocketClient<
     if (
       this.wsStore.getConnectionState(wsKey) !== WsConnectionStateEnum.CLOSING
     ) {
+      this.logger.trace(
+        `onWsClose(${wsKey}): rejecting all deferred promises...`,
+      );
       // clean up any pending promises for this connection
       this.getWsStore().rejectAllDeferredPromises(
         wsKey,
@@ -1187,6 +1247,9 @@ export abstract class BaseWebsocketClient<
       this.emit('reconnect', { wsKey, event });
     } else {
       // clean up any pending promises for this connection
+      this.logger.trace(
+        `onWsClose(${wsKey}): rejecting all deferred promises...`,
+      );
       this.getWsStore().rejectAllDeferredPromises(wsKey, 'disconnected');
       this.setWsState(wsKey, WsConnectionStateEnum.INITIAL);
       this.emit('close', { wsKey, event });

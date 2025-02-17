@@ -1,4 +1,4 @@
-import { neverGuard } from './websockets';
+import { neverGuard } from './typeGuards';
 
 function bufferToB64(buffer: ArrayBuffer): string {
   let binary = '';
