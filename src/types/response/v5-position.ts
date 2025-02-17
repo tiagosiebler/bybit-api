@@ -29,6 +29,7 @@ export interface PositionV5 {
   bustPrice?: string;
   positionIM?: string;
   positionMM?: string;
+  positionBalance?: string;
   tpslMode?: TPSLModeV5;
   takeProfit?: string;
   stopLoss?: string;
@@ -108,6 +109,7 @@ export interface ExecutionV5 {
   underlyingPrice?: string;
   blockTradeId?: string;
   closedSize?: string;
+  seq: number;
 }
 
 export interface ClosedPnLV5 {

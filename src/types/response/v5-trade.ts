@@ -107,5 +107,7 @@ export interface SpotBorrowCheckResultV5 {
   side: OrderSideV5;
   maxTradeQty: string;
   maxTradeAmount: string;
+  spotMaxTradeQty: string;
+  spotMaxTradeAmount: string;
   borrowCoin: string;
 }

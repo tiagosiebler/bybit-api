@@ -27,26 +27,44 @@ export interface SubMemberV5 {
 }
 export type ApiKeyType = 1 | 2;
 
+export interface ApiKeyPermissionsV5 {
+  ContractTrade: string[];
+  Spot: string[];
+  Wallet: string[];
+  Options: string[];
+  Derivatives: string[];
+  CopyTrading: string[];
+  BlockTrade: string[];
+  Exchange: string[];
+  NFT: string[];
+  Affiliate: string[];
+}
+
 export interface ApiKeyInfoV5 {
   id: string;
   note: string;
   apiKey: string;
   readOnly: 0 | 1;
   secret: string;
-  permissions: PermissionsV5;
-  ips?: string[];
-  type: ApiKeyType;
-  deadlineDay?: number;
-  expiredAt?: string;
+  permissions: ApiKeyPermissionsV5;
+  ips: string[];
+  type: 1 | 2; // 1: personal, 2: connected to third-party app
+  deadlineDay: number;
+  expiredAt: string;
   createdAt: string;
-  unified: 0 | 1;
-  uta: 0 | 1;
+  /** @deprecated */
+  unified: number;
+  uta: 0 | 1; // 0: regular account, 1: unified trade account
   userID: number;
   inviterID: number;
-  vipLevel?: string;
-  mktMakerLevel?: string;
-  affiliateID?: number;
+  vipLevel: string;
+  mktMakerLevel: string;
+  affiliateID: number;
+  rsaPublicKey: string;
   isMaster: boolean;
+  parentUid: string;
+  kycLevel: 'LEVEL_DEFAULT' | 'LEVEL_1' | 'LEVEL_2';
+  kycRegion: string;
 }
 
 export interface UpdateApiKeyResultV5 {

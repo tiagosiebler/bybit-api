@@ -170,7 +170,6 @@ import {
   SpotBorrowCheckResultV5,
   SpotLeveragedTokenOrderHistoryV5,
   SpotMarginStateV5,
-  SubAccountAllApiKeysResultV5,
   SubMemberV5,
   SwitchIsolatedMarginParamsV5,
   SwitchPositionModeParamsV5,
@@ -191,6 +190,7 @@ import {
   VipCollateralCoinsV5,
   WalletBalanceV5,
   WithdrawParamsV5,
+  WithdrawableAmountV5,
   WithdrawalRecordV5,
 } from './types';
 
@@ -551,7 +551,9 @@ export class RestClientV5 extends BaseRestClient {
 
   cancelAllOrders(
     params: CancelAllOrdersParamsV5,
-  ): Promise<APIResponseV3WithTime<{ list: OrderResultV5[] }>> {
+  ): Promise<
+    APIResponseV3WithTime<{ list: OrderResultV5[]; success: string }>
+  > {
     return this.postPrivate('/v5/order/cancel-all', params);
   }
 
@@ -564,6 +566,18 @@ export class RestClientV5 extends BaseRestClient {
     params: GetAccountHistoricOrdersParamsV5,
   ): Promise<APIResponseV3WithTime<CategoryCursorListV5<AccountOrderV5[]>>> {
     return this.getPrivate('/v5/order/history', params);
+  }
+
+  /**
+   * Query users' execution records, sorted by execTime in descending order
+   *
+   * Unified account covers: Spot / Linear contract / Options
+   * Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures
+   */
+  getExecutionList(
+    params: GetExecutionListParamsV5,
+  ): Promise<APIResponseV3WithTime<CategoryCursorListV5<ExecutionV5[]>>> {
+    return this.getPrivate('/v5/execution/list', params);
   }
 
   /**
@@ -675,7 +689,7 @@ export class RestClientV5 extends BaseRestClient {
    * Only for institutional clients!
    */
   setDisconnectCancelAllWindowV2(params: {
-    product: 'OPTION' | 'SPOT' | 'DERIVATIVES';
+    product?: 'OPTION' | 'SPOT' | 'DERIVATIVES';
     timeWindow: number;
   }): Promise<APIResponseV3<undefined>> {
     return this.postPrivate('/v5/order/disconnected-cancel-all', params);
@@ -733,6 +747,7 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * @deprecated
    * This endpoint sets the take profit/stop loss (TP/SL) mode to full or partial.
    *
    * Unified account covers: Linear contract; normal account covers: USDT perpetual, inverse perpetual, inverse futures.
@@ -761,6 +776,7 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * @deprecated
    * The risk limit will limit the maximum position value you can hold under different margin requirements.
    * If you want to hold a bigger position size, you need more margin.
    *
@@ -809,18 +825,6 @@ export class RestClientV5 extends BaseRestClient {
     params: AddOrReduceMarginParamsV5,
   ): Promise<APIResponseV3WithTime<AddOrReduceMarginResultV5>> {
     return this.postPrivate('/v5/position/add-margin', params);
-  }
-
-  /**
-   * Query users' execution records, sorted by execTime in descending order
-   *
-   * Unified account covers: Spot / Linear contract / Options
-   * Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures
-   */
-  getExecutionList(
-    params: GetExecutionListParamsV5,
-  ): Promise<APIResponseV3WithTime<CategoryCursorListV5<ExecutionV5[]>>> {
-    return this.getPrivate('/v5/execution/list', params);
   }
 
   /**
@@ -1100,6 +1104,19 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Query the DCP configuration of the account's contracts (USDT perpetual, USDC perpetual and USDC Futures) / spot / options.
+   *
+   * Only the configured main / sub account can query information from this API. Calling this API by an account always returns empty.
+   *
+   * INFO
+   * support linear contract (USDT, USDC Perp & USDC Futures) / Spot / Options only
+   * Unified account only
+   */
+  getDCPInfo(): Promise<APIResponseV3WithTime<{ dcpInfos: DCPInfoV5[] }>> {
+    return this.getPrivate('/v5/account/query-dcp-info');
+  }
+
+  /**
    * Query transaction logs in Unified account.
    */
   getTransactionLog(
@@ -1184,37 +1201,10 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
-   * Query the DCP configuration of the account's contracts (USDT perpetual, USDC perpetual and USDC Futures) / spot / options.
-   *
-   * Only the configured main / sub account can query information from this API. Calling this API by an account always returns empty.
-   *
-   * INFO
-   * support linear contract (USDT, USDC Perp & USDC Futures) / Spot / Options only
-   * Unified account only
-   */
-  getDCPInfo(): Promise<APIResponseV3WithTime<{ dcpInfos: DCPInfoV5[] }>> {
-    return this.getPrivate('/v5/account/query-dcp-info');
-  }
-
-  /**
    *
    ****** Asset APIs
    *
    */
-
-  /**
-   * Query the coin exchange records.
-   *
-   * CAUTION: You may experience long delays with this endpoint.
-   */
-  getCoinExchangeRecords(params?: GetCoinExchangeRecordParamsV5): Promise<
-    APIResponseV3WithTime<{
-      orderBody: CoinExchangeRecordV5[];
-      nextPageCursor?: string;
-    }>
-  > {
-    return this.getPrivate('/v5/asset/exchange/order-record', params);
-  }
 
   /**
    * Query option delivery records, sorted by deliveryTime in descending order.
@@ -1238,6 +1228,46 @@ export class RestClientV5 extends BaseRestClient {
     APIResponseV3WithTime<CategoryCursorListV5<SettlementRecordV5[]>>
   > {
     return this.getPrivate('/v5/asset/settlement-record', params);
+  }
+
+  /**
+   * Query the coin exchange records.
+   *
+   * CAUTION: You may experience long delays with this endpoint.
+   */
+  getCoinExchangeRecords(params?: GetCoinExchangeRecordParamsV5): Promise<
+    APIResponseV3WithTime<{
+      orderBody: CoinExchangeRecordV5[];
+      nextPageCursor?: string;
+    }>
+  > {
+    return this.getPrivate('/v5/asset/exchange/order-record', params);
+  }
+
+  /**
+   * Query coin information, including chain information, withdraw and deposit status.
+   */
+  getCoinInfo(
+    coin?: string,
+  ): Promise<APIResponseV3WithTime<{ rows: CoinInfoV5[] }>> {
+    return this.getPrivate(
+      '/v5/asset/coin/query-info',
+      coin ? { coin } : undefined,
+    );
+  }
+
+  /**
+   * Query the sub UIDs under a main UID
+   *
+   * CAUTION: Can query by the master UID's api key only
+   */
+  getSubUID(): Promise<
+    APIResponseV3WithTime<{
+      subMemberIds: string[];
+      transferableSubMemberIds: string[];
+    }>
+  > {
+    return this.getPrivate('/v5/asset/transfer/query-sub-member-list');
   }
 
   /**
@@ -1278,6 +1308,15 @@ export class RestClientV5 extends BaseRestClient {
       '/v5/asset/transfer/query-account-coin-balance',
       params,
     );
+  }
+
+  /**
+   * Query withdrawable amount.
+   */
+  getWithdrawableAmount(params: {
+    coin: string;
+  }): Promise<APIResponseV3<{ rows: WithdrawableAmountV5[] }>> {
+    return this.getPrivate('/v5/asset/withdraw/withdrawable-amount', params);
   }
 
   /**
@@ -1325,20 +1364,6 @@ export class RestClientV5 extends BaseRestClient {
       '/v5/asset/transfer/query-inter-transfer-list',
       params,
     );
-  }
-
-  /**
-   * Query the sub UIDs under a main UID
-   *
-   * CAUTION: Can query by the master UID's api key only
-   */
-  getSubUID(): Promise<
-    APIResponseV3WithTime<{
-      subMemberIds: string[];
-      transferableSubMemberIds: string[];
-    }>
-  > {
-    return this.getPrivate('/v5/asset/transfer/query-sub-member-list');
   }
 
   /**
@@ -1396,7 +1421,7 @@ export class RestClientV5 extends BaseRestClient {
       nextPageCursor: string;
     }>
   > {
-    return this.get('/v5/asset/deposit/query-allowed-list', params);
+    return this.getPrivate('/v5/asset/deposit/query-allowed-list', params);
   }
 
   /**
@@ -1497,6 +1522,7 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * @deprecated - duplicate function, use getSubDepositAddress() instead
    * Query the deposit address information of SUB account.
    * @deprecated Duplicate endpoint - Use getSubDepositAddress() instead
    *
@@ -1521,33 +1547,12 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
-   * Query coin information, including chain information, withdraw and deposit status.
-   */
-  getCoinInfo(
-    coin?: string,
-  ): Promise<APIResponseV3WithTime<{ rows: CoinInfoV5[] }>> {
-    return this.getPrivate(
-      '/v5/asset/coin/query-info',
-      coin ? { coin } : undefined,
-    );
-  }
-
-  /**
    * Query withdrawal records.
    */
   getWithdrawalRecords(
     params?: GetWithdrawalRecordsParamsV5,
   ): Promise<APIResponseV3<CursorRowsV5<WithdrawalRecordV5[]>>> {
     return this.getPrivate('/v5/asset/withdraw/query-record', params);
-  }
-
-  /**
-   * Query withdrawable amount.
-   */
-  getWithdrawableAmount(params: {
-    coin: string;
-  }): Promise<APIResponseV3<{ rows: WithdrawalRecordV5[] }>> {
-    return this.getPrivate('/v5/asset/withdraw/withdrawable-amount', params);
   }
 
   /**
@@ -1621,7 +1626,7 @@ export class RestClientV5 extends BaseRestClient {
    * Query the exchange result by sending quoteTxId.
    */
   getConvertStatus(params: {
-    quoteTxId?: string;
+    quoteTxId: string;
     accountType:
       | 'eb_convert_funding'
       | 'eb_convert_uta'
@@ -1702,15 +1707,6 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
-   * Query all api keys information of a sub UID.
-   */
-  getSubAccountAllApiKeys(
-    params: GetSubAccountAllApiKeysParamsV5,
-  ): Promise<APIResponseV3WithTime<SubAccountAllApiKeysResultV5>> {
-    return this.getPrivate('/v5/user/sub-apikeys', params);
-  }
-
-  /**
    * Froze sub uid. Use master user's api key only.
    *
    * TIP: The API key must have one of the permissions to be allowed to call the following API endpoint.
@@ -1733,6 +1729,18 @@ export class RestClientV5 extends BaseRestClient {
     return this.getPrivate('/v5/user/query-api');
   }
 
+  /**
+   * Query all api keys information of a sub UID.
+   */
+  getSubAccountAllApiKeys(params: GetSubAccountAllApiKeysParamsV5): Promise<
+    APIResponseV3WithTime<{
+      result: ApiKeyInfoV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/user/sub-apikeys', params);
+  }
+
   getUIDWalletType(params: { memberIds: string }): Promise<
     APIResponseV3WithTime<{
       accounts: {
@@ -1741,7 +1749,7 @@ export class RestClientV5 extends BaseRestClient {
       }[];
     }>
   > {
-    return this.getPrivate('/v5/user/query-api', params);
+    return this.getPrivate('/v5/user/get-member-type', params);
   }
 
   /**
@@ -1771,6 +1779,19 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Delete a sub UID. Before deleting the UID, please make sure there are no assets.
+   *
+   * TIP:
+   * The API key must have one of the permissions to be allowed to call the following API endpoint.
+   * - master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+   */
+  deleteSubMember(
+    params: DeleteSubMemberParamsV5,
+  ): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate('/v5/user/del-submember', params);
+  }
+
+  /**
    * Delete the api key of master account. Use the api key pending to be delete to call the endpoint. Use master user's api key only.
    *
    * TIP:
@@ -1797,19 +1818,6 @@ export class RestClientV5 extends BaseRestClient {
     apikey?: string;
   }): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate('/v5/user/delete-sub-api', params);
-  }
-
-  /**
-   * Delete a sub UID. Before deleting the UID, please make sure there are no assets.
-   *
-   * TIP:
-   * The API key must have one of the permissions to be allowed to call the following API endpoint.
-   * - master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
-   */
-  deleteSubMember(
-    params: DeleteSubMemberParamsV5,
-  ): Promise<APIResponseV3WithTime<{}>> {
-    return this.postPrivate('/v5/user/del-submember', params);
   }
 
   /**
