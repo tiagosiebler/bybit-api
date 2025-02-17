@@ -205,6 +205,9 @@ export class WsStore<
     const promise = this.getDeferredPromise(wsKey, promiseRef);
 
     if (promise?.reject) {
+      this.logger.trace(
+        `rejectDeferredPromise(): rejecting ${wsKey}/${promiseRef}/${value}`,
+      );
       promise.reject(value);
     }
 

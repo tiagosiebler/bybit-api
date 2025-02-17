@@ -163,10 +163,15 @@ export abstract class BaseWebsocketClient<
       reconnectTimeout: 500,
       recvWindow: 5000,
 
+      // Calls to subscribeV5() are wrapped in a promise, allowing you to await a subscription request.
+      // Note: due to internal complexity, it's only recommended if you connect before subscribing.
+      promiseSubscribeRequests: false,
+
       // Automatically send an authentication op/request after a connection opens, for private connections.
       authPrivateConnectionsOnConnect: true,
       // Individual requests do not require a signature, so this is disabled.
       authPrivateRequests: false,
+
       ...options,
     };
   }
@@ -305,6 +310,9 @@ export abstract class BaseWebsocketClient<
 
       for (const requestKey in pendingSubReqs) {
         const request = pendingSubReqs[requestKey];
+        this.logger.trace(
+          `clearTopicsPendingSubscriptions(${wsKey}, ${rejectAll}, ${rejectReason}, ${requestKey}): rejecting promise for: ${JSON.stringify(request?.requestData || {})}`,
+        );
         request?.rejector(request.requestData, rejectReason);
       }
     }
@@ -854,9 +862,11 @@ export abstract class BaseWebsocketClient<
     for (const midflightRequest of subscribeWsMessages) {
       const wsMessage = midflightRequest.requestEvent;
 
-      promises.push(
-        this.upsertPendingTopicSubscribeRequests(wsKey, midflightRequest),
-      );
+      if (this.options.promiseSubscribeRequests) {
+        promises.push(
+          this.upsertPendingTopicSubscribeRequests(wsKey, midflightRequest),
+        );
+      }
 
       this.logger.trace(
         `Sending batch via message: "${JSON.stringify(wsMessage)}"`,
@@ -899,9 +909,11 @@ export abstract class BaseWebsocketClient<
     for (const midflightRequest of subscribeWsMessages) {
       const wsMessage = midflightRequest.requestEvent;
 
-      promises.push(
-        this.upsertPendingTopicSubscribeRequests(wsKey, midflightRequest),
-      );
+      if (this.options.promiseSubscribeRequests) {
+        promises.push(
+          this.upsertPendingTopicSubscribeRequests(wsKey, midflightRequest),
+        );
+      }
 
       this.logger.trace(`Sending batch via message: "${wsMessage}"`);
       this.tryWsSend(wsKey, JSON.stringify(wsMessage));
@@ -1004,6 +1016,7 @@ export abstract class BaseWebsocketClient<
     } catch (e) {
       this.logger.error(
         'Exception trying to resolve "connectionInProgress" promise',
+        e,
       );
     }
 
@@ -1073,6 +1086,7 @@ export abstract class BaseWebsocketClient<
     } catch (e) {
       this.logger.error(
         'Exception trying to resolve "connectionInProgress" promise',
+        e,
       );
     }
 
@@ -1216,6 +1230,9 @@ export abstract class BaseWebsocketClient<
     if (
       this.wsStore.getConnectionState(wsKey) !== WsConnectionStateEnum.CLOSING
     ) {
+      this.logger.trace(
+        `onWsClose(${wsKey}): rejecting all deferred promises...`,
+      );
       // clean up any pending promises for this connection
       this.getWsStore().rejectAllDeferredPromises(
         wsKey,
@@ -1230,6 +1247,9 @@ export abstract class BaseWebsocketClient<
       this.emit('reconnect', { wsKey, event });
     } else {
       // clean up any pending promises for this connection
+      this.logger.trace(
+        `onWsClose(${wsKey}): rejecting all deferred promises...`,
+      );
       this.getWsStore().rejectAllDeferredPromises(wsKey, 'disconnected');
       this.setWsState(wsKey, WsConnectionStateEnum.INITIAL);
       this.emit('close', { wsKey, event });

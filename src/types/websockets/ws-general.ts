@@ -124,6 +124,15 @@ export interface WSClientConfigurableOptions {
   wsUrl?: string;
 
   /**
+   * Default: false.
+   *
+   * When enabled, any calls to the subscribe method will return a promise.
+   * Note: internally, subscription requests are sent in batches. This may not behave as expected when
+   * subscribing to a large number of topics, especially if you are not yet connected when subscribing.
+   */
+  promiseSubscribeRequests?: boolean;
+
+  /**
    * Allows you to provide a custom "signMessage" function, e.g. to use node's much faster createHmac method
    *
    * Look in the examples folder for a demonstration on using node's createHmac instead.
