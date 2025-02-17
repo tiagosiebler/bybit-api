@@ -170,7 +170,6 @@ import {
   SpotBorrowCheckResultV5,
   SpotLeveragedTokenOrderHistoryV5,
   SpotMarginStateV5,
-  SubAccountAllApiKeysResultV5,
   SubMemberV5,
   SwitchIsolatedMarginParamsV5,
   SwitchPositionModeParamsV5,
@@ -1692,15 +1691,6 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
-   * Query all api keys information of a sub UID.
-   */
-  getSubAccountAllApiKeys(
-    params: GetSubAccountAllApiKeysParamsV5,
-  ): Promise<APIResponseV3WithTime<SubAccountAllApiKeysResultV5>> {
-    return this.getPrivate('/v5/user/sub-apikeys', params);
-  }
-
-  /**
    * Froze sub uid. Use master user's api key only.
    *
    * TIP: The API key must have one of the permissions to be allowed to call the following API endpoint.
@@ -1723,6 +1713,18 @@ export class RestClientV5 extends BaseRestClient {
     return this.getPrivate('/v5/user/query-api');
   }
 
+  /**
+   * Query all api keys information of a sub UID.
+   */
+  getSubAccountAllApiKeys(params: GetSubAccountAllApiKeysParamsV5): Promise<
+    APIResponseV3WithTime<{
+      result: ApiKeyInfoV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/user/sub-apikeys', params);
+  }
+
   getUIDWalletType(params: { memberIds: string }): Promise<
     APIResponseV3WithTime<{
       accounts: {
@@ -1731,7 +1733,7 @@ export class RestClientV5 extends BaseRestClient {
       }[];
     }>
   > {
-    return this.getPrivate('/v5/user/query-api', params);
+    return this.getPrivate('/v5/user/get-member-type', params);
   }
 
   /**
@@ -1761,6 +1763,19 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Delete a sub UID. Before deleting the UID, please make sure there are no assets.
+   *
+   * TIP:
+   * The API key must have one of the permissions to be allowed to call the following API endpoint.
+   * - master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+   */
+  deleteSubMember(
+    params: DeleteSubMemberParamsV5,
+  ): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate('/v5/user/del-submember', params);
+  }
+
+  /**
    * Delete the api key of master account. Use the api key pending to be delete to call the endpoint. Use master user's api key only.
    *
    * TIP:
@@ -1787,19 +1802,6 @@ export class RestClientV5 extends BaseRestClient {
     apikey?: string;
   }): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate('/v5/user/delete-sub-api', params);
-  }
-
-  /**
-   * Delete a sub UID. Before deleting the UID, please make sure there are no assets.
-   *
-   * TIP:
-   * The API key must have one of the permissions to be allowed to call the following API endpoint.
-   * - master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
-   */
-  deleteSubMember(
-    params: DeleteSubMemberParamsV5,
-  ): Promise<APIResponseV3WithTime<{}>> {
-    return this.postPrivate('/v5/user/del-submember', params);
   }
 
   /**
