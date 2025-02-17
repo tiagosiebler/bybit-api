@@ -10,6 +10,8 @@ export interface GetCoinExchangeRecordParamsV5 {
 export interface GetDeliveryRecordParamsV5 {
   category: CategoryV5;
   symbol?: string;
+  startTime?: number;
+  endTime?: number;
   expDate?: string;
   limit?: number;
   cursor?: string;

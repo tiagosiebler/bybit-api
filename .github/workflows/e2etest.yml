@@ -1,16 +1,20 @@
-name: 'Build & Test'
+name: E2ETests
 
-on: [push]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
 
-# on:
-#   # pull_request:
-#   #   branches:
-#   #     - "master"
-#   push:
-#     branches:
+env:
+  PROXY_ENABLED: ${{ secrets.PROXY_ENABLED }}
+  PROXY_HOST: ${{ secrets.PROXY_HOST }}
+  PROXY_PASS: ${{ secrets.PROXY_PASS }}
+  PROXY_PORT: ${{ secrets.PROXY_PORT }}
+  PROXY_USER: ${{ secrets.PROXY_USER }}
+
 
 jobs:
-  build:
+  E2ETests:
     name: 'Build & Test'
     runs-on: ubuntu-latest
 
@@ -30,13 +34,20 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Test
-        run: npm run test
+      - name: Test Public Read API Calls
+        run: npm run test -- public.read.test.ts
+
+      - name: Test Private Read API Calls
+        run: npm run test -- private.read.test.ts
         env:
           API_KEY_COM: ${{ secrets.API_KEY_COM }}
           API_SECRET_COM: ${{ secrets.API_SECRET_COM }}
-          PROXY_ENABLED: ${{ secrets.PROXY_ENABLED }}
-          PROXY_HOST: ${{ secrets.PROXY_HOST }}
-          PROXY_PASS: ${{ secrets.PROXY_PASS }}
-          PROXY_PORT: ${{ secrets.PROXY_PORT }}
-          PROXY_USER: ${{ secrets.PROXY_USER }}
+
+      - name: Test Private Write API Calls
+        run: npm run test -- private.write.test.ts
+        env:
+          API_KEY_COM: ${{ secrets.API_KEY_COM }}
+          API_SECRET_COM: ${{ secrets.API_SECRET_COM }}
+
+      - name: Test Public WS
+        run: npm run test -- public.ws.test.ts
