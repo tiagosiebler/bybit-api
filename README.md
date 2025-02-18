@@ -377,8 +377,8 @@ ws.on('close', () => {
 });
 
 // Listen to raw error events. Recommended.
-ws.on('error', (err) => {
-  console.error('error', err);
+ws.on('exception', (err) => {
+  console.error('exception', err);
 });
 
 ws.on('reconnect', ({ wsKey }) => {

@@ -21,7 +21,7 @@ export type WsClientEvent =
   | 'open'
   | 'update'
   | 'close'
-  | 'error'
+  | 'exception'
   | 'reconnect'
   | 'reconnected'
   | 'response';
@@ -46,7 +46,7 @@ export function waitForSocketEvent(
       clearTimeout(timeout);
       resolvedOnce = true;
       wsClient.removeListener(event, (e) => resolver(e));
-      wsClient.removeListener('error', (e) => rejector(e));
+      wsClient.removeListener('exception', (e) => rejector(e));
     }
 
     function resolver(event) {

@@ -49,7 +49,7 @@ wsClient.on('reconnect', ({ wsKey }) => {
 wsClient.on('reconnected', (data) => {
   console.log('ws has reconnected ', data?.wsKey);
 });
-// wsClient.on('error', (data) => {
+// wsClient.on('exception', (data) => {
 //   console.error('ws exception: ', data);
 // });
 

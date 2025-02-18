@@ -69,8 +69,8 @@ async function main() {
   const CANCEL_AFTER_SECONDS = 5;
 
   // Exceptions including rejected commands will show here (as well as the catch handler used below)
-  wsClient.on('error', (data) => {
-    console.error('ws error: ', data);
+  wsClient.on('exception', (data) => {
+    console.error('ws exception: ', data);
   });
 
   // Replies to commands will show here
