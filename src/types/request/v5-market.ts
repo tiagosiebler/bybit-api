@@ -1,5 +1,5 @@
 import { KlineIntervalV3 } from '../shared';
-import { CategoryV5, InstrumentStatusV5, OptionTypeV5 } from '../v5-shared';
+import { CategoryV5, InstrumentStatusV5, OptionTypeV5 } from '../shared-v5';
 
 export interface GetKlineParamsV5 {
   category: 'spot' | 'linear' | 'inverse';
@@ -108,6 +108,7 @@ export interface GetInsuranceParamsV5 {
 export interface GetRiskLimitParamsV5 {
   category?: 'linear' | 'inverse';
   symbol?: string;
+  cursor?: string;
 }
 
 export interface GetOptionDeliveryPriceParamsV5 {

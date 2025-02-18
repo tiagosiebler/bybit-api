@@ -5,7 +5,7 @@ import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../src';
 
 const logger = {
   ...DefaultLogger,
-  silly: (...params) => console.log('silly', ...params),
+  trace: (...params) => console.log('trace', ...params),
 };
 
 /**
@@ -17,13 +17,8 @@ const logger = {
  * - Heartbeats/ping/pong/reconnects are all handled automatically.
  *    If a connection drops, the client will clean it up, respawn a fresh connection and resubscribe for you.
  */
-const wsClient = new WebsocketClient(
-  {
-    market: 'v5',
-    // demoTrading: true,
-  },
-  logger,
-);
+
+const wsClient = new WebsocketClient({}, logger);
 
 wsClient.on('update', (data) => {
   console.log('raw message received ', JSON.stringify(data));
@@ -41,9 +36,10 @@ wsClient.on('reconnect', ({ wsKey }) => {
 wsClient.on('reconnected', (data) => {
   console.log('ws has reconnected ', data?.wsKey);
 });
-// wsClient.on('error', (data) => {
-//   console.error('ws exception: ', data);
-// });
+
+wsClient.on('exception', (data) => {
+  console.error('ws exception: ', data);
+});
 
 /**
  * For public V5 topics, use the subscribeV5 method and include the API category this topic is for.
@@ -69,6 +65,17 @@ wsClient.on('reconnected', (data) => {
 // Option v5
 // wsClient.subscribeV5('publicTrade.BTC', 'option');
 
+const topics = ['kline.5.XRPUSDT', 'kline.5.BTCUSDT', 'kline.5.ETHUSDT'];
+
+// Use the subscribeV5() call for most subscribe calls with v5 websockets
+wsClient.subscribeV5(topics, 'spot');
+
+// Alternatively, you can also use objects in the wsClient.subscribe() call
+// wsClient.subscribe({
+//   topic: 'orderook.50.BTCUSDT',
+//   category: 'spot',
+// });
+
 /**
  * For private V5 topics, just call the same subscribeV5() method on the ws client or use the original subscribe() method.
  *
@@ -79,10 +86,6 @@ wsClient.on('reconnected', (data) => {
 // wsClient.subscribeV5('position', 'linear');
 // wsClient.subscribeV5('execution', 'linear');
 // wsClient.subscribeV5(['order', 'wallet', 'greek'], 'linear');
-
-const topics = ['kline.5.XRPUSDT', 'kline.5.BTCUSDT', 'kline.5.ETHUSDT'];
-
-wsClient.subscribeV5(topics, 'spot');
 
 // To unsubscribe from topics (after a 5 second delay, in this example):
 setTimeout(() => {

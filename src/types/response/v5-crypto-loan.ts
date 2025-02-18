@@ -1,6 +1,5 @@
 export interface CollateralCoinV5 {
   collateralAccuracy: number;
-  currency: string;
   initialLTV: string;
   liquidationLTV: string;
   marginCallLTV: string;

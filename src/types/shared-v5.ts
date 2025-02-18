@@ -142,7 +142,10 @@ export type StopOrderTypeV5 =
   | 'Stop'
   | 'PartialTakeProfit'
   | 'PartialStopLoss'
-  | 'tpslOrder';
+  | 'tpslOrder'
+  | 'OcoOrder'
+  | 'MmRateClose'
+  | 'BidirectionalTpslOrder';
 
 /**
  * Position index. Used to identify positions in different position modes.

@@ -1,4 +1,4 @@
-import { AccountTypeV5, CategoryV5, TransactionTypeV5 } from '../v5-shared';
+import { AccountTypeV5, CategoryV5, TransactionTypeV5 } from '../shared-v5';
 
 export interface GetWalletBalanceParamsV5 {
   accountType: AccountTypeV5;

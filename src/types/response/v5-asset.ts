@@ -1,4 +1,4 @@
-import { AccountTypeV5, OrderSideV5, WithdrawalTypeV5 } from '../v5-shared';
+import { AccountTypeV5, OrderSideV5, WithdrawalTypeV5 } from '../shared-v5';
 
 export interface CoinExchangeRecordV5 {
   fromCoin: string;
@@ -66,6 +66,8 @@ export interface AccountCoinBalanceV5 {
     walletBalance: string;
     transferBalance: string;
     bonus: string;
+    transferSafeAmount: string;
+    ltvTransferSafeAmount: string;
   };
 }
 
@@ -113,6 +115,9 @@ export interface DepositRecordV5 {
   confirmations: string;
   txIndex: string;
   blockHash: string;
+  batchReleaseLimit: string;
+  depositType: string;
+  fromAddress: string;
 }
 
 export interface InternalDepositRecordV5 {
@@ -123,6 +128,7 @@ export interface InternalDepositRecordV5 {
   status: 1 | 2 | 3;
   address: string;
   createdTime: string;
+  txID: string;
 }
 
 export interface DepositAddressChainV5 {
@@ -130,6 +136,8 @@ export interface DepositAddressChainV5 {
   addressDeposit: string;
   tagDeposit: string;
   chain: string;
+  batchReleaseLimit: string;
+  contractAddress: string;
 }
 
 export interface DepositAddressResultV5 {
@@ -151,6 +159,8 @@ export interface CoinInfoV5 {
     minAccuracy: string;
     chainDeposit: string;
     chainWithdraw: string;
+    withdrawPercentageFee: string;
+    contractAddress: string;
   }[];
 }
 
@@ -167,6 +177,22 @@ export interface WithdrawalRecordV5 {
   tag: string;
   createTime: string;
   updateTime: string;
+}
+
+export interface WithdrawableAmountV5 {
+  limitAmountUsd: string;
+  withdrawableAmount: {
+    SPOT: {
+      coin: string;
+      withdrawableAmount: string;
+      availableBalance: string;
+    };
+    FUND: {
+      coin: string;
+      withdrawableAmount: string;
+      availableBalance: string;
+    };
+  };
 }
 
 export interface VaspEntityV5 {
@@ -220,7 +246,7 @@ export interface ConvertStatusV5 {
   fromAmount: string;
   toAmount: string;
   exchangeStatus: 'init' | 'processing' | 'success' | 'failure';
-  extInfo: object;
+  extInfo: { paramType: string; paramValue: string };
   convertRate: string;
   createdAt: string;
 }
@@ -236,7 +262,7 @@ export interface ConvertHistoryRecordV5 {
   fromAmount: string;
   toAmount: string;
   exchangeStatus: 'init' | 'processing' | 'success' | 'failure';
-  extInfo: object;
+  extInfo: { paramType: string; paramValue: string };
   convertRate: string;
   createdAt: string;
 }
