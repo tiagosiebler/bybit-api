@@ -193,6 +193,16 @@ import {
   WithdrawableAmountV5,
   WithdrawalRecordV5,
 } from './types';
+import {
+  GetEarnOrderHistoryParams,
+  GetEarnPositionParams,
+  SubmitStakeRedeemParams,
+} from './types/request/v5-earn';
+import {
+  EarnOrderHistory,
+  EarnPosition,
+  EarnProduct,
+} from './types/response/v5-earn';
 
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
@@ -2545,5 +2555,74 @@ export class RestClientV5 extends BaseRestClient {
     params: GetBrokerIssuedVoucherParamsV5,
   ): Promise<APIResponseV3<BrokerIssuedVoucherV5>> {
     return this.postPrivate('/v5/broker/award/distribution-record', params);
+  }
+
+  /**
+   *
+   ****** EARN
+   *
+   */
+
+  /**
+   * Get Product Info for Earn products
+   *
+   * INFO: Do not need authentication
+   */
+  getEarnProduct(params: { category: string; coin?: string }): Promise<
+    APIResponseV3WithTime<{
+      list: EarnProduct[];
+    }>
+  > {
+    return this.get('/v5/earn/product', params);
+  }
+
+  /**
+   * Stake or Redeem Earn products
+   *
+   * INFO: API key needs "Earn" permission
+   *
+   * NOTE: In times of high demand for loans in the market for a specific cryptocurrency,
+   * the redemption of the principal may encounter delays and is expected to be processed
+   * within 48 hours. Once the redemption request is initiated, it cannot be canceled,
+   * and your principal will continue to earn interest until the process is completed.
+   */
+  submitStakeRedeem(params: SubmitStakeRedeemParams): Promise<
+    APIResponseV3WithTime<{
+      orderId: string;
+      orderLinkId: string;
+    }>
+  > {
+    return this.postPrivate('/v5/earn/place-order', params);
+  }
+
+  /**
+   * Get Stake/Redeem Order History
+   *
+   * INFO: API key needs "Earn" permission
+   *
+   * Note: Either orderId or orderLinkId is required. If both are passed,
+   * make sure they're matched, otherwise returning empty result
+   */
+  getEarnOrderHistory(params: GetEarnOrderHistoryParams): Promise<
+    APIResponseV3WithTime<{
+      list: EarnOrderHistory[];
+    }>
+  > {
+    return this.getPrivate('/v5/earn/order', params);
+  }
+
+  /**
+   * Get Staked Position
+   *
+   * INFO: API key needs "Earn" permission
+   *
+   * Note: Fully redeemed position is also returned in the response
+   */
+  getEarnPosition(params: GetEarnPositionParams): Promise<
+    APIResponseV3WithTime<{
+      list: EarnPosition[];
+    }>
+  > {
+    return this.getPrivate('/v5/earn/position', params);
   }
 }
