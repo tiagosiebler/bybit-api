@@ -1,13 +1,28 @@
 import { APIID, WS_KEY_MAP } from '../../util';
 import {
   AmendOrderParamsV5,
+  BatchAmendOrderParamsV5,
+  BatchCancelOrderParamsV5,
+  BatchOrderParamsV5,
   CancelOrderParamsV5,
   OrderParamsV5,
 } from '../request';
-import { OrderResultV5 } from '../response';
+import {
+  BatchAmendOrderResultV5,
+  BatchCancelOrderResultV5,
+  BatchCreateOrderResultV5,
+  BatchOrdersResponseV5,
+  OrderResultV5,
+} from '../response';
 import { WsKey } from './ws-general';
 
-export type WSAPIOperation = 'order.create' | 'order.amend' | 'order.cancel';
+export type WSAPIOperation =
+  | 'order.create'
+  | 'order.amend'
+  | 'order.cancel'
+  | 'order.create-batch'
+  | 'order.amend-batch'
+  | 'order.cancel-batch';
 
 export type WsOperation =
   | 'subscribe'
@@ -85,6 +100,9 @@ export interface WsAPITopicRequestParamMap {
   'order.create': OrderParamsV5;
   'order.amend': AmendOrderParamsV5;
   'order.cancel': CancelOrderParamsV5;
+  'order.create-batch': BatchOrderParamsV5[];
+  'order.amend-batch': BatchAmendOrderParamsV5[];
+  'order.cancel-batch': BatchCancelOrderParamsV5[];
 }
 
 /**
@@ -94,6 +112,18 @@ export interface WsAPIOperationResponseMap {
   'order.create': WSAPIResponse<OrderResultV5, 'order.create'>;
   'order.amend': WSAPIResponse<OrderResultV5, 'order.amend'>;
   'order.cancel': WSAPIResponse<OrderResultV5, 'order.cancel'>;
+  'order.create-batch': WSAPIResponse<
+    BatchOrdersResponseV5<BatchCreateOrderResultV5[]>,
+    'order.create-batch'
+  >;
+  'order.amend-batch': WSAPIResponse<
+    BatchOrdersResponseV5<BatchAmendOrderResultV5[]>,
+    'order.amend-batch'
+  >;
+  'order.cancel-batch': WSAPIResponse<
+    BatchOrdersResponseV5<BatchCancelOrderResultV5[]>,
+    'order.cancel-batch'
+  >;
   ping: {
     retCode: 0 | number;
     retMsg: 'OK' | string;
