@@ -14,6 +14,29 @@ import {
   WSPositionEventV5,
 } from '../types/websockets/ws-events';
 
+export interface BybitEventV5<TData = unknown> {
+  topic: string;
+  type: string;
+  ts: number;
+  data: TData;
+  wsKey: string;
+}
+
+export function isWsEventV5<TEventData = unknown>(
+  event: unknown,
+): event is BybitEventV5<TEventData> {
+  if (
+    typeof event !== 'object' ||
+    !event ||
+    typeof event['topic'] !== 'string' ||
+    typeof event['type'] !== 'string'
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
 /**
  * Type guard to detect a V5 orderbook event (delta & snapshots)
  *
@@ -140,4 +163,18 @@ export function isTopicSubscriptionConfirmation(
   }
 
   return true;
+}
+
+export function isWsAllLiquidationEvent(
+  event: unknown,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): event is BybitEventV5<any[]> {
+  if (!isWsEventV5(event)) {
+    return false;
+  }
+
+  if (event['topic'].startsWith('allLiquidation')) {
+    return true;
+  }
+  return false;
 }
