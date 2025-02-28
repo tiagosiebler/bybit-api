@@ -67,6 +67,7 @@ interface SignedRequest<T> {
 interface UnsignedRequest<T> {
   originalParams: T;
   paramsWithSign: T;
+  serializedParams: string;
   sign?: string;
   timestamp?: number;
   recvWindow?: number;
@@ -285,7 +286,9 @@ export default abstract class BaseRestClient {
         return {
           ...options,
           headers,
-          params: signResult.originalParams,
+          url: signResult.serializedParams
+            ? options.url + '?' + signResult.serializedParams
+            : options.url,
         };
       }
 
