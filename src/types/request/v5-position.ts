@@ -5,7 +5,7 @@ import {
   OrderTypeV5,
   PositionIdx,
   TPSLModeV5,
-} from '../v5-shared';
+} from '../shared-v5';
 
 export interface PositionInfoParamsV5 {
   category: CategoryV5;

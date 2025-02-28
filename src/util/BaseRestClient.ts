@@ -4,14 +4,13 @@ import https from 'https';
 
 import {
   APIID,
-  REST_CLIENT_TYPE_ENUM,
   RestClientOptions,
   RestClientType,
   getRestBaseUrl,
   parseRateLimitHeaders,
   serializeParams,
 } from './requestUtils';
-import { signMessage } from './node-support';
+import { SignAlgorithm, SignEncodeMethod, signMessage } from './webCryptoAPI';
 
 const ENABLE_HTTP_TRACE =
   typeof process === 'object' &&
@@ -51,8 +50,6 @@ interface SignedRequestContext {
   timestamp?: number;
   api_key?: string;
   recv_window?: number;
-  // spot v1 is diff from the rest...
-  recvWindow?: number;
 }
 
 interface SignedRequest<T> {
@@ -73,7 +70,7 @@ interface UnsignedRequest<T> {
   recvWindow?: number;
 }
 
-type SignMethod = 'v2auth' | 'v5auth';
+type SignMethod = 'v5auth';
 
 export default abstract class BaseRestClient {
   private timeOffset: number | null = null;
@@ -163,10 +160,6 @@ export default abstract class BaseRestClient {
       this.syncTime();
       setInterval(this.syncTime.bind(this), +this.options.sync_interval_ms!);
     }
-  }
-
-  private isSpotV1Client() {
-    return this.clientType === REST_CLIENT_TYPE_ENUM.spot;
   }
 
   get(endpoint: string, params?: any) {
@@ -264,58 +257,36 @@ export default abstract class BaseRestClient {
       };
     }
 
-    // USDC endpoints, unified margin and a few others use a different way of authenticating requests (headers instead of params)
-    if (this.clientType === REST_CLIENT_TYPE_ENUM.v3) {
-      const signResult = await this.prepareSignParams(
-        method,
-        'v5auth',
-        params,
-        isPublicApi,
-      );
-
-      const headers: AxiosRequestConfig['headers'] = {
-        'X-BAPI-SIGN-TYPE': 2,
-        'X-BAPI-API-KEY': this.key,
-        'X-BAPI-TIMESTAMP': signResult.timestamp,
-        'X-BAPI-SIGN': signResult.sign,
-        'X-BAPI-RECV-WINDOW': signResult.recvWindow,
-        ...options.headers,
-      };
-
-      if (method === 'GET') {
-        return {
-          ...options,
-          headers,
-          url: signResult.serializedParams
-            ? options.url + '?' + signResult.serializedParams
-            : options.url,
-        };
-      }
-
-      return {
-        ...options,
-        headers,
-        data: signResult.originalParams,
-      };
-    }
-
     const signResult = await this.prepareSignParams(
       method,
-      'v2auth',
+      'v5auth',
       params,
       isPublicApi,
     );
 
-    if (method === 'GET' || this.isSpotV1Client()) {
+    const headers: AxiosRequestConfig['headers'] = {
+      'X-BAPI-SIGN-TYPE': 2,
+      'X-BAPI-API-KEY': this.key,
+      'X-BAPI-TIMESTAMP': signResult.timestamp,
+      'X-BAPI-SIGN': signResult.sign,
+      'X-BAPI-RECV-WINDOW': signResult.recvWindow,
+      ...options.headers,
+    };
+
+    if (method === 'GET') {
       return {
         ...options,
-        params: signResult.paramsWithSign,
+        headers,
+        url: signResult.serializedParams
+          ? options.url + '?' + signResult.serializedParams
+          : options.url,
       };
     }
 
     return {
       ...options,
-      data: signResult.paramsWithSign,
+      headers,
+      data: signResult.originalParams,
     };
   }
 
@@ -397,6 +368,18 @@ export default abstract class BaseRestClient {
     };
   }
 
+  private async signMessage(
+    paramsStr: string,
+    secret: string,
+    method: SignEncodeMethod,
+    algorithm: SignAlgorithm,
+  ): Promise<string> {
+    if (typeof this.options.customSignMessageFn === 'function') {
+      return this.options.customSignMessageFn(paramsStr, secret);
+    }
+    return await signMessage(paramsStr, secret, method, algorithm);
+  }
+
   /**
    * @private sign request and set recv window
    */
@@ -444,46 +427,19 @@ export default abstract class BaseRestClient {
 
       const paramsStr = timestamp + key + recvWindow + signRequestParams;
 
-      res.sign = await signMessage(paramsStr, this.secret);
+      res.sign = await this.signMessage(
+        paramsStr,
+        this.secret,
+        'hex',
+        'SHA-256',
+      );
+
       res.serializedParams = signRequestParams;
 
       // console.log('sign req: ', {
       //   req: paramsStr,
       //   sign: res.sign,
       // });
-      return res;
-    }
-
-    // spot/v2 derivatives
-    if (signMethod === 'v2auth') {
-      res.originalParams.api_key = key;
-      res.originalParams.timestamp = timestamp;
-
-      // Optional, set to 5000 by default. Increase if timestamp/recv_window errors are seen.
-      if (recvWindow) {
-        if (this.isSpotV1Client()) {
-          res.originalParams.recvWindow = recvWindow;
-        } else {
-          res.originalParams.recv_window = recvWindow;
-        }
-      }
-      const sortProperties = true;
-      const encodeValues = false;
-
-      res.serializedParams = serializeParams(
-        res.originalParams,
-        strictParamValidation,
-        sortProperties,
-        encodeValues,
-      );
-      res.sign = await signMessage(res.serializedParams, this.secret);
-
-      // @ts-ignore
-      res.paramsWithSign = {
-        ...res.originalParams,
-        sign: res.sign,
-      };
-
       return res;
     }
 

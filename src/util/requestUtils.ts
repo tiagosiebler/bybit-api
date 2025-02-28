@@ -1,7 +1,5 @@
 import { AxiosResponse } from 'axios';
 import { APIRateLimit } from '../types';
-import { WebsocketSucceededTopicSubscriptionConfirmationEvent } from '../types/ws-events/succeeded-topic-subscription-confirmation';
-import { WebsocketTopicSubscriptionConfirmationEvent } from '../types/ws-events/topic-subscription-confirmation';
 
 export interface RestClientOptions {
   /** Your API key */
@@ -74,6 +72,13 @@ export interface RestClientOptions {
 
   /** Default: false. Enable to throw error if rate limit parser fails */
   throwOnFailedRateLimitParse?: boolean;
+
+  /**
+   * Allows you to provide a custom "signMessage" function, e.g. to use node's much faster createHmac method
+   *
+   * Look in the examples folder for a demonstration on using node's createHmac instead.
+   */
+  customSignMessageFn?: (message: string, secret: string) => Promise<string>;
 }
 
 /**
@@ -178,44 +183,13 @@ export function isWsPong(msg: any): boolean {
   );
 }
 
-export function isTopicSubscriptionConfirmation(
-  msg: unknown,
-): msg is WebsocketTopicSubscriptionConfirmationEvent {
-  if (typeof msg !== 'object') {
-    return false;
-  }
-  if (!msg) {
-    return false;
-  }
-  if (typeof msg['op'] !== 'string') {
-    return false;
-  }
-  if (msg['op'] !== 'subscribe') {
-    return false;
-  }
-
-  return true;
-}
-
-export function isTopicSubscriptionSuccess(
-  msg: unknown,
-): msg is WebsocketSucceededTopicSubscriptionConfirmationEvent {
-  if (!isTopicSubscriptionConfirmation(msg)) return false;
-  return msg.success === true;
-}
-
 export const APIID = 'bybitapinode';
 
 /**
  * Used to switch how authentication/requests work under the hood (primarily for SPOT since it's different there)
  */
 export const REST_CLIENT_TYPE_ENUM = {
-  accountAsset: 'accountAsset',
-  inverse: 'inverse',
-  inverseFutures: 'inverseFutures',
-  linear: 'linear',
-  spot: 'spot',
-  v3: 'v3',
+  v5: 'v5',
 } as const;
 
 export type RestClientType =

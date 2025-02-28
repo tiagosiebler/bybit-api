@@ -2,7 +2,7 @@ import {
   LTOrderStatusV5,
   LTOrderTypeV5,
   LeverageTokenStatusV5,
-} from '../v5-shared';
+} from '../shared-v5';
 
 export interface LeverageTokenInfoV5 {
   ltCoin: string;

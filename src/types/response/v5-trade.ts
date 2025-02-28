@@ -10,7 +10,7 @@ import {
   OrderTypeV5,
   PositionIdx,
   StopOrderTypeV5,
-} from '../v5-shared';
+} from '../shared-v5';
 
 export interface OrderResultV5 {
   orderId: string;
@@ -109,5 +109,7 @@ export interface SpotBorrowCheckResultV5 {
   side: OrderSideV5;
   maxTradeQty: string;
   maxTradeAmount: string;
+  spotMaxTradeQty: string;
+  spotMaxTradeAmount: string;
   borrowCoin: string;
 }

@@ -4,10 +4,10 @@ import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from '../src';
 // or
 // import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from 'bybit-api';
 
-// Create & inject a custom logger to disable the silly logging level (empty function)
+// Create & inject a custom logger to enable the trace logging level (empty function)
 const logger = {
   ...DefaultLogger,
-  silly: () => {},
+  // trace: (...params) => console.log('trace', ...params),
 };
 
 const key = process.env.API_KEY;
@@ -26,10 +26,10 @@ const wsClient = new WebsocketClient(
   {
     key: key,
     secret: secret,
-    market: 'v5',
-    testnet: true,
+    // testnet: false,
+    // demoTrading: false, // set testnet to false, if you plan on using demo trading
   },
-  logger
+  logger,
 );
 
 wsClient.on('update', (data) => {
@@ -49,7 +49,7 @@ wsClient.on('reconnect', ({ wsKey }) => {
 wsClient.on('reconnected', (data) => {
   console.log('ws has reconnected ', data?.wsKey);
 });
-// wsClient.on('error', (data) => {
+// wsClient.on('exception', (data) => {
 //   console.error('ws exception: ', data);
 // });
 
