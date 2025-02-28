@@ -18,8 +18,8 @@ export interface OrderParamsV5 {
   orderType: OrderTypeV5;
   qty: string;
   marketUnit?: 'baseCoin' | 'quoteCoin';
-  slippageToleranceType: string;
-  slippageTolerance: string;
+  slippageToleranceType?: string;
+  slippageTolerance?: string;
   price?: string;
   triggerDirection?: 1 | 2;
   orderFilter?: OrderFilterV5;
