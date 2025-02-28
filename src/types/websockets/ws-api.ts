@@ -100,9 +100,18 @@ export interface WsAPITopicRequestParamMap {
   'order.create': OrderParamsV5;
   'order.amend': AmendOrderParamsV5;
   'order.cancel': CancelOrderParamsV5;
-  'order.create-batch': BatchOrderParamsV5[];
-  'order.amend-batch': BatchAmendOrderParamsV5[];
-  'order.cancel-batch': BatchCancelOrderParamsV5[];
+  'order.create-batch': {
+    category: 'option' | 'linear';
+    orders: BatchOrderParamsV5[];
+  };
+  'order.amend-batch': {
+    category: 'option' | 'linear';
+    orders: BatchAmendOrderParamsV5[];
+  };
+  'order.cancel-batch': {
+    category: 'option' | 'linear';
+    orders: BatchCancelOrderParamsV5[];
+  };
 }
 
 /**
