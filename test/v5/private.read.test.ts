@@ -188,7 +188,35 @@ describe('Private READ V5 REST API Endpoints', () => {
           accountType: accountType,
           coin: settleCoin,
         }),
-      ).toMatchObject({ ...successResponseObjectV3() });
+      ).toMatchObject({
+        ...successResponseObjectV3(),
+        // retMsg: '',
+      });
+    });
+
+    it('getAllCoinsBalance() unified with one symbol', async () => {
+      const result = await api.getAllCoinsBalance({
+        accountType: 'UNIFIED',
+        coin: 'USDT',
+      });
+
+      if (result.retCode !== 0) {
+        console.error(expect.getState().currentTestName, 'exception: ', result);
+      }
+
+      expect(result).toMatchObject({ ...successResponseObjectV3() });
+    });
+
+    it('getAllCoinsBalance() unified with multiple symbols', async () => {
+      const result = await api.getAllCoinsBalance({
+        accountType: 'UNIFIED',
+        coin: 'USDT,ETH',
+      });
+
+      if (result.retCode !== 0) {
+        console.error(expect.getState().currentTestName, 'exception: ', result);
+      }
+      expect(result).toMatchObject({ ...successResponseObjectV3() });
     });
 
     it('getTransferableCoinList()', async () => {

@@ -42,6 +42,8 @@ export interface AccountOrderV5 {
   stopOrderType: StopOrderTypeV5;
   orderIv: string;
   marketUnit: 'baseCoin' | 'quoteCoin';
+  slippageToleranceType: string;
+  slippageTolerance: string;
   triggerPrice: string;
   takeProfit: string;
   stopLoss: string;
