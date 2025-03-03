@@ -78,16 +78,18 @@ export interface BatchCreateOrderResultV5 {
   createAt: string;
 }
 
+export interface BatchOrdersRetExtInfoV5 {
+  list: {
+    code: number;
+    msg: string;
+  }[];
+}
+
 export interface BatchOrdersResponseV5<T extends unknown[]> {
   result: {
     list: T;
   };
-  retExtInfo: {
-    list: {
-      code: number;
-      msg: string;
-    }[];
-  };
+  retExtInfo: BatchOrdersRetExtInfoV5;
 }
 
 export interface BatchAmendOrderResultV5 {

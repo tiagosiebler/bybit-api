@@ -12,10 +12,12 @@ import {
   BatchCancelOrderResultV5,
   BatchCreateOrderResultV5,
   BatchOrdersResponseV5,
+  BatchOrdersRetExtInfoV5,
   OrderResultV5,
 } from '../response';
 import { WsKey } from './ws-general';
 
+// When new WS API operations are added, make sure to also update WS_API_Operations[] below
 export type WSAPIOperation =
   | 'order.create'
   | 'order.amend'
@@ -24,18 +26,21 @@ export type WSAPIOperation =
   | 'order.amend-batch'
   | 'order.cancel-batch';
 
+export const WS_API_Operations: WSAPIOperation[] = [
+  'order.create',
+  'order.amend',
+  'order.cancel',
+  'order.create-batch',
+  'order.amend-batch',
+  'order.cancel-batch',
+];
+
 export type WsOperation =
   | 'subscribe'
   | 'unsubscribe'
   | 'auth'
   | 'ping'
   | 'pong';
-
-export const WS_API_Operations: WSAPIOperation[] = [
-  'order.create',
-  'order.amend',
-  'order.cancel',
-];
 
 export interface WsRequestOperationBybit<TWSTopic extends string> {
   req_id: string;
@@ -100,17 +105,18 @@ export interface WsAPITopicRequestParamMap {
   'order.create': OrderParamsV5;
   'order.amend': AmendOrderParamsV5;
   'order.cancel': CancelOrderParamsV5;
+
   'order.create-batch': {
     category: 'option' | 'linear';
-    orders: BatchOrderParamsV5[];
+    request: BatchOrderParamsV5[];
   };
   'order.amend-batch': {
     category: 'option' | 'linear';
-    orders: BatchAmendOrderParamsV5[];
+    request: BatchAmendOrderParamsV5[];
   };
   'order.cancel-batch': {
     category: 'option' | 'linear';
-    orders: BatchCancelOrderParamsV5[];
+    request: BatchCancelOrderParamsV5[];
   };
 }
 
@@ -121,18 +127,26 @@ export interface WsAPIOperationResponseMap {
   'order.create': WSAPIResponse<OrderResultV5, 'order.create'>;
   'order.amend': WSAPIResponse<OrderResultV5, 'order.amend'>;
   'order.cancel': WSAPIResponse<OrderResultV5, 'order.cancel'>;
+
   'order.create-batch': WSAPIResponse<
-    BatchOrdersResponseV5<BatchCreateOrderResultV5[]>,
+    { list: BatchCreateOrderResultV5[] },
     'order.create-batch'
-  >;
+  > & {
+    retExtInfo: BatchOrdersRetExtInfoV5;
+  };
   'order.amend-batch': WSAPIResponse<
-    BatchOrdersResponseV5<BatchAmendOrderResultV5[]>,
+    { list: BatchAmendOrderResultV5[] },
     'order.amend-batch'
-  >;
+  > & {
+    retExtInfo: BatchOrdersRetExtInfoV5;
+  };
   'order.cancel-batch': WSAPIResponse<
-    BatchOrdersResponseV5<BatchCancelOrderResultV5[]>,
+    { list: BatchCancelOrderResultV5[] },
     'order.cancel-batch'
-  >;
+  > & {
+    retExtInfo: BatchOrdersRetExtInfoV5;
+  };
+
   ping: {
     retCode: 0 | number;
     retMsg: 'OK' | string;
