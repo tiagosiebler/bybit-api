@@ -11,7 +11,6 @@ import {
   BatchAmendOrderResultV5,
   BatchCancelOrderResultV5,
   BatchCreateOrderResultV5,
-  BatchOrdersResponseV5,
   BatchOrdersRetExtInfoV5,
   OrderResultV5,
 } from '../response';
