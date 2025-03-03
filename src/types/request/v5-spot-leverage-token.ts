@@ -1,4 +1,4 @@
-import { LTOrderTypeV5 } from '../v5-shared';
+import { LTOrderTypeV5 } from '../shared-v5';
 
 export interface PurchaseSpotLeveragedTokenParamsV5 {
   ltCoin: string;
