@@ -12,6 +12,7 @@ import {
   WSConnectedResult,
   WS_AUTH_ON_CONNECT_KEYS,
   WS_KEY_MAP,
+  WS_LOGGER_CATEGORY,
   WsTopicRequest,
   getMaxTopicsPerSubscribeEvent,
   getNormalisedTopicRequests,
@@ -42,8 +43,6 @@ import {
   WsRequestOperationBybit,
 } from './types/websockets/ws-api';
 import { SignAlgorithm, signMessage } from './util/webCryptoAPI';
-
-const WS_LOGGER_CATEGORY = { category: 'bybit-ws' };
 
 export class WebsocketClient extends BaseWebsocketClient<
   WsKey,
@@ -633,9 +632,6 @@ export class WebsocketClient extends BaseWebsocketClient<
         return true;
       }
 
-      // console.log('isWsPing?', {
-      //   data: msg.data,
-      // });
       return false;
     }
 
@@ -659,9 +655,6 @@ export class WebsocketClient extends BaseWebsocketClient<
         return true;
       }
 
-      // console.log('isWsPong?', {
-      //   data: msg.data,
-      // });
       return false;
     }
 
