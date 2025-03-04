@@ -55,12 +55,12 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs and We
 - [Related Projects](#related-projects)
 - [Documentation](#documentation)
 
-## Structure & Usage
-- [Structure](#structure)
+## REST API Examples & Usage Guidance
+- [Detailed Examples](#examples)
 - [API Clients](#api-clients)
-- [REST API USAGE](#rest-api-usage)
+- [REST API Usage](#rest-api-usage)
 
-## WebSocket Integration
+## WebSocket Integration & Examples
 - [WebSockets](#websockets)
 - [WebSocket Subscriptions - Consuming Events](#websocket-subscriptions---consuming-events)
 - [Websocket API - Sending Orders via WebSockets](#websocket-api---sending-orders-via-websockets)
@@ -130,6 +130,8 @@ The SDK is written in TypeScript, but fully compatible with both TypeScript and 
 - [test](./test) - automated end-to-end tests that run before every release, making real API calls.
 
 ---
+
+## Examples
 
 Examples for using each client can be found in:
 
