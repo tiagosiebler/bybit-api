@@ -54,9 +54,9 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs and We
 - [Issues & Discussion](#issues--discussion)
 - [Related Projects](#related-projects)
 - [Documentation](#documentation)
+- [Detailed Examples](#examples)
 
 ## REST API Examples
-- [Detailed Examples](#examples)
 - [API Clients](#api-clients)
 - [REST API Usage](#rest-api-usage)
 
