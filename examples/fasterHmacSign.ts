@@ -1,20 +1,33 @@
+import { createHmac } from 'crypto';
 import { DefaultLogger, RestClientV5, WebsocketClient } from '../src/index';
 
 // or
-// import { RestClientV5 } from 'bybit-api';
+// import { createHmac } from 'crypto';
+// import { DefaultLogger, RestClientV5, WebsocketClient } from 'bybit-api';
+
+/**
+ * Injecting a custom signMessage function.
+ *
+ * As of version 4.0.0 of the bybit-api Node.js/TypeScript/JavaScript
+ * SDK for Bybit, the SDK uses the Web Crypto API for signing requests.
+ * While it is compatible with Node and Browser environments, it is
+ * slightly slower than using Node's native crypto module (only
+ * available in backend Node environments).
+ *
+ * For latency sensitive users, you can inject the previous node crypto sign
+ * method (or your own even faster-implementation), if this change affects you.
+ *
+ * This example demonstrates how to inject a custom sign function, to achieve
+ * the same peformance as seen before the Web Crypto API was introduced.
+ *
+ * For context on standard usage, the "signMessage" function is used:
+ * - During every single API call
+ * - After opening a new private WebSocket connection
+ *
+ */
 
 const key = process.env.API_KEY_COM;
 const secret = process.env.API_SECRET_COM;
-
-/**
- *
- *
- * This example demonstrates how to use Bybit's demo trading functionality, both for REST and WS.
- *
- * Refer to the API docs for more information: https://bybit-exchange.github.io/docs/v5/demo
- *
- *
- */
 
 const restClient = new RestClientV5({
   key: key,
@@ -24,6 +37,13 @@ const restClient = new RestClientV5({
    * Set this to true to enable demo trading:
    */
   demoTrading: true,
+  /**
+   * Overkill in almost every case, but if you need any optimisation available,
+   * you can inject a faster sign mechanism such as node's native createHmac:
+   */
+  customSignMessageFn: async (message, secret) => {
+    return createHmac('sha256', secret).update(message).digest('hex');
+  },
 });
 
 // Optional, uncomment the "trace" override to log a lot more info about what the WS client is doing
@@ -36,12 +56,18 @@ const wsClient = new WebsocketClient(
   {
     key: key,
     secret: secret,
-
     /**
      * Set this to true to enable demo trading for the private account data WS
      * Topics: order,execution,position,wallet,greeks
      */
     demoTrading: true,
+    /**
+     * Overkill in almost every case, but if you need any optimisation available,
+     * you can inject a faster sign mechanism such as node's native createHmac:
+     */
+    customSignMessageFn: async (message, secret) => {
+      return createHmac('sha256', secret).update(message).digest('hex');
+    },
   },
   customLogger,
 );

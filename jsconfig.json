@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-      "target": "ES6",
-      "module": "commonjs"
+    "target": "ES6",
+    "module": "commonjs"
   },
   "exclude": [
-      "node_modules",
-      "**/node_modules/*",
-      "coverage",
-      "doc"
+    "node_modules",
+    "**/node_modules/*",
+    "coverage",
+    "doc",
+    "examples/ignored/*"
   ]
 }

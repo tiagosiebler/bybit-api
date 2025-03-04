@@ -7,7 +7,7 @@ import {
   MarginTradingV5,
   OptionTypeV5,
   OrderSideV5,
-} from '../v5-shared';
+} from '../shared-v5';
 
 /**
  * OHLCVT candle used by v5 APIs
@@ -163,6 +163,8 @@ export interface OrderbookResponseV5 {
   a: OrderbookLevelV5[];
   ts: number;
   u: number;
+  seq: number;
+  cts: number;
 }
 
 export interface TickerLinearInverseV5 {
@@ -192,6 +194,7 @@ export interface TickerLinearInverseV5 {
   preOpenPrice: string;
   preQty: string;
   curPreListingPhase: string;
+  basis: string;
 }
 
 export interface TickerOptionV5 {
@@ -252,6 +255,10 @@ export interface PublicTradeV5 {
   side: OrderSideV5;
   time: string;
   isBlockTrade: boolean;
+  mP?: string;
+  iP?: string;
+  mIv?: string;
+  iv?: string;
 }
 
 /**
@@ -279,6 +286,7 @@ export interface HistoricalVolatilityV5 {
 
 export interface InsuranceDataV5 {
   coin: string;
+  symbols: string;
   balance: string;
   value: string;
 }
@@ -299,6 +307,7 @@ export interface RiskLimitV5 {
   isLowestRisk: 0 | 1;
   maxLeverage: string;
   mmDeduction: string;
+  nextPageCursor?: string;
 }
 
 /** @deprecated use DeliveryPriceV5 instead */

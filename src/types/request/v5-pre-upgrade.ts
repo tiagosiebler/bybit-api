@@ -1,4 +1,4 @@
-import { ExecTypeV5 } from '../v5-shared';
+import { ExecTypeV5 } from '../shared-v5';
 
 export interface GetPreUpgradeOrderHistoryParamsV5 {
   category: 'linear' | 'inverse';

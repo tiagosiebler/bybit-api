@@ -8,7 +8,8 @@ import {
   OrderTriggerByV5,
   OrderTypeV5,
   PositionIdx,
-} from '../v5-shared';
+  StopOrderTypeV5,
+} from '../shared-v5';
 
 export interface OrderParamsV5 {
   category: CategoryV5;
@@ -53,6 +54,7 @@ export interface AmendOrderParamsV5 {
   triggerPrice?: string;
   qty?: string;
   price?: string;
+  tpslMode?: 'Full' | 'Partial';
   takeProfit?: string;
   stopLoss?: string;
   tpTriggerBy?: OrderTriggerByV5;
@@ -88,6 +90,7 @@ export interface GetAccountHistoricOrdersParamsV5 {
   category: CategoryV5;
   symbol?: string;
   baseCoin?: string;
+  settleCoin?: string;
   orderId?: string;
   orderLinkId?: string;
   orderFilter?: OrderFilterV5;
@@ -104,11 +107,13 @@ export interface CancelAllOrdersParamsV5 {
   baseCoin?: string;
   settleCoin?: string;
   orderFilter?: OrderFilterV5;
+  stopOrderType?: StopOrderTypeV5;
 }
 
 export interface BatchOrderParamsV5 {
   symbol: string;
   side: OrderSideV5;
+  isLeverage?: 0 | 1;
   orderType: OrderTypeV5;
   qty: string;
   price?: string;

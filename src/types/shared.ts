@@ -1,23 +1,7 @@
-import { ContractClient } from '../contract-client';
-import { InverseClient } from '../inverse-client';
-import { LinearClient } from '../linear-client';
 import { RestClientV5 } from '../rest-client-v5';
-import { SpotClient } from '../spot-client';
 import { SpotClientV3 } from '../spot-client-v3';
-import { UnifiedMarginClient } from '../unified-margin-client';
-import { USDCOptionClient } from '../usdc-option-client';
-import { USDCPerpetualClient } from '../usdc-perpetual-client';
 
-export type RESTClient =
-  | InverseClient
-  | LinearClient
-  | SpotClient
-  | SpotClientV3
-  | USDCOptionClient
-  | USDCPerpetualClient
-  | UnifiedMarginClient
-  | ContractClient
-  | RestClientV5;
+export type RESTClient = SpotClientV3 | RestClientV5;
 
 export type numberInString = string;
 
@@ -53,14 +37,6 @@ export type KlineIntervalV3 =
   | 'W'
   | 'M';
 
-export interface APIResponse<T> {
-  ret_code: number;
-  ret_msg: 'OK' | string;
-  ext_code: string | null;
-  ext_info: string | null;
-  result: T;
-}
-
 export interface APIRateLimit {
   /** Remaining requests to this endpoint before the next reset */
   remainingRequests: number;
@@ -88,12 +64,6 @@ export interface APIResponseV3<T> {
 }
 
 export type APIResponseV3WithTime<T> = APIResponseV3<T> & { time: number };
-
-export interface APIResponseWithTime<T = {}> extends APIResponse<T> {
-  /** UTC timestamp */
-  time_now: numberInString;
-}
-
 /**
  * Request Parameter Types
  */
