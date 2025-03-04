@@ -509,7 +509,7 @@ export abstract class BaseWebsocketClient<
     const ws = this.getWs(wsKey);
     ws?.close();
     if (force) {
-      safeTerminateWs(ws);
+      safeTerminateWs(ws, false);
     }
   }
 
@@ -726,7 +726,7 @@ export abstract class BaseWebsocketClient<
 
     if (ws) {
       ws.close();
-      safeTerminateWs(ws);
+      safeTerminateWs(ws, false);
     }
 
     if (!wasOpen) {

@@ -309,14 +309,26 @@ export const WS_ERROR_ENUM = {
 /**
  * #305: ws.terminate() is undefined in browsers.
  * This only works in node.js, not in browsers.
- * Does nothing if `ws` is undefined.
+ * Does nothing if `ws` is undefined. Does nothing in browsers.
  */
-export function safeTerminateWs(ws?: WebSocket | unknown) {
-  // #305: ws.terminate() undefined in browsers
-  if (ws && typeof ws['terminate'] === 'function') {
-    ws.terminate();
+export function safeTerminateWs(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ws?: WebSocket | any,
+  fallbackToClose?: boolean,
+): boolean {
+  if (!ws) {
+    return false;
   }
+  if (typeof ws['terminate'] === 'function') {
+    ws.terminate();
+    return true;
+  } else if (fallbackToClose) {
+    ws.close();
+  }
+
+  return false;
 }
+
 /**
  * WS API promises are stored using a primary key. This key is constructed using
  * properties found in every request & reply.
