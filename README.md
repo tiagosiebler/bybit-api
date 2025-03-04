@@ -510,7 +510,7 @@ Important: do not subscribe to the same topics on both clients or you will recei
 
 ### Customise logging
 
-Pass a custom logger (or mutate the imported DefaultLogger class) which supports the log methods `silly`, `debug`, `notice`, `info`, `warning` and `error`, or override methods from the default logger as desired, as in the example below:
+Pass a custom logger (or mutate the imported DefaultLogger class) which supports the log methods `trace`, `info` and `error`, or override methods from the default logger as desired, as in the example below:
 
 ```javascript
 const { WebsocketClient, DefaultLogger } = require('bybit-api');

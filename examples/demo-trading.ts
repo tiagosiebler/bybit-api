@@ -26,7 +26,7 @@ const restClient = new RestClientV5({
   demoTrading: true,
 });
 
-// Optional, uncomment the "silly" override to log a lot more info about what the WS client is doing
+// Optional, uncomment the "trace" override to log a lot more info about what the WS client is doing
 const customLogger = {
   ...DefaultLogger,
   // trace: (...params) => console.log('trace', ...params),
