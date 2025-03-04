@@ -380,10 +380,6 @@ export class WsStore<
    * @returns
    */
   getMatchingTopic(key: WsKey, topic: TWSTopicSubscribeEventArgs) {
-    // if (typeof topic === 'string') {
-    //   return this.getMatchingTopic(key, { channel: topic });
-    // }
-
     const allTopics = this.getTopics(key).values();
     for (const storedTopic of allTopics) {
       if (isDeepObjectMatch(topic, storedTopic)) {
@@ -393,13 +389,6 @@ export class WsStore<
   }
 
   addTopic(key: WsKey, topic: TWSTopicSubscribeEventArgs) {
-    // if (typeof topic === 'string') {
-    //   return this.addTopic(key, {
-    //     instType: 'sp',
-    //     channel: topic,
-    //     instId: 'default',
-    //   };
-    // }
     // Check for duplicate topic. If already tracked, don't store this one
     const existingTopic = this.getMatchingTopic(key, topic);
     if (existingTopic) {
