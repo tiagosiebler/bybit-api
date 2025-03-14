@@ -81,7 +81,7 @@ export interface WSOrderbookV5 {
 export type WSOrderbookEventV5 = WSPublicTopicEventV5<
   string,
   'delta' | 'snapshot',
-  WSOrderbookV5[]
+  WSOrderbookV5
 >;
 
 export interface WSPositionV5 {
