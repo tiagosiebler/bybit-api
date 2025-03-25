@@ -47,6 +47,7 @@ import {
   ConvertHistoryRecordV5,
   ConvertQuoteV5,
   ConvertStatusV5,
+  CreateP2PAdParamsV5,
   CreateSubApiKeyParamsV5,
   CreateSubApiKeyResultV5,
   CreateSubMemberParamsV5,
@@ -59,6 +60,9 @@ import {
   DeliveryRecordV5,
   DepositAddressChainV5,
   DepositRecordV5,
+  EarnOrderHistory,
+  EarnPosition,
+  EarnProduct,
   ExchangeBrokerAccountInfoV5,
   ExchangeBrokerEarningResultV5,
   ExchangeBrokerSubAccountDepositRecordV5,
@@ -82,6 +86,8 @@ import {
   GetDeliveryPriceParamsV5,
   GetDeliveryRecordParamsV5,
   GetDepositRecordParamsV5,
+  GetEarnOrderHistoryParams,
+  GetEarnPositionParams,
   GetExchangeBrokerEarningsParamsV5,
   GetExecutionListParamsV5,
   GetFeeRateParamsV5,
@@ -100,6 +106,13 @@ import {
   GetOpenInterestParamsV5,
   GetOptionDeliveryPriceParamsV5,
   GetOrderbookParamsV5,
+  GetP2PAccountCoinsBalanceParamsV5,
+  GetP2PCounterpartyUserInfoParamsV5,
+  GetP2POnlineAdsParamsV5,
+  GetP2POrderMessagesParamsV5,
+  GetP2POrdersParamsV5,
+  GetP2PPendingOrdersParamsV5,
+  GetP2PPersonalAdsParamsV5,
   GetPreUpgradeClosedPnlParamsV5,
   GetPreUpgradeOptionDeliveryRecordParamsV5,
   GetPreUpgradeOrderHistoryParamsV5,
@@ -133,6 +146,7 @@ import {
   LongShortRatioV5,
   MMPModifyParamsV5,
   MMPStateV5,
+  MarkP2POrderAsPaidParamsV5,
   MovePositionHistoryV5,
   MovePositionParamsV5,
   MovePositionResultV5,
@@ -144,6 +158,17 @@ import {
   OrderResultV5,
   OrderSideV5,
   OrderbookResponseV5,
+  P2PAccountCoinsBalanceV5,
+  P2PAdDetailV5,
+  P2PCounterpartyUserInfoV5,
+  P2PCreateAdResponseV5,
+  P2POnlineAdsResponseV5,
+  P2POrderDetailV5,
+  P2POrderMessageV5,
+  P2POrdersResponseV5,
+  P2PPersonalAdsResponseV5,
+  P2PUserInfoV5,
+  P2PUserPaymentV5,
   PositionInfoParamsV5,
   PositionV5,
   PreUpgradeOptionsDelivery,
@@ -159,6 +184,7 @@ import {
   RepaymentHistoryV5,
   RequestConvertQuoteParamsV5,
   RiskLimitV5,
+  SendP2POrderMessageParamsV5,
   SetAutoAddMarginParamsV5,
   SetCollateralCoinParamsV5,
   SetLeverageParamsV5,
@@ -171,6 +197,7 @@ import {
   SpotLeveragedTokenOrderHistoryV5,
   SpotMarginStateV5,
   SubMemberV5,
+  SubmitStakeRedeemParams,
   SwitchIsolatedMarginParamsV5,
   SwitchPositionModeParamsV5,
   TPSLModeV5,
@@ -184,6 +211,7 @@ import {
   UnpaidLoanOrderV5,
   UpdateApiKeyParamsV5,
   UpdateApiKeyResultV5,
+  UpdateP2PAdParamsV5,
   VIPMarginDataV5,
   VaspEntityV5,
   VipBorrowableCoinsV5,
@@ -193,17 +221,6 @@ import {
   WithdrawableAmountV5,
   WithdrawalRecordV5,
 } from './types';
-import {
-  GetEarnOrderHistoryParams,
-  GetEarnPositionParams,
-  SubmitStakeRedeemParams,
-} from './types/request/v5-earn';
-import {
-  EarnOrderHistory,
-  EarnPosition,
-  EarnProduct,
-} from './types/response/v5-earn';
-
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
 
@@ -2624,5 +2641,202 @@ export class RestClientV5 extends BaseRestClient {
     }>
   > {
     return this.getPrivate('/v5/earn/position', params);
+  }
+
+  /**
+   *
+   ****** P2P TRADING
+   *
+   */
+
+  /**
+   *
+   * General P2P
+   */
+
+  /**
+   * Get coin balance of all account types under the master account, and sub account.
+   *
+   * Note: this field is mandatory for accountType=UNIFIED, and supports up to 10 coins each request
+   */
+  getP2PAccountCoinsBalance(
+    params: GetP2PAccountCoinsBalanceParamsV5,
+  ): Promise<APIResponseV3WithTime<P2PAccountCoinsBalanceV5>> {
+    return this.getPrivate(
+      '/v5/asset/transfer/query-account-coins-balance',
+      params,
+    );
+  }
+
+  /**
+   *
+   * Advertisement P2P
+   */
+
+  /**
+   * Get market online ads list
+   */
+  getP2POnlineAds(
+    params: GetP2POnlineAdsParamsV5,
+  ): Promise<APIResponseV3WithTime<P2POnlineAdsResponseV5>> {
+    return this.post('/v5/p2p/item/online', params);
+  }
+
+  /**
+   * Post new P2P advertisement
+   */
+  createP2PAd(
+    params: CreateP2PAdParamsV5,
+  ): Promise<APIResponseV3WithTime<P2PCreateAdResponseV5>> {
+    return this.postPrivate('/v5/p2p/item/create', params);
+  }
+
+  /**
+   * Cancel P2P advertisement
+   */
+  cancelP2PAd(params: { itemId: string }): Promise<
+    APIResponseV3WithTime<{
+      securityRiskToken: string;
+      riskTokenType: string;
+      riskVersion: string;
+      needSecurityRisk: boolean;
+    }>
+  > {
+    return this.postPrivate('/v5/p2p/item/cancel', params);
+  }
+
+  /**
+   * Update or relist P2P advertisement
+   */
+  updateP2PAd(
+    params: UpdateP2PAdParamsV5,
+  ): Promise<APIResponseV3WithTime<P2PCreateAdResponseV5>> {
+    return this.postPrivate('/v5/p2p/item/update', params);
+  }
+
+  /**
+   * Get personal P2P ads list
+   *
+   */
+  getP2PPersonalAds(
+    params: GetP2PPersonalAdsParamsV5,
+  ): Promise<APIResponseV3WithTime<P2PPersonalAdsResponseV5>> {
+    return this.postPrivate('/v5/p2p/item/personal/list', params);
+  }
+
+  /**
+   * Get P2P ad details
+   */
+  getP2PAdDetail(params: {
+    itemId: string;
+  }): Promise<APIResponseV3WithTime<P2PAdDetailV5>> {
+    return this.postPrivate('/v5/p2p/item/info', params);
+  }
+
+  /**
+   *
+   * Orders P2P
+   */
+
+  /**
+   * Get all P2P orders
+   *
+   */
+  getP2POrders(
+    params: GetP2POrdersParamsV5,
+  ): Promise<APIResponseV3WithTime<P2POrdersResponseV5>> {
+    return this.postPrivate('/v5/p2p/order/simplifyList', params);
+  }
+
+  /**
+   * Get P2P order details
+   *
+   */
+  getP2POrderDetail(params: {
+    orderId: string;
+  }): Promise<APIResponseV3WithTime<P2POrderDetailV5>> {
+    return this.postPrivate('/v5/p2p/order/info', params);
+  }
+
+  /**
+   * Get pending P2P orders
+   */
+  getP2PPendingOrders(
+    params: GetP2PPendingOrdersParamsV5,
+  ): Promise<APIResponseV3WithTime<P2POrdersResponseV5>> {
+    return this.postPrivate('/v5/p2p/order/pending/simplifyList', params);
+  }
+
+  /**
+   * Mark P2P order as paid
+   */
+  markP2POrderAsPaid(
+    params: MarkP2POrderAsPaidParamsV5,
+  ): Promise<APIResponseV3WithTime<null>> {
+    return this.postPrivate('/v5/p2p/order/pay', params);
+  }
+
+  /**
+   * Release digital assets in a P2P order
+   */
+  releaseP2POrder(params: {
+    orderId: string;
+  }): Promise<APIResponseV3WithTime<null>> {
+    return this.postPrivate('/v5/p2p/order/finish', params);
+  }
+
+  /**
+   * Send chat message in a P2P order
+   */
+  sendP2POrderMessage(
+    params: SendP2POrderMessageParamsV5,
+  ): Promise<APIResponseV3WithTime<null>> {
+    return this.postPrivate('/v5/p2p/order/message/send', params);
+  }
+
+  /**
+   * Upload chat file for P2P order
+   */
+  uploadP2PChatFile(params: {
+    upload_file: File; // Only supports: jpg, png, jpeg, pdf, mp4
+  }): Promise<APIResponseV3WithTime<null>> {
+    return this.postPrivate('/v5/p2p/oss/upload_file', params);
+  }
+
+  /**
+   * Get chat messages in a P2P order
+   */
+  getP2POrderMessages(
+    params: GetP2POrderMessagesParamsV5,
+  ): Promise<APIResponseV3WithTime<P2POrderMessageV5[]>> {
+    return this.postPrivate('/v5/p2p/order/message/listpage', params);
+  }
+
+  /**
+   *
+   * User P2P
+   */
+
+  /**
+   * Get P2P user account information
+   */
+  getP2PUserInfo(): Promise<APIResponseV3WithTime<P2PUserInfoV5>> {
+    return this.postPrivate('/v5/p2p/user/personal/info');
+  }
+
+  /**
+   * Get counterparty user information in a P2P order
+   */
+  getP2PCounterpartyUserInfo(
+    params: GetP2PCounterpartyUserInfoParamsV5,
+  ): Promise<APIResponseV3WithTime<P2PCounterpartyUserInfoV5>> {
+    return this.postPrivate('/v5/p2p/user/order/personal/info', params);
+  }
+
+  /**
+   * Get user payment information
+   */
+  getP2PUserPayments(): Promise<APIResponseV3WithTime<P2PUserPaymentV5[]>> {
+    return this.postPrivate('/v5/p2p/user/payment/list');
   }
 }
