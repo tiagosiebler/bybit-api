@@ -1,4 +1,4 @@
-export interface EarnProduct {
+export interface EarnProductV5 {
   category: string;
   estimateApr: string;
   coin: string;
@@ -9,7 +9,7 @@ export interface EarnProduct {
   status: 'Available' | 'NotAvailable';
 }
 
-export interface EarnOrderHistory {
+export interface EarnOrderHistoryV5 {
   coin: string;
   orderValue: string;
   orderType: 'Redeem' | 'Stake';
@@ -21,7 +21,7 @@ export interface EarnOrderHistory {
   updatedAt: string;
 }
 
-export interface EarnPosition {
+export interface EarnPositionV5 {
   coin: string;
   productId: string;
   amount: string;

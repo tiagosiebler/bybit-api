@@ -1,4 +1,4 @@
-export interface SubmitStakeRedeemParams {
+export interface SubmitStakeRedeemParamsV5 {
   category: string;
   orderType: 'Stake' | 'Redeem';
   accountType: 'FUND' | 'UNIFIED';
@@ -8,13 +8,13 @@ export interface SubmitStakeRedeemParams {
   orderLinkId: string;
 }
 
-export interface GetEarnOrderHistoryParams {
+export interface GetEarnOrderHistoryParamsV5 {
   category: string;
   orderId?: string;
   orderLinkId?: string;
 }
 
-export interface GetEarnPositionParams {
+export interface GetEarnPositionParamsV5 {
   category: string;
   productId?: string;
   coin?: string;
