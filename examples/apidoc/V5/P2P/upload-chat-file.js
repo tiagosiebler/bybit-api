@@ -1,6 +1,5 @@
 const { RestClientV5 } = require('bybit-api');
 const fs = require('fs');
-const FormData = require('form-data');
 
 // Initialize the client with testnet mode
 const client = new RestClientV5({
