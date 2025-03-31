@@ -137,6 +137,13 @@ export interface WithdrawParamsV5 {
   beneficiary?: {
     vaspEntityId?: string;
     beneficiaryName?: string;
+    beneficiaryLegalType?: string;
+    beneficiaryWalletType?: string;
+    beneficiaryUnhostedWalletType?: string;
+    beneficiaryPoiNumber?: string;
+    beneficiaryPoiType?: string;
+    beneficiaryPoiIssuingCountry?: string;
+    beneficiaryPoiExpiredDate?: string;
   };
 }
 
