@@ -17,7 +17,7 @@ export type MarginTradingV5 = 'none' | 'both' | 'utaOnly' | 'normalSpotOnly';
 export type OrderFilterV5 = 'Order' | 'tpslOrder' | 'StopOrder';
 export type OrderSideV5 = 'Buy' | 'Sell';
 export type OrderTypeV5 = 'Market' | 'Limit';
-export type OrderTimeInForceV5 = 'GTC' | 'IOC' | 'FOK' | 'PostOnly';
+export type OrderTimeInForceV5 = 'GTC' | 'IOC' | 'FOK' | 'PostOnly' | 'RPI';
 export type OrderTriggerByV5 = 'LastPrice' | 'IndexPrice' | 'MarkPrice';
 export type OCOTriggerTypeV5 =
   | 'OcoTriggerByUnknown'
