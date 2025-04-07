@@ -255,6 +255,7 @@ export interface PublicTradeV5 {
   side: OrderSideV5;
   time: string;
   isBlockTrade: boolean;
+  isRPITrade: boolean;
   mP?: string;
   iP?: string;
   mIv?: string;
