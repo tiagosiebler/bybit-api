@@ -313,8 +313,27 @@ export class RestClientV5 extends BaseRestClient {
     return this.get('/v5/market/time');
   }
 
-  requestDemoTradingFunds(): Promise<{}> {
-    return this.postPrivate('/v5/account/demo-apply-money');
+  /**
+   *
+   ****** Demo Account APIs
+   *
+   */
+
+  requestDemoTradingFunds(params?: {
+    adjustType?: 0 | 1;
+    utaDemoApplyMoney?: Array<{
+      coin: string;
+      amountStr: string;
+    }>;
+  }): Promise<APIResponseV3<{}>> {
+    return this.postPrivate('/v5/account/demo-apply-money', params);
+  }
+
+  /**
+   * Create a demo trading account.
+   */
+  createDemoAccount(): Promise<APIResponseV3<{ subMemberId: string }>> {
+    return this.postPrivate('/v5/user/create-demo-member');
   }
 
   /**
