@@ -146,7 +146,7 @@ export interface DepositAddressResultV5 {
 }
 
 export interface CoinInfoV5 {
-  name: number;
+  name: string;
   coin: string;
   remainAmount: string;
   chains: {
