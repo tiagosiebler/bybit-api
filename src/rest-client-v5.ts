@@ -16,6 +16,7 @@ import {
   AllCoinsBalanceV5,
   AllowedDepositCoinInfoV5,
   AmendOrderParamsV5,
+  AmendSpreadOrderParamsV5,
   ApiKeyInfoV5,
   AssetInfoV5,
   BatchAmendOrderParamsV5,
@@ -125,6 +126,10 @@ import {
   GetRiskLimitParamsV5,
   GetSettlementRecordParamsV5,
   GetSpotLeveragedTokenOrderHistoryParamsV5,
+  GetSpreadInstrumentsInfoParamsV5,
+  GetSpreadOpenOrdersParamsV5,
+  GetSpreadOrderHistoryParamsV5,
+  GetSpreadTradeHistoryParamsV5,
   GetSubAccountAllApiKeysParamsV5,
   GetSubAccountDepositRecordParamsV5,
   GetTickersParamsV5,
@@ -196,7 +201,15 @@ import {
   SpotBorrowCheckResultV5,
   SpotLeveragedTokenOrderHistoryV5,
   SpotMarginStateV5,
+  SpreadInstrumentInfoV5,
+  SpreadOpenOrderV5,
+  SpreadOrderHistoryV5,
+  SpreadOrderbookResponseV5,
+  SpreadRecentTradeV5,
+  SpreadTickerV5,
+  SpreadTradeV5,
   SubMemberV5,
+  SubmitSpreadOrderParamsV5,
   SubmitStakeRedeemParamsV5,
   SwitchIsolatedMarginParamsV5,
   SwitchPositionModeParamsV5,
@@ -334,6 +347,163 @@ export class RestClientV5 extends BaseRestClient {
    */
   createDemoAccount(): Promise<APIResponseV3<{ subMemberId: string }>> {
     return this.postPrivate('/v5/user/create-demo-member');
+  }
+
+  /**
+   *
+   ****** Spread Trading APIs
+   *
+   */
+
+  /**
+   * Get Spread Instruments Info
+   */
+  getSpreadInstrumentsInfo(params?: GetSpreadInstrumentsInfoParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: SpreadInstrumentInfoV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.get('/v5/spread/instrument', params);
+  }
+
+  /**
+   * Get Spread Orderbook
+   */
+  getSpreadOrderbook(params: {
+    symbol: string;
+    limit?: number;
+  }): Promise<APIResponseV3WithTime<SpreadOrderbookResponseV5>> {
+    return this.get('/v5/spread/orderbook', params);
+  }
+
+  /**
+   * Get Spread Tickers
+   */
+  getSpreadTickers(params: { symbol: string }): Promise<
+    APIResponseV3WithTime<{
+      list: SpreadTickerV5[];
+    }>
+  > {
+    return this.get('/v5/spread/tickers', params);
+  }
+
+  /**
+   * Get Spread Public Recent Trades
+   */
+  getSpreadRecentTrades(params: { symbol: string; limit?: number }): Promise<
+    APIResponseV3WithTime<{
+      list: SpreadRecentTradeV5[];
+    }>
+  > {
+    return this.get('/v5/spread/recent-trade', params);
+  }
+
+  /**
+   * Create Spread Order
+   */
+  submitSpreadOrder(params: SubmitSpreadOrderParamsV5): Promise<
+    APIResponseV3WithTime<{
+      orderId: string;
+      orderLinkId: string;
+    }>
+  > {
+    return this.postPrivate('/v5/spread/order/create', params);
+  }
+
+  /**
+   * Amend Spread Order
+   * You can only modify unfilled or partially filled orders.
+   */
+  amendSpreadOrder(params: AmendSpreadOrderParamsV5): Promise<
+    APIResponseV3WithTime<{
+      orderId: string;
+      orderLinkId: string;
+    }>
+  > {
+    return this.postPrivate('/v5/spread/order/amend', params);
+  }
+
+  /**
+   * Cancel Spread Order
+   */
+  cancelSpreadOrder(params: {
+    orderId?: string;
+    orderLinkId?: string;
+  }): Promise<
+    APIResponseV3WithTime<{
+      orderId: string;
+      orderLinkId: string;
+    }>
+  > {
+    return this.postPrivate('/v5/spread/order/cancel', params);
+  }
+
+  /**
+   * Cancel All Spread Orders
+   *
+   * When a symbol is specified, all orders for that symbol will be canceled regardless of the cancelAll field.
+   * When symbol is not specified and cancelAll=true, all orders, regardless of the symbol, will be canceled.
+   */
+  cancelAllSpreadOrders(params?: {
+    symbol?: string;
+    cancelAll?: boolean;
+  }): Promise<
+    APIResponseV3WithTime<{
+      list: {
+        orderId: string;
+        orderLinkId: string;
+      }[];
+      success: string;
+    }>
+  > {
+    return this.postPrivate('/v5/spread/order/cancel-all', params);
+  }
+
+  /**
+   * Get Spread Open Orders
+   * Query unfilled or partially filled orders in real-time.
+   */
+  getSpreadOpenOrders(params?: GetSpreadOpenOrdersParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: SpreadOpenOrderV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/spread/order/realtime', params);
+  }
+
+  /**
+   * Get Spread Order History
+   *
+   * Note:
+   * - orderId & orderLinkId has a higher priority than startTime & endTime
+   * - Fully canceled orders are stored for up to 24 hours
+   * - Single leg orders can also be found with "createType"=CreateByFutureSpread via Get Order History
+   */
+  getSpreadOrderHistory(params?: GetSpreadOrderHistoryParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: SpreadOrderHistoryV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/spread/order/history', params);
+  }
+
+  /**
+   * Get Spread Trade History
+   *
+   * Note:
+   * - In self-trade cases, both the maker and taker single-leg trades will be returned in the same request
+   * - Single leg executions can also be found with "execType"=FutureSpread via Get Trade History
+   */
+  getSpreadTradeHistory(params?: GetSpreadTradeHistoryParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: SpreadTradeV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/spread/execution/list', params);
   }
 
   /**

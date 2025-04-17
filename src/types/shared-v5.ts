@@ -258,6 +258,7 @@ export interface PermissionsV5 {
   CopyTrading?: string[];
   BlockTrade?: string[];
   Exchange?: string[];
+  /** @deprecated , always returns []*/
   NFT?: string[];
 }
 

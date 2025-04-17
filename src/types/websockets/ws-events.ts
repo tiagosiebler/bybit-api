@@ -383,3 +383,69 @@ export interface WSGreeksV5 {
 }
 
 export type WSGreeksEventV5 = WSPrivateTopicEventV5<'greeks', WSGreeksV5[]>;
+
+export interface WSSpreadOrderV5 {
+  category: 'combination' | 'spot_leg' | 'future_leg';
+  symbol: string;
+  parentOrderId: string;
+  orderId: string;
+  orderLinkId: string;
+  side: OrderSideV5;
+  orderStatus: OrderStatusV5;
+  cancelType: OrderCancelTypeV5;
+  rejectReason: OrderRejectReasonV5;
+  timeInForce: OrderTimeInForceV5;
+  price: string;
+  qty: string;
+  avgPrice: string;
+  leavesQty: string;
+  leavesValue: string;
+  cumExecQty: string;
+  cumExecValue: string;
+  cumExecFee: string;
+  orderType: OrderTypeV5;
+  isLeverage: string;
+  createdTime: string;
+  updatedTime: string;
+  feeCurrency: string;
+  createType: OrderCreateTypeV5;
+  closedPnl: string;
+}
+
+export type WSSpreadOrderEventV5 = WSPrivateTopicEventV5<
+  'spread.order',
+  WSSpreadOrderV5[]
+>;
+
+export interface WSSpreadExecutionV5 {
+  category: 'combination' | 'spot_leg' | 'future_leg';
+  symbol: string;
+  isLeverage: string;
+  orderId: string;
+  orderLinkId: string;
+  side: OrderSideV5;
+  orderPrice: string;
+  orderQty: string;
+  leavesQty: string;
+  createType: OrderCreateTypeV5;
+  orderType: OrderTypeV5;
+  execFee: string;
+  parentExecId: string;
+  execId: string;
+  execPrice: string;
+  execQty: string;
+  execPnl: string;
+  execType: ExecTypeV5;
+  execValue: string;
+  execTime: string;
+  isMaker: boolean;
+  feeRate: string;
+  markPrice: string;
+  closedSize: string;
+  seq: number;
+}
+
+export type WSSpreadExecutionEventV5 = WSPrivateTopicEventV5<
+  'spread.execution',
+  WSSpreadExecutionV5[]
+>;
