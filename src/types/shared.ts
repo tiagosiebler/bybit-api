@@ -49,10 +49,11 @@ export interface APIRateLimit {
   resetAtTimestamp: number;
 }
 
-export interface APIResponseV3<T> {
+export interface APIResponseV3<TResult, TExtInfo = object> {
   retCode: number;
   retMsg: 'OK' | string;
-  result: T;
+  result: TResult;
+  retExtInfo: TExtInfo;
   /**
    * These are per-UID per-endpoint rate limits, automatically parsed from response headers if available.
    *

@@ -20,9 +20,12 @@ import {
   ApiKeyInfoV5,
   AssetInfoV5,
   BatchAmendOrderParamsV5,
+  BatchAmendOrderResultV5,
   BatchCancelOrderParamsV5,
+  BatchCancelOrderResultV5,
+  BatchCreateOrderResultV5,
   BatchOrderParamsV5,
-  BatchOrdersResponseV5,
+  BatchOrdersRetExtInfoV5,
   BorrowCryptoLoanParamsV5,
   BorrowHistoryRecordV5,
   BrokerIssuedVoucherV5,
@@ -808,7 +811,14 @@ export class RestClientV5 extends BaseRestClient {
   batchSubmitOrders(
     category: 'option' | 'linear',
     orders: BatchOrderParamsV5[],
-  ): Promise<BatchOrdersResponseV5> {
+  ): Promise<
+    APIResponseV3<
+      {
+        list: BatchCreateOrderResultV5[];
+      },
+      BatchOrdersRetExtInfoV5
+    >
+  > {
     return this.postPrivate('/v5/order/create-batch', {
       category,
       request: orders,
@@ -826,7 +836,14 @@ export class RestClientV5 extends BaseRestClient {
   batchAmendOrders(
     category: 'option' | 'linear',
     orders: BatchAmendOrderParamsV5[],
-  ): Promise<BatchOrdersResponseV5> {
+  ): Promise<
+    APIResponseV3<
+      {
+        list: BatchAmendOrderResultV5[];
+      },
+      BatchOrdersRetExtInfoV5
+    >
+  > {
     return this.postPrivate('/v5/order/amend-batch', {
       category,
       request: orders,
@@ -844,7 +861,14 @@ export class RestClientV5 extends BaseRestClient {
   batchCancelOrders(
     category: 'option' | 'linear',
     orders: BatchCancelOrderParamsV5[],
-  ): Promise<BatchOrdersResponseV5> {
+  ): Promise<
+    APIResponseV3<
+      {
+        list: BatchCancelOrderResultV5[];
+      },
+      BatchOrdersRetExtInfoV5
+    >
+  > {
     return this.postPrivate('/v5/order/cancel-batch', {
       category,
       request: orders,
