@@ -119,6 +119,7 @@ export interface TransactionLogV5 {
   tradeId: string;
   orderId: string;
   orderLinkId: string;
+  transSubType: string;
 }
 
 export interface MMPStateV5 {

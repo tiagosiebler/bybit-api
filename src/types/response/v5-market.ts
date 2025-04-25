@@ -93,6 +93,7 @@ export interface LinearInverseInstrumentInfoV5 {
       makerFeeRate: string;
     };
   } | null;
+  displayName: string;
 }
 
 export interface OptionInstrumentInfoV5 {
@@ -115,6 +116,7 @@ export interface OptionInstrumentInfoV5 {
     minOrderQty: string;
     qtyStep: string;
   };
+  displayName: string;
 }
 
 export interface SpotInstrumentInfoV5 {

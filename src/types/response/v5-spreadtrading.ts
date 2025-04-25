@@ -77,7 +77,6 @@ export interface SpreadOrderHistoryV5 {
   orderStatus: 'Rejected' | 'Cancelled' | 'Filled';
   price: string;
   orderQty: string;
-  orderPrice: string;
   timeInForce: 'GTC' | 'FOK' | 'IOC' | 'PostOnly';
   baseCoin: string;
   createdAt: string;
@@ -95,6 +94,7 @@ export interface SpreadOrderHistoryV5 {
   leg2OrderId: string;
   leg2Symbol: string;
   leg2Side: string;
+  cxlRejReason: string;
 }
 
 export interface SpreadTradeLegV5 {

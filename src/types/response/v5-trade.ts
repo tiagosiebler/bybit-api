@@ -75,7 +75,7 @@ export interface BatchCreateOrderResultV5 {
   symbol: string;
   orderId: string;
   orderLinkId: string;
-  createAt: string;
+  createAt?: string;
 }
 
 export interface BatchOrdersRetExtInfoV5 {
@@ -83,13 +83,6 @@ export interface BatchOrdersRetExtInfoV5 {
     code: number;
     msg: string;
   }[];
-}
-
-export interface BatchOrdersResponseV5<T extends unknown[]> {
-  result: {
-    list: T;
-  };
-  retExtInfo: BatchOrdersRetExtInfoV5;
 }
 
 export interface BatchAmendOrderResultV5 {

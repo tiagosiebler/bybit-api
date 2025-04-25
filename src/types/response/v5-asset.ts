@@ -233,6 +233,7 @@ export interface ConvertQuoteV5 {
   toAmount: string;
   expiredTime: string;
   requestId: string;
+  extTaxAndFee: string[];
 }
 
 export interface ConvertStatusV5 {
