@@ -812,7 +812,7 @@ export class RestClientV5 extends BaseRestClient {
     category: 'option' | 'linear',
     orders: BatchOrderParamsV5[],
   ): Promise<
-    APIResponseV3<
+    APIResponseV3WithTime<
       {
         list: BatchCreateOrderResultV5[];
       },
@@ -837,7 +837,7 @@ export class RestClientV5 extends BaseRestClient {
     category: 'option' | 'linear',
     orders: BatchAmendOrderParamsV5[],
   ): Promise<
-    APIResponseV3<
+    APIResponseV3WithTime<
       {
         list: BatchAmendOrderResultV5[];
       },
@@ -862,7 +862,7 @@ export class RestClientV5 extends BaseRestClient {
     category: 'option' | 'linear',
     orders: BatchCancelOrderParamsV5[],
   ): Promise<
-    APIResponseV3<
+    APIResponseV3WithTime<
       {
         list: BatchCancelOrderResultV5[];
       },

@@ -49,7 +49,7 @@ export interface APIRateLimit {
   resetAtTimestamp: number;
 }
 
-export interface APIResponseV3<TResult, TExtInfo = object> {
+export interface APIResponseV3<TResult, TExtInfo = {}> {
   retCode: number;
   retMsg: 'OK' | string;
   result: TResult;
@@ -64,7 +64,10 @@ export interface APIResponseV3<TResult, TExtInfo = object> {
   rateLimitApi?: APIRateLimit;
 }
 
-export type APIResponseV3WithTime<T> = APIResponseV3<T> & { time: number };
+export type APIResponseV3WithTime<TResult, TExtInfo = {}> = APIResponseV3<
+  TResult,
+  TExtInfo
+> & { time: number };
 /**
  * Request Parameter Types
  */
