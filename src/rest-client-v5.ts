@@ -20,10 +20,7 @@ import {
   ApiKeyInfoV5,
   AssetInfoV5,
   BatchAmendOrderParamsV5,
-  BatchAmendOrderResultV5,
   BatchCancelOrderParamsV5,
-  BatchCancelOrderResultV5,
-  BatchCreateOrderResultV5,
   BatchOrderParamsV5,
   BatchOrdersResponseV5,
   BorrowCryptoLoanParamsV5,
@@ -290,7 +287,7 @@ export class RestClientV5 extends BaseRestClient {
       `,
     );
 
-    if (timeDifference > 500) {
+    if (Math.abs(timeDifference) > 500) {
       console.warn(
         `WARNING! Time difference between server and client clock is greater than 500ms. It is currently ${timeDifference}ms.
         Consider adjusting your system clock to avoid unwanted clock sync errors!
@@ -811,9 +808,7 @@ export class RestClientV5 extends BaseRestClient {
   batchSubmitOrders(
     category: 'option' | 'linear',
     orders: BatchOrderParamsV5[],
-  ): Promise<
-    APIResponseV3WithTime<BatchOrdersResponseV5<BatchCreateOrderResultV5[]>>
-  > {
+  ): Promise<BatchOrdersResponseV5> {
     return this.postPrivate('/v5/order/create-batch', {
       category,
       request: orders,
@@ -831,9 +826,7 @@ export class RestClientV5 extends BaseRestClient {
   batchAmendOrders(
     category: 'option' | 'linear',
     orders: BatchAmendOrderParamsV5[],
-  ): Promise<
-    APIResponseV3WithTime<BatchOrdersResponseV5<BatchAmendOrderResultV5[]>>
-  > {
+  ): Promise<BatchOrdersResponseV5> {
     return this.postPrivate('/v5/order/amend-batch', {
       category,
       request: orders,
@@ -851,9 +844,7 @@ export class RestClientV5 extends BaseRestClient {
   batchCancelOrders(
     category: 'option' | 'linear',
     orders: BatchCancelOrderParamsV5[],
-  ): Promise<
-    APIResponseV3WithTime<BatchOrdersResponseV5<BatchCancelOrderResultV5[]>>
-  > {
+  ): Promise<BatchOrdersResponseV5> {
     return this.postPrivate('/v5/order/cancel-batch', {
       category,
       request: orders,

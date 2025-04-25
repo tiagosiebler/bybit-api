@@ -85,11 +85,14 @@ export interface BatchOrdersRetExtInfoV5 {
   }[];
 }
 
-export interface BatchOrdersResponseV5<T extends unknown[]> {
+export interface BatchOrdersResponseV5 {
+  retCode: number;
+  retMsg: 'OK' | string;
   result: {
-    list: T;
+    list: BatchCreateOrderResultV5[];
   };
   retExtInfo: BatchOrdersRetExtInfoV5;
+  time: number;
 }
 
 export interface BatchAmendOrderResultV5 {
