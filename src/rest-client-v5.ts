@@ -2883,7 +2883,7 @@ export class RestClientV5 extends BaseRestClient {
   getP2POnlineAds(
     params: GetP2POnlineAdsParamsV5,
   ): Promise<APIResponseV3WithTime<P2POnlineAdsResponseV5>> {
-    return this.post('/v5/p2p/item/online', params);
+    return this.postPrivate('/v5/p2p/item/online', params);
   }
 
   /**
