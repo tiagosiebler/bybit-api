@@ -78,6 +78,11 @@ const PRIVATE_TOPICS = [
   'order',
   'wallet',
   'greeks',
+  // v5 fast execution topics are private
+  'execution.fast',
+  'execution.fast.linear',
+  'execution.fast.inverse',
+  'execution.fast.spot',
 ];
 
 /**
