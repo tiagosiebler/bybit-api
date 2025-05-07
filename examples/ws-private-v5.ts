@@ -10,8 +10,8 @@ const logger = {
   // trace: (...params) => console.log('trace', ...params),
 };
 
-const key = process.env.API_KEY;
-const secret = process.env.API_SECRET;
+const key = process.env.API_KEY_COM;
+const secret = process.env.API_SECRET_COM;
 
 /**
  * Prepare an instance of the WebSocket client. This client handles all aspects of connectivity for you:
@@ -62,8 +62,11 @@ wsClient.on('reconnected', (data) => {
  */
 
 wsClient.subscribeV5('position', 'linear');
-wsClient.subscribeV5('execution', 'linear');
 wsClient.subscribeV5(['order', 'wallet', 'greeks'], 'linear');
+
+wsClient.subscribeV5('execution', 'linear');
+// wsClient.subscribeV5('execution.fast', 'linear');
+// wsClient.subscribeV5('execution.fast.linear', 'linear');
 
 /**
  * The following has the same effect as above, since there's only one private endpoint for V5 account topics:
