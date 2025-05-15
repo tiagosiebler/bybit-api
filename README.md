@@ -303,7 +303,7 @@ const wsConfig = {
    *
    * Refer to the examples folder on GitHub for a more detailed demonstration.
    */
-  // demoTrading; true;
+  // demoTrading: true,
 
   // recv window size for websocket authentication (higher latency connections
   // (VPN) can cause authentication to fail if the recv window is too small)
