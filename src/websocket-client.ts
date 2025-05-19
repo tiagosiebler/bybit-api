@@ -343,23 +343,23 @@ export class WebsocketClient extends BaseWebsocketClient<
   // do not trigger excess property checks
   // Without these overloads, TypeScript won't complain if you include an
   // unexpected property with your request (if it doesn't clash with an existing property)
-  sendWSAPIRequest<TWSOpreation extends WSAPIOperation = 'order.create'>(
+  sendWSAPIRequest<TWSOperation extends WSAPIOperation = 'order.create'>(
     wsKey: typeof WS_KEY_MAP.v5PrivateTrade,
-    operation: TWSOpreation,
-    params: WsAPITopicRequestParamMap[TWSOpreation],
-  ): Promise<WsAPIOperationResponseMap[TWSOpreation]>;
+    operation: TWSOperation,
+    params: WsAPITopicRequestParamMap[TWSOperation],
+  ): Promise<WsAPIOperationResponseMap[TWSOperation]>;
 
-  sendWSAPIRequest<TWSOpreation extends WSAPIOperation = 'order.amend'>(
+  sendWSAPIRequest<TWSOperation extends WSAPIOperation = 'order.amend'>(
     wsKey: typeof WS_KEY_MAP.v5PrivateTrade,
-    operation: TWSOpreation,
-    params: WsAPITopicRequestParamMap[TWSOpreation],
-  ): Promise<WsAPIOperationResponseMap[TWSOpreation]>;
+    operation: TWSOperation,
+    params: WsAPITopicRequestParamMap[TWSOperation],
+  ): Promise<WsAPIOperationResponseMap[TWSOperation]>;
 
-  sendWSAPIRequest<TWSOpreation extends WSAPIOperation = 'order.cancel'>(
+  sendWSAPIRequest<TWSOperation extends WSAPIOperation = 'order.cancel'>(
     wsKey: typeof WS_KEY_MAP.v5PrivateTrade,
-    operation: TWSOpreation,
-    params: WsAPITopicRequestParamMap[TWSOpreation],
-  ): Promise<WsAPIOperationResponseMap[TWSOpreation]>;
+    operation: TWSOperation,
+    params: WsAPITopicRequestParamMap[TWSOperation],
+  ): Promise<WsAPIOperationResponseMap[TWSOperation]>;
 
   async sendWSAPIRequest<
     TWSKey extends keyof WsAPIWsKeyTopicMap,
