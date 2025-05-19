@@ -47,9 +47,9 @@ export class WsStore<
   private wsState: Record<string, WsStoredState<TWSTopicSubscribeEventArgs>> =
     {};
 
-  private logger: typeof DefaultLogger;
+  private logger: DefaultLogger;
 
-  constructor(logger: typeof DefaultLogger) {
+  constructor(logger: DefaultLogger) {
     this.logger = logger || DefaultLogger;
   }
 
@@ -131,6 +131,10 @@ export class WsStore<
     return wsConnection;
   }
 
+  /**
+   * deferred promises
+   */
+
   getDeferredPromise<TSuccessResult = any>(
     wsKey: WsKey,
     promiseRef: string | DeferredPromiseRef,
@@ -206,9 +210,15 @@ export class WsStore<
 
     if (promise?.reject) {
       this.logger.trace(
-        `rejectDeferredPromise(): rejecting ${wsKey}/${promiseRef}/${value}`,
+        `rejectDeferredPromise(): rejecting ${wsKey}/${promiseRef}`,
+        value,
       );
-      promise.reject(value);
+
+      if (typeof value === 'string') {
+        promise.reject(new Error(value));
+      } else {
+        promise.reject(value);
+      }
     }
 
     if (removeAfter) {
@@ -252,6 +262,9 @@ export class WsStore<
       }
 
       try {
+        this.logger.trace(
+          `rejectAllDeferredPromises(): rejecting ${wsKey}/${promiseRef}/${reason}`,
+        );
         this.rejectDeferredPromise(wsKey, promiseRef, reason, true);
       } catch (e) {
         this.logger.error(
@@ -339,6 +352,7 @@ export class WsStore<
 
   setConnectionState(key: WsKey, state: WsConnectionStateEnum) {
     this.get(key, true).connectionState = state;
+    this.get(key, true).connectionStateChangedAt = new Date();
   }
 
   isConnectionState(key: WsKey, state: WsConnectionStateEnum): boolean {
@@ -355,6 +369,22 @@ export class WsStore<
       this.isConnectionState(key, WsConnectionStateEnum.CONNECTING) ||
       this.isConnectionState(key, WsConnectionStateEnum.RECONNECTING);
 
+    if (isConnectionInProgress) {
+      const wsState = this.get(key, true);
+      const stateLastChangedAt = wsState?.connectionStateChangedAt;
+      const stateChangedAtTimestamp = stateLastChangedAt?.getTime();
+      if (stateChangedAtTimestamp) {
+        const timestampNow = new Date().getTime();
+        const stateChangedTimeAgo = timestampNow - stateChangedAtTimestamp;
+        const stateChangeTimeout = 15000; // allow a max 15 second timeout since the last state change before assuming stuck;
+        if (stateChangedTimeAgo >= stateChangeTimeout) {
+          const msg = 'State change timed out, reconnect workflow stuck?';
+          this.logger.error(msg, { key, wsState });
+          this.setConnectionState(key, WsConnectionStateEnum.ERROR);
+        }
+      }
+    }
+
     return isConnectionInProgress;
   }
 
@@ -366,13 +396,14 @@ export class WsStore<
 
   getTopicsByKey(): Record<string, Set<TWSTopicSubscribeEventArgs>> {
     const result: any = {};
+
     for (const refKey in this.wsState) {
       result[refKey] = this.getTopics(refKey as WsKey);
     }
+
     return result;
   }
 
-  // Since topics are objects we can't rely on the set to detect duplicates
   /**
    * Find matching "topic" request from the store
    * @param key

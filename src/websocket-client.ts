@@ -396,21 +396,48 @@ export class WebsocketClient extends BaseWebsocketClient<
     // Store deferred promise, resolved within the "resolveEmittableEvents" method while parsing incoming events
     const promiseRef = getPromiseRefForWSAPIRequest(requestEvent);
 
-    const deferredPromise =
-      this.getWsStore().createDeferredPromise<TWSAPIResponse>(
-        wsKey,
-        promiseRef,
-        false,
-      );
+    const deferredPromise = this.getWsStore().createDeferredPromise<
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      TWSAPIResponse & { request: any }
+    >(wsKey, promiseRef, false);
+
+    // Enrich returned promise with request context for easier debugging
+    deferredPromise.promise
+      ?.then((res) => {
+        if (!Array.isArray(res)) {
+          res.request = {
+            wsKey,
+            ...signedEvent,
+          };
+        }
+
+        return res;
+      })
+      .catch((e) => {
+        if (typeof e === 'string') {
+          this.logger.error('unexpcted string', { e });
+          return e;
+        }
+        e.request = {
+          wsKey,
+          operation,
+          params: params,
+        };
+        // throw e;
+        return e;
+      });
 
     this.logger.trace(
       `sendWSAPIRequest(): sending raw request: ${JSON.stringify(signedEvent, null, 2)}`,
     );
 
     // Send event
-    this.tryWsSend(wsKey, JSON.stringify(signedEvent));
+    const throwExceptions = false;
+    this.tryWsSend(wsKey, JSON.stringify(signedEvent), throwExceptions);
 
-    this.logger.trace(`sendWSAPIRequest(): sent ${operation} event`);
+    this.logger.trace(
+      `sendWSAPIRequest(): sent "${operation}" event with promiseRef(${promiseRef})`,
+    );
 
     // Return deferred promise, so caller can await this call
     return deferredPromise.promise!;
