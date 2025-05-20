@@ -1,4 +1,15 @@
-import { OrderParamsV5, OrderResultV5 } from './types';
+import {
+  AmendOrderParamsV5,
+  BatchAmendOrderParamsV5,
+  BatchAmendOrderResultV5,
+  BatchCancelOrderParamsV5,
+  BatchCancelOrderResultV5,
+  BatchCreateOrderResultV5,
+  BatchOrderParamsV5,
+  BatchOrdersRetExtInfoV5,
+  CancelOrderParamsV5,
+  OrderResultV5,
+} from './types';
 import { WSAPIResponse } from './types/websockets/ws-api';
 import { WSClientConfigurableOptions } from './types/websockets/ws-general';
 import { DefaultLogger } from './util';
@@ -75,18 +86,118 @@ export class WebsocketAPIClient {
    */
 
   /**
-   * Submit a new order
+   * Amend an order
    *
    * @param params
    * @returns
    */
-  submitNewOrder(
-    params: OrderParamsV5,
-  ): Promise<WSAPIResponse<OrderResultV5, 'order.create'>> {
+  amendOrder(
+    params: AmendOrderParamsV5,
+  ): Promise<WSAPIResponse<OrderResultV5, 'order.amend'>> {
     return this.wsClient.sendWSAPIRequest(
       WS_KEY_MAP.v5PrivateTrade,
-      'order.create',
+      'order.amend',
       params,
+    );
+  }
+
+  /**
+   * Cancel an order
+   *
+   * @param params
+   * @returns
+   */
+  cancelOrder(
+    params: CancelOrderParamsV5,
+  ): Promise<WSAPIResponse<OrderResultV5, 'order.cancel'>> {
+    return this.wsClient.sendWSAPIRequest(
+      WS_KEY_MAP.v5PrivateTrade,
+      'order.cancel',
+      params,
+    );
+  }
+
+  /**
+   * Batch submit orders
+   *
+   * @param params
+   * @returns
+   */
+  batchSubmitOrders(
+    category: 'option' | 'linear',
+    orders: BatchOrderParamsV5[],
+  ): Promise<
+    WSAPIResponse<
+      {
+        list: BatchCreateOrderResultV5[];
+      },
+      'order.create-batch',
+      BatchOrdersRetExtInfoV5
+    >
+  > {
+    return this.wsClient.sendWSAPIRequest(
+      WS_KEY_MAP.v5PrivateTrade,
+      'order.create-batch',
+      {
+        category,
+        request: orders,
+      },
+    );
+  }
+
+  /**
+   * Batch amend orders
+   *
+   * @param params
+   * @returns
+   */
+  batchAmendOrder(
+    category: 'option' | 'linear',
+    orders: BatchAmendOrderParamsV5[],
+  ): Promise<
+    WSAPIResponse<
+      {
+        list: BatchAmendOrderResultV5[];
+      },
+      'order.amend-batch',
+      BatchOrdersRetExtInfoV5
+    >
+  > {
+    return this.wsClient.sendWSAPIRequest(
+      WS_KEY_MAP.v5PrivateTrade,
+      'order.amend-batch',
+      {
+        category,
+        request: orders,
+      },
+    );
+  }
+
+  /**
+   * Batch cancel orders
+   *
+   * @param params
+   * @returns
+   */
+  batchCancelOrder(
+    category: 'option' | 'linear',
+    orders: BatchCancelOrderParamsV5[],
+  ): Promise<
+    WSAPIResponse<
+      {
+        list: BatchCancelOrderResultV5[];
+      },
+      'order.cancel-batch',
+      BatchOrdersRetExtInfoV5
+    >
+  > {
+    return this.wsClient.sendWSAPIRequest(
+      WS_KEY_MAP.v5PrivateTrade,
+      'order.cancel-batch',
+      {
+        category,
+        request: orders,
+      },
     );
   }
 

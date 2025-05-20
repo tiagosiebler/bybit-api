@@ -65,6 +65,7 @@ export interface WSAPIRequest<
 export interface WSAPIResponse<
   TResponseData extends object = object,
   TOperation extends WSAPIOperation = WSAPIOperation,
+  TResponseExtInfo = {}, // added as optional for batch calls
 > {
   wsKey: WsKey;
   /** Auto-generated */
@@ -73,6 +74,7 @@ export interface WSAPIResponse<
   retMsg: 'OK' | string;
   op: TOperation;
   data: TResponseData;
+  retExtInfo: TResponseExtInfo;
   header?: {
     'X-Bapi-Limit': string;
     'X-Bapi-Limit-Status': string;
