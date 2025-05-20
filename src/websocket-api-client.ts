@@ -8,6 +8,7 @@ import {
   BatchOrderParamsV5,
   BatchOrdersRetExtInfoV5,
   CancelOrderParamsV5,
+  OrderParamsV5,
   OrderResultV5,
 } from './types';
 import { WSAPIResponse } from './types/websockets/ws-api';
@@ -84,6 +85,22 @@ export class WebsocketAPIClient {
    * Bybit WebSocket API Methods
    * https://bybit-exchange.github.io/docs/v5/websocket/trade/guideline
    */
+
+  /**
+   * Submit a new order
+   *
+   * @param params
+   * @returns
+   */
+  submitNewOrder(
+    params: OrderParamsV5,
+  ): Promise<WSAPIResponse<OrderResultV5, 'order.create'>> {
+    return this.wsClient.sendWSAPIRequest(
+      WS_KEY_MAP.v5PrivateTrade,
+      'order.create',
+      params,
+    );
+  }
 
   /**
    * Amend an order
