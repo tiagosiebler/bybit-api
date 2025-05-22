@@ -124,7 +124,7 @@ export abstract class BaseWebsocketClient<
    */
   private wsStore: WsStore<TWSKey, WsTopicRequest<string>>;
 
-  protected logger: typeof DefaultLogger;
+  public logger: typeof DefaultLogger;
 
   protected options: WebsocketClientOptions;
 
@@ -413,7 +413,7 @@ export abstract class BaseWebsocketClient<
           wsTopicRequests,
         },
       );
-      return;
+      return isConnectionInProgress;
     }
 
     // We're connected. Check if auth is needed and if already authenticated
@@ -532,7 +532,11 @@ export abstract class BaseWebsocketClient<
   /**
    * Request connection to a specific websocket, instead of waiting for automatic connection.
    */
-  public async connect(wsKey: TWSKey): Promise<WSConnectedResult | undefined> {
+  public async connect(
+    wsKey: TWSKey,
+    customUrl?: string | undefined,
+    throwOnError?: boolean,
+  ): Promise<WSConnectedResult | undefined> {
     try {
       if (this.wsStore.isWsOpen(wsKey)) {
         this.logger.error(
@@ -549,7 +553,7 @@ export abstract class BaseWebsocketClient<
           'Refused to connect to ws, connection attempt already active',
           { ...WS_LOGGER_CATEGORY, wsKey },
         );
-        return;
+        return this.wsStore.getConnectionInProgressPromise(wsKey)?.promise;
       }
 
       if (
@@ -563,7 +567,7 @@ export abstract class BaseWebsocketClient<
         this.wsStore.createConnectionInProgressPromise(wsKey, false);
       }
 
-      const url = await this.getWsUrl(wsKey);
+      const url = customUrl || (await this.getWsUrl(wsKey));
       const ws = this.connectToWsUrl(url, wsKey);
 
       this.wsStore.setWs(wsKey, ws);
@@ -572,6 +576,10 @@ export abstract class BaseWebsocketClient<
     } catch (err) {
       this.parseWsError('Connection failed', err, wsKey);
       this.reconnectWithDelay(wsKey, this.options.reconnectTimeout!);
+
+      if (throwOnError) {
+        throw err;
+      }
     }
   }
 
@@ -589,6 +597,8 @@ export abstract class BaseWebsocketClient<
     ws.onerror = (event: any) =>
       this.parseWsError('Websocket onWsError', event, wsKey);
     ws.onclose = (event: any) => this.onWsClose(event, wsKey);
+
+    ws.wsKey = wsKey;
 
     return ws;
   }
@@ -668,12 +678,18 @@ export abstract class BaseWebsocketClient<
       this.setWsState(wsKey, WsConnectionStateEnum.RECONNECTING);
     }
 
+    this.logger.info('Reconnecting to websocket with delay...', {
+      ...WS_LOGGER_CATEGORY,
+      wsKey,
+      connectionDelayMs,
+    });
+
     if (this.wsStore.get(wsKey)?.activeReconnectTimer) {
       this.clearReconnectTimer(wsKey);
     }
 
     this.wsStore.get(wsKey, true).activeReconnectTimer = setTimeout(() => {
-      this.logger.info('Reconnecting to websocket', {
+      this.logger.info('Reconnecting to websocket now', {
         ...WS_LOGGER_CATEGORY,
         wsKey,
       });
@@ -1250,6 +1266,10 @@ export abstract class BaseWebsocketClient<
       );
       this.getWsStore().rejectAllDeferredPromises(wsKey, 'disconnected');
       this.setWsState(wsKey, WsConnectionStateEnum.INITIAL);
+
+      // This was an intentional close, delete all state for this connection, as if it never existed:
+      this.wsStore.delete(wsKey);
+
       this.emit('close', { wsKey, event });
     }
   }

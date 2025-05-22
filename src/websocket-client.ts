@@ -343,23 +343,23 @@ export class WebsocketClient extends BaseWebsocketClient<
   // do not trigger excess property checks
   // Without these overloads, TypeScript won't complain if you include an
   // unexpected property with your request (if it doesn't clash with an existing property)
-  sendWSAPIRequest<TWSOpreation extends WSAPIOperation = 'order.create'>(
+  sendWSAPIRequest<TWSOperation extends WSAPIOperation = 'order.create'>(
     wsKey: typeof WS_KEY_MAP.v5PrivateTrade,
-    operation: TWSOpreation,
-    params: WsAPITopicRequestParamMap[TWSOpreation],
-  ): Promise<WsAPIOperationResponseMap[TWSOpreation]>;
+    operation: TWSOperation,
+    params: WsAPITopicRequestParamMap[TWSOperation],
+  ): Promise<WsAPIOperationResponseMap[TWSOperation]>;
 
-  sendWSAPIRequest<TWSOpreation extends WSAPIOperation = 'order.amend'>(
+  sendWSAPIRequest<TWSOperation extends WSAPIOperation = 'order.amend'>(
     wsKey: typeof WS_KEY_MAP.v5PrivateTrade,
-    operation: TWSOpreation,
-    params: WsAPITopicRequestParamMap[TWSOpreation],
-  ): Promise<WsAPIOperationResponseMap[TWSOpreation]>;
+    operation: TWSOperation,
+    params: WsAPITopicRequestParamMap[TWSOperation],
+  ): Promise<WsAPIOperationResponseMap[TWSOperation]>;
 
-  sendWSAPIRequest<TWSOpreation extends WSAPIOperation = 'order.cancel'>(
+  sendWSAPIRequest<TWSOperation extends WSAPIOperation = 'order.cancel'>(
     wsKey: typeof WS_KEY_MAP.v5PrivateTrade,
-    operation: TWSOpreation,
-    params: WsAPITopicRequestParamMap[TWSOpreation],
-  ): Promise<WsAPIOperationResponseMap[TWSOpreation]>;
+    operation: TWSOperation,
+    params: WsAPITopicRequestParamMap[TWSOperation],
+  ): Promise<WsAPIOperationResponseMap[TWSOperation]>;
 
   async sendWSAPIRequest<
     TWSKey extends keyof WsAPIWsKeyTopicMap,
@@ -379,11 +379,13 @@ export class WebsocketClient extends BaseWebsocketClient<
     await this.assertIsAuthenticated(wsKey);
     this.logger.trace('sendWSAPIRequest()->assertIsAuthenticated() ok');
 
+    const timestampMs = Date.now() + (this.getTimeOffsetMs() || 0);
+
     const requestEvent: WSAPIRequest<TWSParams> = {
       reqId: this.getNewRequestId(),
       header: {
         'X-BAPI-RECV-WINDOW': `${this.options.recvWindow}`,
-        'X-BAPI-TIMESTAMP': `${Date.now()}`,
+        'X-BAPI-TIMESTAMP': `${timestampMs}`,
         Referer: APIID,
       },
       op: operation,
@@ -396,21 +398,52 @@ export class WebsocketClient extends BaseWebsocketClient<
     // Store deferred promise, resolved within the "resolveEmittableEvents" method while parsing incoming events
     const promiseRef = getPromiseRefForWSAPIRequest(requestEvent);
 
-    const deferredPromise =
-      this.getWsStore().createDeferredPromise<TWSAPIResponse>(
-        wsKey,
-        promiseRef,
-        false,
-      );
+    const deferredPromise = this.getWsStore().createDeferredPromise<
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      TWSAPIResponse & { request: any }
+    >(wsKey, promiseRef, false);
+
+    // Enrich returned promise with request context for easier debugging
+    deferredPromise.promise
+      ?.then((res) => {
+        if (!Array.isArray(res)) {
+          res.request = {
+            wsKey,
+            ...signedEvent,
+          };
+        }
+
+        return res;
+      })
+      .catch((e) => {
+        if (typeof e === 'string') {
+          this.logger.error('Unexpected string thrown without Error object:', {
+            e,
+            wsKey,
+            signedEvent,
+          });
+          return e;
+        }
+        e.request = {
+          wsKey,
+          operation,
+          params: params,
+        };
+        // throw e;
+        return e;
+      });
 
     this.logger.trace(
       `sendWSAPIRequest(): sending raw request: ${JSON.stringify(signedEvent, null, 2)}`,
     );
 
     // Send event
-    this.tryWsSend(wsKey, JSON.stringify(signedEvent));
+    const throwExceptions = false;
+    this.tryWsSend(wsKey, JSON.stringify(signedEvent), throwExceptions);
 
-    this.logger.trace(`sendWSAPIRequest(): sent ${operation} event`);
+    this.logger.trace(
+      `sendWSAPIRequest(): sent "${operation}" event with promiseRef(${promiseRef})`,
+    );
 
     // Return deferred promise, so caller can await this call
     return deferredPromise.promise!;

@@ -3,6 +3,8 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type LogParams = null | any;
 
+export type DefaultLogger = typeof DefaultLogger;
+
 export const DefaultLogger = {
   /** Ping/pong events and other raw messages that might be noisy. Enable this while troubleshooting. */
   trace: (..._params: LogParams): void => {
