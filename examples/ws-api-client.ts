@@ -1,31 +1,14 @@
 import { DefaultLogger, WebsocketAPIClient } from '../src';
 
 // or
-// import { DefaultLogger, WebsocketClient } from 'bybit-api';
+// import { DefaultLogger, WebsocketAPIClient } from 'bybit-api';
 
 const key = process.env.API_KEY_COM;
 const secret = process.env.API_SECRET_COM;
 
-async function main() {
-  // Optional
-  const logger = {
-    ...DefaultLogger,
-    // For a more detailed view of the WebsocketClient, enable the `trace` level by uncommenting the below line:
-    // trace: (...params) => console.log('trace', ...params),
-  };
-
-  const wsClient = new WebsocketAPIClient(
-    {
-      key: key,
-      secret: secret,
-      // testnet: true, // Whether to use the testnet environment: https://testnet.bybit.com/app/user/api-management
-      // demoTrading: false, // note: As of Jan 2025, demo trading does NOT support the WS API
-    },
-    logger, // Optional: inject a custom logger
-  );
-
-  // To do: Check if this is how listeners are handled
-
+/* function attachEventHandlers<TWSClient extends WebsocketAPIClient>(
+  wsClient: TWSClient,
+): void {
   wsClient.getWSClient().on('update', (data) => {
     console.log('raw message received ', JSON.stringify(data));
   });
@@ -42,6 +25,29 @@ async function main() {
   wsClient.getWSClient().on('authenticated', (data) => {
     console.log('ws has authenticated ', data?.wsKey);
   });
+} */
+
+async function main() {
+  // Optional
+  const logger = {
+    ...DefaultLogger,
+    // For a more detailed view of the WebsocketClient, enable the `trace` level by uncommenting the below line:
+    // trace: (...params) => console.log('trace', ...params),
+  };
+
+  const wsClient = new WebsocketAPIClient(
+    {
+      key: key,
+      secret: secret,
+      // testnet: true, // Whether to use the testnet environment: https://testnet.bybit.com/app/user/api-management
+      // demoTrading: false, // note: As of Jan 2025, demo trading does NOT support the WS API
+
+      // If you want your own event handlers instead of the default ones with logs,
+      // disable this setting and see the `attachEventHandlers` example below:
+      // attachEventListeners: false
+    },
+    logger, // Optional: inject a custom logger
+  );
 
   // Optional, if you see RECV Window errors, you can use this to manage time issues.
   // ! However, make sure you sync your system clock first!
