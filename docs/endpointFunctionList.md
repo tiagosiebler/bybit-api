@@ -20,6 +20,7 @@ All REST clients are in the [src](/src) folder. For usage examples, make sure to
 
 List of clients:
 - [rest-client-v5](#rest-client-v5ts)
+- [websocket-api-client](#websocket-api-clientts)
 
 
 If anything is missing or wrong, please open an issue or let us know in our [Node.js Traders](https://t.me/nodetraders) telegram group!
@@ -242,3 +243,18 @@ This table includes all endpoints from the official Exchange API docs and corres
 | [getP2PUserInfo()](https://github.com/tiagosiebler/bybit-api/blob/master/src/rest-client-v5.ts#L3027) | :closed_lock_with_key:  | POST | `/v5/p2p/user/personal/info` |
 | [getP2PCounterpartyUserInfo()](https://github.com/tiagosiebler/bybit-api/blob/master/src/rest-client-v5.ts#L3034) | :closed_lock_with_key:  | POST | `/v5/p2p/user/order/personal/info` |
 | [getP2PUserPayments()](https://github.com/tiagosiebler/bybit-api/blob/master/src/rest-client-v5.ts#L3043) | :closed_lock_with_key:  | POST | `/v5/p2p/user/payment/list` |
+
+# websocket-api-client.ts
+
+This table includes all endpoints from the official Exchange API docs and corresponding SDK functions for each endpoint that are found in [websocket-api-client.ts](/src/websocket-api-client.ts). 
+
+This client provides WebSocket API endpoints which allow for faster interactions with the Bybit API via a WebSocket connection.
+
+| Function | AUTH | HTTP Method | Endpoint |
+| -------- | :------: | :------: | -------- |
+| [submitNewOrder()](https://github.com/tiagosiebler/bybit-api/blob/master/src/websocket-api-client.ts#L95) | :closed_lock_with_key:  | WS | `order.create` |
+| [amendOrder()](https://github.com/tiagosiebler/bybit-api/blob/master/src/websocket-api-client.ts#L111) | :closed_lock_with_key:  | WS | `order.amend` |
+| [cancelOrder()](https://github.com/tiagosiebler/bybit-api/blob/master/src/websocket-api-client.ts#L127) | :closed_lock_with_key:  | WS | `order.cancel` |
+| [batchSubmitOrders()](https://github.com/tiagosiebler/bybit-api/blob/master/src/websocket-api-client.ts#L143) | :closed_lock_with_key:  | WS | `order.create-batch` |
+| [batchAmendOrder()](https://github.com/tiagosiebler/bybit-api/blob/master/src/websocket-api-client.ts#L171) | :closed_lock_with_key:  | WS | `order.amend-batch` |
+| [batchCancelOrder()](https://github.com/tiagosiebler/bybit-api/blob/master/src/websocket-api-client.ts#L199) | :closed_lock_with_key:  | WS | `order.cancel-batch` |
