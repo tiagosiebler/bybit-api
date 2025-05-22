@@ -3,9 +3,8 @@ import { DefaultLogger, WebsocketAPIClient } from '../src';
 // or
 // import { DefaultLogger, WebsocketClient } from 'bybit-api';
 
-const key = process.env.API_KEY_COM || '1j3PcP9EMjGPbjcjlC';
-const secret =
-  process.env.API_SECRET_COM || 'VlvBfQqMcGKX77XgYcMqZmOR7biwA9ZvaTwk';
+const key = process.env.API_KEY_COM;
+const secret = process.env.API_SECRET_COM;
 
 async function main() {
   // Optional
