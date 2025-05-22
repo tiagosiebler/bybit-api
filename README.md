@@ -425,7 +425,7 @@ The below example demonstrates the promise-driven approach, which behaves simila
 Connectivity, authentication and connecting requests & responses to promises - these are all handled automatically without additional configuration by the WebsocketClient. The WebsocketAPIClient is a wrapper built on top of this, providing dedicated methods for every available Websocket API command. Each method has fully typed requests & responses. Benefit from the capabilities of the WebSocket API without the complexity of managing asynchronous messaging over WebSockets.
 
 ```javascript
-const { WS_KEY_MAP, WebsocketClient } = require('bybit-api');
+const { WS_KEY_MAP, WebsocketAPIClient } = require('bybit-api');
 
 // or
 // import { WS_KEY_MAP, WebsocketAPIClient } from 'bybit-api';
