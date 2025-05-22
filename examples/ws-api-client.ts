@@ -61,7 +61,9 @@ async function main() {
   // https://github.com/tiagosiebler/awesome-crypto-examples/wiki/Timestamp-for-this-request-is-outside-of-the-recvWindow
   // wsClient.setTimeOffsetMs(-5000);
 
-  await wsClient.getWSClient().connectWSAPI();
+  // Optional: prepare the WebSocket API connection in advance.
+  // This happens automatically but you can do this early before making any API calls, to prevent delays from a cold start.
+  // await wsClient.getWSClient().connectWSAPI();
 
   try {
     const response = await wsClient.submitNewOrder({
