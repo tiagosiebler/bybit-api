@@ -1,7 +1,8 @@
-import { DefaultLogger, WebsocketAPIClient, WebsocketClient } from '../src';
+import { DefaultLogger, WebsocketAPIClient } from '../src';
 
 // or
 // import { DefaultLogger, WebsocketAPIClient } from 'bybit-api';
+// const { DefaultLogger, WebsocketAPIClient } = require('bybit-api');
 
 const key = process.env.API_KEY_COM;
 const secret = process.env.API_SECRET_COM;
