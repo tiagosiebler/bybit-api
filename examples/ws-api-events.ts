@@ -55,7 +55,8 @@ async function main() {
    * - Handle any exceptions in a catch block.
    *
    * This is a more "raw" workflow in how WebSockets behave. For a more convenient & REST-like approach, using the
-   * promise-driven interface is recommended. See the `ws-api-promises.ts` example for a demonstration you can compare.
+   * promise-driven interface is recommended. See the `ws-api-promises.ts` and `ws-api-client.ts` examples for a
+   * demonstration you can compare.
    *
    * Note: even without using promises, you should still tie on a .catch handler to each sendWSAPIRequest call, to prevent
    * any unnecessary "unhandled promise rejection" exceptions.
