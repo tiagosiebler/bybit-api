@@ -1,4 +1,4 @@
-import { DefaultLogger, WebsocketAPIClient } from '../src';
+import { DefaultLogger, WebsocketAPIClient, WebsocketClient } from '../src';
 
 // or
 // import { DefaultLogger, WebsocketAPIClient } from 'bybit-api';
@@ -6,26 +6,25 @@ import { DefaultLogger, WebsocketAPIClient } from '../src';
 const key = process.env.API_KEY_COM;
 const secret = process.env.API_SECRET_COM;
 
-/* function attachEventHandlers<TWSClient extends WebsocketAPIClient>(
-  wsClient: TWSClient,
-): void {
-  wsClient.getWSClient().on('update', (data) => {
-    console.log('raw message received ', JSON.stringify(data));
-  });
-
-  wsClient.getWSClient().on('open', (data) => {
-    console.log('ws connected', data.wsKey);
-  });
-  wsClient.getWSClient().on('reconnect', ({ wsKey }) => {
-    console.log('ws automatically reconnecting.... ', wsKey);
-  });
-  wsClient.getWSClient().on('reconnected', (data) => {
-    console.log('ws has reconnected ', data?.wsKey);
-  });
-  wsClient.getWSClient().on('authenticated', (data) => {
-    console.log('ws has authenticated ', data?.wsKey);
-  });
-} */
+// function attachEventHandlers<TWSClient extends WebsocketClient>(
+//   wsClient: TWSClient,
+// ): void {
+//   wsClient.on('update', (data) => {
+//     console.log('raw message received ', JSON.stringify(data));
+//   });
+//   wsClient.on('open', (data) => {
+//     console.log('ws connected', data.wsKey);
+//   });
+//   wsClient.on('reconnect', ({ wsKey }) => {
+//     console.log('ws automatically reconnecting.... ', wsKey);
+//   });
+//   wsClient.on('reconnected', (data) => {
+//     console.log('ws has reconnected ', data?.wsKey);
+//   });
+//   wsClient.on('authenticated', (data) => {
+//     console.log('ws has authenticated ', data?.wsKey);
+//   });
+// }
 
 async function main() {
   // Optional
@@ -40,7 +39,11 @@ async function main() {
       key: key,
       secret: secret,
       // testnet: true, // Whether to use the testnet environment: https://testnet.bybit.com/app/user/api-management
-      // demoTrading: false, // note: As of Jan 2025, demo trading does NOT support the WS API
+
+      // Whether to use the livenet demo trading environment
+      // Note: As of Jan 2025, demo trading only supports consuming events, it does
+      // NOT support the WS API.
+      // demoTrading: false,
 
       // If you want your own event handlers instead of the default ones with logs,
       // disable this setting and see the `attachEventHandlers` example below:
@@ -49,10 +52,15 @@ async function main() {
     logger, // Optional: inject a custom logger
   );
 
+  // Optional, see above "attachEventListeners". Attach basic event handlers, so nothing is left unhandled
+  // attachEventHandlers(wsClient.getWSClient());
+
   // Optional, if you see RECV Window errors, you can use this to manage time issues.
   // ! However, make sure you sync your system clock first!
   // https://github.com/tiagosiebler/awesome-crypto-examples/wiki/Timestamp-for-this-request-is-outside-of-the-recvWindow
   // wsClient.setTimeOffsetMs(-5000);
+
+  await wsClient.getWSClient().connectWSAPI();
 
   try {
     const response = await wsClient.submitNewOrder({

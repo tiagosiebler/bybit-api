@@ -1,4 +1,4 @@
-# Node.js & JavaScript SDK for Bybit REST API & WebSockets
+# Node.js & JavaScript SDK for Bybit REST API, WebSocket API & WebSocket Events
 
 [![Build & Test](https://github.com/tiagosiebler/bybit-api/actions/workflows/e2etest.yml/badge.svg?branch=master)](https://github.com/tiagosiebler/bybit-api/actions/workflows/e2etest.yml)
 [![npm version](https://img.shields.io/npm/v/bybit-api)][1]
@@ -19,7 +19,7 @@
 
 [1]: https://www.npmjs.com/package/bybit-api
 
-Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs and WebSockets:
+Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSocket APIs & WebSocket Events:
 
 - Complete integration with all Bybit REST APIs & WebSockets, including the WebSocket API.
 - Actively maintained with a modern, promise-driven interface.
@@ -29,22 +29,22 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs and We
 - Proxy support via axios integration.
 - Robust WebSocket consumer integration with configurable heartbeats & automatic reconnect then resubscribe workflows.
   - Event driven messaging
-  - Smart websocket persistence
+  - Smart WebSocket persistence
     - Automatically handle silent websocket disconnections through timed heartbeats, including the scheduled 24hr disconnect.
     - Automatically handle authentication.
     - Emit `reconnected` event when dropped connection is restored.
 - WebSocket API integration, with two design patterns to choose from:
-  - Asynchronous promise-driven responses:
+  1. Asynchronous **promise**-driven responses:
       - Make requests like a REST API, using the WebSocket API. No need to subscribe to asynchronous events.
-      - Send commands with the await sendWSAPIRequest(...) method.
-      - Await responses to commands directly in the fully typed sendWSAPIRequest() call.
-      - The method directly returns a promise. Use a try/catch block for convenient error handling without the complexity of asynchronous WebSockets.
-      - See example for more details: [examples/ws-api-promises.ts](./examples/ws-api-promises.ts)
-  - Asynchronous event-driven responses:
+      - Import the `WebsocketAPIClient` and use it like the REST API client. Call functions and await responses.
+        - See example for more details: [examples/ws-api-client.ts](./examples/ws-api-client.ts).
+      - Prefer something more raw? Use the `sendWSAPIRequest(...)` method and await responses
+        - See example for more details: [examples/ws-api-raw-promises.ts](./examples/ws-api-raw-promises.ts)
+  2. Asynchronous **event**-driven responses:
       - Subscribe to `response` and `error` events from WebsocketClient's event emitter.
-      - Send commands with the sendWSAPIRequest(...) method.
-      - Responses to commands will arrive via the `response` and `error` events.
-      - See example for more details: [examples/ws-api-events.ts](./examples/ws-api-events.ts)
+      - Send commands with the `sendWSAPIRequest(...)` method.
+      - Responses to commands will arrive via the `response` and `error` events emitted by the client.
+      - See example for more details: [examples/ws-api-raw-events.ts](./examples/ws-api-raw-events.ts)
 - Active community support & collaboration in telegram: [Node.js Algo Traders](https://t.me/nodetraders).
 
 # Table of Contents
@@ -153,6 +153,7 @@ Here are the available REST clients and the corresponding API groups described i
 |                     [ **V5 API** ]                     | The new unified V5 APIs (successor to previously fragmented APIs for all API groups).                                                  |
 |         [RestClientV5](src/rest-client-v5.ts)          |   Unified V5 all-in-one REST client for all [V5 REST APIs](https://bybit-exchange.github.io/docs/v5/intro)                             |
 |       [WebsocketClient](src/websocket-client.ts)       |   All WebSocket features (Public & Private consumers for all API categories & the WebSocket API)                                       |
+|    [WebsocketAPIClient](src/websocket-api-client.ts)   |   Use the WebSocket API like a REST API. Call functions and await responses, powered by WebSockets.                                    |
 
 
 ## REST API Usage
@@ -398,36 +399,41 @@ ws.on('reconnected', (data) => {
 
 ## Websocket API - Sending orders via WebSockets
 
-Bybit supports sending, amending and cancelling orders over a WebSocket connection. The [WebsocketClient](./src/WebsocketClient.ts) fully supports Bybit's WebSocket API via the `sendWSAPIRequest(...)` method.
+Bybit supports sending, amending and cancelling orders over a WebSocket connection. The [WebsocketClient](./src/WebsocketClient.ts) fully supports Bybit's WebSocket API via the `sendWSAPIRequest(...)` method. There is also a dedicated [WebsocketAPIClient](./src/websocket-api-client.ts), built over the WSClient's sendWSAPIRequest mechanism for a simpler experience.
 
 Links for reference:
 - [Bybit WebSocket API Documentation](https://bybit-exchange.github.io/docs/v5/websocket/trade/guideline)
-- [WebSocket API Example Node.js/TypeScript/JavaScript](./examples/ws-api-promises.ts).
+- [WebsocketAPIClient example, use the Websocket API like a REST API](./examples/ws-api-client.ts)
+- [Raw Asynchronous Websocket API Node.js/TypeScript/JavaScript example](./examples/ws-api-raw-promises.ts)
 
 Note: as of January 2025, the demo trading environment does not support the WebSocket API.
 
 There are two ways to use the WS API, depending on individual preference:
-- event-driven:
-  - send requests via `client.sendWSAPIRequest(wsKey, operation, params)`, fire and forget
-  - handle async replies via event handlers on `client.on('exception', cb)` and `client.on('response', cb)`
-  - See example for more details: [examples/ws-api-events.ts](./examples/ws-api-events.ts)
-- promise-driven:
-  - send requests via `const result = await client.sendWSAPIRequest(wsKey, operation, params)`, which returns a promise
-  - await each call
-  - use try/catch blocks to handle promise rejections
-  - See example for more details: [examples/ws-api-promises.ts](./examples/ws-api-promises.ts)
+1. event-driven:
+    - send requests via `client.sendWSAPIRequest(wsKey, operation, params)`, fire and forget
+    - handle async replies via event handlers on `client.on('exception', cb)` and `client.on('response', cb)`
+    - See example for more details: [examples/ws-api-raw-events.ts](./examples/ws-api-raw-events.ts)
+2. promise-driven:
+    - import the `WebsocketAPIClient` and use it much like a REST API.
+    - make an instance & call the Websocket API with a function.
+    - await responses, much like a REST API.
+    - use try/catch blocks to handle promise rejections
+    - See example for more details: [examples/ws-api-client.ts](./examples/ws-api-client.ts)
 
-The below example demonstrates the promise-driven approach, which behaves similar to a REST API. The WebSocket API even accepts the same parameters as the corresponding REST API endpoints, so this approach should be compatible with existing REST implementations. Connectivity, authentication, and processing requests wrapped in promises - these are all handled automatically by the WebsocketClient without additional configuration.
+The below example demonstrates the promise-driven approach, which behaves similar to a REST API. The WebSocket API even accepts the same parameters as the corresponding REST API endpoints, so this approach should be compatible with existing REST implementations.
+
+Connectivity, authentication and connecting requests & responses to promises - these are all handled automatically without additional configuration by the WebsocketClient. The WebsocketAPIClient is a wrapper built on top of this, providing dedicated methods for every available Websocket API command. Each method has fully typed requests & responses. Benefit from the capabilities of the WebSocket API without the complexity of managing asynchronous messaging over WebSockets.
 
 ```javascript
 const { WS_KEY_MAP, WebsocketClient } = require('bybit-api');
 
 // or
-// import { WS_KEY_MAP, WebsocketClient } from 'bybit-api';
+// import { WS_KEY_MAP, WebsocketAPIClient } from 'bybit-api';
 
-// Create an instance of the WebsocketClient.
-// This will automatically handle connectivity and authentication for you.
-const wsClient = new WebsocketClient(
+// Create an instance of the WebsocketAPIClient. This is built on
+// top of the WebsocketClient and will automatically handle WebSocket
+// persistence and authentication for you.
+const wsClient = new WebsocketAPIClient(
   {
     key: 'yourApiKeyHere',
     secret: 'yourApiSecretHere',
@@ -440,6 +446,10 @@ const wsClient = new WebsocketClient(
     // Note: As of Jan 2025, demo trading only supports consuming events, it does
     // NOT support the WS API.
     // demoTrading: false,
+
+    // If you want your own event handlers instead of the default ones with logs,
+    // disable this setting and see ws-api-client example for more details.
+    // attachEventListeners: false
   }
 );
 
@@ -452,32 +462,47 @@ async function main() {
    * This is not necessary and will happen automatically when
    * sending a command, if you aren't connected/authenticated yet.
    */
-  // await wsClient.connectWSAPI();
+  // await wsClient.getWSClient().connectWSAPI();
 
   try {
     console.log('Step 1: Create an order');
-
-    // The type for `wsAPISubmitOrderResult` is automatically
-    // resolved to `WSAPIResponse<OrderResultV5, "order.create">`
-    const wsAPISubmitOrderResult = await wsClient.sendWSAPIRequest(
-      WS_KEY_MAP.v5PrivateTrade,
-      'order.create',
-      {
-        symbol: 'BTCUSDT',
-        side: 'Buy',
-        orderType: 'Limit',
-        price: '50000',
-        qty: '1',
-        category: 'linear',
-      },
-    );
-
-    console.log(
-      `Step 1: Order result (order ID: "${wsAPISubmitOrderResult.data.orderId}"): `,
-      wsAPISubmitOrderResult,
-    );
+    const response = await wsClient.submitNewOrder({
+      category: 'linear',
+      symbol: 'BTCUSDT',
+      orderType: 'Limit',
+      qty: '0.001',
+      side: 'Buy',
+      price: '50000',
+    });
+    console.log('submitNewOrder response: ', response);
   } catch (e) {
-    console.error('Step 1: Order submit exception: ', e);
+    console.log('submitNewOrder error: ', e);
+  }
+
+  try {
+    console.log('Step 2: Amend an order');
+    const response = await wsClient.amendOrder({
+      category: 'linear',
+      symbol: 'BTCUSDT',
+      orderId: 'b4b9e205-793c-4777-8112-0bf3c2d26b6e',
+      qty: '0.001',
+      price: '60000',
+    });
+    console.log('amendOrder response: ', response);
+  } catch (e) {
+    console.log('amendOrder error: ', e);
+  }
+
+  try {
+    console.log('Step 3: Cancel an order');
+    const response = await wsClient.cancelOrder({
+      category: 'linear',
+      symbol: 'BTCUSDT',
+      orderId: 'b4b9e205-793c-4777-8112-0bf3c2d26b6e',
+    });
+    console.log('cancelOrder response: ', response);
+  } catch (e) {
+    console.log('cancelOrder error: ', e);
   }
 }
 
@@ -485,8 +510,6 @@ async function main() {
 main();
 
 ```
-
-See the [examples/ws-api-promises.ts](./examples/ws-api-promises.ts) example for a more detailed explanation.
 
 ---
 

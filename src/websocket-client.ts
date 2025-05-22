@@ -379,11 +379,13 @@ export class WebsocketClient extends BaseWebsocketClient<
     await this.assertIsAuthenticated(wsKey);
     this.logger.trace('sendWSAPIRequest()->assertIsAuthenticated() ok');
 
+    const timestampMs = Date.now() + (this.getTimeOffsetMs() || 0);
+
     const requestEvent: WSAPIRequest<TWSParams> = {
       reqId: this.getNewRequestId(),
       header: {
         'X-BAPI-RECV-WINDOW': `${this.options.recvWindow}`,
-        'X-BAPI-TIMESTAMP': `${Date.now()}`,
+        'X-BAPI-TIMESTAMP': `${timestampMs}`,
         Referer: APIID,
       },
       op: operation,
@@ -415,7 +417,11 @@ export class WebsocketClient extends BaseWebsocketClient<
       })
       .catch((e) => {
         if (typeof e === 'string') {
-          this.logger.error('unexpcted string', { e });
+          this.logger.error('Unexpected string thrown without Error object:', {
+            e,
+            wsKey,
+            signedEvent,
+          });
           return e;
         }
         e.request = {
