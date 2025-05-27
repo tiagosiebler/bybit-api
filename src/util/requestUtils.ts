@@ -183,7 +183,6 @@ export function isWsPong(msg: any): boolean {
   );
 }
 
-export const APIID = 'bybitapinode';
 
 /**
  * Used to switch how authentication/requests work under the hood (primarily for SPOT since it's different there)
