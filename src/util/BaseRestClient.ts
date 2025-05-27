@@ -132,7 +132,6 @@ export default abstract class BaseRestClient {
       ...networkOptions,
       headers: {
         ...networkOptions.headers,
-        'x-referer': APIID,
       },
     };
 
