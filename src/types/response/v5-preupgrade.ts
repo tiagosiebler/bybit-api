@@ -18,6 +18,7 @@ export interface PreUpgradeTransaction {
   tradeId: string;
   orderId: string;
   orderLinkId: string;
+  extraFees: string;
 }
 
 export interface PreUpgradeOptionsDelivery {

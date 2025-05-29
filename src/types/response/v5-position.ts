@@ -110,6 +110,7 @@ export interface ExecutionV5 {
   blockTradeId?: string;
   closedSize?: string;
   seq: number;
+  extraFees: string;
 }
 
 export interface ClosedPnLV5 {
