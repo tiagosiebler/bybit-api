@@ -449,3 +449,16 @@ export type WSSpreadExecutionEventV5 = WSPrivateTopicEventV5<
   'spread.execution',
   WSSpreadExecutionV5[]
 >;
+
+export interface WSInsuranceV5 {
+  coin: string;
+  symbols: string;
+  balance: string;
+  updateTime: string;
+}
+
+export type WSInsuranceEventV5 = WSPublicTopicEventV5<
+  'insurance.USDT' | 'insurance.USDC' | 'insurance.inverse',
+  'snapshot' | 'delta',
+  WSInsuranceV5[]
+>;

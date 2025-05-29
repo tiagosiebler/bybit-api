@@ -123,6 +123,7 @@ export interface GetDeliveryPriceParamsV5 {
   category: 'linear' | 'inverse' | 'option';
   symbol?: string;
   baseCoin?: string;
+  settleCoin?: string;
   limit?: number;
   cursor?: string;
 }
