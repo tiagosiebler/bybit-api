@@ -136,10 +136,50 @@ export interface WSTickerV5 {
   curPreListingPhase?: string;
 }
 
+export interface WSTickerOptionV5 {
+  symbol: string;
+  bidPrice: string;
+  bidSize: string;
+  bidIv: string;
+  askPrice: string;
+  askSize: string;
+  askIv: string;
+  lastPrice: string;
+  highPrice24h: string;
+  lowPrice24h: string;
+  markPrice: string;
+  indexPrice: string;
+  markPriceIv: string;
+  underlyingPrice: string;
+  openInterest: string;
+  turnover24h: string;
+  volume24h: string;
+  totalVolume: string;
+  totalTurnover: string;
+  delta: string;
+  gamma: string;
+  vega: string;
+  theta: string;
+  predictedDeliveryPrice: string;
+  change24h: string;
+}
+
+export interface WSTickerSpotV5 {
+  symbol: string;
+  lastPrice: string;
+  highPrice24h: string;
+  lowPrice24h: string;
+  prevPrice24h: string;
+  volume24h: string;
+  turnover24h: string;
+  price24hPcnt: string;
+  usdIndexPrice: string;
+}
+
 export type WSTickerEventV5 = WSPublicTopicEventV5<
   string,
   'snapshot' | 'delta',
-  WSTickerV5
+  WSTickerV5 | WSTickerOptionV5 | WSTickerSpotV5
 >;
 
 export interface WSKlineV5 {
