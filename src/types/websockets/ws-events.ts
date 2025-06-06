@@ -106,6 +106,9 @@ export type WSTradeEventV5 = WSPublicTopicEventV5<
   WSTradeV5[]
 >;
 
+/**
+ *  WSTickerV5 is the data structure for the "linear" ticker channel
+ *  */
 export interface WSTickerV5 {
   symbol: string;
   tickDirection: string;
