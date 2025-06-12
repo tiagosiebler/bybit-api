@@ -176,6 +176,7 @@ import {
   P2PUserPaymentV5,
   PositionInfoParamsV5,
   PositionV5,
+  PreCheckOrderResultV5,
   PreUpgradeOptionsDelivery,
   PreUpgradeTransaction,
   PreUpgradeUSDCSessionSettlement,
@@ -924,6 +925,20 @@ export class RestClientV5 extends BaseRestClient {
     timeWindow: number;
   }): Promise<APIResponseV3<undefined>> {
     return this.postPrivate('/v5/order/disconnected-cancel-all', params);
+  }
+
+  /**
+   * Pre-check order to calculate changes in IMR and MMR before placing an order
+   *
+   * This endpoint supports orders with category = inverse, linear, option.
+   * Only Cross Margin mode and Portfolio Margin mode are supported, isolated margin mode is not supported.
+   * category = inverse is not supported in Cross Margin mode.
+   * Conditional order is not supported.
+   */
+  preCheckOrder(
+    params: OrderParamsV5,
+  ): Promise<APIResponseV3WithTime<PreCheckOrderResultV5>> {
+    return this.postPrivate('/v5/order/pre-check', params);
   }
 
   /**
