@@ -8,6 +8,8 @@ export interface GetExchangeBrokerEarningsParamsV5 {
 }
 
 export interface GetBrokerSubAccountDepositsV5 {
+  id?: string;
+  txID?: string;
   subMemberId?: string;
   coin?: string;
   startTime?: number;

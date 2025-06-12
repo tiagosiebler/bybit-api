@@ -87,6 +87,8 @@ export interface GetAllowedDepositCoinInfoParamsV5 {
 }
 
 export interface GetDepositRecordParamsV5 {
+  id?: string;
+  txID?: string;
   coin?: string;
   startTime?: number;
   endTime?: number;
@@ -95,6 +97,8 @@ export interface GetDepositRecordParamsV5 {
 }
 
 export interface GetSubAccountDepositRecordParamsV5 {
+  id?: string;
+  txID?: string;
   subMemberId: string;
   coin?: string;
   startTime?: number;

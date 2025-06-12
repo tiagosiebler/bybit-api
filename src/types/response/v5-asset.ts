@@ -103,6 +103,7 @@ export interface AllowedDepositCoinInfoV5 {
 }
 
 export interface DepositRecordV5 {
+  id: string;
   coin: string;
   chain: string;
   amount: string;
@@ -161,6 +162,7 @@ export interface CoinInfoV5 {
     chainWithdraw: string;
     withdrawPercentageFee: string;
     contractAddress: string;
+    safeConfirmNumber: string;
   }[];
 }
 
