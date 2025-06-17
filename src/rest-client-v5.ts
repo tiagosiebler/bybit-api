@@ -852,14 +852,14 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * This endpoint allows you to cancel more than one open order in a single request.
-   * Covers: Option (UTA, UTA Pro) / USDT Perpetual, UDSC Perpetual, USDC Futures (UTA Pro)
+   * Covers: Spot, Option (UTA, UTA Pro) / USDT Perpetual, UDSC Perpetual, USDC Futures (UTA Pro)
    *
    * You must specify orderId or orderLinkId. If orderId and orderLinkId is not matched, the system will process orderId first.
    *
    * You can cancel unfilled or partially filled orders. A maximum of 20 orders can be cancelled per request.
    */
   batchCancelOrders(
-    category: 'option' | 'linear',
+    category: 'spot' | 'option' | 'linear',
     orders: BatchCancelOrderParamsV5[],
   ): Promise<
     APIResponseV3WithTime<
