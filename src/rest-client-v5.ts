@@ -810,7 +810,7 @@ export class RestClientV5 extends BaseRestClient {
    * The structure of the two lists are completely consistent.
    */
   batchSubmitOrders(
-    category: 'option' | 'linear',
+    category: 'spot' | 'option' | 'linear' | 'inverse',
     orders: BatchOrderParamsV5[],
   ): Promise<
     APIResponseV3WithTime<
@@ -835,7 +835,7 @@ export class RestClientV5 extends BaseRestClient {
    * A maximum of 20 orders can be amended per request.
    */
   batchAmendOrders(
-    category: 'option' | 'linear',
+    category: 'spot' | 'option' | 'linear' | 'inverse',
     orders: BatchAmendOrderParamsV5[],
   ): Promise<
     APIResponseV3WithTime<
@@ -860,7 +860,7 @@ export class RestClientV5 extends BaseRestClient {
    * You can cancel unfilled or partially filled orders. A maximum of 20 orders can be cancelled per request.
    */
   batchCancelOrders(
-    category: 'option' | 'linear',
+    category: 'spot' | 'option' | 'linear' | 'inverse',
     orders: BatchCancelOrderParamsV5[],
   ): Promise<
     APIResponseV3WithTime<
