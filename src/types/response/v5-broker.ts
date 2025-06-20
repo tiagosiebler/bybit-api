@@ -43,6 +43,7 @@ export interface ExchangeBrokerAccountInfoV5 {
 }
 
 export interface ExchangeBrokerSubAccountDepositRecordV5 {
+  id: string;
   subMemberId: string;
   coin: string;
   chain: string;

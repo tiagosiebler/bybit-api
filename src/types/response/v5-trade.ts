@@ -109,3 +109,12 @@ export interface SpotBorrowCheckResultV5 {
   spotMaxTradeAmount: string;
   borrowCoin: string;
 }
+
+export interface PreCheckOrderResultV5 {
+  orderId: string;
+  orderLinkId: string;
+  preImrE4: number; // Initial margin rate before checking (in basis points)
+  preMmrE4: number; // Maintenance margin rate before checking (in basis points)
+  postImrE4: number; // Initial margin rate after checking (in basis points)
+  postMmrE4: number; // Maintenance margin rate after checking (in basis points)
+}
