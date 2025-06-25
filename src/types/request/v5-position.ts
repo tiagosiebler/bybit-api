@@ -133,3 +133,12 @@ export interface ConfirmNewRiskLimitParamsV5 {
   category: 'linear' | 'inverse';
   symbol: string;
 }
+
+export interface GetClosedOptionsPositionsParamsV5 {
+  category: 'option';
+  symbol?: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}

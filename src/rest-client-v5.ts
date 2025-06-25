@@ -36,6 +36,7 @@ import {
   CategoryListV5,
   CategorySymbolListV5,
   CategoryV5,
+  ClosedOptionsPositionV5,
   ClosedPnLV5,
   CoinExchangeRecordV5,
   CoinGreeksV5,
@@ -80,6 +81,7 @@ import {
   GetBrokerIssuedVoucherParamsV5,
   GetBrokerSubAccountDepositsV5,
   GetClassicTransactionLogsParamsV5,
+  GetClosedOptionsPositionsParamsV5,
   GetClosedPnLParamsV5,
   GetCoinExchangeRecordParamsV5,
   GetCompletedLoanOrderHistoryParamsV5,
@@ -160,6 +162,7 @@ import {
   OpenInterestResponseV5,
   OptionDeliveryPriceV5,
   OrderParamsV5,
+  OrderPriceLimitV5,
   OrderResultV5,
   OrderSideV5,
   OrderbookResponseV5,
@@ -733,6 +736,13 @@ export class RestClientV5 extends BaseRestClient {
     return this.get('/v5/market/account-ratio', params);
   }
 
+  getOrderPriceLimit(params: {
+    symbol: string;
+    category: 'spot' | 'linear' | 'inverse';
+  }): Promise<APIResponseV3WithTime<OrderPriceLimitV5>> {
+    return this.get('/v5/order/price-limit', params);
+  }
+
   /**
    *
    ****** Trade APIs
@@ -1083,6 +1093,26 @@ export class RestClientV5 extends BaseRestClient {
     params: GetClosedPnLParamsV5,
   ): Promise<APIResponseV3WithTime<CategoryCursorListV5<ClosedPnLV5[]>>> {
     return this.getPrivate('/v5/position/closed-pnl', params);
+  }
+
+  /**
+   * Get Closed Options Positions
+   * Query user's closed options positions, sorted by closeTime in descending order
+   *
+   * INFO
+   * Only supports users to query closed options positions in recently 6 months
+   * Fee and price retain 8 decimal places and do not omit the last 0
+   */
+  getClosedOptionsPositions(
+    params?: GetClosedOptionsPositionsParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      nextPageCursor: string;
+      category: string;
+      list: ClosedOptionsPositionV5[];
+    }>
+  > {
+    return this.getPrivate('/v5/position/get-closed-positions', params);
   }
 
   /**

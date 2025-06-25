@@ -332,3 +332,10 @@ export interface LongShortRatioV5 {
   sellRatio: string;
   timestamp: string;
 }
+
+export interface OrderPriceLimitV5 {
+  symbol: string;
+  buyLmt: string;
+  sellLmt: string;
+  ts: string;
+}

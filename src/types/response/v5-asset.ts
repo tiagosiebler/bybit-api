@@ -19,6 +19,7 @@ export interface DeliveryRecordV5 {
   strike: string;
   fee: string;
   deliveryRpl: string;
+  entryPrice: string;
 }
 
 export interface SettlementRecordV5 {
