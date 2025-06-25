@@ -505,3 +505,15 @@ export type WSInsuranceEventV5 = WSPublicTopicEventV5<
   'snapshot' | 'delta',
   WSInsuranceV5[]
 >;
+
+export interface WSPriceLimitV5 {
+  symbol: string;
+  buyLmt: string;
+  sellLmt: string;
+}
+
+export type WSPriceLimitEventV5 = WSPublicTopicEventV5<
+  string,
+  'snapshot',
+  WSPriceLimitV5
+>;

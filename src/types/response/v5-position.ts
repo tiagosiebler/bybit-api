@@ -122,6 +122,8 @@ export interface ClosedPnLV5 {
   orderType: OrderTypeV5;
   execType: ExecTypeV5;
   closedSize: string;
+  openFee: string;
+  closeFee: string;
   cumEntryValue: string;
   avgEntryPrice: string;
   cumExitValue: string;
@@ -156,4 +158,19 @@ export interface MovePositionHistoryV5 {
   createdAt: number;
   updatedAt: number;
   rejectParty: '' | 'Taker' | 'Maker' | 'bybit';
+}
+
+export interface ClosedOptionsPositionV5 {
+  symbol: string;
+  side: 'Buy' | 'Sell';
+  totalOpenFee: string;
+  deliveryFee: string;
+  totalCloseFee: string;
+  qty: string;
+  closeTime: number;
+  avgExitPrice: string;
+  deliveryPrice: string;
+  openTime: number;
+  avgEntryPrice: string;
+  totalPnl: string;
 }
