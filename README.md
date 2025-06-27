@@ -22,6 +22,11 @@
 Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSocket APIs & WebSocket Events:
 
 - Complete integration with all Bybit REST APIs & WebSockets, including the WebSocket API.
+- Higher API rate limits than the highest VIP tier!
+  - All API requests made with this SDK are automatically subject to significantly higher rate limits.
+  - Rate limits are raised to 400 requests per second, higher than the highest VIP tier.
+  - No action required. This is automatic for any API calls made with this SDK, for any user.
+  - Read more in the announcement: [here](https://github.com/tiagosiebler/bybit-api/issues/458).
 - Actively maintained with a modern, promise-driven interface.
 - TypeScript support (thorough type declarations for most API requests & responses, including WS API).
 - JavaScript support (TypeScript not required but definitely recommended).
