@@ -236,6 +236,8 @@ export interface WSPositionV5 {
   autoAddMargin: number;
   positionMM: string;
   positionIM: string;
+  positionIMByMp: string;
+  positionMMByMp: string;
   liqPrice: string;
   bustPrice: string;
   tpslMode: string;
@@ -350,6 +352,7 @@ export interface WSExecutionV5 {
   underlyingPrice: string;
   blockTradeId: string;
   closedSize: string;
+  extraFees: string;
   seq: number;
   marketUnit: string;
 }
@@ -405,6 +408,10 @@ export interface WSWalletV5 {
   accountLTV: string;
   accountIMRate: string;
   accountMMRate: string;
+  accountIMRateByMp: string;
+  accountMMRateByMp: string;
+  totalInitialMarginByMp: string;
+  totalMaintenanceMarginByMp: string;
   totalEquity: string;
   totalWalletBalance: string;
   totalMarginBalance: string;
@@ -473,6 +480,8 @@ export interface WSSpreadExecutionV5 {
   createType: OrderCreateTypeV5;
   orderType: OrderTypeV5;
   execFee: string;
+  execFeeV2: string;
+  feeCurrency: string;
   parentExecId: string;
   execId: string;
   execPrice: string;
