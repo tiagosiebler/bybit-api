@@ -48,6 +48,8 @@ export interface PositionV5 {
   leverageSysUpdatedTime: string | '';
   createdTime: string;
   updatedTime: string;
+  positionIMByMp: string;
+  positionMMByMp: string;
   seq: number;
 }
 
@@ -94,6 +96,7 @@ export interface ExecutionV5 {
   orderType: OrderTypeV5;
   stopOrderType?: StopOrderTypeV5;
   execFee: string;
+  execFeeV2: string;
   execId: string;
   execPrice: string;
   execQty: string;

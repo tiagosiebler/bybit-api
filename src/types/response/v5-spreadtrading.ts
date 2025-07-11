@@ -121,4 +121,5 @@ export interface SpreadTradeV5 {
   execQty: string;
   execId: string;
   legs: SpreadTradeLegV5[];
+  extraFees: string;
 }

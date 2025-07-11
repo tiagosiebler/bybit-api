@@ -32,6 +32,10 @@ export interface WalletBalanceV5 {
   accountLTV: string;
   accountIMRate: string;
   accountMMRate: string;
+  accountIMRateByMp: string;
+  accountMMRateByMp: string;
+  totalInitialMarginByMp: string;
+  totalMaintenanceMarginByMp: string;
   totalEquity: string;
   totalWalletBalance: string;
   totalMarginBalance: string;
