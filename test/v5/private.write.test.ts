@@ -1,6 +1,5 @@
 import {
   API_ERROR_CODE,
-  LeverageTokenInfoV5,
   OrderSideV5,
   OrderTypeV5,
   RestClientV5,
