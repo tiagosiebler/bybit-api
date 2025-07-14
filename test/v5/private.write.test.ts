@@ -1,6 +1,5 @@
 import {
   API_ERROR_CODE,
-  LeverageTokenInfoV5,
   OrderSideV5,
   OrderTypeV5,
   RestClientV5,
@@ -428,41 +427,6 @@ describe('Private WRITE V5 REST API Endpoints', () => {
         // ...successResponseObjectV3(),
         // retMsg: '',
         retCode: API_ERROR_CODE.SUB_USER_NOT_FOUND,
-      });
-    });
-  });
-
-  describe('Spot Leverage Token APIs', () => {
-    let leverageToken: LeverageTokenInfoV5;
-
-    beforeAll(async () => {
-      const tokenResult = await api.getLeveragedTokenInfo();
-      leverageToken = tokenResult.result.list[0];
-    });
-
-    it('purchaseSpotLeveragedToken()', async () => {
-      expect(
-        await api.purchaseSpotLeveragedToken({
-          amount: '100',
-          ltCoin: leverageToken.ltCoin,
-        }),
-      ).toMatchObject({
-        // ...successResponseObjectV3(),
-        retCode: 175025,
-        // retMsg: '',
-      });
-    });
-
-    it('redeemSpotLeveragedToken()', async () => {
-      expect(
-        await api.redeemSpotLeveragedToken({
-          quantity: '100',
-          ltCoin: leverageToken.ltCoin,
-        }),
-      ).toMatchObject({
-        // ...successResponseObjectV3(),
-        retCode: 175025,
-        // retMsg: '',
       });
     });
   });

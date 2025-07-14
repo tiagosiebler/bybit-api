@@ -127,7 +127,6 @@ import {
   GetRepaymentHistoryParamsV5,
   GetRiskLimitParamsV5,
   GetSettlementRecordParamsV5,
-  GetSpotLeveragedTokenOrderHistoryParamsV5,
   GetSpreadInstrumentsInfoParamsV5,
   GetSpreadOpenOrdersParamsV5,
   GetSpreadOrderHistoryParamsV5,
@@ -147,8 +146,6 @@ import {
   InternalDepositRecordV5,
   InternalTransferRecordV5,
   IssueVoucherParamsV5,
-  LeverageTokenInfoV5,
-  LeveragedTokenMarketResultV5,
   LoanLTVAdjustmentHistoryV5,
   LongShortRatioV5,
   MMPModifyParamsV5,
@@ -184,10 +181,6 @@ import {
   PreUpgradeTransaction,
   PreUpgradeUSDCSessionSettlement,
   PublicTradeV5,
-  PurchaseSpotLeveragedTokenParamsV5,
-  PurchaseSpotLeveragedTokenResultV5,
-  RedeemSpotLeveragedTokenParamsV5,
-  RedeemSpotLeveragedTokenResultV5,
   RepayLiabilityParamsV5,
   RepayLiabilityResultV5,
   RepaymentHistoryV5,
@@ -203,7 +196,6 @@ import {
   SetTradingStopParamsV5,
   SettlementRecordV5,
   SpotBorrowCheckResultV5,
-  SpotLeveragedTokenOrderHistoryV5,
   SpotMarginStateV5,
   SpreadInstrumentInfoV5,
   SpreadOpenOrderV5,
@@ -2133,59 +2125,6 @@ export class RestClientV5 extends BaseRestClient {
     uid: string;
   }): Promise<APIResponseV3WithTime<AffiliateUserInfoV5>> {
     return this.getPrivate('/v5/user/aff-customer-info', params);
-  }
-
-  /**
-   *
-   ****** Spot Leverage Token APIs
-   *
-   */
-
-  /**
-   * Query leverage token information
-   */
-  getLeveragedTokenInfo(
-    ltCoin?: string,
-  ): Promise<APIResponseV3WithTime<{ list: LeverageTokenInfoV5[] }>> {
-    return this.get('/v5/spot-lever-token/info', { ltCoin });
-  }
-
-  /**
-   * Get leverage token market information.
-   */
-  getLeveragedTokenMarket(
-    ltCoin: string,
-  ): Promise<APIResponseV3WithTime<LeveragedTokenMarketResultV5>> {
-    return this.get('/v5/spot-lever-token/reference', { ltCoin });
-  }
-
-  /**
-   * This endpoint allows you to purchase a leveraged token with a specified amount.
-   */
-  purchaseSpotLeveragedToken(
-    params: PurchaseSpotLeveragedTokenParamsV5,
-  ): Promise<APIResponseV3WithTime<PurchaseSpotLeveragedTokenResultV5>> {
-    return this.postPrivate('/v5/spot-lever-token/purchase', params);
-  }
-
-  /**
-   * Redeem leveraged token.
-   */
-  redeemSpotLeveragedToken(
-    params: RedeemSpotLeveragedTokenParamsV5,
-  ): Promise<APIResponseV3WithTime<RedeemSpotLeveragedTokenResultV5>> {
-    return this.postPrivate('/v5/spot-lever-token/redeem', params);
-  }
-
-  /**
-   * Get purchase or redemption history
-   */
-  getSpotLeveragedTokenOrderHistory(
-    params?: GetSpotLeveragedTokenOrderHistoryParamsV5,
-  ): Promise<
-    APIResponseV3WithTime<{ list: SpotLeveragedTokenOrderHistoryV5[] }>
-  > {
-    return this.getPrivate('/v5/spot-lever-token/order-record', params);
   }
 
   /**
