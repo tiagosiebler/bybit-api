@@ -2143,6 +2143,8 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * Query leverage token information
+   *
+   * @deprecated
    */
   getLeveragedTokenInfo(
     ltCoin?: string,
@@ -2152,6 +2154,8 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * Get leverage token market information.
+   *
+   * @deprecated
    */
   getLeveragedTokenMarket(
     ltCoin: string,
@@ -2161,6 +2165,8 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * This endpoint allows you to purchase a leveraged token with a specified amount.
+   *
+   * @deprecated
    */
   purchaseSpotLeveragedToken(
     params: PurchaseSpotLeveragedTokenParamsV5,
@@ -2170,6 +2176,8 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * Redeem leveraged token.
+   *
+   * @deprecated
    */
   redeemSpotLeveragedToken(
     params: RedeemSpotLeveragedTokenParamsV5,
@@ -2179,6 +2187,8 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * Get purchase or redemption history
+   *
+   * @deprecated
    */
   getSpotLeveragedTokenOrderHistory(
     params?: GetSpotLeveragedTokenOrderHistoryParamsV5,

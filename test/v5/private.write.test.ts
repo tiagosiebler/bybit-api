@@ -432,41 +432,6 @@ describe('Private WRITE V5 REST API Endpoints', () => {
     });
   });
 
-  describe('Spot Leverage Token APIs', () => {
-    let leverageToken: LeverageTokenInfoV5;
-
-    beforeAll(async () => {
-      const tokenResult = await api.getLeveragedTokenInfo();
-      leverageToken = tokenResult.result.list[0];
-    });
-
-    it('purchaseSpotLeveragedToken()', async () => {
-      expect(
-        await api.purchaseSpotLeveragedToken({
-          amount: '100',
-          ltCoin: leverageToken.ltCoin,
-        }),
-      ).toMatchObject({
-        // ...successResponseObjectV3(),
-        retCode: 175025,
-        // retMsg: '',
-      });
-    });
-
-    it('redeemSpotLeveragedToken()', async () => {
-      expect(
-        await api.redeemSpotLeveragedToken({
-          quantity: '100',
-          ltCoin: leverageToken.ltCoin,
-        }),
-      ).toMatchObject({
-        // ...successResponseObjectV3(),
-        retCode: 175025,
-        // retMsg: '',
-      });
-    });
-  });
-
   describe('Spot Margin APIs', () => {
     it('toggleSpotMarginTrade()', async () => {
       expect(await api.toggleSpotMarginTrade('1')).toMatchObject({
