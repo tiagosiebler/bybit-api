@@ -8,12 +8,17 @@ import {
   WsTopic,
 } from './types';
 import {
+  Exact,
+  WSAPIOperation,
+  WsAPIOperationResponseMap,
+  WSAPIRequest,
+  WsAPITopicRequestParamMap,
+  WsAPIWsKeyTopicMap,
+  WsOperation,
+  WsRequestOperationBybit,
+} from './types/websockets/ws-api';
+import {
   APIID,
-  WSConnectedResult,
-  WS_AUTH_ON_CONNECT_KEYS,
-  WS_KEY_MAP,
-  WS_LOGGER_CATEGORY,
-  WsTopicRequest,
   getMaxTopicsPerSubscribeEvent,
   getNormalisedTopicRequests,
   getPromiseRefForWSAPIRequest,
@@ -26,22 +31,17 @@ import {
   isWSAPIResponse,
   isWsPong,
   neverGuard,
+  WS_AUTH_ON_CONNECT_KEYS,
+  WS_KEY_MAP,
+  WS_LOGGER_CATEGORY,
+  WSConnectedResult,
+  WsTopicRequest,
 } from './util';
 import {
   BaseWebsocketClient,
   EmittableEvent,
   MidflightWsRequestEvent,
 } from './util/BaseWSClient';
-import {
-  Exact,
-  WSAPIOperation,
-  WSAPIRequest,
-  WsAPIOperationResponseMap,
-  WsAPITopicRequestParamMap,
-  WsAPIWsKeyTopicMap,
-  WsOperation,
-  WsRequestOperationBybit,
-} from './types/websockets/ws-api';
 import { SignAlgorithm, signMessage } from './util/webCryptoAPI';
 
 export class WebsocketClient extends BaseWebsocketClient<
@@ -773,6 +773,7 @@ export class WebsocketClient extends BaseWebsocketClient<
               },
               true,
             );
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
           } catch (e) {
             this.logger.error('Exception trying to reject WSAPI promise', {
               wsKey,
@@ -800,6 +801,7 @@ export class WebsocketClient extends BaseWebsocketClient<
             },
             true,
           );
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
           this.logger.error('Exception trying to resolve WSAPI promise', {
             wsKey,

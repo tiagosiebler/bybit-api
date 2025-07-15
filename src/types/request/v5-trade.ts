@@ -1,8 +1,8 @@
 import {
   CategoryV5,
   OrderFilterV5,
-  OrderSMPTypeV5,
   OrderSideV5,
+  OrderSMPTypeV5,
   OrderStatusV5,
   OrderTimeInForceV5,
   OrderTriggerByV5,

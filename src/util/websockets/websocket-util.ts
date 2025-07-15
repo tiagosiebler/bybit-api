@@ -1,4 +1,5 @@
 import WebSocket from 'isomorphic-ws';
+
 import {
   APIMarket,
   CategoryV5,
@@ -6,9 +7,8 @@ import {
   WsKey,
   WsTopic,
 } from '../../types';
-
-import { DefaultLogger } from '../logger';
 import { WSAPIRequest } from '../../types/websockets/ws-api';
+import { DefaultLogger } from '../logger';
 import { neverGuard } from '../typeGuards';
 
 export const WS_LOGGER_CATEGORY = { category: 'bybit-ws' };
