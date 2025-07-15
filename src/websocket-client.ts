@@ -751,6 +751,7 @@ export class WebsocketClient extends BaseWebsocketClient<
 
         if (!reqId) {
           this.logger.error(
+            // eslint-disable-next-line max-len
             'WS API response is missing reqId - promisified workflow could get stuck. If this happens, please get in touch with steps to reproduce. Trace:',
             {
               wsKey,

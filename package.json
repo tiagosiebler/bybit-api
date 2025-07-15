@@ -1,6 +1,6 @@
 {
   "name": "bybit-api",
-  "version": "4.1.15",
+  "version": "4.1.16",
   "description": "Complete & robust Node.js SDK for Bybit's REST APIs and WebSockets, with TypeScript & strong end to end tests.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -17,7 +17,8 @@
     "build:watch": "npm run clean && tsc --project tsconfig.build.json --watch",
     "pack": "webpack --config webpack/webpack.config.js",
     "prepublish": "npm run build:clean",
-    "betapublish": "npm publish --tag beta"
+    "betapublish": "npm publish --tag beta",
+    "lint": "eslint src"
   },
   "author": "Tiago Siebler (https://github.com/tiagosiebler)",
   "contributors": [],
