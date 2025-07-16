@@ -27,6 +27,7 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
+    'no-param-reassign': ['error'],
     '@typescript-eslint/ban-types': 'off',
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
