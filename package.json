@@ -12,7 +12,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "clean": "rimraf lib dist",
-    "build": "tsc --project tsconfig.build.json && npm run lint",
+    "build": "tsc --project tsconfig.build.json",
     "build:clean": "npm run clean && npm run build",
     "build:watch": "npm run clean && tsc --project tsconfig.build.json --watch",
     "pack": "webpack --config webpack/webpack.config.js",
