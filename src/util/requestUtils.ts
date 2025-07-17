@@ -1,4 +1,5 @@
 import { AxiosResponse } from 'axios';
+
 import { APIRateLimit } from '../types';
 
 export interface RestClientOptions {

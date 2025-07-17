@@ -4,10 +4,10 @@ import https from 'https';
 
 import {
   APIID,
-  RestClientOptions,
-  RestClientType,
   getRestBaseUrl,
   parseRateLimitHeaders,
+  RestClientOptions,
+  RestClientType,
   serializeParams,
 } from './requestUtils';
 import { SignAlgorithm, SignEncodeMethod, signMessage } from './webCryptoAPI';

@@ -1,4 +1,5 @@
 import { createHmac } from 'crypto';
+
 import { DefaultLogger, RestClientV5, WebsocketClient } from '../src/index';
 
 // or

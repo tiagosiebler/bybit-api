@@ -1,7 +1,7 @@
 import {
+  LeverageTokenStatusV5,
   LTOrderStatusV5,
   LTOrderTypeV5,
-  LeverageTokenStatusV5,
 } from '../shared-v5';
 
 export interface LeverageTokenInfoV5 {

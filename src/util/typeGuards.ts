@@ -6,7 +6,7 @@ import {
   WebsocketSucceededTopicSubscriptionConfirmationEvent,
   WebsocketTopicSubscriptionConfirmationEvent,
 } from '../types';
-import { WSAPIResponse, WS_API_Operations } from '../types/websockets/ws-api';
+import { WS_API_Operations, WSAPIResponse } from '../types/websockets/ws-api';
 import {
   WSAccountOrderEventV5,
   WSExecutionEventV5,

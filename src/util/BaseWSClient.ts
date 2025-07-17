@@ -3,25 +3,25 @@
 import EventEmitter from 'events';
 import WebSocket from 'isomorphic-ws';
 
+import {
+  isMessageEvent,
+  MessageEventLike,
+  WebsocketClientOptions,
+  WSClientConfigurableOptions,
+  WsMarket,
+} from '../types';
+import { WsOperation } from '../types/websockets/ws-api';
 import { DefaultLogger } from './logger';
 import {
-  MessageEventLike,
-  WSClientConfigurableOptions,
-  WebsocketClientOptions,
-  WsMarket,
-  isMessageEvent,
-} from '../types';
-import { WsStore } from './websockets/WsStore';
-import {
-  WSConnectedResult,
+  getNormalisedTopicRequests,
+  safeTerminateWs,
   WS_LOGGER_CATEGORY,
+  WSConnectedResult,
   WsConnectionStateEnum,
   WsTopicRequest,
   WsTopicRequestOrStringTopic,
-  getNormalisedTopicRequests,
-  safeTerminateWs,
 } from './websockets';
-import { WsOperation } from '../types/websockets/ws-api';
+import { WsStore } from './websockets/WsStore';
 
 type UseTheExceptionEventInstead = never;
 

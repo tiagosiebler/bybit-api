@@ -1,4 +1,4 @@
-import { RestClientV5, WebsocketClient, isWsAllLiquidationEvent } from '../src';
+import { isWsAllLiquidationEvent, RestClientV5, WebsocketClient } from '../src';
 
 // or
 // import {

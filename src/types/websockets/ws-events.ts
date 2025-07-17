@@ -7,8 +7,8 @@ import {
   OrderCancelTypeV5,
   OrderCreateTypeV5,
   OrderRejectReasonV5,
-  OrderSMPTypeV5,
   OrderSideV5,
+  OrderSMPTypeV5,
   OrderStatusV5,
   OrderTimeInForceV5,
   OrderTriggerByV5,
@@ -20,7 +20,6 @@ import {
   TPSLModeV5,
   TradeModeV5,
 } from '../shared-v5';
-
 import { WsKey } from './ws-general';
 
 export interface MessageEventLike {
