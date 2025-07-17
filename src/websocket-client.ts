@@ -773,12 +773,12 @@ export class WebsocketClient extends BaseWebsocketClient<
               },
               true,
             );
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
           } catch (e) {
             this.logger.error('Exception trying to reject WSAPI promise', {
               wsKey,
               promiseRef,
               parsedEvent: parsed,
+              error: e,
             });
           }
 
@@ -801,12 +801,12 @@ export class WebsocketClient extends BaseWebsocketClient<
             },
             true,
           );
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
           this.logger.error('Exception trying to resolve WSAPI promise', {
             wsKey,
             promiseRef,
             parsedEvent: parsed,
+            error: e,
           });
         }
 
