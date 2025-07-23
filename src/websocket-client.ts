@@ -482,8 +482,8 @@ export class WebsocketClient extends BaseWebsocketClient<
   private async signMessage(
     paramsStr: string,
     secret: string,
-    method: 'hex' | 'base64',
-    algorithm: SignAlgorithm,
+    method?: 'hex' | 'base64',
+    algorithm: SignAlgorithm = 'SHA-256',
   ): Promise<string> {
     if (typeof this.options.customSignMessageFn === 'function') {
       return this.options.customSignMessageFn(paramsStr, secret);
@@ -535,7 +535,7 @@ export class WebsocketClient extends BaseWebsocketClient<
     const signature = await this.signMessage(
       'GET/realtime' + signatureExpiresAt,
       secret,
-      'hex',
+      undefined, // Let the function automatically determine encoding based on key type
       'SHA-256',
     );
 

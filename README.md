@@ -28,6 +28,7 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSo
   - No action required. This is automatic for any API calls made with this SDK, for any user.
   - Read more in the announcement: [here](https://github.com/tiagosiebler/bybit-api/issues/458).
 - Actively maintained with a modern, promise-driven interface.
+- Automatic support for HMAC & RSA authentication. 
 - TypeScript support (thorough type declarations for most API requests & responses, including WS API).
 - JavaScript support (TypeScript not required but definitely recommended).
 - Thorough & automatic end-to-end tests making real API calls & WebSocket connections, validating any changes before they reach npm.
@@ -177,6 +178,7 @@ const { RestClientV5 } = require('bybit-api');
 // import { RestClientV5 } from 'bybit-api';
 
 const restClientOptions = {
+  /** supports HMAC & RSA API keys - automatically detected */
   /** Your API key */
   key: 'apiKeyHere',
 
@@ -287,6 +289,7 @@ const wsConfig = {
   /**
    * API credentials are optional. They are only required if you plan on using
    * any account-specific topics or the WS API
+   * supports HMAC & RSA API keys - automatically detected
    */
   key: 'yourAPIKeyHere',
   secret: 'yourAPISecretHere',
@@ -438,6 +441,7 @@ const { WS_KEY_MAP, WebsocketAPIClient } = require('bybit-api');
 // Create an instance of the WebsocketAPIClient. This is built on
 // top of the WebsocketClient and will automatically handle WebSocket
 // persistence and authentication for you.
+// supports HMAC & RSA API keys - automatically detected
 const wsClient = new WebsocketAPIClient(
   {
     key: 'yourApiKeyHere',
