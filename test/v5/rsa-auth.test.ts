@@ -25,9 +25,10 @@ describe('RSA Authentication', () => {
       expect(keyType).toBe('HMAC');
     });
 
+    // dummy key for testing
     test('should detect RSA key with different PEM format', () => {
       const rsaKeyDifferentFormat = `-----BEGIN RSA PRIVATE KEY-----
-MIIEowIBAAKCAQEA4f5wg5l2hKsTeNem/V41fGnJm6gOdrj8ym3rFkEjWT2btYI=
+MIIEowIBCCKCAQEA4f5wg5l2hKsXeNem/V41fGnJm6gOdrj8ym3rFkEjWT2btYI=
 -----END RSA PRIVATE KEY-----`;
       const keyType = getSignKeyType(rsaKeyDifferentFormat);
       expect(keyType).toBe('RSASSA-PKCS1-v1_5');
