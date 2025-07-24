@@ -33,7 +33,7 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSo
     - Place orders with a notional value as low as $1.
     - Lower than the default minimum notional order value $5.
     - *Note: the lower min notional requirement is an undocumented benefit that may end at any time.
-- Automatic support for HMAC & RSA authentication. 
+- Automatic support for HMAC & RSA authentication.
 - TypeScript support (thorough type declarations for most API requests & responses, including WS API).
 - JavaScript support (TypeScript not required but definitely recommended).
 - Thorough & automatic end-to-end tests making real API calls & WebSocket connections, validating any changes before they reach npm.
@@ -607,7 +607,7 @@ The bundle can be found in `dist/`. Altough usage should be largely consistent, 
 
 ## Use with LLMs & AI
 
-This package is designed to be used with LLMs & AI. If you want to insert this package directly into an LLM for faster usage, you can use the `llms.txt` file in the root of this repository.
+This SDK includes a bundled `llms.txt` file in the root of the repository. If you're developing with LLMs, use the included `llms.txt` with your LLM - it will significantly improve the LLMs understanding of how to correctly use this SDK.
 
 This file contains AI optimised structure of all the functions in this package, and their parameters for easier use with any learning models or artificial intelligence.
 
