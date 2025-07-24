@@ -27,4 +27,5 @@ localtest.sh
 localtest.ts
 privaterepotracker
 restClientRegex.ts
+repomix.sh
 

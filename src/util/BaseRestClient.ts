@@ -379,8 +379,8 @@ export default abstract class BaseRestClient {
   private async signMessage(
     paramsStr: string,
     secret: string,
-    method: SignEncodeMethod,
-    algorithm: SignAlgorithm,
+    method?: SignEncodeMethod,
+    algorithm: SignAlgorithm = 'SHA-256',
   ): Promise<string> {
     if (typeof this.options.customSignMessageFn === 'function') {
       return this.options.customSignMessageFn(paramsStr, secret);
@@ -438,7 +438,7 @@ export default abstract class BaseRestClient {
       res.sign = await this.signMessage(
         paramsStr,
         this.secret,
-        'hex',
+        undefined, // Let the function automatically determine encoding based on key type
         'SHA-256',
       );
 

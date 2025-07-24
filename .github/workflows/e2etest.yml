@@ -37,17 +37,39 @@ jobs:
       - name: Test Public Read API Calls
         run: npm run test -- public.read.test.ts
 
-      - name: Test Private Read API Calls
-        run: npm run test -- private.read.test.ts
-        env:
-          API_KEY_COM: ${{ secrets.API_KEY_COM }}
-          API_SECRET_COM: ${{ secrets.API_SECRET_COM }}
-
-      - name: Test Private Write API Calls
-        run: npm run test -- private.write.test.ts
-        env:
-          API_KEY_COM: ${{ secrets.API_KEY_COM }}
-          API_SECRET_COM: ${{ secrets.API_SECRET_COM }}
-
       - name: Test Public WS
         run: npm run test -- public.ws.test.ts
+
+      - name: Test Private Read HMAC API Calls
+        run: npm run test -- private.readHMAC.test.ts
+        env:
+          API_KEY_COM: ${{ secrets.API_KEY_COM }}
+          API_SECRET_COM: ${{ secrets.API_SECRET_COM }}
+
+      - name: Test Private Write HMAC API Calls
+        run: npm run test -- private.writeHMAC.test.ts
+        env:
+          API_KEY_COM: ${{ secrets.API_KEY_COM }}
+          API_SECRET_COM: ${{ secrets.API_SECRET_COM }}
+
+      - name: Test Private Read RSA API Calls
+        run: npm run test -- private.readRSA.test.ts
+        env:
+          API_KEY_COM_RSA: ${{ secrets.API_KEY_COM_RSA }}
+          API_SECRET_COM_RSA: ${{ secrets.API_SECRET_COM_RSA }}
+  
+      - name: Test Private Write RSA API Calls
+        run: npm run test -- private.writeRSA.test.ts
+        env:
+          API_KEY_COM_RSA: ${{ secrets.API_KEY_COM_RSA }}
+          API_SECRET_COM_RSA: ${{ secrets.API_SECRET_COM_RSA }}
+      
+      - name: Test RSA/HMAC automatic detection
+        run: npm run test -- rsa-auth.test.ts
+        env:
+          API_KEY_COM: ${{ secrets.API_KEY_COM }}
+          API_SECRET_COM: ${{ secrets.API_SECRET_COM }}
+          API_KEY_COM_RSA: ${{ secrets.API_KEY_COM_RSA }}
+          API_SECRET_COM_RSA: ${{ secrets.API_SECRET_COM_RSA }}
+
+

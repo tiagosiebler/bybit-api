@@ -15,7 +15,7 @@ const client = new RestClientV5({
   try {
     /** Simple examples for private REST API calls with bybit's V5 REST APIs */
     const response = await client.getPositionInfo({
-      category: 'option',
+      category: 'linear',
       symbol: 'BTCUSDT',
     });
 
