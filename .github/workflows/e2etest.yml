@@ -55,8 +55,8 @@ jobs:
       - name: Test Private Read RSA API Calls
         run: npm run test -- private.readRSA.test.ts
         env:
-            API_KEY_COM_RSA: ${{ secrets.API_KEY_COM_RSA }}
-            API_SECRET_COM_RSA: ${{ secrets.API_SECRET_COM_RSA }}
+          API_KEY_COM_RSA: ${{ secrets.API_KEY_COM_RSA }}
+          API_SECRET_COM_RSA: ${{ secrets.API_SECRET_COM_RSA }}
   
       - name: Test Private Write RSA API Calls
         run: npm run test -- private.writeRSA.test.ts
