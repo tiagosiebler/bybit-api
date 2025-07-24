@@ -13,6 +13,64 @@ function bufferToB64(buffer: ArrayBuffer): string {
 export type SignEncodeMethod = 'hex' | 'base64';
 export type SignAlgorithm = 'SHA-256' | 'SHA-512';
 
+type KeyType = 'HMAC' | 'RSASSA-PKCS1-v1_5';
+
+/**
+ * Determine the key type based on the secret format
+ * RSA keys contain "-----BEGIN PRIVATE KEY-----" or "-----BEGIN RSA PRIVATE KEY-----"
+ * HMAC keys are plain strings
+ */
+export function getSignKeyType(secret: string): KeyType {
+  if (secret.includes('PRIVATE KEY')) {
+    return 'RSASSA-PKCS1-v1_5';
+  }
+  return 'HMAC';
+}
+
+/**
+ * Import a key for signing based on its type
+ */
+async function importKey(
+  secret: string,
+  type: KeyType,
+  algorithm: SignAlgorithm,
+  encoder: TextEncoder,
+): Promise<CryptoKey> {
+  switch (type) {
+    case 'RSASSA-PKCS1-v1_5': {
+      // Remove PEM headers/footers and whitespace to get base64 content
+      const base64Key = secret.replace(
+        /(?:-----BEGIN RSA PRIVATE KEY-----|-----BEGIN PRIVATE KEY-----|-----END RSA PRIVATE KEY-----|-----END PRIVATE KEY-----|\s+)/g,
+        '',
+      );
+
+      const binaryKey = Uint8Array.from(atob(base64Key), (c) =>
+        c.charCodeAt(0),
+      );
+
+      return crypto.subtle.importKey(
+        'pkcs8',
+        binaryKey.buffer,
+        { name: type, hash: { name: algorithm } },
+        false,
+        ['sign'],
+      );
+    }
+    case 'HMAC': {
+      return globalThis.crypto.subtle.importKey(
+        'raw',
+        encoder.encode(secret),
+        { name: type, hash: algorithm },
+        false,
+        ['sign'],
+      );
+    }
+    default: {
+      throw neverGuard(type, `Unhandled key type: "${type}"`);
+    }
+  }
+}
+
 /**
  * Similar to node crypto's `createHash()` function
  */
@@ -45,30 +103,32 @@ export async function hashMessage(
 
 /**
  * Sign a message, with a secret, using the Web Crypto API
+ * Automatically detects key type (HMAC vs RSA) and uses appropriate signing method
+ * RSA keys use base64 encoding, HMAC keys use hex encoding (for backwards compatibility)
  */
 export async function signMessage(
   message: string,
   secret: string,
-  method: SignEncodeMethod,
-  algorithm: SignAlgorithm,
+  method?: SignEncodeMethod,
+  algorithm: SignAlgorithm = 'SHA-256',
 ): Promise<string> {
   const encoder = new TextEncoder();
 
-  const key = await globalThis.crypto.subtle.importKey(
-    'raw',
-    encoder.encode(secret),
-    { name: 'HMAC', hash: algorithm },
-    false,
-    ['sign'],
-  );
+  const signKeyType = getSignKeyType(secret);
+
+  // Automatically determine encoding method based on key type if not specified
+  const encodeMethod =
+    method || (signKeyType === 'RSASSA-PKCS1-v1_5' ? 'base64' : 'hex');
+
+  const key = await importKey(secret, signKeyType, algorithm, encoder);
 
   const buffer = await globalThis.crypto.subtle.sign(
-    'HMAC',
+    { name: signKeyType },
     key,
     encoder.encode(message),
   );
 
-  switch (method) {
+  switch (encodeMethod) {
     case 'hex': {
       return Array.from(new Uint8Array(buffer))
         .map((byte) => byte.toString(16).padStart(2, '0'))
@@ -78,7 +138,10 @@ export async function signMessage(
       return bufferToB64(buffer);
     }
     default: {
-      throw neverGuard(method, `Unhandled sign method: "${method}"`);
+      throw neverGuard(
+        encodeMethod,
+        `Unhandled sign method: "${encodeMethod}"`,
+      );
     }
   }
 }
