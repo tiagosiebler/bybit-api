@@ -284,6 +284,7 @@ examples/
   rest-v5-proxies.ts
   rest-v5-proxies2.ts
   rest-v5-public.ts
+  RSA-sign.ts
   ws-api-client.ts
   ws-api-raw-events.ts
   ws-api-raw-promises.ts
@@ -2602,18 +2603,6 @@ limit: 50, // Maximum page size per request
 cursor: nextCursor || undefined, // Only send cursor if we have one
 ⋮----
 // Optional: Add a small delay to avoid rate limits
-
-================
-File: examples/rest-v5-private.ts
-================
-import { RestClientV5 } from '../src/index';
-⋮----
-// or
-// import { RestClientV5 } from 'bybit-api';
-⋮----
-/** Simple examples for private REST API calls with bybit's V5 REST APIs */
-⋮----
-// Trade USDT linear perps
 
 ================
 File: examples/rest-v5-proxies.ts
@@ -5410,40 +5399,6 @@ new BundleAnalyzerPlugin({
 module.exports = generateConfig('bybitapi');
 
 ================
-File: .gitignore
-================
-!.gitkeep
-.DS_STORE
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
-pids
-*.pid
-*.seed
-*.pid.lock
-node_modules/
-.npm
-.eslintcache
-.node_repl_history
-*.tgz
-.yarn-integrity
-.env
-.env.test
-.cache
-lib
-bundleReport.html
-.history/
-rawReq.ts
-localtest.sh
-localtest.ts
-privaterepotracker
-restClientRegex.ts
-repomix.sh
-
-================
 File: .jshintrc
 ================
 {
@@ -6452,6 +6407,56 @@ function setWsClientEventListeners(
 /** Simple examples for private REST API calls with bybit's V5 REST APIs */
 ⋮----
 // Trade USDT linear perps
+
+================
+File: examples/rest-v5-private.ts
+================
+import { RestClientV5 } from '../src/index';
+⋮----
+// or
+// import { RestClientV5 } from 'bybit-api';
+⋮----
+/** Simple examples for private REST API calls with bybit's V5 REST APIs */
+⋮----
+// Trade USDT linear perps
+
+================
+File: examples/RSA-sign.ts
+================
+/**
+ * Example demonstrating RSA authentication support in Bybit API client
+ *
+ * The client now automatically detects the key type and uses the appropriate
+ * signing algorithm:
+ * - HMAC keys (string): HMAC-SHA256 with hex encoding
+ * - RSA keys (PEM format): RSA-SHA256 with base64 encoding
+ */
+⋮----
+import { RestClientV5 } from '../src/rest-client-v5';
+⋮----
+// Example HMAC key (traditional API key)
+⋮----
+// Example RSA key (self-generated API key)
+// https://www.bybit.com/en/help-center/article/How-to-Create-an-RSA-Key-on-Bybit
+⋮----
+async function demonstrateAuthentication()
+⋮----
+// Example 1: Using HMAC (traditional API key)
+⋮----
+// This will automatically use HMAC-SHA256 with hex encoding
+⋮----
+// Example 2: Using RSA (self-generated API key)
+⋮----
+secret: rsaPrivateKey, // PEM format private key
+⋮----
+// This will automatically use RSA-SHA256 with base64 encoding
+⋮----
+// Demonstrate automatic key type detection
+⋮----
+console.log('HMAC key type:', getSignKeyType(hmacSecret)); // Should be 'HMAC'
+console.log('RSA key type:', getSignKeyType(rsaPrivateKey)); // Should be 'RSASSA-PKCS1-v1_5'
+⋮----
+// Only run if this file is executed directly
 
 ================
 File: examples/ws-public-v5.ts
@@ -7891,6 +7896,40 @@ File: src/types/websockets/index.ts
 
 
 ================
+File: .gitignore
+================
+!.gitkeep
+.DS_STORE
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+pids
+*.pid
+*.seed
+*.pid.lock
+node_modules/
+.npm
+.eslintcache
+.node_repl_history
+*.tgz
+.yarn-integrity
+.env
+.env.test
+.cache
+lib
+bundleReport.html
+.history/
+rawReq.ts
+localtest.sh
+localtest.ts
+privaterepotracker
+restClientRegex.ts
+repomix.sh
+
+================
 File: examples/apidoc/V5/P2P/upload-chat-file.js
 ================
 // Initialize the client with testnet mode
@@ -8064,6 +8103,65 @@ async function main()
 // The type for `wsAPICancelOrderResult` is automatically resolved to `WSAPIResponse<OrderResultV5, "order.cancel">`
 ⋮----
 // Start executing the example workflow
+
+================
+File: examples/ws-private-v5.ts
+================
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { DefaultLogger, WebsocketClient, WS_KEY_MAP } from '../src';
+⋮----
+// or
+// import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from 'bybit-api';
+⋮----
+// Create & inject a custom logger to enable the trace logging level (empty function)
+⋮----
+// trace: (...params) => console.log('trace', ...params),
+⋮----
+/**
+ * Prepare an instance of the WebSocket client. This client handles all aspects of connectivity for you:
+ * - Connections are opened when you subscribe to topics
+ * - If key & secret are provided, authentication is handled automatically
+ * - If you subscribe to topics from different v5 products (e.g. spot and linear perps),
+ *    subscription events are automatically routed to the different ws endpoints on bybit's side
+ * - Heartbeats/ping/pong/reconnects are all handled automatically.
+ *    If a connection drops, the client will clean it up, respawn a fresh connection and resubscribe for you.
+ */
+⋮----
+// testnet: false,
+// demoTrading: false, // set testnet to false, if you plan on using demo trading
+⋮----
+// console.log('raw message received ', JSON.stringify(data, null, 2));
+⋮----
+// wsClient.on('exception', (data) => {
+//   console.error('ws exception: ', data);
+// });
+⋮----
+/**
+ * For private V5 topics, us the subscribeV5() method on the ws client or use the original subscribe() method.
+ *
+ * Note: for private endpoints the "category" field is ignored since there is only one private endpoint
+ * (compared to one public one per category).
+ * The "category" is only needed for public topics since bybit has one endpoint for public events per category.
+ */
+⋮----
+// wsClient.subscribeV5('execution.fast', 'linear');
+// wsClient.subscribeV5('execution.fast.linear', 'linear');
+⋮----
+/**
+ * The following has the same effect as above, since there's only one private endpoint for V5 account topics:
+ */
+// wsClient.subscribe('position');
+// wsClient.subscribe('execution');
+// wsClient.subscribe(['order', 'wallet', 'greek']);
+⋮----
+// To unsubscribe from topics (after a 5 second delay, in this example):
+// setTimeout(() => {
+//   console.log('unsubscribing');
+//   wsClient.unsubscribeV5('execution', 'linear');
+// }, 5 * 1000);
+⋮----
+// Topics are tracked per websocket type
+// Get a list of subscribed topics (e.g. for public v3 spot topics) (after a 5 second delay)
 
 ================
 File: examples/ws-public-allLiquidations.ts
@@ -9075,65 +9173,6 @@ File: .eslintrc.cjs
 // 'plugin:require-extensions/recommended', // only once moved to ESM
 ⋮----
 // 'no-unused-vars': ['warn'],
-
-================
-File: examples/ws-private-v5.ts
-================
-/* eslint-disable @typescript-eslint/no-empty-function */
-import { DefaultLogger, WebsocketClient, WS_KEY_MAP } from '../src';
-⋮----
-// or
-// import { DefaultLogger, WS_KEY_MAP, WebsocketClient } from 'bybit-api';
-⋮----
-// Create & inject a custom logger to enable the trace logging level (empty function)
-⋮----
-// trace: (...params) => console.log('trace', ...params),
-⋮----
-/**
- * Prepare an instance of the WebSocket client. This client handles all aspects of connectivity for you:
- * - Connections are opened when you subscribe to topics
- * - If key & secret are provided, authentication is handled automatically
- * - If you subscribe to topics from different v5 products (e.g. spot and linear perps),
- *    subscription events are automatically routed to the different ws endpoints on bybit's side
- * - Heartbeats/ping/pong/reconnects are all handled automatically.
- *    If a connection drops, the client will clean it up, respawn a fresh connection and resubscribe for you.
- */
-⋮----
-// testnet: false,
-// demoTrading: false, // set testnet to false, if you plan on using demo trading
-⋮----
-// console.log('raw message received ', JSON.stringify(data, null, 2));
-⋮----
-// wsClient.on('exception', (data) => {
-//   console.error('ws exception: ', data);
-// });
-⋮----
-/**
- * For private V5 topics, us the subscribeV5() method on the ws client or use the original subscribe() method.
- *
- * Note: for private endpoints the "category" field is ignored since there is only one private endpoint
- * (compared to one public one per category).
- * The "category" is only needed for public topics since bybit has one endpoint for public events per category.
- */
-⋮----
-// wsClient.subscribeV5('execution.fast', 'linear');
-// wsClient.subscribeV5('execution.fast.linear', 'linear');
-⋮----
-/**
- * The following has the same effect as above, since there's only one private endpoint for V5 account topics:
- */
-// wsClient.subscribe('position');
-// wsClient.subscribe('execution');
-// wsClient.subscribe(['order', 'wallet', 'greek']);
-⋮----
-// To unsubscribe from topics (after a 5 second delay, in this example):
-// setTimeout(() => {
-//   console.log('unsubscribing');
-//   wsClient.unsubscribeV5('execution', 'linear');
-// }, 5 * 1000);
-⋮----
-// Topics are tracked per websocket type
-// Get a list of subscribed topics (e.g. for public v3 spot topics) (after a 5 second delay)
 
 ================
 File: src/types/request/v5-trade.ts
@@ -11096,8 +11135,8 @@ private async getWsAuthURLSuffix(): Promise<string>
 private async signMessage(
     paramsStr: string,
     secret: string,
-    method: 'hex' | 'base64',
-    algorithm: SignAlgorithm,
+    method?: 'hex' | 'base64',
+    algorithm: SignAlgorithm = 'SHA-256',
 ): Promise<string>
 ⋮----
 protected async getWsAuthRequestEvent(
@@ -11107,6 +11146,8 @@ protected async getWsAuthRequestEvent(
 private async getWsAuthSignature(
     wsKey: WsKey,
 ): Promise<
+⋮----
+undefined, // Let the function automatically determine encoding based on key type
 ⋮----
 private async signWSAPIRequest<TRequestParams = object>(
     requestEvent: WSAPIRequest<TRequestParams>,
@@ -11770,6 +11811,7 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSo
   - No action required. This is automatic for any API calls made with this SDK, for any user.
   - Read more in the announcement: [here](https://github.com/tiagosiebler/bybit-api/issues/458).
 - Actively maintained with a modern, promise-driven interface.
+- Automatic support for HMAC & RSA authentication. 
 - TypeScript support (thorough type declarations for most API requests & responses, including WS API).
 - JavaScript support (TypeScript not required but definitely recommended).
 - Thorough & automatic end-to-end tests making real API calls & WebSocket connections, validating any changes before they reach npm.
@@ -11919,6 +11961,7 @@ const { RestClientV5 } = require('bybit-api');
 // import { RestClientV5 } from 'bybit-api';
 
 const restClientOptions = {
+  /** supports HMAC & RSA API keys - automatically detected */
   /** Your API key */
   key: 'apiKeyHere',
 
@@ -12029,6 +12072,7 @@ const wsConfig = {
   /**
    * API credentials are optional. They are only required if you plan on using
    * any account-specific topics or the WS API
+   * supports HMAC & RSA API keys - automatically detected
    */
   key: 'yourAPIKeyHere',
   secret: 'yourAPISecretHere',
@@ -12180,6 +12224,7 @@ const { WS_KEY_MAP, WebsocketAPIClient } = require('bybit-api');
 // Create an instance of the WebsocketAPIClient. This is built on
 // top of the WebsocketClient and will automatically handle WebSocket
 // persistence and authentication for you.
+// supports HMAC & RSA API keys - automatically detected
 const wsClient = new WebsocketAPIClient(
   {
     key: 'yourApiKeyHere',
@@ -15007,7 +15052,7 @@ File: package.json
 ================
 {
   "name": "bybit-api",
-  "version": "4.1.17",
+  "version": "4.2.0",
   "description": "Complete & robust Node.js SDK for Bybit's REST APIs and WebSockets, with TypeScript & strong end to end tests.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
