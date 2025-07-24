@@ -79,6 +79,7 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSo
 - [Browser Usage](#browser-usage)
   - [Import](#import)
   - [Webpack](#webpack)
+- [Use with LLMs & AI](#use-with-llms--ai)
 
 ## Contributing
 - [Contributions & Thanks](#contributions--thanks)
@@ -598,6 +599,12 @@ Build a bundle using webpack:
 - `npm pack`
 
 The bundle can be found in `dist/`. Altough usage should be largely consistent, smaller differences will exist. Documentation is still TODO - contributions welcome.
+
+## Use with LLMs & AI
+
+This package is designed to be used with LLMs & AI. If you want to insert this package directly into an LLM for faster usage, you can use the `llms.txt` file in the root of this repository.
+
+This file contains AI optimised structure of all the functions in this package, and their parameters for easier use with any learning models or artificial intelligence.
 
 ---
 
