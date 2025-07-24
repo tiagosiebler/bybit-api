@@ -63,5 +63,13 @@ jobs:
         env:
           API_KEY_COM_RSA: ${{ secrets.API_KEY_COM_RSA }}
           API_SECRET_COM_RSA: ${{ secrets.API_SECRET_COM_RSA }}
+      
+      - name: Test RSA/HMAC automatic detection
+        run: npm run test -- rsa-auth.test.ts
+        env:
+          API_KEY_COM: ${{ secrets.API_KEY_COM }}
+          API_SECRET_COM: ${{ secrets.API_SECRET_COM }}
+          API_KEY_COM_RSA: ${{ secrets.API_KEY_COM_RSA }}
+          API_SECRET_COM_RSA: ${{ secrets.API_SECRET_COM_RSA }}
 
 
