@@ -101,3 +101,48 @@ export interface GetRepaymentHistoryFlexibleParamsV5 {
   limit?: string;
   cursor?: string;
 }
+
+// Fixed Loan Request Types
+
+export interface GetSupplyOrderQuoteFixedParamsV5 {
+  orderCurrency: string;
+  term?: string;
+  orderBy: 'apy' | 'term' | 'quantity';
+  sort?: number;
+  limit?: number;
+}
+
+export interface GetBorrowOrderQuoteFixedParamsV5 {
+  orderCurrency: string;
+  term?: string;
+  orderBy: 'apy' | 'term' | 'quantity';
+  sort?: number;
+  limit?: number;
+}
+
+export interface CreateBorrowOrderFixedParamsV5 {
+  orderCurrency: string;
+  orderAmount: string;
+  annualRate: string;
+  term: string;
+  autoRepay?: string;
+  collateralList?: {
+    currency: string;
+    amount: string;
+  }[];
+}
+
+export interface CreateSupplyOrderFixedParamsV5 {
+  orderCurrency: string;
+  orderAmount: string;
+  annualRate: string;
+  term: string;
+}
+
+export interface CancelBorrowOrderFixedParamsV5 {
+  orderId: string;
+}
+
+export interface CancelSupplyOrderFixedParamsV5 {
+  orderId: string;
+}

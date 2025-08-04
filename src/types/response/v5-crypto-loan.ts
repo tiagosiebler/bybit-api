@@ -216,3 +216,27 @@ export interface RepaymentHistoryFlexibleV5 {
   repayTime: number;
   repayType: number;
 }
+
+// Fixed Loan Types
+
+export interface SupplyOrderQuoteFixedV5 {
+  orderCurrency: string;
+  term: number;
+  annualRate: string;
+  qty: string;
+}
+
+export interface BorrowOrderQuoteFixedV5 {
+  orderCurrency: string;
+  term: number;
+  annualRate: string;
+  qty: string;
+}
+
+export interface CreateBorrowOrderFixedV5 {
+  orderId: string;
+}
+
+export interface CreateSupplyOrderFixedV5 {
+  orderId: string;
+}
