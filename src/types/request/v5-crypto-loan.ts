@@ -67,3 +67,37 @@ export interface GetCollateralAdjustmentHistoryNewParamsV5 {
   limit?: string;
   cursor?: string;
 }
+
+// Flexible Loan Request Types
+
+export interface BorrowFlexibleParamsV5 {
+  loanCurrency: string;
+  loanAmount: string;
+  collateralList?: {
+    currency: string;
+    amount: string;
+  }[];
+}
+
+export interface RepayFlexibleParamsV5 {
+  loanCurrency: string;
+  amount: string;
+}
+
+export interface GetOngoingFlexibleLoansParamsV5 {
+  loanCurrency?: string;
+}
+
+export interface GetBorrowHistoryFlexibleParamsV5 {
+  orderId?: string;
+  loanCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+
+export interface GetRepaymentHistoryFlexibleParamsV5 {
+  repayId?: string;
+  loanCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}

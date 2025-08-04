@@ -31,6 +31,10 @@ import {
   // New Crypto Loan Types
   BorrowableCoinNewV5,
   BorrowCryptoLoanParamsV5,
+  // Flexible Loan Types
+  BorrowFlexibleParamsV5,
+  BorrowFlexibleV5,
+  BorrowHistoryFlexibleV5,
   BorrowHistoryRecordV5,
   BrokerIssuedVoucherV5,
   BrokerVoucherSpecV5,
@@ -85,6 +89,7 @@ import {
   GetAllowedDepositCoinInfoParamsV5,
   GetAssetInfoParamsV5,
   GetBorrowableCoinsNewParamsV5,
+  GetBorrowHistoryFlexibleParamsV5,
   GetBorrowHistoryParamsV5,
   GetBrokerIssuedVoucherParamsV5,
   GetBrokerSubAccountDepositsV5,
@@ -117,6 +122,7 @@ import {
   GetMarkPriceKlineParamsV5,
   GetMaxCollateralAmountNewParamsV5,
   GetMovePositionHistoryParamsV5,
+  GetOngoingFlexibleLoansParamsV5,
   GetOpenInterestParamsV5,
   GetOptionDeliveryPriceParamsV5,
   GetOrderbookParamsV5,
@@ -135,6 +141,7 @@ import {
   GetPreUpgradeTransactionLogParamsV5,
   GetPreUpgradeUSDCSessionParamsV5,
   GetPublicTradingHistoryParamsV5,
+  GetRepaymentHistoryFlexibleParamsV5,
   GetRepaymentHistoryParamsV5,
   GetRiskLimitParamsV5,
   GetSettlementRecordParamsV5,
@@ -169,6 +176,7 @@ import {
   MovePositionResultV5,
   OHLCKlineV5,
   OHLCVKlineV5,
+  OngoingFlexibleLoanV5,
   OpenInterestResponseV5,
   OptionDeliveryPriceV5,
   OrderbookResponseV5,
@@ -194,8 +202,11 @@ import {
   PreUpgradeTransaction,
   PreUpgradeUSDCSessionSettlement,
   PublicTradeV5,
+  RepayFlexibleParamsV5,
+  RepayFlexibleV5,
   RepayLiabilityParamsV5,
   RepayLiabilityResultV5,
+  RepaymentHistoryFlexibleV5,
   RepaymentHistoryV5,
   RequestConvertQuoteParamsV5,
   RiskLimitV5,
@@ -2683,6 +2694,83 @@ export class RestClientV5 extends BaseRestClient {
     APIResponseV3WithTime<CryptoLoanPositionNewV5>
   > {
     return this.getPrivate('/v5/crypto-loan-common/position');
+  }
+
+  /**
+   *
+   ****** Crypto Loan New - Flexible Loan
+   *
+   */
+
+  /**
+   * Borrow Flexible Loan
+   * Fully or partially repay a loan. If interest is due, that is paid off first, with the loaned amount being paid off only after due interest.
+   *
+   * Permission: "Spot trade"
+   */
+  borrowFlexible(
+    params: BorrowFlexibleParamsV5,
+  ): Promise<APIResponseV3WithTime<BorrowFlexibleV5>> {
+    return this.postPrivate('/v5/crypto-loan-flexible/borrow', params);
+  }
+
+  /**
+   * Repay Flexible Loan
+   * Fully or partially repay a loan. If interest is due, that is paid off first, with the loaned amount being paid off only after due interest.
+   *
+   * Permission: "Spot trade"
+   */
+  repayFlexible(
+    params: RepayFlexibleParamsV5,
+  ): Promise<APIResponseV3WithTime<RepayFlexibleV5>> {
+    return this.postPrivate('/v5/crypto-loan-flexible/repay', params);
+  }
+
+  /**
+   * Get Flexible Loans
+   * Query for your ongoing loans
+   *
+   * Permission: "Spot trade"
+   */
+  getOngoingFlexibleLoans(params?: GetOngoingFlexibleLoansParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: OngoingFlexibleLoanV5[];
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-flexible/ongoing-coin', params);
+  }
+
+  /**
+   * Get Borrow Orders History
+   *
+   * Permission: "Spot trade"
+   */
+  getBorrowHistoryFlexible(params?: GetBorrowHistoryFlexibleParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: BorrowHistoryFlexibleV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-flexible/borrow-history', params);
+  }
+
+  /**
+   * Get Repayment Orders History
+   *
+   * Permission: "Spot trade"
+   */
+  getRepaymentHistoryFlexible(
+    params?: GetRepaymentHistoryFlexibleParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      list: RepaymentHistoryFlexibleV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate(
+      '/v5/crypto-loan-flexible/repayment-history',
+      params,
+    );
   }
 
   /**

@@ -183,3 +183,36 @@ export interface CryptoLoanPositionNewV5 {
   totalDebt: string;
   totalSupply: string;
 }
+
+// Flexible Loan Types
+
+export interface BorrowFlexibleV5 {
+  orderId: string;
+}
+
+export interface RepayFlexibleV5 {
+  repayId: string;
+}
+
+export interface OngoingFlexibleLoanV5 {
+  hourlyInterestRate: string;
+  loanCurrency: string;
+  totalDebt: string;
+}
+
+export interface BorrowHistoryFlexibleV5 {
+  borrowTime: number;
+  initialLoanAmount: string;
+  loanCurrency: string;
+  orderId: string;
+  status: number;
+}
+
+export interface RepaymentHistoryFlexibleV5 {
+  loanCurrency: string;
+  repayAmount: string;
+  repayId: string;
+  repayStatus: number;
+  repayTime: number;
+  repayType: number;
+}
