@@ -8,9 +8,9 @@ const client = new RestClientV5({
   secret: 'YOUR_API_SECRET',
 });
 
-async function adjustCollateralAmount() {
+async function updateCollateralAmount() {
   try {
-    const response = await client.adjustCollateralAmountNew({
+    const response = await client.updateCollateralAmount({
       currency: 'BTC',
       amount: '0.08',
       direction: '1', // 0: add collateral; 1: reduce collateral
@@ -22,4 +22,4 @@ async function adjustCollateralAmount() {
   }
 }
 
-adjustCollateralAmount();
+updateCollateralAmount();

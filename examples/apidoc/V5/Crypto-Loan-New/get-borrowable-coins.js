@@ -6,9 +6,9 @@ const client = new RestClientV5({
   testnet: true,
 });
 
-async function getBorrowableCoins() {
+async function getLoanBorrowableCoins() {
   try {
-    const response = await client.getBorrowableCoinsNew({
+    const response = await client.getLoanBorrowableCoins({
       currency: 'ETH',
       vipLevel: 'VIP5',
     });
@@ -19,4 +19,4 @@ async function getBorrowableCoins() {
   }
 }
 
-getBorrowableCoins();
+getLoanBorrowableCoins();

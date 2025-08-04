@@ -2457,7 +2457,7 @@ export class RestClientV5 extends BaseRestClient {
    * Get Collateral Coins
    *
    * INFO: Do not need authentication
-   * @deprecated
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    */
   getCollateralCoins(params?: {
     vipLevel?: string;
@@ -2474,7 +2474,7 @@ export class RestClientV5 extends BaseRestClient {
    * Get Borrowable Coins
    *
    * INFO: Do not need authentication
-   * @deprecated
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    */
   getBorrowableCoins(params?: {
     vipLevel?: string;
@@ -2492,7 +2492,7 @@ export class RestClientV5 extends BaseRestClient {
    * Query the account borrowable/collateral limit
    *
    * Permission: "Spot trade"
-   * @deprecated
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    */
   getAccountBorrowCollateralLimit(params: {
     loanCurrency: string;
@@ -2675,7 +2675,7 @@ export class RestClientV5 extends BaseRestClient {
    * Get Borrowable Coins New
    *
    */
-  getBorrowableCoinsNew(params?: GetBorrowableCoinsParamsV5): Promise<
+  getLoanBorrowableCoins(params?: GetBorrowableCoinsParamsV5): Promise<
     APIResponseV3WithTime<{
       list: BorrowableCoinV5[];
     }>
@@ -2687,7 +2687,7 @@ export class RestClientV5 extends BaseRestClient {
    * Get Collateral Coins New
    *
    */
-  getCollateralCoinsNew(
+  getLoanCollateralCoins(
     params?: GetCollateralCoinsParamsV5,
   ): Promise<APIResponseV3WithTime<CollateralDataV5>> {
     return this.get('/v5/crypto-loan-common/collateral-data', params);
@@ -2697,7 +2697,7 @@ export class RestClientV5 extends BaseRestClient {
    * Get Max. Allowed Collateral Reduction Amount New
    *
    */
-  getMaxCollateralAmountNew(params: GetMaxCollateralAmountParamsV5): Promise<
+  getMaxCollateralAmount(params: GetMaxCollateralAmountParamsV5): Promise<
     APIResponseV3WithTime<{
       maxCollateralAmount: string;
     }>
@@ -2712,7 +2712,7 @@ export class RestClientV5 extends BaseRestClient {
    * Adjust Collateral Amount New
    * You can increase or reduce your collateral amount. When you reduce, please obey the Get Max. Allowed Collateral Reduction Amount
    */
-  adjustCollateralAmountNew(
+  updateCollateralAmount(
     params: AdjustCollateralAmountParamsV5,
   ): Promise<APIResponseV3WithTime<AdjustCollateralAmountV5>> {
     return this.postPrivate('/v5/crypto-loan-common/adjust-ltv', params);
@@ -2723,7 +2723,7 @@ export class RestClientV5 extends BaseRestClient {
    * Query for your LTV adjustment history.
    *
    */
-  getCollateralAdjustmentHistoryNew(
+  getCollateralAdjustmentHistory(
     params?: GetCollateralAdjustmentHistoryParamsV5,
   ): Promise<
     APIResponseV3WithTime<{
@@ -2738,7 +2738,7 @@ export class RestClientV5 extends BaseRestClient {
    * Get Crypto Loan Position New
    *
    */
-  getCryptoLoanPositionNew(): Promise<
+  getCryptoLoanPosition(): Promise<
     APIResponseV3WithTime<CryptoLoanPositionV5>
   > {
     return this.getPrivate('/v5/crypto-loan-common/position');

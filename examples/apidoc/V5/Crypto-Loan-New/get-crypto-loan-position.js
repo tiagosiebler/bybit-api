@@ -10,7 +10,7 @@ const client = new RestClientV5({
 
 async function getCryptoLoanPosition() {
   try {
-    const response = await client.getCryptoLoanPositionNew();
+    const response = await client.getCryptoLoanPosition();
 
     console.log(response);
   } catch (error) {

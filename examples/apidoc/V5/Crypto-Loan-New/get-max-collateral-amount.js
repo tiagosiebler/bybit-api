@@ -10,7 +10,7 @@ const client = new RestClientV5({
 
 async function getMaxCollateralAmount() {
   try {
-    const response = await client.getMaxCollateralAmountNew({
+    const response = await client.getMaxCollateralAmount({
       currency: 'BTC',
     });
 

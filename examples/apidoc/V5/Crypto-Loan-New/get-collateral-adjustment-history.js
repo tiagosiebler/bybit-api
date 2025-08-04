@@ -10,7 +10,7 @@ const client = new RestClientV5({
 
 async function getCollateralAdjustmentHistory() {
   try {
-    const response = await client.getCollateralAdjustmentHistoryNew({
+    const response = await client.getCollateralAdjustmentHistory({
       limit: '2',
       collateralCurrency: 'BTC',
     });

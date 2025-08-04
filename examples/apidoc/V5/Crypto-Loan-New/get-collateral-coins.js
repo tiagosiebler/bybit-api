@@ -6,9 +6,9 @@ const client = new RestClientV5({
   testnet: true,
 });
 
-async function getCollateralCoins() {
+async function getLoanCollateralCoins() {
   try {
-    const response = await client.getCollateralCoinsNew({
+    const response = await client.getLoanCollateralCoins({
       currency: 'BTC',
     });
 
