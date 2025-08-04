@@ -6,10 +6,11 @@ const client = new RestClientV5({
   secret: 'YOUR_API_SECRET',
 });
 
-async function getMaxCollateralAmount() {
+async function getCollateralAdjustmentHistory() {
   try {
-    const response = await client.getMaxCollateralAmountNew({
-      currency: 'BTC',
+    const response = await client.getCollateralAdjustmentHistoryNew({
+      limit: '2',
+      collateralCurrency: 'BTC',
     });
 
     console.log(response);
@@ -18,4 +19,4 @@ async function getMaxCollateralAmount() {
   }
 }
 
-getMaxCollateralAmount();
+getCollateralAdjustmentHistory();

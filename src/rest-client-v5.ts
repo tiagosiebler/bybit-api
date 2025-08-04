@@ -9,6 +9,8 @@ import {
   AccountTypeV5,
   AddOrReduceMarginParamsV5,
   AddOrReduceMarginResultV5,
+  AdjustCollateralAmountNewParamsV5,
+  AdjustCollateralAmountNewV5,
   AffiliateUserInfoV5,
   AffiliateUserListItemV5,
   AllCoinsBalanceV5,
@@ -43,6 +45,7 @@ import {
   CoinExchangeRecordV5,
   CoinGreeksV5,
   CoinInfoV5,
+  CollateralAdjustmentHistoryNewV5,
   CollateralDataNewV5,
   CollateralInfoV5,
   CompletedLoanOrderV5,
@@ -57,6 +60,7 @@ import {
   CreateSubApiKeyResultV5,
   CreateSubMemberParamsV5,
   CreateSubMemberResultV5,
+  CryptoLoanPositionNewV5,
   CursorListV5,
   CursorRowsV5,
   DCPInfoV5,
@@ -88,6 +92,7 @@ import {
   GetClosedOptionsPositionsParamsV5,
   GetClosedPnLParamsV5,
   GetCoinExchangeRecordParamsV5,
+  GetCollateralAdjustmentHistoryNewParamsV5,
   GetCollateralCoinsNewParamsV5,
   GetCompletedLoanOrderHistoryParamsV5,
   GetConvertHistoryParamsV5,
@@ -2638,6 +2643,46 @@ export class RestClientV5 extends BaseRestClient {
       '/v5/crypto-loan-common/max-collateral-amount',
       params,
     );
+  }
+
+  /**
+   * Adjust Collateral Amount New
+   * You can increase or reduce your collateral amount. When you reduce, please obey the Get Max. Allowed Collateral Reduction Amount
+   *
+   * Permission: "Spot trade"
+   */
+  adjustCollateralAmountNew(
+    params: AdjustCollateralAmountNewParamsV5,
+  ): Promise<APIResponseV3WithTime<AdjustCollateralAmountNewV5>> {
+    return this.postPrivate('/v5/crypto-loan-common/adjust-ltv', params);
+  }
+
+  /**
+   * Get Collateral Adjustment History New
+   * Query for your LTV adjustment history.
+   *
+   * Permission: "Spot trade"
+   */
+  getCollateralAdjustmentHistoryNew(
+    params?: GetCollateralAdjustmentHistoryNewParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      list: CollateralAdjustmentHistoryNewV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-common/adjustment-history', params);
+  }
+
+  /**
+   * Get Crypto Loan Position New
+   *
+   * Permission: "Spot trade"
+   */
+  getCryptoLoanPositionNew(): Promise<
+    APIResponseV3WithTime<CryptoLoanPositionNewV5>
+  > {
+    return this.getPrivate('/v5/crypto-loan-common/position');
   }
 
   /**

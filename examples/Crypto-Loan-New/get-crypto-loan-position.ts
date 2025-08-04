@@ -2,14 +2,13 @@ import { RestClientV5 } from '../../src';
 
 const client = new RestClientV5({
   testnet: true,
+  key: 'YOUR_API_KEY',
+  secret: 'YOUR_API_SECRET',
 });
 
-async function getBorrowableCoins() {
+async function getCryptoLoanPosition() {
   try {
-    const response = await client.getBorrowableCoinsNew({
-      currency: 'ETH',
-      vipLevel: 'VIP5',
-    });
+    const response = await client.getCryptoLoanPositionNew();
 
     console.log(response);
   } catch (error) {
@@ -17,4 +16,4 @@ async function getBorrowableCoins() {
   }
 }
 
-getBorrowableCoins();
+getCryptoLoanPosition();

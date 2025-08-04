@@ -10,10 +10,7 @@ async function getCollateralCoins() {
       currency: 'BTC',
     });
 
-    console.log(
-      'Get Collateral Coins Response:',
-      JSON.stringify(response, null, 2),
-    );
+    console.log(response);
   } catch (error) {
     console.error('Error:', error);
   }

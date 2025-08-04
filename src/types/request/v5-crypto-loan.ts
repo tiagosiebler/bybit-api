@@ -54,3 +54,16 @@ export interface GetCollateralCoinsNewParamsV5 {
 export interface GetMaxCollateralAmountNewParamsV5 {
   currency: string;
 }
+
+export interface AdjustCollateralAmountNewParamsV5 {
+  currency: string;
+  amount: string;
+  direction: '0' | '1';
+}
+
+export interface GetCollateralAdjustmentHistoryNewParamsV5 {
+  adjustId?: string;
+  collateralCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
