@@ -26,6 +26,8 @@ import {
   BatchCreateOrderResultV5,
   BatchOrderParamsV5,
   BatchOrdersRetExtInfoV5,
+  // New Crypto Loan Types
+  BorrowableCoinNewV5,
   BorrowCryptoLoanParamsV5,
   BorrowHistoryRecordV5,
   BrokerIssuedVoucherV5,
@@ -41,6 +43,7 @@ import {
   CoinExchangeRecordV5,
   CoinGreeksV5,
   CoinInfoV5,
+  CollateralDataNewV5,
   CollateralInfoV5,
   CompletedLoanOrderV5,
   ConfirmNewRiskLimitParamsV5,
@@ -77,6 +80,7 @@ import {
   GetAllCoinsBalanceParamsV5,
   GetAllowedDepositCoinInfoParamsV5,
   GetAssetInfoParamsV5,
+  GetBorrowableCoinsNewParamsV5,
   GetBorrowHistoryParamsV5,
   GetBrokerIssuedVoucherParamsV5,
   GetBrokerSubAccountDepositsV5,
@@ -84,6 +88,7 @@ import {
   GetClosedOptionsPositionsParamsV5,
   GetClosedPnLParamsV5,
   GetCoinExchangeRecordParamsV5,
+  GetCollateralCoinsNewParamsV5,
   GetCompletedLoanOrderHistoryParamsV5,
   GetConvertHistoryParamsV5,
   GetDeliveryPriceParamsV5,
@@ -105,6 +110,7 @@ import {
   GetLoanLTVAdjustmentHistoryParamsV5,
   GetLongShortRatioParamsV5,
   GetMarkPriceKlineParamsV5,
+  GetMaxCollateralAmountNewParamsV5,
   GetMovePositionHistoryParamsV5,
   GetOpenInterestParamsV5,
   GetOptionDeliveryPriceParamsV5,
@@ -133,6 +139,7 @@ import {
   GetSpreadTradeHistoryParamsV5,
   GetSubAccountAllApiKeysParamsV5,
   GetSubAccountDepositRecordParamsV5,
+  GetSystemStatusParamsV5,
   GetTickersParamsV5,
   GetTransactionLogParamsV5,
   GetUniversalTransferRecordsParamsV5,
@@ -149,6 +156,7 @@ import {
   LoanLTVAdjustmentHistoryV5,
   LongShortRatioV5,
   MarkP2POrderAsPaidParamsV5,
+  MaxCollateralAmountNewV5,
   MMPModifyParamsV5,
   MMPStateV5,
   MovePositionHistoryV5,
@@ -209,6 +217,7 @@ import {
   SubmitStakeRedeemParamsV5,
   SwitchIsolatedMarginParamsV5,
   SwitchPositionModeParamsV5,
+  SystemStatusItemV5,
   TickerLinearInverseV5,
   TickerOptionV5,
   TickerSpotV5,
@@ -306,6 +315,14 @@ export class RestClientV5 extends BaseRestClient {
    ****** Misc Bybit APIs
    *
    */
+
+  getSystemStatus(params?: GetSystemStatusParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: SystemStatusItemV5[];
+    }>
+  > {
+    return this.getPrivate('/v5/system/status', params);
+  }
 
   getClientType() {
     return REST_CLIENT_TYPE_ENUM.v5;
@@ -2577,6 +2594,50 @@ export class RestClientV5 extends BaseRestClient {
     }>
   > {
     return this.getPrivate('/v5/crypto-loan/adjustment-history', params);
+  }
+
+  /**
+   *
+   ****** Crypto Loan New
+   *
+   */
+
+  /**
+   * Get Borrowable Coins New
+   *
+   * INFO: Do not need authentication
+   */
+  getBorrowableCoinsNew(params?: GetBorrowableCoinsNewParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: BorrowableCoinNewV5[];
+    }>
+  > {
+    return this.get('/v5/crypto-loan-common/loanable-data', params);
+  }
+
+  /**
+   * Get Collateral Coins New
+   *
+   * INFO: Do not need authentication
+   */
+  getCollateralCoinsNew(
+    params?: GetCollateralCoinsNewParamsV5,
+  ): Promise<APIResponseV3WithTime<CollateralDataNewV5>> {
+    return this.get('/v5/crypto-loan-common/collateral-data', params);
+  }
+
+  /**
+   * Get Max. Allowed Collateral Reduction Amount New
+   *
+   * Permission: "Spot trade"
+   */
+  getMaxCollateralAmountNew(
+    params: GetMaxCollateralAmountNewParamsV5,
+  ): Promise<APIResponseV3WithTime<MaxCollateralAmountNewV5>> {
+    return this.getPrivate(
+      '/v5/crypto-loan-common/max-collateral-amount',
+      params,
+    );
   }
 
   /**

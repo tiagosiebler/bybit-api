@@ -89,3 +89,49 @@ export interface LoanLTVAdjustmentHistoryV5 {
   direction: number;
   amount: string;
 }
+
+// New Crypto Loan Types
+
+export interface BorrowableCoinNewV5 {
+  currency: string;
+  fixedBorrowable: boolean;
+  fixedBorrowingAccuracy: number;
+  flexibleBorrowable: boolean;
+  flexibleBorrowingAccuracy: number;
+  maxBorrowingAmount: string;
+  minFixedBorrowingAmount: string;
+  minFlexibleBorrowingAmount: string;
+  vipLevel: string;
+  flexibleAnnualizedInterestRate: string;
+  annualizedInterestRate7D: string;
+  annualizedInterestRate14D: string;
+  annualizedInterestRate30D: string;
+  annualizedInterestRate60D: string;
+  annualizedInterestRate90D: string;
+  annualizedInterestRate180D: string;
+}
+
+export interface CollateralRatioV5 {
+  collateralRatio: string;
+  maxValue: string;
+  minValue: string;
+}
+
+export interface CollateralRatioConfigV5 {
+  collateralRatioList: CollateralRatioV5[];
+  currencies: string;
+}
+
+export interface CurrencyLiquidationV5 {
+  currency: string;
+  liquidationOrder: number;
+}
+
+export interface CollateralDataNewV5 {
+  collateralRatioConfigList: CollateralRatioConfigV5[];
+  currencyLiquidationList: CurrencyLiquidationV5[];
+}
+
+export interface MaxCollateralAmountNewV5 {
+  maxCollateralAmount: string;
+}

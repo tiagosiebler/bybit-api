@@ -39,3 +39,18 @@ export interface GetLoanLTVAdjustmentHistoryParamsV5 {
   limit?: string;
   cursor?: string;
 }
+
+// New Crypto Loan Request Types
+
+export interface GetBorrowableCoinsNewParamsV5 {
+  vipLevel?: string;
+  currency?: string;
+}
+
+export interface GetCollateralCoinsNewParamsV5 {
+  currency?: string;
+}
+
+export interface GetMaxCollateralAmountNewParamsV5 {
+  currency: string;
+}

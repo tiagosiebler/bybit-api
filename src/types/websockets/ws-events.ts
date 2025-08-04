@@ -17,6 +17,7 @@ import {
   PositionSideV5,
   PositionStatusV5,
   StopOrderTypeV5,
+  SystemStatusItemV5,
   TPSLModeV5,
   TradeModeV5,
 } from '../shared-v5';
@@ -524,4 +525,10 @@ export type WSPriceLimitEventV5 = WSPublicTopicEventV5<
   string,
   'snapshot',
   WSPriceLimitV5
+>;
+
+export type WSSystemStatusEventV5 = WSPublicTopicEventV5<
+  'system.status',
+  'snapshot',
+  SystemStatusItemV5[]
 >;
