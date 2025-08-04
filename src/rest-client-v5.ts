@@ -9,8 +9,8 @@ import {
   AccountTypeV5,
   AddOrReduceMarginParamsV5,
   AddOrReduceMarginResultV5,
-  AdjustCollateralAmountNewParamsV5,
-  AdjustCollateralAmountNewV5,
+  AdjustCollateralAmountParamsV5,
+  AdjustCollateralAmountV5,
   AffiliateUserInfoV5,
   AffiliateUserListItemV5,
   AllCoinsBalanceV5,
@@ -28,11 +28,9 @@ import {
   BatchCreateOrderResultV5,
   BatchOrderParamsV5,
   BatchOrdersRetExtInfoV5,
-  // New Crypto Loan Types
-  BorrowableCoinNewV5,
+  BorrowableCoinV5,
   BorrowContractInfoFixedV5,
   BorrowCryptoLoanParamsV5,
-  // Flexible Loan Types
   BorrowFlexibleParamsV5,
   BorrowFlexibleV5,
   BorrowHistoryFlexibleV5,
@@ -54,8 +52,8 @@ import {
   CoinExchangeRecordV5,
   CoinGreeksV5,
   CoinInfoV5,
-  CollateralAdjustmentHistoryNewV5,
-  CollateralDataNewV5,
+  CollateralAdjustmentHistoryV5,
+  CollateralDataV5,
   CollateralInfoV5,
   CompletedLoanOrderV5,
   ConfirmNewRiskLimitParamsV5,
@@ -73,7 +71,7 @@ import {
   CreateSubMemberResultV5,
   CreateSupplyOrderFixedParamsV5,
   CreateSupplyOrderFixedV5,
-  CryptoLoanPositionNewV5,
+  CryptoLoanPositionV5,
   CursorListV5,
   CursorRowsV5,
   DCPInfoV5,
@@ -97,8 +95,7 @@ import {
   GetAllCoinsBalanceParamsV5,
   GetAllowedDepositCoinInfoParamsV5,
   GetAssetInfoParamsV5,
-  GetBorrowableCoinsNewParamsV5,
-  // Additional Fixed Loan Types
+  GetBorrowableCoinsParamsV5,
   GetBorrowContractInfoFixedParamsV5,
   GetBorrowHistoryFlexibleParamsV5,
   GetBorrowHistoryParamsV5,
@@ -110,8 +107,8 @@ import {
   GetClosedOptionsPositionsParamsV5,
   GetClosedPnLParamsV5,
   GetCoinExchangeRecordParamsV5,
-  GetCollateralAdjustmentHistoryNewParamsV5,
-  GetCollateralCoinsNewParamsV5,
+  GetCollateralAdjustmentHistoryParamsV5,
+  GetCollateralCoinsParamsV5,
   GetCompletedLoanOrderHistoryParamsV5,
   GetConvertHistoryParamsV5,
   GetDeliveryPriceParamsV5,
@@ -133,7 +130,7 @@ import {
   GetLoanLTVAdjustmentHistoryParamsV5,
   GetLongShortRatioParamsV5,
   GetMarkPriceKlineParamsV5,
-  GetMaxCollateralAmountNewParamsV5,
+  GetMaxCollateralAmountParamsV5,
   GetMovePositionHistoryParamsV5,
   GetOngoingFlexibleLoansParamsV5,
   GetOpenInterestParamsV5,
@@ -167,7 +164,6 @@ import {
   GetSubAccountDepositRecordParamsV5,
   GetSupplyContractInfoFixedParamsV5,
   GetSupplyOrderInfoFixedParamsV5,
-  // Fixed Loan Types
   GetSupplyOrderQuoteFixedParamsV5,
   GetSystemStatusParamsV5,
   GetTickersParamsV5,
@@ -186,7 +182,6 @@ import {
   LoanLTVAdjustmentHistoryV5,
   LongShortRatioV5,
   MarkP2POrderAsPaidParamsV5,
-  MaxCollateralAmountNewV5,
   MMPModifyParamsV5,
   MMPStateV5,
   MovePositionHistoryV5,
@@ -2680,9 +2675,9 @@ export class RestClientV5 extends BaseRestClient {
    * Get Borrowable Coins New
    *
    */
-  getBorrowableCoinsNew(params?: GetBorrowableCoinsNewParamsV5): Promise<
+  getBorrowableCoinsNew(params?: GetBorrowableCoinsParamsV5): Promise<
     APIResponseV3WithTime<{
-      list: BorrowableCoinNewV5[];
+      list: BorrowableCoinV5[];
     }>
   > {
     return this.get('/v5/crypto-loan-common/loanable-data', params);
@@ -2693,8 +2688,8 @@ export class RestClientV5 extends BaseRestClient {
    *
    */
   getCollateralCoinsNew(
-    params?: GetCollateralCoinsNewParamsV5,
-  ): Promise<APIResponseV3WithTime<CollateralDataNewV5>> {
+    params?: GetCollateralCoinsParamsV5,
+  ): Promise<APIResponseV3WithTime<CollateralDataV5>> {
     return this.get('/v5/crypto-loan-common/collateral-data', params);
   }
 
@@ -2702,9 +2697,11 @@ export class RestClientV5 extends BaseRestClient {
    * Get Max. Allowed Collateral Reduction Amount New
    *
    */
-  getMaxCollateralAmountNew(
-    params: GetMaxCollateralAmountNewParamsV5,
-  ): Promise<APIResponseV3WithTime<MaxCollateralAmountNewV5>> {
+  getMaxCollateralAmountNew(params: GetMaxCollateralAmountParamsV5): Promise<
+    APIResponseV3WithTime<{
+      maxCollateralAmount: string;
+    }>
+  > {
     return this.getPrivate(
       '/v5/crypto-loan-common/max-collateral-amount',
       params,
@@ -2716,8 +2713,8 @@ export class RestClientV5 extends BaseRestClient {
    * You can increase or reduce your collateral amount. When you reduce, please obey the Get Max. Allowed Collateral Reduction Amount
    */
   adjustCollateralAmountNew(
-    params: AdjustCollateralAmountNewParamsV5,
-  ): Promise<APIResponseV3WithTime<AdjustCollateralAmountNewV5>> {
+    params: AdjustCollateralAmountParamsV5,
+  ): Promise<APIResponseV3WithTime<AdjustCollateralAmountV5>> {
     return this.postPrivate('/v5/crypto-loan-common/adjust-ltv', params);
   }
 
@@ -2727,10 +2724,10 @@ export class RestClientV5 extends BaseRestClient {
    *
    */
   getCollateralAdjustmentHistoryNew(
-    params?: GetCollateralAdjustmentHistoryNewParamsV5,
+    params?: GetCollateralAdjustmentHistoryParamsV5,
   ): Promise<
     APIResponseV3WithTime<{
-      list: CollateralAdjustmentHistoryNewV5[];
+      list: CollateralAdjustmentHistoryV5[];
       nextPageCursor: string;
     }>
   > {
@@ -2742,7 +2739,7 @@ export class RestClientV5 extends BaseRestClient {
    *
    */
   getCryptoLoanPositionNew(): Promise<
-    APIResponseV3WithTime<CryptoLoanPositionNewV5>
+    APIResponseV3WithTime<CryptoLoanPositionV5>
   > {
     return this.getPrivate('/v5/crypto-loan-common/position');
   }

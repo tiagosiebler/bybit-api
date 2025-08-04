@@ -92,7 +92,7 @@ export interface LoanLTVAdjustmentHistoryV5 {
 
 // New Crypto Loan Types
 
-export interface BorrowableCoinNewV5 {
+export interface BorrowCoinV5 {
   currency: string;
   fixedBorrowable: boolean;
   fixedBorrowingAccuracy: number;
@@ -127,22 +127,18 @@ export interface CurrencyLiquidationV5 {
   liquidationOrder: number;
 }
 
-export interface CollateralDataNewV5 {
+export interface CollateralDataV5 {
   collateralRatioConfigList: CollateralRatioConfigV5[];
   currencyLiquidationList: CurrencyLiquidationV5[];
 }
 
-export interface MaxCollateralAmountNewV5 {
-  maxCollateralAmount: string;
-}
-
 // Additional New Crypto Loan Types
 
-export interface AdjustCollateralAmountNewV5 {
+export interface AdjustCollateralAmountV5 {
   adjustId: number;
 }
 
-export interface CollateralAdjustmentHistoryNewV5 {
+export interface CollateralAdjustmentHistoryV5 {
   adjustId: number;
   adjustTime: number;
   afterLTV: string;
@@ -153,7 +149,7 @@ export interface CollateralAdjustmentHistoryNewV5 {
   status: number;
 }
 
-export interface BorrowListNewV5 {
+export interface BorrowListV5 {
   fixedTotalDebt: string;
   fixedTotalDebtUSD: string;
   flexibleHourlyInterestRate: string;
@@ -162,23 +158,23 @@ export interface BorrowListNewV5 {
   loanCurrency: string;
 }
 
-export interface CollateralListNewV5 {
+export interface CollateralListV5 {
   amount: string;
   amountUSD: string;
   currency: string;
   ltv: string;
 }
 
-export interface SupplyListNewV5 {
+export interface SupplyListV5 {
   amount: string;
   amountUSD: string;
   currency: string;
 }
 
-export interface CryptoLoanPositionNewV5 {
-  borrowList: BorrowListNewV5[];
-  collateralList: CollateralListNewV5[];
-  supplyList: SupplyListNewV5[];
+export interface CryptoLoanPositionV5 {
+  borrowList: BorrowListV5[];
+  collateralList: CollateralListV5[];
+  supplyList: SupplyListV5[];
   totalCollateral: string;
   totalDebt: string;
   totalSupply: string;
