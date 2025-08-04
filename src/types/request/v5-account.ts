@@ -57,3 +57,8 @@ export interface GetClassicTransactionLogsParamsV5 {
   limit?: number;
   cursor?: string;
 }
+
+export interface SetLimitPriceActionParamsV5 {
+  category: CategoryV5;
+  modifyEnable: boolean;
+}

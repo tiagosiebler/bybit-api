@@ -235,6 +235,7 @@ import {
   SetAutoAddMarginParamsV5,
   SetCollateralCoinParamsV5,
   SetLeverageParamsV5,
+  SetLimitPriceActionParamsV5,
   SetRiskLimitParamsV5,
   SetRiskLimitResultV5,
   SettlementRecordV5,
@@ -277,7 +278,7 @@ import {
   WalletBalanceV5,
   WithdrawableAmountV5,
   WithdrawalRecordV5,
-  WithdrawParamsV5,
+  WithdrawParamsV5
 } from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
@@ -1500,6 +1501,19 @@ export class RestClientV5 extends BaseRestClient {
     setHedgingMode: 'ON' | 'OFF';
   }): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate('/v5/account/set-hedging-mode', params);
+  }
+
+  /**
+   * Set Limit Price Behaviour
+   * You can configure how the system behaves when your limit order price exceeds the highest bid or lowest ask price.
+   *
+   * Spot: If the order price exceeds the boundary, the system rejects the request.
+   * Futures: If the order price exceeds the boundary, the system will automatically adjust the price to the nearest allowed boundary.
+   */
+  setLimitPriceAction(
+    params: SetLimitPriceActionParamsV5,
+  ): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate('/v5/account/set-limit-px-action', params);
   }
 
   /**
