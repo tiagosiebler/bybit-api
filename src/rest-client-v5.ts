@@ -2452,7 +2452,9 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    *
-   ****** Crypto Loan
+   ****** Crypto Loan - Legacy
+   *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    */
 
@@ -2460,6 +2462,7 @@ export class RestClientV5 extends BaseRestClient {
    * Get Collateral Coins
    *
    * INFO: Do not need authentication
+   * @deprecated
    */
   getCollateralCoins(params?: {
     vipLevel?: string;
@@ -2476,6 +2479,7 @@ export class RestClientV5 extends BaseRestClient {
    * Get Borrowable Coins
    *
    * INFO: Do not need authentication
+   * @deprecated
    */
   getBorrowableCoins(params?: {
     vipLevel?: string;
@@ -2493,6 +2497,7 @@ export class RestClientV5 extends BaseRestClient {
    * Query the account borrowable/collateral limit
    *
    * Permission: "Spot trade"
+   * @deprecated
    */
   getAccountBorrowCollateralLimit(params: {
     loanCurrency: string;
@@ -2506,6 +2511,7 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * Borrow Crypto Loan
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    * Permission: "Spot trade"
    *
@@ -2523,6 +2529,8 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * Repay Crypto Loan
+   *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    * You can repay partial loan. If there is interest occurred, interest will be repaid in priority
    *
@@ -2544,6 +2552,8 @@ export class RestClientV5 extends BaseRestClient {
    * Get Unpaid Loan Orders
    * Query the ongoing loan orders, which are not fully repaid
    *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
+   *
    * Permission: "Spot trade"
    */
   getUnpaidLoanOrders(params?: GetUnpaidLoanOrdersParamsV5): Promise<
@@ -2558,6 +2568,8 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Get Repayment Transaction History
    * Query repaid transaction history
+   *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    * Permission: "Spot trade"
    *
@@ -2577,6 +2589,8 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Get Completed Loan Order History
    * Query the completed loan orders
+   *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    * Permission: "Spot trade"
    *
@@ -2598,6 +2612,8 @@ export class RestClientV5 extends BaseRestClient {
    * Get Max. Allowed Reduction Collateral Amount
    * Query the maximum allowed reduction collateral amount
    *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
+   *
    * Permission: "Spot trade"
    */
   getMaxAllowedReductionCollateralAmount(params: { orderId: string }): Promise<
@@ -2611,6 +2627,8 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Adjust Collateral Amount
    * You can increase or reduce collateral amount. When you reduce, please follow the max. allowed reduction amount.
+   *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    * Permission: "Spot trade"
    *
@@ -2632,6 +2650,8 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Get Loan LTV Adjustment History
    * Query the transaction history of collateral amount adjustment
+   *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    * Permission: "Spot trade"
    *
