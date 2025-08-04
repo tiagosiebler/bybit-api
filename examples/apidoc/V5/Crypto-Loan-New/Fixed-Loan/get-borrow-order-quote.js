@@ -1,12 +1,12 @@
-import { RestClientV5 } from '../../../src';
+import { RestClientV5 } from 'bybit-api';
 
 const client = new RestClientV5({
   testnet: true,
 });
 
-async function getSupplyOrderQuote() {
+async function getBorrowOrderQuote() {
   try {
-    const response = await client.getSupplyOrderQuoteFixed({
+    const response = await client.getBorrowOrderQuoteFixed({
       orderCurrency: 'USDT',
       orderBy: 'apy',
     });
@@ -17,4 +17,4 @@ async function getSupplyOrderQuote() {
   }
 }
 
-getSupplyOrderQuote();
+getBorrowOrderQuote();

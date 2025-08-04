@@ -146,3 +146,51 @@ export interface CancelBorrowOrderFixedParamsV5 {
 export interface CancelSupplyOrderFixedParamsV5 {
   orderId: string;
 }
+
+export interface GetBorrowContractInfoFixedParamsV5 {
+  orderId?: string;
+  loanId?: string;
+  orderCurrency?: string;
+  term?: string;
+  limit?: string;
+  cursor?: string;
+}
+
+export interface GetSupplyContractInfoFixedParamsV5 {
+  orderId?: string;
+  supplyId?: string;
+  supplyCurrency?: string;
+  term?: string;
+  limit?: string;
+  cursor?: string;
+}
+
+export interface GetBorrowOrderInfoFixedParamsV5 {
+  orderId?: string;
+  orderCurrency?: string;
+  state?: string;
+  term?: string;
+  limit?: string;
+  cursor?: string;
+}
+
+export interface GetSupplyOrderInfoFixedParamsV5 {
+  orderId?: string;
+  orderCurrency?: string;
+  state?: string;
+  term?: string;
+  limit?: string;
+  cursor?: string;
+}
+
+export interface RepayFixedParamsV5 {
+  loanId?: string;
+  loanCurrency?: string;
+}
+
+export interface GetRepaymentHistoryFixedParamsV5 {
+  repayId?: string;
+  loanCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}

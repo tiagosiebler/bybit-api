@@ -1,4 +1,4 @@
-import { RestClientV5 } from '../../../src';
+import { RestClientV5 } from 'bybit-api';
 
 const client = new RestClientV5({
   testnet: true,
@@ -6,10 +6,10 @@ const client = new RestClientV5({
   secret: 'YOUR_API_SECRET',
 });
 
-async function cancelSupplyOrder() {
+async function getBorrowContractInfo() {
   try {
-    const response = await client.cancelSupplyOrderFixed({
-      orderId: '13577',
+    const response = await client.getBorrowContractInfoFixed({
+      orderCurrency: 'ETH',
     });
 
     console.log(response);
@@ -18,4 +18,4 @@ async function cancelSupplyOrder() {
   }
 }
 
-cancelSupplyOrder();
+getBorrowContractInfo(); 

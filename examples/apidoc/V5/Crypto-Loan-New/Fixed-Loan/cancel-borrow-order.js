@@ -1,4 +1,4 @@
-import { RestClientV5 } from '../../src';
+import { RestClientV5 } from 'bybit-api';
 
 const client = new RestClientV5({
   testnet: true,
@@ -6,9 +6,11 @@ const client = new RestClientV5({
   secret: 'YOUR_API_SECRET',
 });
 
-async function getCryptoLoanPosition() {
+async function cancelBorrowOrder() {
   try {
-    const response = await client.getCryptoLoanPositionNew();
+    const response = await client.cancelBorrowOrderFixed({
+      orderId: '13009',
+    });
 
     console.log(response);
   } catch (error) {
@@ -16,4 +18,4 @@ async function getCryptoLoanPosition() {
   }
 }
 
-getCryptoLoanPosition();
+cancelBorrowOrder();

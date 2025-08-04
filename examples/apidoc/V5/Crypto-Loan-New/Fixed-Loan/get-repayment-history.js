@@ -1,4 +1,4 @@
-import { RestClientV5 } from '../../../src';
+import { RestClientV5 } from 'bybit-api';
 
 const client = new RestClientV5({
   testnet: true,
@@ -6,10 +6,10 @@ const client = new RestClientV5({
   secret: 'YOUR_API_SECRET',
 });
 
-async function cancelBorrowOrder() {
+async function getRepaymentHistory() {
   try {
-    const response = await client.cancelBorrowOrderFixed({
-      orderId: '13009',
+    const response = await client.getRepaymentHistoryFixed({
+      repayId: '1780',
     });
 
     console.log(response);
@@ -18,4 +18,4 @@ async function cancelBorrowOrder() {
   }
 }
 
-cancelBorrowOrder();
+getRepaymentHistory();

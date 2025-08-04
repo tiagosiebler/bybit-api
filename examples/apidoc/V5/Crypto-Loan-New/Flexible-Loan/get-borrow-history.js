@@ -1,4 +1,4 @@
-import { RestClientV5 } from '../../src';
+import { RestClientV5 } from 'bybit-api';
 
 const client = new RestClientV5({
   testnet: true,
@@ -6,11 +6,10 @@ const client = new RestClientV5({
   secret: 'YOUR_API_SECRET',
 });
 
-async function getCollateralAdjustmentHistory() {
+async function getBorrowHistory() {
   try {
-    const response = await client.getCollateralAdjustmentHistoryNew({
+    const response = await client.getBorrowHistoryFlexible({
       limit: '2',
-      collateralCurrency: 'BTC',
     });
 
     console.log(response);
@@ -19,4 +18,4 @@ async function getCollateralAdjustmentHistory() {
   }
 }
 
-getCollateralAdjustmentHistory();
+getBorrowHistory();

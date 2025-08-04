@@ -1,4 +1,4 @@
-import { RestClientV5 } from '../../src';
+import { RestClientV5 } from 'bybit-api';
 
 const client = new RestClientV5({
   testnet: true,
@@ -6,10 +6,10 @@ const client = new RestClientV5({
   secret: 'YOUR_API_SECRET',
 });
 
-async function getMaxCollateralAmount() {
+async function getOngoingFlexibleLoans() {
   try {
-    const response = await client.getMaxCollateralAmountNew({
-      currency: 'BTC',
+    const response = await client.getOngoingFlexibleLoans({
+      loanCurrency: 'BTC',
     });
 
     console.log(response);
@@ -18,4 +18,4 @@ async function getMaxCollateralAmount() {
   }
 }
 
-getMaxCollateralAmount();
+getOngoingFlexibleLoans();

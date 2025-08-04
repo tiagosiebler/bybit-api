@@ -1,4 +1,4 @@
-import { RestClientV5 } from '../../../src';
+import { RestClientV5 } from 'bybit-api';
 
 const client = new RestClientV5({
   testnet: true,
@@ -6,11 +6,10 @@ const client = new RestClientV5({
   secret: 'YOUR_API_SECRET',
 });
 
-async function repayFlexible() {
+async function getSupplyOrderInfo() {
   try {
-    const response = await client.repayFlexible({
-      loanCurrency: 'BTC',
-      amount: '0.005',
+    const response = await client.getSupplyOrderInfoFixed({
+      orderId: '13564',
     });
 
     console.log(response);
@@ -19,4 +18,4 @@ async function repayFlexible() {
   }
 }
 
-repayFlexible();
+getSupplyOrderInfo();

@@ -30,12 +30,14 @@ import {
   BatchOrdersRetExtInfoV5,
   // New Crypto Loan Types
   BorrowableCoinNewV5,
+  BorrowContractInfoFixedV5,
   BorrowCryptoLoanParamsV5,
   // Flexible Loan Types
   BorrowFlexibleParamsV5,
   BorrowFlexibleV5,
   BorrowHistoryFlexibleV5,
   BorrowHistoryRecordV5,
+  BorrowOrderInfoFixedV5,
   BorrowOrderQuoteFixedV5,
   BrokerIssuedVoucherV5,
   BrokerVoucherSpecV5,
@@ -96,8 +98,11 @@ import {
   GetAllowedDepositCoinInfoParamsV5,
   GetAssetInfoParamsV5,
   GetBorrowableCoinsNewParamsV5,
+  // Additional Fixed Loan Types
+  GetBorrowContractInfoFixedParamsV5,
   GetBorrowHistoryFlexibleParamsV5,
   GetBorrowHistoryParamsV5,
+  GetBorrowOrderInfoFixedParamsV5,
   GetBorrowOrderQuoteFixedParamsV5,
   GetBrokerIssuedVoucherParamsV5,
   GetBrokerSubAccountDepositsV5,
@@ -149,6 +154,7 @@ import {
   GetPreUpgradeTransactionLogParamsV5,
   GetPreUpgradeUSDCSessionParamsV5,
   GetPublicTradingHistoryParamsV5,
+  GetRepaymentHistoryFixedParamsV5,
   GetRepaymentHistoryFlexibleParamsV5,
   GetRepaymentHistoryParamsV5,
   GetRiskLimitParamsV5,
@@ -159,6 +165,8 @@ import {
   GetSpreadTradeHistoryParamsV5,
   GetSubAccountAllApiKeysParamsV5,
   GetSubAccountDepositRecordParamsV5,
+  GetSupplyContractInfoFixedParamsV5,
+  GetSupplyOrderInfoFixedParamsV5,
   // Fixed Loan Types
   GetSupplyOrderQuoteFixedParamsV5,
   GetSystemStatusParamsV5,
@@ -212,10 +220,13 @@ import {
   PreUpgradeTransaction,
   PreUpgradeUSDCSessionSettlement,
   PublicTradeV5,
+  RepayFixedParamsV5,
+  RepayFixedV5,
   RepayFlexibleParamsV5,
   RepayFlexibleV5,
   RepayLiabilityParamsV5,
   RepayLiabilityResultV5,
+  RepaymentHistoryFixedV5,
   RepaymentHistoryFlexibleV5,
   RepaymentHistoryV5,
   RequestConvertQuoteParamsV5,
@@ -241,6 +252,8 @@ import {
   SubMemberV5,
   SubmitSpreadOrderParamsV5,
   SubmitStakeRedeemParamsV5,
+  SupplyContractInfoFixedV5,
+  SupplyOrderInfoFixedV5,
   SupplyOrderQuoteFixedV5,
   SwitchIsolatedMarginParamsV5,
   SwitchPositionModeParamsV5,
@@ -2849,6 +2862,92 @@ export class RestClientV5 extends BaseRestClient {
       '/v5/crypto-loan-fixed/supply-order-cancel',
       params,
     );
+  }
+
+  /**
+   * Get Borrow Contract Info
+   *
+   */
+  getBorrowContractInfoFixed(
+    params?: GetBorrowContractInfoFixedParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      list: BorrowContractInfoFixedV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate(
+      '/v5/crypto-loan-fixed/borrow-contract-info',
+      params,
+    );
+  }
+
+  /**
+   * Get Supply Contract Info
+   *
+   */
+  getSupplyContractInfoFixed(
+    params?: GetSupplyContractInfoFixedParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      list: SupplyContractInfoFixedV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate(
+      '/v5/crypto-loan-fixed/supply-contract-info',
+      params,
+    );
+  }
+
+  /**
+   * Get Borrow Order Info
+   *
+   */
+  getBorrowOrderInfoFixed(params?: GetBorrowOrderInfoFixedParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: BorrowOrderInfoFixedV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-fixed/borrow-order-info', params);
+  }
+
+  /**
+   * Get Supply Order Info
+   *
+   */
+  getSupplyOrderInfoFixed(params?: GetSupplyOrderInfoFixedParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: SupplyOrderInfoFixedV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-fixed/supply-order-info', params);
+  }
+
+  /**
+   * Repay Fixed Loan
+   * Either loanId or loanCurrency needs to be passed
+   *
+   */
+  repayFixed(
+    params: RepayFixedParamsV5,
+  ): Promise<APIResponseV3WithTime<RepayFixedV5>> {
+    return this.postPrivate('/v5/crypto-loan-fixed/fully-repay', params);
+  }
+
+  /**
+   * Get Repayment History
+   *
+   */
+  getRepaymentHistoryFixed(params?: GetRepaymentHistoryFixedParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: RepaymentHistoryFixedV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-fixed/repayment-history', params);
   }
 
   /**

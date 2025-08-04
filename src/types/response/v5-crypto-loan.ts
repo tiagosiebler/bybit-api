@@ -240,3 +240,73 @@ export interface CreateBorrowOrderFixedV5 {
 export interface CreateSupplyOrderFixedV5 {
   orderId: string;
 }
+
+export interface BorrowContractInfoFixedV5 {
+  annualRate: string;
+  autoRepay: string;
+  borrowCurrency: string;
+  borrowTime: string;
+  interestPaid: string;
+  loanId: string;
+  orderId: string;
+  repaymentTime: string;
+  residualPenaltyInterest: string;
+  residualPrincipal: string;
+  status: number;
+  term: string;
+}
+
+export interface SupplyContractInfoFixedV5 {
+  annualRate: string;
+  supplyCurrency: string;
+  supplyTime: string;
+  supplyAmount: string;
+  interestPaid: string;
+  supplyId: string;
+  orderId: string;
+  redemptionTime: string;
+  penaltyInterest: string;
+  actualRedemptionTime: string;
+  status: number;
+  term: string;
+}
+
+export interface BorrowOrderInfoFixedV5 {
+  annualRate: string;
+  orderId: number;
+  orderTime: string;
+  filledQty: string;
+  orderQty: string;
+  orderCurrency: string;
+  state: number;
+  term: number;
+}
+
+export interface SupplyOrderInfoFixedV5 {
+  annualRate: string;
+  orderId: number;
+  orderTime: string;
+  filledQty: string;
+  orderQty: string;
+  orderCurrency: string;
+  state: number;
+  term: number;
+}
+
+export interface RepayFixedV5 {
+  repayId: string;
+}
+
+export interface RepaymentHistoryFixedV5 {
+  details: {
+    loanCurrency: string;
+    loanId: string;
+    repayAmount: string;
+  }[];
+  loanCurrency: string;
+  repayAmount: string;
+  repayId: string;
+  repayStatus: number;
+  repayTime: number;
+  repayType: number;
+}

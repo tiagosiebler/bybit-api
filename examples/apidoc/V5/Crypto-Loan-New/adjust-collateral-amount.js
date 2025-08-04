@@ -1,4 +1,4 @@
-import { RestClientV5 } from '../../src';
+import { RestClientV5 } from 'bybit-api';
 
 const client = new RestClientV5({
   testnet: true,
