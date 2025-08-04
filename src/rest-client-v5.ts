@@ -278,7 +278,7 @@ import {
   WalletBalanceV5,
   WithdrawableAmountV5,
   WithdrawalRecordV5,
-  WithdrawParamsV5
+  WithdrawParamsV5,
 } from './types';
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';

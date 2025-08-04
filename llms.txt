@@ -69,6 +69,7 @@ examples/
         repay-liability.js
         reset-mmp.js
         set-collateral-coin.js
+        set-limit-price-behaviour.js
         set-margin-mode.js
         set-mmp.js
         set-spot-hedging.js
@@ -116,7 +117,7 @@ examples/
         issue-voucher.js
         query-issued-voucher.js
         query-voucher-spec.js
-      Crypto-Loan/
+      Crypto-Loan-Legacy/
         adjust-collateral-amount.js
         borrow.js
         get-account-borrow-collateral-limit.js
@@ -128,6 +129,32 @@ examples/
         get-repayment-transaction-history.js
         get-unpaid-loan-orders.js
         repay.js
+      Crypto-Loan-New/
+        Fixed-Loan/
+          cancel-borrow-order.js
+          cancel-supply-order.js
+          create-borrow-order.js
+          create-supply-order.js
+          get-borrow-contract-info.js
+          get-borrow-order-info.js
+          get-borrow-order-quote.js
+          get-repayment-history.js
+          get-supply-contract-info.js
+          get-supply-order-info.js
+          get-supply-order-quote.js
+          repay.js
+        Flexible-Loan/
+          borrow.js
+          get-borrow-history.js
+          get-ongoing-flexible-loans.js
+          get-repayment-history.js
+          repay.ts
+        adjust-collateral-amount.js
+        get-borrowable-coins.js
+        get-collateral-adjustment-history.js
+        get-collateral-coins.js
+        get-crypto-loan-position.js
+        get-max-collateral-amount.js
       Earn/
         get-product-info.js
         get-stake-redeem-order-history.js
@@ -1136,144 +1163,6 @@ File: examples/apidoc/V5/Broker/query-voucher-spec.js
 const client = new RestClientV5({
 ⋮----
 .getBrokerIssuedVoucher({
-⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Crypto-Loan/adjust-collateral-amount.js
-================
-const client = new RestClientV5({
-⋮----
-.adjustCollateralAmount({
-⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Crypto-Loan/borrow.js
-================
-const client = new RestClientV5({
-⋮----
-.borrowCryptoLoan({
-⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Crypto-Loan/get-account-borrow-collateral-limit.js
-================
-const client = new RestClientV5({
-⋮----
-.getAccountBorrowCollateralLimit({
-⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Crypto-Loan/get-borrowable-coins.js
-================
-const client = new RestClientV5({
-⋮----
-.getBorrowableCoins({
-⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Crypto-Loan/get-collateral-coins.js
-================
-const client = new RestClientV5({
-⋮----
-.getCollateralCoins({
-⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Crypto-Loan/get-completed-loan-order-history.js
-================
-const client = new RestClientV5({
-⋮----
-.getCompletedLoanOrderHistory({ orderId: '1794267532472646144' })
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Crypto-Loan/get-loan-LTV-adjustment-history.js
-================
-const client = new RestClientV5({
-⋮----
-.getLoanLTVAdjustmentHistory({ adjustId: '1794271131730737664' })
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Crypto-Loan/get-max-allowed-reduction-collateral-amount.js
-================
-const client = new RestClientV5({
-⋮----
-.getMaxAllowedReductionCollateralAmount({ orderId: '1794267532472646144' })
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Crypto-Loan/get-repayment-transaction-history.js
-================
-const client = new RestClientV5({
-⋮----
-.getRepaymentHistory({ repayId: '1794271131730737664' })
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Crypto-Loan/get-unpaid-loan-orders.js
-================
-const client = new RestClientV5({
-⋮----
-.getUnpaidLoanOrders({ orderId: '1793683005081680384' })
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Crypto-Loan/repay.js
-================
-const client = new RestClientV5({
-⋮----
-.repayCryptoLoan({
 ⋮----
 .then((response) => {
 console.log(response);
@@ -2564,6 +2453,52 @@ File: examples/deprecated/README.md
 The examples in this folder use old/deprecated/obsolete APIs. They should all have a modern alternative.
 
 As of December 2023, use the V5 APIs & WebSockets.
+
+================
+File: examples/demo-trading.ts
+================
+import { DefaultLogger, RestClientV5, WebsocketClient } from '../src/index';
+⋮----
+// or
+// import { RestClientV5 } from 'bybit-api';
+⋮----
+/**
+ *
+ *
+ * This example demonstrates how to use Bybit's demo trading functionality, both for REST and WS.
+ *
+ * Refer to the API docs for more information: https://bybit-exchange.github.io/docs/v5/demo
+ *
+ *
+ */
+⋮----
+/**
+   * Set this to true to enable demo trading:
+   */
+⋮----
+// Optional, uncomment the "trace" override to log a lot more info about what the WS client is doing
+⋮----
+// trace: (...params) => console.log('trace', ...params),
+⋮----
+/**
+     * Set this to true to enable demo trading for the private account data WS
+     * Topics: order,execution,position,wallet,greeks
+     */
+⋮----
+function setWsClientEventListeners(
+  websocketClient: WebsocketClient,
+  accountRef: string,
+): Promise<void>
+⋮----
+// console.log('raw message received ', JSON.stringify(data, null, 2));
+⋮----
+// Simple promise to ensure we're subscribed before trying anything else
+⋮----
+// Start trading
+⋮----
+/** Simple examples for private REST API calls with bybit's V5 REST APIs */
+⋮----
+// Trade USDT linear perps
 
 ================
 File: examples/README.md
@@ -4162,114 +4097,6 @@ export interface USDCPositionsRequest {
 }
 
 ================
-File: src/types/request/v5-account.ts
-================
-import { AccountTypeV5, CategoryV5, TransactionTypeV5 } from '../shared-v5';
-⋮----
-export interface GetWalletBalanceParamsV5 {
-  accountType: AccountTypeV5;
-  coin?: string;
-}
-⋮----
-export interface GetBorrowHistoryParamsV5 {
-  currency?: string;
-  startTime?: number;
-  endTime?: number;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface GetFeeRateParamsV5 {
-  category: CategoryV5;
-  symbol?: string;
-  baseCoin?: string;
-}
-⋮----
-export interface GetTransactionLogParamsV5 {
-  accountType?: AccountTypeV5;
-  category?: CategoryV5;
-  currency?: string;
-  baseCoin?: string;
-  type?: TransactionTypeV5;
-  startTime?: number;
-  endTime?: number;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface MMPModifyParamsV5 {
-  baseCoin: string;
-  window: string;
-  frozenPeriod: string;
-  qtyLimit: string;
-  deltaLimit: string;
-}
-⋮----
-export interface RepayLiabilityParamsV5 {
-  coin?: string;
-}
-⋮----
-export interface SetCollateralCoinParamsV5 {
-  coin: string;
-  collateralSwitch: 'ON' | 'OFF';
-}
-⋮----
-export interface GetClassicTransactionLogsParamsV5 {
-  currency?: string;
-  baseCoin?: string;
-  type?: string;
-  startTime?: number;
-  endTime?: number;
-  limit?: number;
-  cursor?: string;
-}
-
-================
-File: src/types/request/v5-crypto-loan.ts
-================
-export interface BorrowCryptoLoanParamsV5 {
-  loanCurrency: string;
-  loanAmount?: string;
-  loanTerm?: string;
-  collateralCurrency: string;
-  collateralAmount?: string;
-}
-⋮----
-export interface GetUnpaidLoanOrdersParamsV5 {
-  orderId?: string;
-  loanCurrency?: string;
-  collateralCurrency?: string;
-  loanTermType?: string;
-  loanTerm?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface GetRepaymentHistoryParamsV5 {
-  orderId?: string;
-  repayId?: string;
-  loanCurrency?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface GetCompletedLoanOrderHistoryParamsV5 {
-  orderId?: string;
-  loanCurrency?: string;
-  collateralCurrency?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface GetLoanLTVAdjustmentHistoryParamsV5 {
-  orderId?: string;
-  adjustId?: string;
-  collateralCurrency?: string;
-  limit?: string;
-  cursor?: string;
-}
-
-================
 File: src/types/request/v5-pre-upgrade.ts
 ================
 import { ExecTypeV5 } from '../shared-v5';
@@ -4923,101 +4750,6 @@ export interface LinearOrder {
   tp_trigger_by: string;
   sl_trigger_by: string;
   position_idx: number;
-}
-
-================
-File: src/types/response/v5-crypto-loan.ts
-================
-export interface CollateralCoinV5 {
-  collateralAccuracy: number;
-  initialLTV: string;
-  liquidationLTV: string;
-  marginCallLTV: string;
-  maxLimit: string;
-}
-⋮----
-export interface VipCollateralCoinsV5 {
-  list: CollateralCoinV5[];
-  vipLevel: string;
-}
-⋮----
-export interface BorrowableCoinV5 {
-  borrowingAccuracy: number;
-  currency: string;
-  flexibleHourlyInterestRate: string;
-  hourlyInterestRate7D: string;
-  hourlyInterestRate14D: string;
-  hourlyInterestRate30D: string;
-  hourlyInterestRate90D: string;
-  hourlyInterestRate180D: string;
-  maxBorrowingAmount: string;
-  minBorrowingAmount: string;
-}
-⋮----
-export interface VipBorrowableCoinsV5 {
-  list: BorrowableCoinV5[];
-  vipLevel: string;
-}
-⋮----
-export interface AccountBorrowCollateralLimitV5 {
-  collateralCurrency: string;
-  loanCurrency: string;
-  maxCollateralAmount: string;
-  maxLoanAmount: string;
-  minCollateralAmount: string;
-  minLoanAmount: string;
-}
-⋮----
-export interface UnpaidLoanOrderV5 {
-  collateralAmount: string;
-  collateralCurrency: string;
-  currentLTV: string;
-  expirationTime: string;
-  hourlyInterestRate: string;
-  loanCurrency: string;
-  loanTerm: string;
-  orderId: string;
-  residualInterest: string;
-  residualPenaltyInterest: string;
-  totalDebt: string;
-}
-⋮----
-export interface RepaymentHistoryV5 {
-  collateralCurrency: string;
-  collateralReturn: string;
-  loanCurrency: string;
-  loanTerm: string;
-  orderId: string;
-  repayAmount: string;
-  repayId: string;
-  repayStatus: number;
-  repayTime: string;
-  repayType: string;
-}
-⋮----
-export interface CompletedLoanOrderV5 {
-  borrowTime: string;
-  collateralCurrency: string;
-  expirationTime: string;
-  hourlyInterestRate: string;
-  initialCollateralAmount: string;
-  initialLoanAmount: string;
-  loanCurrency: string;
-  loanTerm: string;
-  orderId: string;
-  repaidInterest: string;
-  repaidPenaltyInterest: string;
-  status: number;
-}
-export interface LoanLTVAdjustmentHistoryV5 {
-  collateralCurrency: string;
-  orderId: string;
-  adjustId: string;
-  adjustTime: string;
-  preLTV: string;
-  afterLTV: string;
-  direction: number;
-  amount: string;
 }
 
 ================
@@ -5797,6 +5529,496 @@ File: tsconfig.test.json
 }
 
 ================
+File: examples/apidoc/V5/Account/set-limit-price-behaviour.js
+================
+const client = new RestClientV5({
+⋮----
+.setLimitPriceAction({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-Legacy/adjust-collateral-amount.js
+================
+const client = new RestClientV5({
+⋮----
+.adjustCollateralAmount({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-Legacy/borrow.js
+================
+const client = new RestClientV5({
+⋮----
+.borrowCryptoLoan({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-Legacy/get-account-borrow-collateral-limit.js
+================
+const client = new RestClientV5({
+⋮----
+.getAccountBorrowCollateralLimit({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-Legacy/get-borrowable-coins.js
+================
+const client = new RestClientV5({
+⋮----
+.getBorrowableCoins({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-Legacy/get-collateral-coins.js
+================
+const client = new RestClientV5({
+⋮----
+.getCollateralCoins({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-Legacy/get-completed-loan-order-history.js
+================
+const client = new RestClientV5({
+⋮----
+.getCompletedLoanOrderHistory({ orderId: '1794267532472646144' })
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-Legacy/get-loan-LTV-adjustment-history.js
+================
+const client = new RestClientV5({
+⋮----
+.getLoanLTVAdjustmentHistory({ adjustId: '1794271131730737664' })
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-Legacy/get-max-allowed-reduction-collateral-amount.js
+================
+const client = new RestClientV5({
+⋮----
+.getMaxAllowedReductionCollateralAmount({ orderId: '1794267532472646144' })
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-Legacy/get-repayment-transaction-history.js
+================
+const client = new RestClientV5({
+⋮----
+.getRepaymentHistory({ repayId: '1794271131730737664' })
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-Legacy/get-unpaid-loan-orders.js
+================
+const client = new RestClientV5({
+⋮----
+.getUnpaidLoanOrders({ orderId: '1793683005081680384' })
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-Legacy/repay.js
+================
+const client = new RestClientV5({
+⋮----
+.repayCryptoLoan({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/cancel-borrow-order.js
+================
+const client = new RestClientV5({
+⋮----
+async function cancelBorrowOrder() {
+⋮----
+const response = await client.cancelBorrowOrderFixed({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+cancelBorrowOrder();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/cancel-supply-order.js
+================
+const client = new RestClientV5({
+⋮----
+async function cancelSupplyOrder() {
+⋮----
+const response = await client.cancelSupplyOrderFixed({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+cancelSupplyOrder();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/create-borrow-order.js
+================
+const client = new RestClientV5({
+⋮----
+async function createBorrowOrder() {
+⋮----
+const response = await client.createBorrowOrderFixed({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+createBorrowOrder();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/create-supply-order.js
+================
+const client = new RestClientV5({
+⋮----
+async function createSupplyOrder() {
+⋮----
+const response = await client.createSupplyOrderFixed({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+createSupplyOrder();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-borrow-contract-info.js
+================
+const client = new RestClientV5({
+⋮----
+async function getBorrowContractInfo() {
+⋮----
+const response = await client.getBorrowContractInfoFixed({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+getBorrowContractInfo();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-borrow-order-info.js
+================
+const client = new RestClientV5({
+⋮----
+async function getBorrowOrderInfo() {
+⋮----
+const response = await client.getBorrowOrderInfoFixed({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+getBorrowOrderInfo();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-borrow-order-quote.js
+================
+const client = new RestClientV5({
+⋮----
+async function getBorrowOrderQuote() {
+⋮----
+const response = await client.getBorrowOrderQuoteFixed({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+getBorrowOrderQuote();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-repayment-history.js
+================
+const client = new RestClientV5({
+⋮----
+async function getRepaymentHistory() {
+⋮----
+const response = await client.getRepaymentHistoryFixed({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+getRepaymentHistory();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-supply-contract-info.js
+================
+const client = new RestClientV5({
+⋮----
+async function getSupplyContractInfo() {
+⋮----
+const response = await client.getSupplyContractInfoFixed({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+getSupplyContractInfo();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-supply-order-info.js
+================
+const client = new RestClientV5({
+⋮----
+async function getSupplyOrderInfo() {
+⋮----
+const response = await client.getSupplyOrderInfoFixed({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+getSupplyOrderInfo();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-supply-order-quote.js
+================
+const client = new RestClientV5({
+⋮----
+async function getSupplyOrderQuote() {
+⋮----
+const response = await client.getSupplyOrderQuoteFixed({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+getSupplyOrderQuote();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/repay.js
+================
+const client = new RestClientV5({
+⋮----
+async function repayFixed() {
+⋮----
+const response = await client.repayFixed({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+repayFixed();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Flexible-Loan/borrow.js
+================
+const client = new RestClientV5({
+⋮----
+async function borrowFlexible() {
+⋮----
+const response = await client.borrowFlexible({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+borrowFlexible();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Flexible-Loan/get-borrow-history.js
+================
+const client = new RestClientV5({
+⋮----
+async function getBorrowHistory() {
+⋮----
+const response = await client.getBorrowHistoryFlexible({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+getBorrowHistory();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Flexible-Loan/get-ongoing-flexible-loans.js
+================
+const client = new RestClientV5({
+⋮----
+async function getOngoingFlexibleLoans() {
+⋮----
+const response = await client.getOngoingFlexibleLoans({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+getOngoingFlexibleLoans();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Flexible-Loan/get-repayment-history.js
+================
+const client = new RestClientV5({
+⋮----
+async function getRepaymentHistory() {
+⋮----
+const response = await client.getRepaymentHistoryFlexible({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+getRepaymentHistory();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Flexible-Loan/repay.ts
+================
+import { RestClientV5 } from 'bybit-api';
+⋮----
+async function repayFlexible()
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/adjust-collateral-amount.js
+================
+const client = new RestClientV5({
+⋮----
+async function adjustCollateralAmount() {
+⋮----
+const response = await client.adjustCollateralAmountNew({
+⋮----
+direction: '1', // 0: add collateral; 1: reduce collateral
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+adjustCollateralAmount();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/get-borrowable-coins.js
+================
+const client = new RestClientV5({
+⋮----
+async function getBorrowableCoins() {
+⋮----
+const response = await client.getBorrowableCoinsNew({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+getBorrowableCoins();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/get-collateral-adjustment-history.js
+================
+const client = new RestClientV5({
+⋮----
+async function getCollateralAdjustmentHistory() {
+⋮----
+const response = await client.getCollateralAdjustmentHistoryNew({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+getCollateralAdjustmentHistory();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/get-collateral-coins.js
+================
+const client = new RestClientV5({
+⋮----
+async function getCollateralCoins() {
+⋮----
+const response = await client.getCollateralCoinsNew({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+getCollateralCoins();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/get-crypto-loan-position.js
+================
+const client = new RestClientV5({
+⋮----
+async function getCryptoLoanPosition() {
+⋮----
+const response = await client.getCryptoLoanPositionNew();
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+getCryptoLoanPosition();
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/get-max-collateral-amount.js
+================
+const client = new RestClientV5({
+⋮----
+async function getMaxCollateralAmount() {
+⋮----
+const response = await client.getMaxCollateralAmountNew({
+⋮----
+console.log(response);
+⋮----
+console.error('Error:', error);
+⋮----
+getMaxCollateralAmount();
+
+================
 File: examples/apidoc/V5/Market/get-order-price-limit.js
 ================
 const client = new RestClientV5({
@@ -6292,52 +6514,6 @@ console.log('Market order result', response);
 console.error('Market order error', error);
 
 ================
-File: examples/demo-trading.ts
-================
-import { DefaultLogger, RestClientV5, WebsocketClient } from '../src/index';
-⋮----
-// or
-// import { RestClientV5 } from 'bybit-api';
-⋮----
-/**
- *
- *
- * This example demonstrates how to use Bybit's demo trading functionality, both for REST and WS.
- *
- * Refer to the API docs for more information: https://bybit-exchange.github.io/docs/v5/demo
- *
- *
- */
-⋮----
-/**
-   * Set this to true to enable demo trading:
-   */
-⋮----
-// Optional, uncomment the "trace" override to log a lot more info about what the WS client is doing
-⋮----
-// trace: (...params) => console.log('trace', ...params),
-⋮----
-/**
-     * Set this to true to enable demo trading for the private account data WS
-     * Topics: order,execution,position,wallet,greeks
-     */
-⋮----
-function setWsClientEventListeners(
-  websocketClient: WebsocketClient,
-  accountRef: string,
-): Promise<void>
-⋮----
-// console.log('raw message received ', JSON.stringify(data, null, 2));
-⋮----
-// Simple promise to ensure we're subscribed before trying anything else
-⋮----
-// Start trading
-⋮----
-/** Simple examples for private REST API calls with bybit's V5 REST APIs */
-⋮----
-// Trade USDT linear perps
-
-================
 File: examples/fasterHmacSign.ts
 ================
 import { createHmac } from 'crypto';
@@ -6521,6 +6697,74 @@ import { DefaultLogger, WebsocketClient, WS_KEY_MAP } from '../src';
 File: src/types/request/index.ts
 ================
 
+
+================
+File: src/types/request/v5-account.ts
+================
+import { AccountTypeV5, CategoryV5, TransactionTypeV5 } from '../shared-v5';
+⋮----
+export interface GetWalletBalanceParamsV5 {
+  accountType: AccountTypeV5;
+  coin?: string;
+}
+⋮----
+export interface GetBorrowHistoryParamsV5 {
+  currency?: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface GetFeeRateParamsV5 {
+  category: CategoryV5;
+  symbol?: string;
+  baseCoin?: string;
+}
+⋮----
+export interface GetTransactionLogParamsV5 {
+  accountType?: AccountTypeV5;
+  category?: CategoryV5;
+  currency?: string;
+  baseCoin?: string;
+  type?: TransactionTypeV5;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface MMPModifyParamsV5 {
+  baseCoin: string;
+  window: string;
+  frozenPeriod: string;
+  qtyLimit: string;
+  deltaLimit: string;
+}
+⋮----
+export interface RepayLiabilityParamsV5 {
+  coin?: string;
+}
+⋮----
+export interface SetCollateralCoinParamsV5 {
+  coin: string;
+  collateralSwitch: 'ON' | 'OFF';
+}
+⋮----
+export interface GetClassicTransactionLogsParamsV5 {
+  currency?: string;
+  baseCoin?: string;
+  type?: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface SetLimitPriceActionParamsV5 {
+  category: CategoryV5;
+  modifyEnable: boolean;
+}
 
 ================
 File: src/types/request/v5-broker.ts
@@ -7066,6 +7310,173 @@ export interface GetSpreadTradeHistoryParamsV5 {
   endTime?: number;
   limit?: number;
   cursor?: string;
+}
+
+================
+File: src/types/request/v5-trade.ts
+================
+import {
+  CategoryV5,
+  OrderFilterV5,
+  OrderSideV5,
+  OrderSMPTypeV5,
+  OrderStatusV5,
+  OrderTimeInForceV5,
+  OrderTriggerByV5,
+  OrderTypeV5,
+  PositionIdx,
+  StopOrderTypeV5,
+} from '../shared-v5';
+⋮----
+export interface OrderParamsV5 {
+  category: CategoryV5;
+  symbol: string;
+  isLeverage?: 0 | 1;
+  side: OrderSideV5;
+  orderType: OrderTypeV5;
+  qty: string;
+  marketUnit?: 'baseCoin' | 'quoteCoin';
+  slippageToleranceType?: string;
+  slippageTolerance?: string;
+  price?: string;
+  triggerDirection?: 1 | 2;
+  orderFilter?: OrderFilterV5;
+  triggerPrice?: string;
+  triggerBy?: OrderTriggerByV5;
+  orderIv?: string;
+  timeInForce?: OrderTimeInForceV5;
+  positionIdx?: PositionIdx;
+  orderLinkId?: string;
+  takeProfit?: string;
+  stopLoss?: string;
+  tpTriggerBy?: OrderTriggerByV5;
+  slTriggerBy?: OrderTriggerByV5;
+  reduceOnly?: boolean;
+  closeOnTrigger?: boolean;
+  smpType?: OrderSMPTypeV5;
+  mmp?: boolean;
+  tpslMode?: 'Full' | 'Partial';
+  tpLimitPrice?: string;
+  slLimitPrice?: string;
+  tpOrderType?: OrderTypeV5;
+  slOrderType?: OrderTypeV5;
+}
+⋮----
+export interface AmendOrderParamsV5 {
+  category: CategoryV5;
+  symbol: string;
+  orderId?: string;
+  orderLinkId?: string;
+  orderIv?: string;
+  triggerPrice?: string;
+  qty?: string;
+  price?: string;
+  tpslMode?: 'Full' | 'Partial';
+  takeProfit?: string;
+  stopLoss?: string;
+  tpTriggerBy?: OrderTriggerByV5;
+  slTriggerBy?: OrderTriggerByV5;
+  triggerBy?: OrderTriggerByV5;
+  tpLimitPrice?: string;
+  slLimitPrice?: string;
+}
+⋮----
+export interface CancelOrderParamsV5 {
+  category: CategoryV5;
+  symbol: string;
+  orderId?: string;
+  orderLinkId?: string;
+  orderFilter?: OrderFilterV5;
+}
+⋮----
+export interface GetAccountOrdersParamsV5 {
+  category: CategoryV5;
+  symbol?: string;
+  baseCoin?: string;
+  settleCoin?: string;
+  orderId?: string;
+  orderLinkId?: string;
+  openOnly?: 0 | 1 | 2;
+  orderFilter?: OrderFilterV5;
+  orderStatus?: OrderStatusV5;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface GetAccountHistoricOrdersParamsV5 {
+  category: CategoryV5;
+  symbol?: string;
+  baseCoin?: string;
+  settleCoin?: string;
+  orderId?: string;
+  orderLinkId?: string;
+  orderFilter?: OrderFilterV5;
+  orderStatus?: OrderStatusV5;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface CancelAllOrdersParamsV5 {
+  category: CategoryV5;
+  symbol?: string;
+  baseCoin?: string;
+  settleCoin?: string;
+  orderFilter?: OrderFilterV5;
+  stopOrderType?: StopOrderTypeV5;
+}
+⋮----
+export interface BatchOrderParamsV5 {
+  symbol: string;
+  side: OrderSideV5;
+  isLeverage?: 0 | 1;
+  orderType: OrderTypeV5;
+  qty: string;
+  price?: string;
+  triggerDirection?: 1 | 2;
+  triggerBy?: OrderTriggerByV5;
+  orderIv?: string;
+  timeInForce?: OrderTimeInForceV5;
+  positionIdx?: PositionIdx;
+  orderLinkId?: string;
+  takeProfit?: string;
+  stopLoss?: string;
+  tpTriggerBy?: OrderTriggerByV5;
+  slTriggerBy?: OrderTriggerByV5;
+  reduceOnly?: boolean;
+  closeOnTrigger?: boolean;
+  smpType?: OrderSMPTypeV5;
+  mmp?: boolean;
+  tpslMode?: 'Full' | 'Partial';
+  tpLimitPrice?: string;
+  slLimitPrice?: string;
+  tpOrderType?: OrderTypeV5;
+  slOrderType?: OrderTypeV5;
+}
+⋮----
+export interface BatchAmendOrderParamsV5 {
+  symbol: string;
+  orderId?: string;
+  orderLinkId?: string;
+  orderIv?: string;
+  triggerPrice?: string;
+  qty?: string;
+  price?: string;
+  tpslMode?: 'Full' | 'Partial';
+  takeProfit?: string;
+  stopLoss?: string;
+  tpTriggerBy?: OrderTriggerByV5;
+  slTriggerBy?: OrderTriggerByV5;
+  triggerBy?: OrderTriggerByV5;
+  tpLimitPrice?: string;
+  slLimitPrice?: string;
+}
+⋮----
+export interface BatchCancelOrderParamsV5 {
+  symbol: string;
+  orderId?: string;
+  orderLinkId?: string;
 }
 
 ================
@@ -7948,6 +8359,167 @@ File: src/types/websockets/index.ts
 
 
 ================
+File: src/types/websockets/ws-api.ts
+================
+import { APIID, WS_KEY_MAP } from '../../util';
+import {
+  AmendOrderParamsV5,
+  BatchAmendOrderParamsV5,
+  BatchCancelOrderParamsV5,
+  BatchOrderParamsV5,
+  CancelOrderParamsV5,
+  OrderParamsV5,
+} from '../request';
+import {
+  BatchAmendOrderResultV5,
+  BatchCancelOrderResultV5,
+  BatchCreateOrderResultV5,
+  BatchOrdersRetExtInfoV5,
+  OrderResultV5,
+} from '../response';
+import { WsKey } from './ws-general';
+⋮----
+// When new WS API operations are added, make sure to also update WS_API_Operations[] below
+export type WSAPIOperation =
+  | 'order.create'
+  | 'order.amend'
+  | 'order.cancel'
+  | 'order.create-batch'
+  | 'order.amend-batch'
+  | 'order.cancel-batch';
+⋮----
+export type WsOperation =
+  | 'subscribe'
+  | 'unsubscribe'
+  | 'auth'
+  | 'ping'
+  | 'pong';
+⋮----
+export interface WsRequestOperationBybit<TWSTopic extends string> {
+  req_id: string;
+  op: WsOperation;
+  args?: (TWSTopic | string | number)[];
+}
+⋮----
+export interface WSAPIRequest<
+  TRequestParams = undefined,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TWSOperation extends WSAPIOperation = any,
+> {
+  reqId: string;
+  op: TWSOperation;
+  header: {
+    'X-BAPI-TIMESTAMP': string;
+    'X-BAPI-RECV-WINDOW': string;
+    Referer: typeof APIID;
+  };
+  args: [TRequestParams];
+}
+⋮----
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+⋮----
+export interface WSAPIResponse<
+  TResponseData extends object = object,
+  TOperation extends WSAPIOperation = WSAPIOperation,
+  TResponseExtInfo = {}, // added as optional for batch calls
+> {
+  wsKey: WsKey;
+  /** Auto-generated */
+  reqId: string;
+  retCode: 0 | number;
+  retMsg: 'OK' | string;
+  op: TOperation;
+  data: TResponseData;
+  retExtInfo: TResponseExtInfo;
+  header?: {
+    'X-Bapi-Limit': string;
+    'X-Bapi-Limit-Status': string;
+    'X-Bapi-Limit-Reset-Timestamp': string;
+    Traceid: string;
+    Timenow: string;
+  };
+  connId: string;
+}
+⋮----
+TResponseExtInfo = {}, // added as optional for batch calls
+⋮----
+/** Auto-generated */
+⋮----
+export type Exact<T> = {
+  // This part says: if there's any key that's not in T, it's an error
+  [K: string]: never;
+} & {
+  [K in keyof T]: T[K];
+};
+⋮----
+// This part says: if there's any key that's not in T, it's an error
+⋮----
+/**
+ * List of operations supported for this WsKey (connection)
+ */
+export interface WsAPIWsKeyTopicMap {
+  [WS_KEY_MAP.v5PrivateTrade]: WSAPIOperation;
+}
+⋮----
+/**
+ * Request parameters expected per operation
+ */
+export interface WsAPITopicRequestParamMap {
+  'order.create': OrderParamsV5;
+  'order.amend': AmendOrderParamsV5;
+  'order.cancel': CancelOrderParamsV5;
+
+  'order.create-batch': {
+    category: 'option' | 'linear';
+    request: BatchOrderParamsV5[];
+  };
+  'order.amend-batch': {
+    category: 'option' | 'linear';
+    request: BatchAmendOrderParamsV5[];
+  };
+  'order.cancel-batch': {
+    category: 'option' | 'linear';
+    request: BatchCancelOrderParamsV5[];
+  };
+}
+⋮----
+/**
+ * Response structure expected for each operation
+ */
+export interface WsAPIOperationResponseMap {
+  'order.create': WSAPIResponse<OrderResultV5, 'order.create'>;
+  'order.amend': WSAPIResponse<OrderResultV5, 'order.amend'>;
+  'order.cancel': WSAPIResponse<OrderResultV5, 'order.cancel'>;
+
+  'order.create-batch': WSAPIResponse<
+    { list: BatchCreateOrderResultV5[] },
+    'order.create-batch'
+  > & {
+    retExtInfo: BatchOrdersRetExtInfoV5;
+  };
+  'order.amend-batch': WSAPIResponse<
+    { list: BatchAmendOrderResultV5[] },
+    'order.amend-batch'
+  > & {
+    retExtInfo: BatchOrdersRetExtInfoV5;
+  };
+  'order.cancel-batch': WSAPIResponse<
+    { list: BatchCancelOrderResultV5[] },
+    'order.cancel-batch'
+  > & {
+    retExtInfo: BatchOrdersRetExtInfoV5;
+  };
+
+  ping: {
+    retCode: 0 | number;
+    retMsg: 'OK' | string;
+    op: 'pong';
+    data: [string];
+    connId: string;
+  };
+}
+
+================
 File: .gitignore
 ================
 !.gitkeep
@@ -8405,703 +8977,14 @@ export interface GetConvertHistoryParamsV5 {
 }
 
 ================
-File: src/types/request/v5-trade.ts
-================
-import {
-  CategoryV5,
-  OrderFilterV5,
-  OrderSideV5,
-  OrderSMPTypeV5,
-  OrderStatusV5,
-  OrderTimeInForceV5,
-  OrderTriggerByV5,
-  OrderTypeV5,
-  PositionIdx,
-  StopOrderTypeV5,
-} from '../shared-v5';
-⋮----
-export interface OrderParamsV5 {
-  category: CategoryV5;
-  symbol: string;
-  isLeverage?: 0 | 1;
-  side: OrderSideV5;
-  orderType: OrderTypeV5;
-  qty: string;
-  marketUnit?: 'baseCoin' | 'quoteCoin';
-  slippageToleranceType?: string;
-  slippageTolerance?: string;
-  price?: string;
-  triggerDirection?: 1 | 2;
-  orderFilter?: OrderFilterV5;
-  triggerPrice?: string;
-  triggerBy?: OrderTriggerByV5;
-  orderIv?: string;
-  timeInForce?: OrderTimeInForceV5;
-  positionIdx?: PositionIdx;
-  orderLinkId?: string;
-  takeProfit?: string;
-  stopLoss?: string;
-  tpTriggerBy?: OrderTriggerByV5;
-  slTriggerBy?: OrderTriggerByV5;
-  reduceOnly?: boolean;
-  closeOnTrigger?: boolean;
-  smpType?: OrderSMPTypeV5;
-  mmp?: boolean;
-  tpslMode?: 'Full' | 'Partial';
-  tpLimitPrice?: string;
-  slLimitPrice?: string;
-  tpOrderType?: OrderTypeV5;
-  slOrderType?: OrderTypeV5;
-}
-⋮----
-export interface AmendOrderParamsV5 {
-  category: CategoryV5;
-  symbol: string;
-  orderId?: string;
-  orderLinkId?: string;
-  orderIv?: string;
-  triggerPrice?: string;
-  qty?: string;
-  price?: string;
-  tpslMode?: 'Full' | 'Partial';
-  takeProfit?: string;
-  stopLoss?: string;
-  tpTriggerBy?: OrderTriggerByV5;
-  slTriggerBy?: OrderTriggerByV5;
-  triggerBy?: OrderTriggerByV5;
-  tpLimitPrice?: string;
-  slLimitPrice?: string;
-}
-⋮----
-export interface CancelOrderParamsV5 {
-  category: CategoryV5;
-  symbol: string;
-  orderId?: string;
-  orderLinkId?: string;
-  orderFilter?: OrderFilterV5;
-}
-⋮----
-export interface GetAccountOrdersParamsV5 {
-  category: CategoryV5;
-  symbol?: string;
-  baseCoin?: string;
-  settleCoin?: string;
-  orderId?: string;
-  orderLinkId?: string;
-  openOnly?: 0 | 1 | 2;
-  orderFilter?: OrderFilterV5;
-  orderStatus?: OrderStatusV5;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface GetAccountHistoricOrdersParamsV5 {
-  category: CategoryV5;
-  symbol?: string;
-  baseCoin?: string;
-  settleCoin?: string;
-  orderId?: string;
-  orderLinkId?: string;
-  orderFilter?: OrderFilterV5;
-  orderStatus?: OrderStatusV5;
-  startTime?: number;
-  endTime?: number;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface CancelAllOrdersParamsV5 {
-  category: CategoryV5;
-  symbol?: string;
-  baseCoin?: string;
-  settleCoin?: string;
-  orderFilter?: OrderFilterV5;
-  stopOrderType?: StopOrderTypeV5;
-}
-⋮----
-export interface BatchOrderParamsV5 {
-  symbol: string;
-  side: OrderSideV5;
-  isLeverage?: 0 | 1;
-  orderType: OrderTypeV5;
-  qty: string;
-  price?: string;
-  triggerDirection?: 1 | 2;
-  triggerBy?: OrderTriggerByV5;
-  orderIv?: string;
-  timeInForce?: OrderTimeInForceV5;
-  positionIdx?: PositionIdx;
-  orderLinkId?: string;
-  takeProfit?: string;
-  stopLoss?: string;
-  tpTriggerBy?: OrderTriggerByV5;
-  slTriggerBy?: OrderTriggerByV5;
-  reduceOnly?: boolean;
-  closeOnTrigger?: boolean;
-  smpType?: OrderSMPTypeV5;
-  mmp?: boolean;
-  tpslMode?: 'Full' | 'Partial';
-  tpLimitPrice?: string;
-  slLimitPrice?: string;
-  tpOrderType?: OrderTypeV5;
-  slOrderType?: OrderTypeV5;
-}
-⋮----
-export interface BatchAmendOrderParamsV5 {
-  symbol: string;
-  orderId?: string;
-  orderLinkId?: string;
-  orderIv?: string;
-  triggerPrice?: string;
-  qty?: string;
-  price?: string;
-  tpslMode?: 'Full' | 'Partial';
-  takeProfit?: string;
-  stopLoss?: string;
-  tpTriggerBy?: OrderTriggerByV5;
-  slTriggerBy?: OrderTriggerByV5;
-  triggerBy?: OrderTriggerByV5;
-  tpLimitPrice?: string;
-  slLimitPrice?: string;
-}
-⋮----
-export interface BatchCancelOrderParamsV5 {
-  symbol: string;
-  orderId?: string;
-  orderLinkId?: string;
-}
-
-================
 File: src/types/response/index.ts
 ================
 
 
 ================
-File: src/types/response/v5-account.ts
-================
-import {
-  AccountMarginModeV5,
-  AccountTypeV5,
-  CategoryV5,
-  TransactionTypeV5,
-  UnifiedUpdateStatusV5,
-} from '../shared-v5';
-⋮----
-export interface WalletBalanceV5Coin {
-  coin: string;
-  equity: string;
-  usdValue: string;
-  walletBalance: string;
-  free: string; // spot only
-  locked: string; // spot only
-  borrowAmount: string;
-  availableToBorrow: string; // deprecated field
-  availableToWithdraw: string;
-  accruedInterest: string;
-  totalOrderIM: string;
-  totalPositionIM: string;
-  totalPositionMM: string;
-  unrealisedPnl: string;
-  cumRealisedPnl: string;
-  bonus: string;
-  marginCollateral: boolean;
-  collateralSwitch: boolean;
-}
-⋮----
-free: string; // spot only
-locked: string; // spot only
-⋮----
-availableToBorrow: string; // deprecated field
-⋮----
-export interface WalletBalanceV5 {
-  accountType: AccountTypeV5;
-  accountLTV: string;
-  accountIMRate: string;
-  accountMMRate: string;
-  accountIMRateByMp: string;
-  accountMMRateByMp: string;
-  totalInitialMarginByMp: string;
-  totalMaintenanceMarginByMp: string;
-  totalEquity: string;
-  totalWalletBalance: string;
-  totalMarginBalance: string;
-  totalAvailableBalance: string;
-  totalPerpUPL: string;
-  totalInitialMargin: string;
-  totalMaintenanceMargin: string;
-  coin: WalletBalanceV5Coin[];
-}
-⋮----
-export interface UnifiedAccountUpgradeResultV5 {
-  unifiedUpdateStatus: UnifiedUpdateStatusV5;
-  unifiedUpdateMsg: {
-    msg: string[] | null;
-  };
-}
-⋮----
-export interface BorrowHistoryRecordV5 {
-  currency: string;
-  createdTime: number;
-  borrowCost: string;
-  hourlyBorrowRate: string;
-  InterestBearingBorrowSize: string;
-  costExemption: string;
-  borrowAmount: string;
-  unrealisedLoss: string;
-  freeBorrowedAmount: string;
-}
-⋮----
-export interface CollateralInfoV5 {
-  currency: string;
-  hourlyBorrowRate: string;
-  maxBorrowingAmount: string;
-  freeBorrowAmount: string;
-  freeBorrowingLimit: string;
-  borrowAmount: string;
-  availableToBorrow: string;
-  borrowable: boolean;
-  borrowUsageRate: string;
-  marginCollateral: boolean;
-  collateralSwitch: boolean;
-  collateralRatio: string;
-}
-⋮----
-export interface CoinGreeksV5 {
-  baseCoin: string;
-  totalDelta: string;
-  totalGamma: string;
-  totalVega: string;
-  totalTheta: string;
-}
-⋮----
-export interface FeeRateV5 {
-  symbol: string;
-  baseCoin: string;
-  takerFeeRate: string;
-  makerFeeRate: string;
-}
-⋮----
-export interface AccountInfoV5 {
-  unifiedMarginStatus: number;
-  marginMode: AccountMarginModeV5;
-  isMasterTrader: boolean;
-  spotHedgingStatus: string;
-  updatedTime: string;
-}
-⋮----
-export interface TransactionLogV5 {
-  symbol: string;
-  category: CategoryV5;
-  side: string;
-  transactionTime: string;
-  type: TransactionTypeV5;
-  qty: string;
-  size: string;
-  currency: string;
-  tradePrice: string;
-  funding: string;
-  fee: string;
-  cashFlow: string;
-  change: string;
-  cashBalance: string;
-  feeRate: string;
-  bonusChange: string;
-  tradeId: string;
-  orderId: string;
-  orderLinkId: string;
-  transSubType: string;
-}
-⋮----
-export interface MMPStateV5 {
-  baseCoin: string;
-  mmpEnabled: boolean;
-  window: string;
-  frozenPeriod: string;
-  qtyLimit: string;
-  deltaLimit: string;
-  mmpFrozenUntil: string;
-  mmpFrozen: boolean;
-}
-⋮----
-export interface RepayLiabilityResultV5 {
-  coin: string;
-  repaymentQty: string;
-}
-⋮----
-export interface DCPInfoV5 {
-  product: 'SPOT' | 'DERIVATIVES' | 'OPTIONS';
-  dcpStatus: 'ON';
-  timeWindow: string;
-}
-
-================
 File: src/types/index.ts
 ================
 
-
-================
-File: src/types/shared-v5.ts
-================
-export type CategoryV5 = 'spot' | 'linear' | 'inverse' | 'option';
-export type ContractTypeV5 =
-  | 'InversePerpetual'
-  | 'LinearPerpetual'
-  | 'InverseFutures';
-export type CopyTradingV5 = 'none' | 'both' | 'utaOnly' | 'normalOnly';
-⋮----
-export type InstrumentStatusV5 =
-  | 'PreLaunch'
-  | 'Trading'
-  | 'Settling'
-  | 'Delivering'
-  | 'Closed';
-⋮----
-export type MarginTradingV5 = 'none' | 'both' | 'utaOnly' | 'normalSpotOnly';
-⋮----
-export type OrderFilterV5 = 'Order' | 'tpslOrder' | 'StopOrder';
-export type OrderSideV5 = 'Buy' | 'Sell';
-export type OrderTypeV5 = 'Market' | 'Limit';
-export type OrderTimeInForceV5 = 'GTC' | 'IOC' | 'FOK' | 'PostOnly' | 'RPI';
-export type OrderTriggerByV5 = 'LastPrice' | 'IndexPrice' | 'MarkPrice';
-export type OCOTriggerTypeV5 =
-  | 'OcoTriggerByUnknown'
-  | 'OcoTriggerTp'
-  | 'OcoTriggerBySl';
-⋮----
-export type OrderSMPTypeV5 =
-  | 'None'
-  | 'CancelMaker'
-  | 'CancelTaker'
-  | 'CancelBoth';
-⋮----
-export type OrderStatusV5 =
-  | 'Created'
-  | 'New'
-  | 'Rejected'
-  | 'PartiallyFilled'
-  | 'PartiallyFilledCanceled'
-  | 'Filled'
-  | 'Cancelled'
-  | 'Untriggered'
-  | 'Triggered'
-  | 'Deactivated'
-  | 'Active';
-⋮----
-/**
- * Defines the types of order creation mechanisms.
- */
-export type OrderCreateTypeV5 =
-  /** Represents an order created by a user. */
-  | 'CreateByUser'
-  /** Represents an order created by an admin closing. */
-  | 'CreateByAdminClosing'
-  /** Futures conditional order. */
-  | 'CreateByStopOrder'
-  /** Futures take profit order. */
-  | 'CreateByTakeProfit'
-  /** Futures partial take profit order. */
-  | 'CreateByPartialTakeProfit'
-  /** Futures stop loss order. */
-  | 'CreateByStopLoss'
-  /** Futures partial stop loss order. */
-  | 'CreateByPartialStopLoss'
-  /** Futures trailing stop order. */
-  | 'CreateByTrailingStop'
-  /** Laddered liquidation to reduce the required maintenance margin. */
-  | 'CreateByLiq'
-  /**
-   * If the position is still subject to liquidation (i.e., does not meet the required maintenance margin level),
-   * the position shall be taken over by the liquidation engine and closed at the bankruptcy price.
-   */
-  | 'CreateByTakeOver_PassThrough'
-  /** Auto-Deleveraging(ADL) */
-  | 'CreateByAdl_PassThrough'
-  /** Order placed via Paradigm. */
-  | 'CreateByBlock_PassThrough'
-  /** Order created by move position. */
-  | 'CreateByBlockTradeMovePosition_PassThrough'
-  /** The close order placed via web or app position area - web/app. */
-  | 'CreateByClosing'
-  /** Order created via grid bot - web/app. */
-  | 'CreateByFGridBot'
-  /** Order closed via grid bot - web/app. */
-  | 'CloseByFGridBot'
-  /** Order created by TWAP - web/app. */
-  | 'CreateByTWAP'
-  /** Order created by TV webhook - web/app. */
-  | 'CreateByTVSignal'
-  /** Order created by Mm rate close function - web/app. */
-  | 'CreateByMmRateClose'
-  /** Order created by Martingale bot - web/app. */
-  | 'CreateByMartingaleBot'
-  /** Order closed by Martingale bot - web/app. */
-  | 'CloseByMartingaleBot'
-  /** Order created by Ice berg strategy - web/app. */
-  | 'CreateByIceBerg'
-  /** Order created by arbitrage - web/app. */
-  | 'CreateByArbitrage'
-  /** Option dynamic delta hedge order - web/app */
-  | 'CreateByDdh';
-⋮----
-/** Represents an order created by a user. */
-⋮----
-/** Represents an order created by an admin closing. */
-⋮----
-/** Futures conditional order. */
-⋮----
-/** Futures take profit order. */
-⋮----
-/** Futures partial take profit order. */
-⋮----
-/** Futures stop loss order. */
-⋮----
-/** Futures partial stop loss order. */
-⋮----
-/** Futures trailing stop order. */
-⋮----
-/** Laddered liquidation to reduce the required maintenance margin. */
-⋮----
-/**
-   * If the position is still subject to liquidation (i.e., does not meet the required maintenance margin level),
-   * the position shall be taken over by the liquidation engine and closed at the bankruptcy price.
-   */
-⋮----
-/** Auto-Deleveraging(ADL) */
-⋮----
-/** Order placed via Paradigm. */
-⋮----
-/** Order created by move position. */
-⋮----
-/** The close order placed via web or app position area - web/app. */
-⋮----
-/** Order created via grid bot - web/app. */
-⋮----
-/** Order closed via grid bot - web/app. */
-⋮----
-/** Order created by TWAP - web/app. */
-⋮----
-/** Order created by TV webhook - web/app. */
-⋮----
-/** Order created by Mm rate close function - web/app. */
-⋮----
-/** Order created by Martingale bot - web/app. */
-⋮----
-/** Order closed by Martingale bot - web/app. */
-⋮----
-/** Order created by Ice berg strategy - web/app. */
-⋮----
-/** Order created by arbitrage - web/app. */
-⋮----
-/** Option dynamic delta hedge order - web/app */
-⋮----
-export type OrderCancelTypeV5 =
-  | 'CancelByUser'
-  | 'CancelByReduceOnly'
-  | 'CancelByPrepareLiq'
-  | 'CancelAllBeforeLiq'
-  | 'CancelByPrepareAdl'
-  | 'CancelAllBeforeAdl'
-  | 'CancelByAdmin'
-  | 'CancelByTpSlTsClear'
-  | 'CancelByPzSideCh'
-  | 'UNKNOWN';
-⋮----
-export type OrderRejectReasonV5 =
-  | 'EC_NoError'
-  | 'EC_Others'
-  | 'EC_UnknownMessageType'
-  | 'EC_MissingClOrdID'
-  | 'EC_MissingOrigClOrdID'
-  | 'EC_ClOrdIDOrigClOrdIDAreTheSame'
-  | 'EC_DuplicatedClOrdID'
-  | 'EC_OrigClOrdIDDoesNotExist'
-  | 'EC_TooLateToCancel'
-  | 'EC_UnknownOrderType'
-  | 'EC_UnknownSide'
-  | 'EC_UnknownTimeInForce'
-  | 'EC_WronglyRouted'
-  | 'EC_MarketOrderPriceIsNotZero'
-  | 'EC_LimitOrderInvalidPrice'
-  | 'EC_NoEnoughQtyToFill'
-  | 'EC_NoImmediateQtyToFill'
-  | 'EC_PerCancelRequest'
-  | 'EC_MarketOrderCannotBePostOnly'
-  | 'EC_PostOnlyWillTakeLiquidity'
-  | 'EC_CancelReplaceOrder'
-  | 'EC_InvalidSymbolStatus';
-⋮----
-export type StopOrderTypeV5 =
-  | 'TakeProfit'
-  | 'StopLoss'
-  | 'TrailingStop'
-  | 'Stop'
-  | 'PartialTakeProfit'
-  | 'PartialStopLoss'
-  | 'tpslOrder'
-  | 'OcoOrder'
-  | 'MmRateClose'
-  | 'BidirectionalTpslOrder';
-⋮----
-/**
- * Position index. Used to identify positions in different position modes.
- *
- * - 0 one-way mode position
- * - 1 Buy side of hedge-mode position
- * - 2 Sell side of hedge-mode position
- */
-export type PositionIdx = 0 | 1 | 2;
-⋮----
-/**
- * Position status.
- *
- * - 'Normal'
- * - 'Liq' in the liquidation progress
- * - 'Adl' in the auto-deleverage progress
- */
-export type PositionStatusV5 = 'Normal' | 'Liq' | 'Adl';
-export type PositionSideV5 = 'Buy' | 'Sell' | 'None' | '';
-⋮----
-export type OptionTypeV5 = 'Call' | 'Put';
-⋮----
-/**
- * Trade mode.
- *
- * - 0 cross-margin,
- * - 1 isolated margin
- */
-export type TradeModeV5 = 0 | 1;
-⋮----
-export type TPSLModeV5 = 'Full' | 'Partial';
-export type AccountMarginModeV5 =
-  | 'ISOLATED_MARGIN'
-  | 'REGULAR_MARGIN'
-  | 'PORTFOLIO_MARGIN';
-export type UnifiedUpdateStatusV5 = 'FAIL' | 'PROCESS' | 'SUCCESS';
-⋮----
-export type AccountTypeV5 =
-  | 'CONTRACT'
-  | 'SPOT'
-  | 'INVESTMENT'
-  | 'OPTION'
-  | 'UNIFIED'
-  | 'FUND';
-⋮----
-export type TransactionTypeV5 =
-  | 'TRANSFER_IN'
-  | 'TRANSFER_OUT'
-  | 'TRADE'
-  | 'SETTLEMENT'
-  | 'DELIVERY'
-  | 'LIQUIDATION'
-  | 'BONUS'
-  | 'FEE_REFUND'
-  | 'INTEREST'
-  | 'CURRENCY_BUY'
-  | 'CURRENCY_SELL';
-⋮----
-export type PermissionTypeV5 =
-  | 'ContractTrade'
-  | 'Spot'
-  | 'Wallet'
-  | 'Options'
-  | 'Derivatives'
-  | 'Exchange'
-  | 'NFT';
-⋮----
-/**
- * Leveraged token status:
- *
- * - '1' LT can be purchased and redeemed
- * - '2' LT can be purchased, but not redeemed
- * - '3' LT can be redeemed, but not purchased
- * - '4' LT cannot be purchased nor redeemed
- * - '5' Adjusting position
- */
-export type LeverageTokenStatusV5 = '1' | '2' | '3' | '4' | '5';
-⋮----
-/**
- * Leveraged token order type: '1': purchase, '2': redeem
- */
-export type LTOrderTypeV5 = '1' | '2';
-⋮----
-/**
- * Leveraged token order status: '1': completed, '2': in progress, '3': failed
- */
-export type LTOrderStatusV5 = '1' | '2' | '3';
-⋮----
-export type ExecTypeV5 =
-  | 'Trade'
-  | 'AdlTrade'
-  | 'Funding'
-  | 'BustTrade'
-  | 'Settle'
-  | 'BlockTrade'
-  | 'MovePosition'
-  | 'UNKNOWN';
-⋮----
-/**
- * Withdraw type. 0(default): on chain. 1: off chain. 2: all.
- */
-export type WithdrawalTypeV5 = '0' | '1' | '2';
-⋮----
-export interface PermissionsV5 {
-  ContractTrade?: string[];
-  Spot?: string[];
-  Wallet?: string[];
-  Options?: string[];
-  Derivatives?: string[];
-  CopyTrading?: string[];
-  BlockTrade?: string[];
-  Exchange?: string[];
-  /** @deprecated , always returns []*/
-  NFT?: string[];
-}
-⋮----
-/** @deprecated , always returns []*/
-⋮----
-export interface CategoryCursorListV5<
-  T extends unknown[],
-  TCategory extends CategoryV5 = CategoryV5,
-> {
-  category: TCategory;
-  list: T;
-  nextPageCursor?: string;
-}
-⋮----
-/**
- * Next page cursor does not exist for spot!
- */
-export interface CursorListV5<T extends unknown[]> {
-  nextPageCursor: string;
-  list: T;
-}
-⋮----
-/**
- * A wrapper type for any responses that have a "nextPageCursor" property, and a "rows" property with an array of elements
- *
- * ```{ nextPageCursor: "something", rows: someData[] }```
- */
-export interface CursorRowsV5<T extends unknown[]> {
-  nextPageCursor: string;
-  rows: T;
-}
-⋮----
-export interface CategoryListV5<
-  T extends unknown[],
-  TCategory extends CategoryV5,
-> {
-  category: TCategory;
-  list: T;
-}
-⋮----
-export interface CategorySymbolListV5<
-  T extends unknown[],
-  TCategory extends CategoryV5,
-> {
-  category: TCategory;
-  symbol: string;
-  list: T;
-}
 
 ================
 File: src/types/shared.ts
@@ -9301,6 +9184,165 @@ File: .eslintrc.cjs
 // 'plugin:require-extensions/recommended', // only once moved to ESM
 ⋮----
 // 'no-unused-vars': ['warn'],
+
+================
+File: src/types/response/v5-account.ts
+================
+import {
+  AccountMarginModeV5,
+  AccountTypeV5,
+  CategoryV5,
+  TransactionTypeV5,
+  UnifiedUpdateStatusV5,
+} from '../shared-v5';
+⋮----
+export interface WalletBalanceV5Coin {
+  coin: string;
+  equity: string;
+  usdValue: string;
+  walletBalance: string;
+  free: string; // spot only
+  locked: string; // spot only
+  borrowAmount: string;
+  availableToBorrow: string; // deprecated field
+  availableToWithdraw: string;
+  accruedInterest: string;
+  totalOrderIM: string;
+  totalPositionIM: string;
+  totalPositionMM: string;
+  unrealisedPnl: string;
+  cumRealisedPnl: string;
+  bonus: string;
+  marginCollateral: boolean;
+  collateralSwitch: boolean;
+}
+⋮----
+free: string; // spot only
+locked: string; // spot only
+⋮----
+availableToBorrow: string; // deprecated field
+⋮----
+export interface WalletBalanceV5 {
+  accountType: AccountTypeV5;
+  accountLTV: string;
+  accountIMRate: string;
+  accountMMRate: string;
+  accountIMRateByMp: string;
+  accountMMRateByMp: string;
+  totalInitialMarginByMp: string;
+  totalMaintenanceMarginByMp: string;
+  totalEquity: string;
+  totalWalletBalance: string;
+  totalMarginBalance: string;
+  totalAvailableBalance: string;
+  totalPerpUPL: string;
+  totalInitialMargin: string;
+  totalMaintenanceMargin: string;
+  coin: WalletBalanceV5Coin[];
+}
+⋮----
+export interface UnifiedAccountUpgradeResultV5 {
+  unifiedUpdateStatus: UnifiedUpdateStatusV5;
+  unifiedUpdateMsg: {
+    msg: string[] | null;
+  };
+}
+⋮----
+export interface BorrowHistoryRecordV5 {
+  currency: string;
+  createdTime: number;
+  borrowCost: string;
+  hourlyBorrowRate: string;
+  InterestBearingBorrowSize: string;
+  costExemption: string;
+  borrowAmount: string;
+  unrealisedLoss: string;
+  freeBorrowedAmount: string;
+}
+⋮----
+export interface CollateralInfoV5 {
+  currency: string;
+  hourlyBorrowRate: string;
+  maxBorrowingAmount: string;
+  freeBorrowAmount: string;
+  freeBorrowingLimit: string;
+  borrowAmount: string;
+  availableToBorrow: string;
+  borrowable: boolean;
+  borrowUsageRate: string;
+  marginCollateral: boolean;
+  collateralSwitch: boolean;
+  collateralRatio: string;
+}
+⋮----
+export interface CoinGreeksV5 {
+  baseCoin: string;
+  totalDelta: string;
+  totalGamma: string;
+  totalVega: string;
+  totalTheta: string;
+}
+⋮----
+export interface FeeRateV5 {
+  symbol: string;
+  baseCoin: string;
+  takerFeeRate: string;
+  makerFeeRate: string;
+}
+⋮----
+export interface AccountInfoV5 {
+  unifiedMarginStatus: number;
+  marginMode: AccountMarginModeV5;
+  isMasterTrader: boolean;
+  spotHedgingStatus: string;
+  updatedTime: string;
+}
+⋮----
+export interface TransactionLogV5 {
+  symbol: string;
+  category: CategoryV5;
+  side: string;
+  transactionTime: string;
+  type: TransactionTypeV5;
+  qty: string;
+  size: string;
+  currency: string;
+  tradePrice: string;
+  funding: string;
+  fee: string;
+  cashFlow: string;
+  change: string;
+  cashBalance: string;
+  feeRate: string;
+  bonusChange: string;
+  tradeId: string;
+  orderId: string;
+  orderLinkId: string;
+  extraFees: string;
+  transSubType: string;
+}
+⋮----
+export interface MMPStateV5 {
+  baseCoin: string;
+  mmpEnabled: boolean;
+  window: string;
+  frozenPeriod: string;
+  qtyLimit: string;
+  deltaLimit: string;
+  mmpFrozenUntil: string;
+  mmpFrozen: boolean;
+}
+⋮----
+export interface RepayLiabilityResultV5 {
+  coin: string;
+  repaymentQty: string;
+}
+⋮----
+export interface DCPInfoV5 {
+  product: 'SPOT' | 'DERIVATIVES' | 'OPTIONS';
+  dcpStatus: 'ON';
+  timeWindow: string;
+}
 
 ================
 File: src/types/response/v5-market.ts
@@ -9988,6 +10030,474 @@ export interface SpreadTradeV5 {
 }
 
 ================
+File: src/types/shared-v5.ts
+================
+export type CategoryV5 = 'spot' | 'linear' | 'inverse' | 'option';
+export type ContractTypeV5 =
+  | 'InversePerpetual'
+  | 'LinearPerpetual'
+  | 'InverseFutures';
+export type CopyTradingV5 = 'none' | 'both' | 'utaOnly' | 'normalOnly';
+⋮----
+export type InstrumentStatusV5 =
+  | 'PreLaunch'
+  | 'Trading'
+  | 'Settling'
+  | 'Delivering'
+  | 'Closed';
+⋮----
+export type MarginTradingV5 = 'none' | 'both' | 'utaOnly' | 'normalSpotOnly';
+⋮----
+export type OrderFilterV5 = 'Order' | 'tpslOrder' | 'StopOrder';
+export type OrderSideV5 = 'Buy' | 'Sell';
+export type OrderTypeV5 = 'Market' | 'Limit';
+export type OrderTimeInForceV5 = 'GTC' | 'IOC' | 'FOK' | 'PostOnly' | 'RPI';
+export type OrderTriggerByV5 = 'LastPrice' | 'IndexPrice' | 'MarkPrice';
+export type OCOTriggerTypeV5 =
+  | 'OcoTriggerByUnknown'
+  | 'OcoTriggerTp'
+  | 'OcoTriggerBySl';
+⋮----
+export type OrderSMPTypeV5 =
+  | 'None'
+  | 'CancelMaker'
+  | 'CancelTaker'
+  | 'CancelBoth';
+⋮----
+export type OrderStatusV5 =
+  | 'Created'
+  | 'New'
+  | 'Rejected'
+  | 'PartiallyFilled'
+  | 'PartiallyFilledCanceled'
+  | 'Filled'
+  | 'Cancelled'
+  | 'Untriggered'
+  | 'Triggered'
+  | 'Deactivated'
+  | 'Active';
+⋮----
+/**
+ * Defines the types of order creation mechanisms.
+ */
+export type OrderCreateTypeV5 =
+  /** Represents an order created by a user. */
+  | 'CreateByUser'
+  /** Represents an order created by an admin closing. */
+  | 'CreateByAdminClosing'
+  /** Futures conditional order. */
+  | 'CreateByStopOrder'
+  /** Futures take profit order. */
+  | 'CreateByTakeProfit'
+  /** Futures partial take profit order. */
+  | 'CreateByPartialTakeProfit'
+  /** Futures stop loss order. */
+  | 'CreateByStopLoss'
+  /** Futures partial stop loss order. */
+  | 'CreateByPartialStopLoss'
+  /** Futures trailing stop order. */
+  | 'CreateByTrailingStop'
+  /** Laddered liquidation to reduce the required maintenance margin. */
+  | 'CreateByLiq'
+  /**
+   * If the position is still subject to liquidation (i.e., does not meet the required maintenance margin level),
+   * the position shall be taken over by the liquidation engine and closed at the bankruptcy price.
+   */
+  | 'CreateByTakeOver_PassThrough'
+  /** Auto-Deleveraging(ADL) */
+  | 'CreateByAdl_PassThrough'
+  /** Order placed via Paradigm. */
+  | 'CreateByBlock_PassThrough'
+  /** Order created by move position. */
+  | 'CreateByBlockTradeMovePosition_PassThrough'
+  /** The close order placed via web or app position area - web/app. */
+  | 'CreateByClosing'
+  /** Order created via grid bot - web/app. */
+  | 'CreateByFGridBot'
+  /** Order closed via grid bot - web/app. */
+  | 'CloseByFGridBot'
+  /** Order created by TWAP - web/app. */
+  | 'CreateByTWAP'
+  /** Order created by TV webhook - web/app. */
+  | 'CreateByTVSignal'
+  /** Order created by Mm rate close function - web/app. */
+  | 'CreateByMmRateClose'
+  /** Order created by Martingale bot - web/app. */
+  | 'CreateByMartingaleBot'
+  /** Order closed by Martingale bot - web/app. */
+  | 'CloseByMartingaleBot'
+  /** Order created by Ice berg strategy - web/app. */
+  | 'CreateByIceBerg'
+  /** Order created by arbitrage - web/app. */
+  | 'CreateByArbitrage'
+  /** Option dynamic delta hedge order - web/app */
+  | 'CreateByDdh';
+⋮----
+/** Represents an order created by a user. */
+⋮----
+/** Represents an order created by an admin closing. */
+⋮----
+/** Futures conditional order. */
+⋮----
+/** Futures take profit order. */
+⋮----
+/** Futures partial take profit order. */
+⋮----
+/** Futures stop loss order. */
+⋮----
+/** Futures partial stop loss order. */
+⋮----
+/** Futures trailing stop order. */
+⋮----
+/** Laddered liquidation to reduce the required maintenance margin. */
+⋮----
+/**
+   * If the position is still subject to liquidation (i.e., does not meet the required maintenance margin level),
+   * the position shall be taken over by the liquidation engine and closed at the bankruptcy price.
+   */
+⋮----
+/** Auto-Deleveraging(ADL) */
+⋮----
+/** Order placed via Paradigm. */
+⋮----
+/** Order created by move position. */
+⋮----
+/** The close order placed via web or app position area - web/app. */
+⋮----
+/** Order created via grid bot - web/app. */
+⋮----
+/** Order closed via grid bot - web/app. */
+⋮----
+/** Order created by TWAP - web/app. */
+⋮----
+/** Order created by TV webhook - web/app. */
+⋮----
+/** Order created by Mm rate close function - web/app. */
+⋮----
+/** Order created by Martingale bot - web/app. */
+⋮----
+/** Order closed by Martingale bot - web/app. */
+⋮----
+/** Order created by Ice berg strategy - web/app. */
+⋮----
+/** Order created by arbitrage - web/app. */
+⋮----
+/** Option dynamic delta hedge order - web/app */
+⋮----
+export type OrderCancelTypeV5 =
+  | 'CancelByUser'
+  | 'CancelByReduceOnly'
+  | 'CancelByPrepareLiq'
+  | 'CancelAllBeforeLiq'
+  | 'CancelByPrepareAdl'
+  | 'CancelAllBeforeAdl'
+  | 'CancelByAdmin'
+  | 'CancelByTpSlTsClear'
+  | 'CancelByPzSideCh'
+  | 'UNKNOWN';
+⋮----
+export type OrderRejectReasonV5 =
+  | 'EC_NoError'
+  | 'EC_Others'
+  | 'EC_UnknownMessageType'
+  | 'EC_MissingClOrdID'
+  | 'EC_MissingOrigClOrdID'
+  | 'EC_ClOrdIDOrigClOrdIDAreTheSame'
+  | 'EC_DuplicatedClOrdID'
+  | 'EC_OrigClOrdIDDoesNotExist'
+  | 'EC_TooLateToCancel'
+  | 'EC_UnknownOrderType'
+  | 'EC_UnknownSide'
+  | 'EC_UnknownTimeInForce'
+  | 'EC_WronglyRouted'
+  | 'EC_MarketOrderPriceIsNotZero'
+  | 'EC_LimitOrderInvalidPrice'
+  | 'EC_NoEnoughQtyToFill'
+  | 'EC_NoImmediateQtyToFill'
+  | 'EC_PerCancelRequest'
+  | 'EC_MarketOrderCannotBePostOnly'
+  | 'EC_PostOnlyWillTakeLiquidity'
+  | 'EC_CancelReplaceOrder'
+  | 'EC_InvalidSymbolStatus';
+⋮----
+export type StopOrderTypeV5 =
+  | 'TakeProfit'
+  | 'StopLoss'
+  | 'TrailingStop'
+  | 'Stop'
+  | 'PartialTakeProfit'
+  | 'PartialStopLoss'
+  | 'tpslOrder'
+  | 'OcoOrder'
+  | 'MmRateClose'
+  | 'BidirectionalTpslOrder';
+⋮----
+/**
+ * Position index. Used to identify positions in different position modes.
+ *
+ * - 0 one-way mode position
+ * - 1 Buy side of hedge-mode position
+ * - 2 Sell side of hedge-mode position
+ */
+export type PositionIdx = 0 | 1 | 2;
+⋮----
+/**
+ * Position status.
+ *
+ * - 'Normal'
+ * - 'Liq' in the liquidation progress
+ * - 'Adl' in the auto-deleverage progress
+ */
+export type PositionStatusV5 = 'Normal' | 'Liq' | 'Adl';
+export type PositionSideV5 = 'Buy' | 'Sell' | 'None' | '';
+⋮----
+export type OptionTypeV5 = 'Call' | 'Put';
+⋮----
+/**
+ * Trade mode.
+ *
+ * - 0 cross-margin,
+ * - 1 isolated margin
+ */
+export type TradeModeV5 = 0 | 1;
+⋮----
+export type TPSLModeV5 = 'Full' | 'Partial';
+export type AccountMarginModeV5 =
+  | 'ISOLATED_MARGIN'
+  | 'REGULAR_MARGIN'
+  | 'PORTFOLIO_MARGIN';
+export type UnifiedUpdateStatusV5 = 'FAIL' | 'PROCESS' | 'SUCCESS';
+⋮----
+export type AccountTypeV5 =
+  | 'CONTRACT'
+  | 'SPOT'
+  | 'INVESTMENT'
+  | 'OPTION'
+  | 'UNIFIED'
+  | 'FUND';
+⋮----
+export type TransactionTypeV5 =
+  | 'TRANSFER_IN'
+  | 'TRANSFER_OUT'
+  | 'TRADE'
+  | 'SETTLEMENT'
+  | 'DELIVERY'
+  | 'LIQUIDATION'
+  | 'ADL'
+  | 'AIRDROP'
+  | 'BONUS_RECOLLECT'
+  | 'BONUS_RECOLLECT'
+  | 'FEE_REFUND'
+  | 'INTEREST'
+  | 'CURRENCY_BUY'
+  | 'CURRENCY_SELL'
+  | 'BORROWED_AMOUNT_INS_LOAN'
+  | 'PRINCIPLE_REPAYMENT_INS_LOAN'
+  | 'INTEREST_REPAYMENT_INS_LOAN'
+  | 'AUTO_SOLD_COLLATERAL_INS_LOAN'
+  | 'AUTO_BUY_LIABILITY_INS_LOAN'
+  | 'AUTO_PRINCIPLE_REPAYMENT_INS_LOAN'
+  | 'AUTO_INTEREST_REPAYMENT_INS_LOAN'
+  | 'TRANSFER_IN_INS_LOAN'
+  | 'TRANSFER_OUT_INS_LOAN'
+  | 'SPOT_REPAYMENT_SELL'
+  | 'SPOT_REPAYMENT_BUY'
+  | 'TOKENS_SUBSCRIPTION'
+  | 'TOKENS_REDEMPTION'
+  | 'AUTO_DEDUCTION'
+  | 'FLEXIBLE_STAKING_SUBSCRIPTION'
+  | 'FLEXIBLE_STAKING_REDEMPTION'
+  | 'FIXED_STAKING_SUBSCRIPTION'
+  | 'BORROWED_AMOUNT_INS_LOAN'
+  | 'PRINCIPLE_REPAYMENT_INS_LOAN'
+  | 'INTEREST_REPAYMENT_INS_LOAN'
+  | 'AUTO_SOLD_COLLATERAL_INS_LOAN'
+  | 'AUTO_BUY_LIABILITY_INS_LOAN'
+  | 'AUTO_PRINCIPLE_REPAYMENT_INS_LOAN'
+  | 'AUTO_INTEREST_REPAYMENT_INS_LOAN'
+  | 'TRANSFER_IN_INS_LOAN'
+  | 'TRANSFER_OUT_INS_LOAN'
+  | 'SPOT_REPAYMENT_SELL'
+  | 'SPOT_REPAYMENT_BUY'
+  | 'TOKENS_SUBSCRIPTION'
+  | 'TOKENS_REDEMPTION'
+  | 'AUTO_DEDUCTION'
+  | 'FLEXIBLE_STAKING_SUBSCRIPTION'
+  | 'FLEXIBLE_STAKING_REDEMPTION'
+  | 'FIXED_STAKING_SUBSCRIPTION'
+  | 'FLEXIBLE_STAKING_REFUND'
+  | 'FIXED_STAKING_REFUND'
+  | 'PREMARKET_TRANSFER_OUT'
+  | 'PREMARKET_DELIVERY_SELL_NEW_COIN'
+  | 'PREMARKET_DELIVERY_BUY_NEW_COIN'
+  | 'PREMARKET_DELIVERY_PLEDGE_PAY_SELLER'
+  | 'PREMARKET_DELIVERY_PLEDGE_BACK'
+  | 'PREMARKET_ROLLBACK_PLEDGE_BACK'
+  | 'PREMARKET_ROLLBACK_PLEDGE_PENALTY_TO_BUYER'
+  | 'CUSTODY_NETWORK_FEE'
+  | 'CUSTODY_SETTLE_FEE'
+  | 'CUSTODY_LOCK'
+  | 'CUSTODY_UNLOCK'
+  | 'CUSTODY_UNLOCK_REFUND'
+  | 'LOANS_BORROW_FUNDS'
+  | 'LOANS_PLEDGE_ASSET'
+  | 'BONUS_TRANSFER_IN'
+  | 'BONUS_TRANSFER_OUT'
+  | 'PEF_TRANSFER_IN'
+  | 'PEF_TRANSFER_OUT'
+  | 'PEF_PROFIT_SHARE'
+  | 'ONCHAINEARN_SUBSCRIPTION'
+  | 'ONCHAINEARN_REDEMPTION'
+  | 'ONCHAINEARN_REFUND'
+  | 'STRUCTURE_PRODUCT_SUBSCRIPTION'
+  | 'STRUCTURE_PRODUCT_REFUND'
+  | 'CLASSIC_WEALTH_MANAGEMENT_SUBSCRIPTION'
+  | 'PREMIMUM_WEALTH_MANAGEMENT_SUBSCRIPTION'
+  | 'PREMIMUM_WEALTH_MANAGEMENT_REFUND'
+  | 'LIQUIDITY_MINING_SUBSCRIPTION'
+  | 'LIQUIDITY_MINING_REFUND'
+  | 'PWM_SUBSCRIPTION'
+  | 'PWM_REFUND'
+  | 'DEFI_INVESTMENT_SUBSCRIPTION'
+  | 'DEFI_INVESTMENT_REFUND'
+  | 'DEFI_INVESTMENT_REDEMPTION'
+  | 'INSTITUTION_LOAN_IN'
+  | 'INSTITUTION_PAYBACK_PRINCIPAL_OUT'
+  | 'INSTITUTION_PAYBACK_INTEREST_OUT'
+  | 'INSTITUTION_EXCHANGE_SELL'
+  | 'INSTITUTION_EXCHANGE_BUY'
+  | 'INSTITUTION_LIQ_PRINCIPAL_OUT'
+  | 'INSTITUTION_LIQ_INTEREST_OUT'
+  | 'INSTITUTION_LOAN_TRANSFER_IN'
+  | 'INSTITUTION_LOAN_TRANSFER_OUT'
+  | 'INSTITUTION_LOAN_WITHOUT_WITHDRAW'
+  | 'INSTITUTION_LOAN_RESERVE_IN'
+  | 'INSTITUTION_LOAN_RESERVE_OUT';
+⋮----
+export type PermissionTypeV5 =
+  | 'ContractTrade'
+  | 'Spot'
+  | 'Wallet'
+  | 'Options'
+  | 'Derivatives'
+  | 'Exchange'
+  | 'NFT';
+⋮----
+/**
+ * Leveraged token status:
+ *
+ * - '1' LT can be purchased and redeemed
+ * - '2' LT can be purchased, but not redeemed
+ * - '3' LT can be redeemed, but not purchased
+ * - '4' LT cannot be purchased nor redeemed
+ * - '5' Adjusting position
+ */
+export type LeverageTokenStatusV5 = '1' | '2' | '3' | '4' | '5';
+⋮----
+/**
+ * Leveraged token order type: '1': purchase, '2': redeem
+ */
+export type LTOrderTypeV5 = '1' | '2';
+⋮----
+/**
+ * Leveraged token order status: '1': completed, '2': in progress, '3': failed
+ */
+export type LTOrderStatusV5 = '1' | '2' | '3';
+⋮----
+export type ExecTypeV5 =
+  | 'Trade'
+  | 'AdlTrade'
+  | 'Funding'
+  | 'BustTrade'
+  | 'Settle'
+  | 'BlockTrade'
+  | 'MovePosition'
+  | 'UNKNOWN';
+⋮----
+/**
+ * Withdraw type. 0(default): on chain. 1: off chain. 2: all.
+ */
+export type WithdrawalTypeV5 = '0' | '1' | '2';
+⋮----
+export interface PermissionsV5 {
+  ContractTrade?: string[];
+  Spot?: string[];
+  Wallet?: string[];
+  Options?: string[];
+  Derivatives?: string[];
+  CopyTrading?: string[];
+  BlockTrade?: string[];
+  Exchange?: string[];
+  /** @deprecated , always returns []*/
+  NFT?: string[];
+}
+⋮----
+/** @deprecated , always returns []*/
+⋮----
+export interface CategoryCursorListV5<
+  T extends unknown[],
+  TCategory extends CategoryV5 = CategoryV5,
+> {
+  category: TCategory;
+  list: T;
+  nextPageCursor?: string;
+}
+⋮----
+/**
+ * Next page cursor does not exist for spot!
+ */
+export interface CursorListV5<T extends unknown[]> {
+  nextPageCursor: string;
+  list: T;
+}
+⋮----
+/**
+ * A wrapper type for any responses that have a "nextPageCursor" property, and a "rows" property with an array of elements
+ *
+ * ```{ nextPageCursor: "something", rows: someData[] }```
+ */
+export interface CursorRowsV5<T extends unknown[]> {
+  nextPageCursor: string;
+  rows: T;
+}
+⋮----
+export interface CategoryListV5<
+  T extends unknown[],
+  TCategory extends CategoryV5,
+> {
+  category: TCategory;
+  list: T;
+}
+⋮----
+export interface CategorySymbolListV5<
+  T extends unknown[],
+  TCategory extends CategoryV5,
+> {
+  category: TCategory;
+  symbol: string;
+  list: T;
+}
+⋮----
+export interface GetSystemStatusParamsV5 {
+  id?: string;
+  state?: string;
+}
+⋮----
+export interface SystemStatusItemV5 {
+  id: string;
+  title: string;
+  state: string;
+  begin: string;
+  end: string;
+  href: string;
+  serviceTypes: number[];
+  product: number[];
+  uidSuffix: number[];
+  maintainType: string;
+  env: string;
+}
+
+================
 File: src/types/response/v5-asset.ts
 ================
 import { AccountTypeV5, OrderSideV5, WithdrawalTypeV5 } from '../shared-v5';
@@ -10264,167 +10774,6 @@ export interface ConvertHistoryRecordV5 {
 }
 
 ================
-File: src/types/websockets/ws-api.ts
-================
-import { APIID, WS_KEY_MAP } from '../../util';
-import {
-  AmendOrderParamsV5,
-  BatchAmendOrderParamsV5,
-  BatchCancelOrderParamsV5,
-  BatchOrderParamsV5,
-  CancelOrderParamsV5,
-  OrderParamsV5,
-} from '../request';
-import {
-  BatchAmendOrderResultV5,
-  BatchCancelOrderResultV5,
-  BatchCreateOrderResultV5,
-  BatchOrdersRetExtInfoV5,
-  OrderResultV5,
-} from '../response';
-import { WsKey } from './ws-general';
-⋮----
-// When new WS API operations are added, make sure to also update WS_API_Operations[] below
-export type WSAPIOperation =
-  | 'order.create'
-  | 'order.amend'
-  | 'order.cancel'
-  | 'order.create-batch'
-  | 'order.amend-batch'
-  | 'order.cancel-batch';
-⋮----
-export type WsOperation =
-  | 'subscribe'
-  | 'unsubscribe'
-  | 'auth'
-  | 'ping'
-  | 'pong';
-⋮----
-export interface WsRequestOperationBybit<TWSTopic extends string> {
-  req_id: string;
-  op: WsOperation;
-  args?: (TWSTopic | string | number)[];
-}
-⋮----
-export interface WSAPIRequest<
-  TRequestParams = undefined,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  TWSOperation extends WSAPIOperation = any,
-> {
-  reqId: string;
-  op: TWSOperation;
-  header: {
-    'X-BAPI-TIMESTAMP': string;
-    'X-BAPI-RECV-WINDOW': string;
-    Referer: typeof APIID;
-  };
-  args: [TRequestParams];
-}
-⋮----
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-⋮----
-export interface WSAPIResponse<
-  TResponseData extends object = object,
-  TOperation extends WSAPIOperation = WSAPIOperation,
-  TResponseExtInfo = {}, // added as optional for batch calls
-> {
-  wsKey: WsKey;
-  /** Auto-generated */
-  reqId: string;
-  retCode: 0 | number;
-  retMsg: 'OK' | string;
-  op: TOperation;
-  data: TResponseData;
-  retExtInfo: TResponseExtInfo;
-  header?: {
-    'X-Bapi-Limit': string;
-    'X-Bapi-Limit-Status': string;
-    'X-Bapi-Limit-Reset-Timestamp': string;
-    Traceid: string;
-    Timenow: string;
-  };
-  connId: string;
-}
-⋮----
-TResponseExtInfo = {}, // added as optional for batch calls
-⋮----
-/** Auto-generated */
-⋮----
-export type Exact<T> = {
-  // This part says: if there's any key that's not in T, it's an error
-  [K: string]: never;
-} & {
-  [K in keyof T]: T[K];
-};
-⋮----
-// This part says: if there's any key that's not in T, it's an error
-⋮----
-/**
- * List of operations supported for this WsKey (connection)
- */
-export interface WsAPIWsKeyTopicMap {
-  [WS_KEY_MAP.v5PrivateTrade]: WSAPIOperation;
-}
-⋮----
-/**
- * Request parameters expected per operation
- */
-export interface WsAPITopicRequestParamMap {
-  'order.create': OrderParamsV5;
-  'order.amend': AmendOrderParamsV5;
-  'order.cancel': CancelOrderParamsV5;
-
-  'order.create-batch': {
-    category: 'option' | 'linear';
-    request: BatchOrderParamsV5[];
-  };
-  'order.amend-batch': {
-    category: 'option' | 'linear';
-    request: BatchAmendOrderParamsV5[];
-  };
-  'order.cancel-batch': {
-    category: 'option' | 'linear';
-    request: BatchCancelOrderParamsV5[];
-  };
-}
-⋮----
-/**
- * Response structure expected for each operation
- */
-export interface WsAPIOperationResponseMap {
-  'order.create': WSAPIResponse<OrderResultV5, 'order.create'>;
-  'order.amend': WSAPIResponse<OrderResultV5, 'order.amend'>;
-  'order.cancel': WSAPIResponse<OrderResultV5, 'order.cancel'>;
-
-  'order.create-batch': WSAPIResponse<
-    { list: BatchCreateOrderResultV5[] },
-    'order.create-batch'
-  > & {
-    retExtInfo: BatchOrdersRetExtInfoV5;
-  };
-  'order.amend-batch': WSAPIResponse<
-    { list: BatchAmendOrderResultV5[] },
-    'order.amend-batch'
-  > & {
-    retExtInfo: BatchOrdersRetExtInfoV5;
-  };
-  'order.cancel-batch': WSAPIResponse<
-    { list: BatchCancelOrderResultV5[] },
-    'order.cancel-batch'
-  > & {
-    retExtInfo: BatchOrdersRetExtInfoV5;
-  };
-
-  ping: {
-    retCode: 0 | number;
-    retMsg: 'OK' | string;
-    op: 'pong';
-    data: [string];
-    connId: string;
-  };
-}
-
-================
 File: src/types/response/v5-trade.ts
 ================
 import {
@@ -10552,6 +10901,522 @@ preImrE4: number; // Initial margin rate before checking (in basis points)
 preMmrE4: number; // Maintenance margin rate before checking (in basis points)
 postImrE4: number; // Initial margin rate after checking (in basis points)
 postMmrE4: number; // Maintenance margin rate after checking (in basis points)
+
+================
+File: src/types/request/v5-crypto-loan.ts
+================
+export interface BorrowCryptoLoanParamsV5 {
+  loanCurrency: string;
+  loanAmount?: string;
+  loanTerm?: string;
+  collateralCurrency: string;
+  collateralAmount?: string;
+}
+⋮----
+export interface GetUnpaidLoanOrdersParamsV5 {
+  orderId?: string;
+  loanCurrency?: string;
+  collateralCurrency?: string;
+  loanTermType?: string;
+  loanTerm?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetRepaymentHistoryParamsV5 {
+  orderId?: string;
+  repayId?: string;
+  loanCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetCompletedLoanOrderHistoryParamsV5 {
+  orderId?: string;
+  loanCurrency?: string;
+  collateralCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetLoanLTVAdjustmentHistoryParamsV5 {
+  orderId?: string;
+  adjustId?: string;
+  collateralCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+// New Crypto Loan Request Types
+⋮----
+export interface GetBorrowableCoinsNewParamsV5 {
+  vipLevel?: string;
+  currency?: string;
+}
+⋮----
+export interface GetCollateralCoinsNewParamsV5 {
+  currency?: string;
+}
+⋮----
+export interface GetMaxCollateralAmountNewParamsV5 {
+  currency: string;
+}
+⋮----
+export interface AdjustCollateralAmountNewParamsV5 {
+  currency: string;
+  amount: string;
+  direction: '0' | '1';
+}
+⋮----
+export interface GetCollateralAdjustmentHistoryNewParamsV5 {
+  adjustId?: string;
+  collateralCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+// Flexible Loan Request Types
+⋮----
+export interface BorrowFlexibleParamsV5 {
+  loanCurrency: string;
+  loanAmount: string;
+  collateralList?: {
+    currency: string;
+    amount: string;
+  }[];
+}
+⋮----
+export interface RepayFlexibleParamsV5 {
+  loanCurrency: string;
+  amount: string;
+}
+⋮----
+export interface GetOngoingFlexibleLoansParamsV5 {
+  loanCurrency?: string;
+}
+⋮----
+export interface GetBorrowHistoryFlexibleParamsV5 {
+  orderId?: string;
+  loanCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetRepaymentHistoryFlexibleParamsV5 {
+  repayId?: string;
+  loanCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+// Fixed Loan Request Types
+⋮----
+export interface GetSupplyOrderQuoteFixedParamsV5 {
+  orderCurrency: string;
+  term?: string;
+  orderBy: 'apy' | 'term' | 'quantity';
+  sort?: number;
+  limit?: number;
+}
+⋮----
+export interface GetBorrowOrderQuoteFixedParamsV5 {
+  orderCurrency: string;
+  term?: string;
+  orderBy: 'apy' | 'term' | 'quantity';
+  sort?: number;
+  limit?: number;
+}
+⋮----
+export interface CreateBorrowOrderFixedParamsV5 {
+  orderCurrency: string;
+  orderAmount: string;
+  annualRate: string;
+  term: string;
+  autoRepay?: string;
+  collateralList?: {
+    currency: string;
+    amount: string;
+  }[];
+}
+⋮----
+export interface CreateSupplyOrderFixedParamsV5 {
+  orderCurrency: string;
+  orderAmount: string;
+  annualRate: string;
+  term: string;
+}
+⋮----
+export interface CancelBorrowOrderFixedParamsV5 {
+  orderId: string;
+}
+⋮----
+export interface CancelSupplyOrderFixedParamsV5 {
+  orderId: string;
+}
+⋮----
+export interface GetBorrowContractInfoFixedParamsV5 {
+  orderId?: string;
+  loanId?: string;
+  orderCurrency?: string;
+  term?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetSupplyContractInfoFixedParamsV5 {
+  orderId?: string;
+  supplyId?: string;
+  supplyCurrency?: string;
+  term?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetBorrowOrderInfoFixedParamsV5 {
+  orderId?: string;
+  orderCurrency?: string;
+  state?: string;
+  term?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetSupplyOrderInfoFixedParamsV5 {
+  orderId?: string;
+  orderCurrency?: string;
+  state?: string;
+  term?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface RepayFixedParamsV5 {
+  loanId?: string;
+  loanCurrency?: string;
+}
+⋮----
+export interface GetRepaymentHistoryFixedParamsV5 {
+  repayId?: string;
+  loanCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+
+================
+File: src/types/response/v5-crypto-loan.ts
+================
+export interface CollateralCoinV5 {
+  collateralAccuracy: number;
+  initialLTV: string;
+  liquidationLTV: string;
+  marginCallLTV: string;
+  maxLimit: string;
+}
+⋮----
+export interface VipCollateralCoinsV5 {
+  list: CollateralCoinV5[];
+  vipLevel: string;
+}
+⋮----
+export interface BorrowableCoinV5 {
+  borrowingAccuracy: number;
+  currency: string;
+  flexibleHourlyInterestRate: string;
+  hourlyInterestRate7D: string;
+  hourlyInterestRate14D: string;
+  hourlyInterestRate30D: string;
+  hourlyInterestRate90D: string;
+  hourlyInterestRate180D: string;
+  maxBorrowingAmount: string;
+  minBorrowingAmount: string;
+}
+⋮----
+export interface VipBorrowableCoinsV5 {
+  list: BorrowableCoinV5[];
+  vipLevel: string;
+}
+⋮----
+export interface AccountBorrowCollateralLimitV5 {
+  collateralCurrency: string;
+  loanCurrency: string;
+  maxCollateralAmount: string;
+  maxLoanAmount: string;
+  minCollateralAmount: string;
+  minLoanAmount: string;
+}
+⋮----
+export interface UnpaidLoanOrderV5 {
+  collateralAmount: string;
+  collateralCurrency: string;
+  currentLTV: string;
+  expirationTime: string;
+  hourlyInterestRate: string;
+  loanCurrency: string;
+  loanTerm: string;
+  orderId: string;
+  residualInterest: string;
+  residualPenaltyInterest: string;
+  totalDebt: string;
+}
+⋮----
+export interface RepaymentHistoryV5 {
+  collateralCurrency: string;
+  collateralReturn: string;
+  loanCurrency: string;
+  loanTerm: string;
+  orderId: string;
+  repayAmount: string;
+  repayId: string;
+  repayStatus: number;
+  repayTime: string;
+  repayType: string;
+}
+⋮----
+export interface CompletedLoanOrderV5 {
+  borrowTime: string;
+  collateralCurrency: string;
+  expirationTime: string;
+  hourlyInterestRate: string;
+  initialCollateralAmount: string;
+  initialLoanAmount: string;
+  loanCurrency: string;
+  loanTerm: string;
+  orderId: string;
+  repaidInterest: string;
+  repaidPenaltyInterest: string;
+  status: number;
+}
+export interface LoanLTVAdjustmentHistoryV5 {
+  collateralCurrency: string;
+  orderId: string;
+  adjustId: string;
+  adjustTime: string;
+  preLTV: string;
+  afterLTV: string;
+  direction: number;
+  amount: string;
+}
+⋮----
+// New Crypto Loan Types
+⋮----
+export interface BorrowableCoinNewV5 {
+  currency: string;
+  fixedBorrowable: boolean;
+  fixedBorrowingAccuracy: number;
+  flexibleBorrowable: boolean;
+  flexibleBorrowingAccuracy: number;
+  maxBorrowingAmount: string;
+  minFixedBorrowingAmount: string;
+  minFlexibleBorrowingAmount: string;
+  vipLevel: string;
+  flexibleAnnualizedInterestRate: string;
+  annualizedInterestRate7D: string;
+  annualizedInterestRate14D: string;
+  annualizedInterestRate30D: string;
+  annualizedInterestRate60D: string;
+  annualizedInterestRate90D: string;
+  annualizedInterestRate180D: string;
+}
+⋮----
+export interface CollateralRatioV5 {
+  collateralRatio: string;
+  maxValue: string;
+  minValue: string;
+}
+⋮----
+export interface CollateralRatioConfigV5 {
+  collateralRatioList: CollateralRatioV5[];
+  currencies: string;
+}
+⋮----
+export interface CurrencyLiquidationV5 {
+  currency: string;
+  liquidationOrder: number;
+}
+⋮----
+export interface CollateralDataNewV5 {
+  collateralRatioConfigList: CollateralRatioConfigV5[];
+  currencyLiquidationList: CurrencyLiquidationV5[];
+}
+⋮----
+export interface MaxCollateralAmountNewV5 {
+  maxCollateralAmount: string;
+}
+⋮----
+// Additional New Crypto Loan Types
+⋮----
+export interface AdjustCollateralAmountNewV5 {
+  adjustId: number;
+}
+⋮----
+export interface CollateralAdjustmentHistoryNewV5 {
+  adjustId: number;
+  adjustTime: number;
+  afterLTV: string;
+  amount: string;
+  collateralCurrency: string;
+  direction: number;
+  preLTV: string;
+  status: number;
+}
+⋮----
+export interface BorrowListNewV5 {
+  fixedTotalDebt: string;
+  fixedTotalDebtUSD: string;
+  flexibleHourlyInterestRate: string;
+  flexibleTotalDebt: string;
+  flexibleTotalDebtUSD: string;
+  loanCurrency: string;
+}
+⋮----
+export interface CollateralListNewV5 {
+  amount: string;
+  amountUSD: string;
+  currency: string;
+  ltv: string;
+}
+⋮----
+export interface SupplyListNewV5 {
+  amount: string;
+  amountUSD: string;
+  currency: string;
+}
+⋮----
+export interface CryptoLoanPositionNewV5 {
+  borrowList: BorrowListNewV5[];
+  collateralList: CollateralListNewV5[];
+  supplyList: SupplyListNewV5[];
+  totalCollateral: string;
+  totalDebt: string;
+  totalSupply: string;
+}
+⋮----
+// Flexible Loan Types
+⋮----
+export interface BorrowFlexibleV5 {
+  orderId: string;
+}
+⋮----
+export interface RepayFlexibleV5 {
+  repayId: string;
+}
+⋮----
+export interface OngoingFlexibleLoanV5 {
+  hourlyInterestRate: string;
+  loanCurrency: string;
+  totalDebt: string;
+}
+⋮----
+export interface BorrowHistoryFlexibleV5 {
+  borrowTime: number;
+  initialLoanAmount: string;
+  loanCurrency: string;
+  orderId: string;
+  status: number;
+}
+⋮----
+export interface RepaymentHistoryFlexibleV5 {
+  loanCurrency: string;
+  repayAmount: string;
+  repayId: string;
+  repayStatus: number;
+  repayTime: number;
+  repayType: number;
+}
+⋮----
+// Fixed Loan Types
+⋮----
+export interface SupplyOrderQuoteFixedV5 {
+  orderCurrency: string;
+  term: number;
+  annualRate: string;
+  qty: string;
+}
+⋮----
+export interface BorrowOrderQuoteFixedV5 {
+  orderCurrency: string;
+  term: number;
+  annualRate: string;
+  qty: string;
+}
+⋮----
+export interface CreateBorrowOrderFixedV5 {
+  orderId: string;
+}
+⋮----
+export interface CreateSupplyOrderFixedV5 {
+  orderId: string;
+}
+⋮----
+export interface BorrowContractInfoFixedV5 {
+  annualRate: string;
+  autoRepay: string;
+  borrowCurrency: string;
+  borrowTime: string;
+  interestPaid: string;
+  loanId: string;
+  orderId: string;
+  repaymentTime: string;
+  residualPenaltyInterest: string;
+  residualPrincipal: string;
+  status: number;
+  term: string;
+}
+⋮----
+export interface SupplyContractInfoFixedV5 {
+  annualRate: string;
+  supplyCurrency: string;
+  supplyTime: string;
+  supplyAmount: string;
+  interestPaid: string;
+  supplyId: string;
+  orderId: string;
+  redemptionTime: string;
+  penaltyInterest: string;
+  actualRedemptionTime: string;
+  status: number;
+  term: string;
+}
+⋮----
+export interface BorrowOrderInfoFixedV5 {
+  annualRate: string;
+  orderId: number;
+  orderTime: string;
+  filledQty: string;
+  orderQty: string;
+  orderCurrency: string;
+  state: number;
+  term: number;
+}
+⋮----
+export interface SupplyOrderInfoFixedV5 {
+  annualRate: string;
+  orderId: number;
+  orderTime: string;
+  filledQty: string;
+  orderQty: string;
+  orderCurrency: string;
+  state: number;
+  term: number;
+}
+⋮----
+export interface RepayFixedV5 {
+  repayId: string;
+}
+⋮----
+export interface RepaymentHistoryFixedV5 {
+  details: {
+    loanCurrency: string;
+    loanId: string;
+    repayAmount: string;
+  }[];
+  loanCurrency: string;
+  repayAmount: string;
+  repayId: string;
+  repayStatus: number;
+  repayTime: number;
+  repayType: number;
+}
 
 ================
 File: src/websocket-api-client.ts
@@ -11215,6 +12080,7 @@ import {
   PositionSideV5,
   PositionStatusV5,
   StopOrderTypeV5,
+  SystemStatusItemV5,
   TPSLModeV5,
   TradeModeV5,
 } from '../shared-v5';
@@ -11738,6 +12604,12 @@ export type WSPriceLimitEventV5 = WSPublicTopicEventV5<
   'snapshot',
   WSPriceLimitV5
 >;
+⋮----
+export type WSSystemStatusEventV5 = WSPublicTopicEventV5<
+  'system.status',
+  'snapshot',
+  SystemStatusItemV5[]
+>;
 
 ================
 File: README.md
@@ -11766,13 +12638,18 @@ File: README.md
 Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSocket APIs & WebSocket Events:
 
 - Complete integration with all Bybit REST APIs & WebSockets, including the WebSocket API.
-- Higher API rate limits than the highest VIP tier!
-  - All API requests made with this SDK are automatically subject to significantly higher rate limits.
-  - Rate limits are raised to 400 requests per second, higher than the highest VIP tier.
-  - No action required. This is automatic for any API calls made with this SDK, for any user.
-  - Read more in the announcement: [here](https://github.com/tiagosiebler/bybit-api/issues/458).
 - Actively maintained with a modern, promise-driven interface.
-- Automatic support for HMAC & RSA authentication. 
+- Exclusive benefits with this Node.js, JavaScript & TypeScript SDK for Bybit:
+  - Higher API rate limits with this SDK than the highest VIP tier!
+    - All qualified API requests made with this SDK are automatically subject to significantly higher rate limits.
+    - Rate limits are raised to 400 requests per second, higher than the highest VIP tier.
+    - No action required. This is automatic for any API calls made with this SDK, for any user.
+    - Read more in the announcement: [here](https://github.com/tiagosiebler/bybit-api/issues/458).
+  - Lower minimum order notional value with this SDK!*
+    - Place orders with a notional value as low as $1.
+    - Lower than the default minimum notional order value $5.
+    - *Note: the lower min notional requirement is an undocumented benefit that may end at any time.
+- Automatic support for HMAC & RSA authentication.
 - TypeScript support (thorough type declarations for most API requests & responses, including WS API).
 - JavaScript support (TypeScript not required but definitely recommended).
 - Thorough & automatic end-to-end tests making real API calls & WebSocket connections, validating any changes before they reach npm.
@@ -12346,7 +13223,7 @@ The bundle can be found in `dist/`. Altough usage should be largely consistent, 
 
 ## Use with LLMs & AI
 
-This package is designed to be used with LLMs & AI. If you want to insert this package directly into an LLM for faster usage, you can use the `llms.txt` file in the root of this repository.
+This SDK includes a bundled `llms.txt` file in the root of the repository. If you're developing with LLMs, use the included `llms.txt` with your LLM - it will significantly improve the LLMs understanding of how to correctly use this SDK.
 
 This file contains AI optimised structure of all the functions in this package, and their parameters for easier use with any learning models or artificial intelligence.
 
@@ -12392,6 +13269,8 @@ import {
   AccountTypeV5,
   AddOrReduceMarginParamsV5,
   AddOrReduceMarginResultV5,
+  AdjustCollateralAmountNewParamsV5,
+  AdjustCollateralAmountNewV5,
   AffiliateUserInfoV5,
   AffiliateUserListItemV5,
   AllCoinsBalanceV5,
@@ -12409,12 +13288,23 @@ import {
   BatchCreateOrderResultV5,
   BatchOrderParamsV5,
   BatchOrdersRetExtInfoV5,
+  // New Crypto Loan Types
+  BorrowableCoinNewV5,
+  BorrowContractInfoFixedV5,
   BorrowCryptoLoanParamsV5,
+  // Flexible Loan Types
+  BorrowFlexibleParamsV5,
+  BorrowFlexibleV5,
+  BorrowHistoryFlexibleV5,
   BorrowHistoryRecordV5,
+  BorrowOrderInfoFixedV5,
+  BorrowOrderQuoteFixedV5,
   BrokerIssuedVoucherV5,
   BrokerVoucherSpecV5,
   CancelAllOrdersParamsV5,
+  CancelBorrowOrderFixedParamsV5,
   CancelOrderParamsV5,
+  CancelSupplyOrderFixedParamsV5,
   CategoryCursorListV5,
   CategoryListV5,
   CategorySymbolListV5,
@@ -12424,6 +13314,8 @@ import {
   CoinExchangeRecordV5,
   CoinGreeksV5,
   CoinInfoV5,
+  CollateralAdjustmentHistoryNewV5,
+  CollateralDataNewV5,
   CollateralInfoV5,
   CompletedLoanOrderV5,
   ConfirmNewRiskLimitParamsV5,
@@ -12432,11 +13324,16 @@ import {
   ConvertHistoryRecordV5,
   ConvertQuoteV5,
   ConvertStatusV5,
+  CreateBorrowOrderFixedParamsV5,
+  CreateBorrowOrderFixedV5,
   CreateP2PAdParamsV5,
   CreateSubApiKeyParamsV5,
   CreateSubApiKeyResultV5,
   CreateSubMemberParamsV5,
   CreateSubMemberResultV5,
+  CreateSupplyOrderFixedParamsV5,
+  CreateSupplyOrderFixedV5,
+  CryptoLoanPositionNewV5,
   CursorListV5,
   CursorRowsV5,
   DCPInfoV5,
@@ -12460,13 +13357,21 @@ import {
   GetAllCoinsBalanceParamsV5,
   GetAllowedDepositCoinInfoParamsV5,
   GetAssetInfoParamsV5,
+  GetBorrowableCoinsNewParamsV5,
+  // Additional Fixed Loan Types
+  GetBorrowContractInfoFixedParamsV5,
+  GetBorrowHistoryFlexibleParamsV5,
   GetBorrowHistoryParamsV5,
+  GetBorrowOrderInfoFixedParamsV5,
+  GetBorrowOrderQuoteFixedParamsV5,
   GetBrokerIssuedVoucherParamsV5,
   GetBrokerSubAccountDepositsV5,
   GetClassicTransactionLogsParamsV5,
   GetClosedOptionsPositionsParamsV5,
   GetClosedPnLParamsV5,
   GetCoinExchangeRecordParamsV5,
+  GetCollateralAdjustmentHistoryNewParamsV5,
+  GetCollateralCoinsNewParamsV5,
   GetCompletedLoanOrderHistoryParamsV5,
   GetConvertHistoryParamsV5,
   GetDeliveryPriceParamsV5,
@@ -12488,7 +13393,9 @@ import {
   GetLoanLTVAdjustmentHistoryParamsV5,
   GetLongShortRatioParamsV5,
   GetMarkPriceKlineParamsV5,
+  GetMaxCollateralAmountNewParamsV5,
   GetMovePositionHistoryParamsV5,
+  GetOngoingFlexibleLoansParamsV5,
   GetOpenInterestParamsV5,
   GetOptionDeliveryPriceParamsV5,
   GetOrderbookParamsV5,
@@ -12507,6 +13414,8 @@ import {
   GetPreUpgradeTransactionLogParamsV5,
   GetPreUpgradeUSDCSessionParamsV5,
   GetPublicTradingHistoryParamsV5,
+  GetRepaymentHistoryFixedParamsV5,
+  GetRepaymentHistoryFlexibleParamsV5,
   GetRepaymentHistoryParamsV5,
   GetRiskLimitParamsV5,
   GetSettlementRecordParamsV5,
@@ -12516,6 +13425,11 @@ import {
   GetSpreadTradeHistoryParamsV5,
   GetSubAccountAllApiKeysParamsV5,
   GetSubAccountDepositRecordParamsV5,
+  GetSupplyContractInfoFixedParamsV5,
+  GetSupplyOrderInfoFixedParamsV5,
+  // Fixed Loan Types
+  GetSupplyOrderQuoteFixedParamsV5,
+  GetSystemStatusParamsV5,
   GetTickersParamsV5,
   GetTransactionLogParamsV5,
   GetUniversalTransferRecordsParamsV5,
@@ -12532,6 +13446,7 @@ import {
   LoanLTVAdjustmentHistoryV5,
   LongShortRatioV5,
   MarkP2POrderAsPaidParamsV5,
+  MaxCollateralAmountNewV5,
   MMPModifyParamsV5,
   MMPStateV5,
   MovePositionHistoryV5,
@@ -12539,6 +13454,7 @@ import {
   MovePositionResultV5,
   OHLCKlineV5,
   OHLCVKlineV5,
+  OngoingFlexibleLoanV5,
   OpenInterestResponseV5,
   OptionDeliveryPriceV5,
   OrderbookResponseV5,
@@ -12564,8 +13480,14 @@ import {
   PreUpgradeTransaction,
   PreUpgradeUSDCSessionSettlement,
   PublicTradeV5,
+  RepayFixedParamsV5,
+  RepayFixedV5,
+  RepayFlexibleParamsV5,
+  RepayFlexibleV5,
   RepayLiabilityParamsV5,
   RepayLiabilityResultV5,
+  RepaymentHistoryFixedV5,
+  RepaymentHistoryFlexibleV5,
   RepaymentHistoryV5,
   RequestConvertQuoteParamsV5,
   RiskLimitV5,
@@ -12573,6 +13495,7 @@ import {
   SetAutoAddMarginParamsV5,
   SetCollateralCoinParamsV5,
   SetLeverageParamsV5,
+  SetLimitPriceActionParamsV5,
   SetRiskLimitParamsV5,
   SetRiskLimitResultV5,
   SettlementRecordV5,
@@ -12590,8 +13513,12 @@ import {
   SubMemberV5,
   SubmitSpreadOrderParamsV5,
   SubmitStakeRedeemParamsV5,
+  SupplyContractInfoFixedV5,
+  SupplyOrderInfoFixedV5,
+  SupplyOrderQuoteFixedV5,
   SwitchIsolatedMarginParamsV5,
   SwitchPositionModeParamsV5,
+  SystemStatusItemV5,
   TickerLinearInverseV5,
   TickerOptionV5,
   TickerSpotV5,
@@ -12613,6 +13540,15 @@ import {
   WithdrawalRecordV5,
   WithdrawParamsV5,
 } from './types';
+⋮----
+// New Crypto Loan Types
+⋮----
+// Flexible Loan Types
+⋮----
+// Additional Fixed Loan Types
+⋮----
+// Fixed Loan Types
+⋮----
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
 ⋮----
@@ -12647,6 +13583,13 @@ async fetchLatencySummary(): Promise<any>
    ****** Misc Bybit APIs
    *
    */
+⋮----
+getSystemStatus(params?: GetSystemStatusParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: SystemStatusItemV5[];
+    }>
+  > {
+    return this.getPrivate('/v5/system/status', params);
 ⋮----
 getClientType()
 ⋮----
@@ -13635,6 +14578,17 @@ setMarginMode(
 setSpotHedging(params: {
     setHedgingMode: 'ON' | 'OFF';
 }): Promise<APIResponseV3WithTime<
+⋮----
+/**
+   * Set Limit Price Behaviour
+   * You can configure how the system behaves when your limit order price exceeds the highest bid or lowest ask price.
+   *
+   * Spot: If the order price exceeds the boundary, the system rejects the request.
+   * Futures: If the order price exceeds the boundary, the system will automatically adjust the price to the nearest allowed boundary.
+   */
+setLimitPriceAction(
+    params: SetLimitPriceActionParamsV5,
+): Promise<APIResponseV3WithTime<
 ⋮----
 /**
    * Configure Market Maker Protection (MMP)
@@ -14631,6 +15585,278 @@ getLoanLTVAdjustmentHistory(
 ⋮----
 /**
    *
+   ****** Crypto Loan New
+   *
+   */
+⋮----
+/**
+   * Get Borrowable Coins New
+   *
+   */
+getBorrowableCoinsNew(params?: GetBorrowableCoinsNewParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: BorrowableCoinNewV5[];
+    }>
+  > {
+    return this.get('/v5/crypto-loan-common/loanable-data', params);
+⋮----
+/**
+   * Get Collateral Coins New
+   *
+   */
+getCollateralCoinsNew(
+    params?: GetCollateralCoinsNewParamsV5,
+): Promise<APIResponseV3WithTime<CollateralDataNewV5>>
+⋮----
+/**
+   * Get Max. Allowed Collateral Reduction Amount New
+   *
+   */
+getMaxCollateralAmountNew(
+    params: GetMaxCollateralAmountNewParamsV5,
+): Promise<APIResponseV3WithTime<MaxCollateralAmountNewV5>>
+⋮----
+/**
+   * Adjust Collateral Amount New
+   * You can increase or reduce your collateral amount. When you reduce, please obey the Get Max. Allowed Collateral Reduction Amount
+   */
+adjustCollateralAmountNew(
+    params: AdjustCollateralAmountNewParamsV5,
+): Promise<APIResponseV3WithTime<AdjustCollateralAmountNewV5>>
+⋮----
+/**
+   * Get Collateral Adjustment History New
+   * Query for your LTV adjustment history.
+   *
+   */
+getCollateralAdjustmentHistoryNew(
+    params?: GetCollateralAdjustmentHistoryNewParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      list: CollateralAdjustmentHistoryNewV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-common/adjustment-history', params);
+⋮----
+/**
+   * Get Crypto Loan Position New
+   *
+   */
+getCryptoLoanPositionNew(): Promise<
+    APIResponseV3WithTime<CryptoLoanPositionNewV5>
+  > {
+    return this.getPrivate('/v5/crypto-loan-common/position');
+⋮----
+/**
+   *
+   ****** Crypto Loan New - Flexible Loan
+   *
+   */
+⋮----
+/**
+   * Borrow Flexible Loan
+   * Fully or partially repay a loan. If interest is due, that is paid off first, with the loaned amount being paid off only after due interest.
+   *
+   */
+borrowFlexible(
+    params: BorrowFlexibleParamsV5,
+): Promise<APIResponseV3WithTime<BorrowFlexibleV5>>
+⋮----
+/**
+   * Repay Flexible Loan
+   * Fully or partially repay a loan. If interest is due, that is paid off first, with the loaned amount being paid off only after due interest.
+   *
+   */
+repayFlexible(
+    params: RepayFlexibleParamsV5,
+): Promise<APIResponseV3WithTime<RepayFlexibleV5>>
+⋮----
+/**
+   * Get Flexible Loans
+   * Query for your ongoing loans
+   *
+   */
+getOngoingFlexibleLoans(params?: GetOngoingFlexibleLoansParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: OngoingFlexibleLoanV5[];
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-flexible/ongoing-coin', params);
+⋮----
+/**
+   * Get Borrow Orders History
+   *
+   */
+getBorrowHistoryFlexible(params?: GetBorrowHistoryFlexibleParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: BorrowHistoryFlexibleV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-flexible/borrow-history', params);
+⋮----
+/**
+   * Get Repayment Orders History
+   *
+   */
+getRepaymentHistoryFlexible(
+    params?: GetRepaymentHistoryFlexibleParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      list: RepaymentHistoryFlexibleV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate(
+      '/v5/crypto-loan-flexible/repayment-history',
+      params,
+    );
+⋮----
+/**
+   *
+   ****** Fixed Loan
+   *
+   */
+⋮----
+/**
+   * Get Supplying Market
+   * If you want to supply, you can use this endpoint to check whether there are any suitable counterparty borrow orders available.
+   *
+   */
+getSupplyOrderQuoteFixed(params: GetSupplyOrderQuoteFixedParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: SupplyOrderQuoteFixedV5[];
+    }>
+  > {
+    return this.get('/v5/crypto-loan-fixed/supply-order-quote', params);
+⋮----
+/**
+   * Get Borrowing Market
+   * If you want to borrow, you can use this endpoint to check whether there are any suitable counterparty supply orders available.
+   *
+   */
+getBorrowOrderQuoteFixed(params: GetBorrowOrderQuoteFixedParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: BorrowOrderQuoteFixedV5[];
+    }>
+  > {
+    return this.get('/v5/crypto-loan-fixed/borrow-order-quote', params);
+⋮----
+/**
+   * Create Borrow Order
+   * The loan funds are released to the Funding wallet.
+   * The collateral funds are deducted from the Funding wallet, so make sure you have enough collateral amount in the Funding wallet.
+   */
+createBorrowOrderFixed(
+    params: CreateBorrowOrderFixedParamsV5,
+): Promise<APIResponseV3WithTime<CreateBorrowOrderFixedV5>>
+⋮----
+/**
+   * Create Supply Order
+   *
+   * Permission: "Spot trade"
+   */
+createSupplyOrderFixed(
+    params: CreateSupplyOrderFixedParamsV5,
+): Promise<APIResponseV3WithTime<CreateSupplyOrderFixedV5>>
+⋮----
+/**
+   * Cancel Borrow Order
+   *
+   */
+cancelBorrowOrderFixed(
+    params: CancelBorrowOrderFixedParamsV5,
+): Promise<APIResponseV3WithTime<
+⋮----
+/**
+   * Cancel Supply Order
+   */
+cancelSupplyOrderFixed(
+    params: CancelSupplyOrderFixedParamsV5,
+): Promise<APIResponseV3WithTime<
+⋮----
+/**
+   * Get Borrow Contract Info
+   *
+   */
+getBorrowContractInfoFixed(
+    params?: GetBorrowContractInfoFixedParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      list: BorrowContractInfoFixedV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate(
+      '/v5/crypto-loan-fixed/borrow-contract-info',
+      params,
+    );
+⋮----
+/**
+   * Get Supply Contract Info
+   *
+   */
+getSupplyContractInfoFixed(
+    params?: GetSupplyContractInfoFixedParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      list: SupplyContractInfoFixedV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate(
+      '/v5/crypto-loan-fixed/supply-contract-info',
+      params,
+    );
+⋮----
+/**
+   * Get Borrow Order Info
+   *
+   */
+getBorrowOrderInfoFixed(params?: GetBorrowOrderInfoFixedParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: BorrowOrderInfoFixedV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-fixed/borrow-order-info', params);
+⋮----
+/**
+   * Get Supply Order Info
+   *
+   */
+getSupplyOrderInfoFixed(params?: GetSupplyOrderInfoFixedParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: SupplyOrderInfoFixedV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-fixed/supply-order-info', params);
+⋮----
+/**
+   * Repay Fixed Loan
+   * Either loanId or loanCurrency needs to be passed
+   *
+   */
+repayFixed(
+    params: RepayFixedParamsV5,
+): Promise<APIResponseV3WithTime<RepayFixedV5>>
+⋮----
+/**
+   * Get Repayment History
+   *
+   */
+getRepaymentHistoryFixed(params?: GetRepaymentHistoryFixedParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: RepaymentHistoryFixedV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-fixed/repayment-history', params);
+⋮----
+/**
+   *
    ****** Institutional Lending
    *
    */
@@ -15020,13 +16246,14 @@ File: package.json
 ================
 {
   "name": "bybit-api",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "description": "Complete & robust Node.js SDK for Bybit's REST APIs and WebSockets, with TypeScript & strong end to end tests.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
     "lib/*",
-    "index.js"
+    "index.js",
+    "llms.txt"
   ],
   "scripts": {
     "test": "jest",
