@@ -8,16 +8,12 @@ const client = new RestClientV5({
   secret: 'YOUR_API_SECRET',
 });
 
-async function getRepaymentHistory() {
-  try {
-    const response = await client.getRepaymentHistoryFixed({
-      repayId: '1780',
-    });
-
+client.getRepaymentHistoryFixed({
+  repayId: '1780',
+})
+  .then(response => {
     console.log(response);
-  } catch (error) {
+  })
+  .catch(error => {
     console.error('Error:', error);
-  }
-}
-
-getRepaymentHistory();
+  });

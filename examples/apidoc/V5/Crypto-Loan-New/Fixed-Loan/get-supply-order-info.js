@@ -8,16 +8,12 @@ const client = new RestClientV5({
   secret: 'YOUR_API_SECRET',
 });
 
-async function getSupplyOrderInfo() {
-  try {
-    const response = await client.getSupplyOrderInfoFixed({
-      orderId: '13564',
-    });
-
+client.getSupplyOrderInfoFixed({
+  orderId: '13564',
+})
+  .then(response => {
     console.log(response);
-  } catch (error) {
+  })
+  .catch(error => {
     console.error('Error:', error);
-  }
-}
-
-getSupplyOrderInfo();
+  });

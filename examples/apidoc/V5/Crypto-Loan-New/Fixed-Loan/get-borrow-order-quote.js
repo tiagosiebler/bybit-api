@@ -6,17 +6,13 @@ const client = new RestClientV5({
   testnet: true,
 });
 
-async function getBorrowOrderQuote() {
-  try {
-    const response = await client.getBorrowOrderQuoteFixed({
-      orderCurrency: 'USDT',
-      orderBy: 'apy',
-    });
-
+client.getBorrowOrderQuoteFixed({
+  orderCurrency: 'USDT',
+  orderBy: 'apy',
+})
+  .then(response => {
     console.log(response);
-  } catch (error) {
+  })
+  .catch(error => {
     console.error('Error:', error);
-  }
-}
-
-getBorrowOrderQuote();
+  });

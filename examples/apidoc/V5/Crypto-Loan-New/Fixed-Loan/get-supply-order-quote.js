@@ -6,17 +6,13 @@ const client = new RestClientV5({
   testnet: true,
 });
 
-async function getSupplyOrderQuote() {
-  try {
-    const response = await client.getSupplyOrderQuoteFixed({
-      orderCurrency: 'USDT',
-      orderBy: 'apy',
-    });
-
+client.getSupplyOrderQuoteFixed({
+  orderCurrency: 'USDT',
+  orderBy: 'apy',
+})
+  .then(response => {
     console.log(response);
-  } catch (error) {
+  })
+  .catch(error => {
     console.error('Error:', error);
-  }
-}
-
-getSupplyOrderQuote();
+  });

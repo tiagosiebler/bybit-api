@@ -6,17 +6,13 @@ const client = new RestClientV5({
   testnet: true,
 });
 
-async function getLoanBorrowableCoins() {
-  try {
-    const response = await client.getLoanBorrowableCoins({
-      currency: 'ETH',
-      vipLevel: 'VIP5',
-    });
-
+client.getLoanBorrowableCoins({
+  currency: 'ETH',
+  vipLevel: 'VIP5',
+})
+  .then(response => {
     console.log(response);
-  } catch (error) {
+  })
+  .catch(error => {
     console.error('Error:', error);
-  }
-}
-
-getLoanBorrowableCoins();
+  });

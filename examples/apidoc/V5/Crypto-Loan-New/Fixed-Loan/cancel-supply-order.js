@@ -8,16 +8,12 @@ const client = new RestClientV5({
   secret: 'YOUR_API_SECRET',
 });
 
-async function cancelSupplyOrder() {
-  try {
-    const response = await client.cancelSupplyOrderFixed({
-      orderId: '13577',
-    });
-
+client.cancelSupplyOrderFixed({
+  orderId: '13577',
+})
+  .then(response => {
     console.log(response);
-  } catch (error) {
+  })
+  .catch(error => {
     console.error('Error:', error);
-  }
-}
-
-cancelSupplyOrder();
+  });

@@ -8,16 +8,12 @@ const client = new RestClientV5({
   secret: 'YOUR_API_SECRET',
 });
 
-async function getRepaymentHistory() {
-  try {
-    const response = await client.getRepaymentHistoryFlexible({
-      loanCurrency: 'BTC',
-    });
-
+client.getRepaymentHistoryFlexible({
+  loanCurrency: 'BTC',
+})
+  .then(response => {
     console.log(response);
-  } catch (error) {
+  })
+  .catch(error => {
     console.error('Error:', error);
-  }
-}
-
-getRepaymentHistory();
+  });

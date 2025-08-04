@@ -8,26 +8,22 @@ const client = new RestClientV5({
   secret: 'YOUR_API_SECRET',
 });
 
-async function createBorrowOrder() {
-  try {
-    const response = await client.createBorrowOrderFixed({
-      orderCurrency: 'ETH',
-      orderAmount: '1.5',
-      annualRate: '0.022',
-      term: '30',
-      autoRepay: 'true',
-      collateralList: [
-        {
-          currency: 'BTC',
-          amount: '0.1',
-        },
-      ],
-    });
-
+client.createBorrowOrderFixed({
+  orderCurrency: 'ETH',
+  orderAmount: '1.5',
+  annualRate: '0.022',
+  term: '30',
+  autoRepay: 'true',
+  collateralList: [
+    {
+      currency: 'BTC',
+      amount: '0.1',
+    },
+  ],
+})
+  .then(response => {
     console.log(response);
-  } catch (error) {
+  })
+  .catch(error => {
     console.error('Error:', error);
-  }
-}
-
-createBorrowOrder();
+  });

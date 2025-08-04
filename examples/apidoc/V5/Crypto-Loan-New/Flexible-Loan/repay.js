@@ -8,17 +8,13 @@ const client = new RestClientV5({
   secret: 'YOUR_API_SECRET',
 });
 
-async function repayFlexible() {
-  try {
-    const response = await client.repayFlexible({
-      loanCurrency: 'BTC',
-      amount: '0.005',
-    });
-
+client.repayFlexible({
+  loanCurrency: 'BTC',
+  amount: '0.005',
+})
+  .then(response => {
     console.log(response);
-  } catch (error) {
+  })
+  .catch(error => {
     console.error('Error:', error);
-  }
-}
-
-repayFlexible();
+  });

@@ -8,16 +8,12 @@ const client = new RestClientV5({
   secret: 'YOUR_API_SECRET',
 });
 
-async function getBorrowOrderInfo() {
-  try {
-    const response = await client.getBorrowOrderInfoFixed({
-      orderId: '13010',
-    });
-
+client.getBorrowOrderInfoFixed({
+  orderId: '13010',
+})
+  .then(response => {
     console.log(response);
-  } catch (error) {
+  })
+  .catch(error => {
     console.error('Error:', error);
-  }
-}
-
-getBorrowOrderInfo(); 
+  }); 

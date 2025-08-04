@@ -8,19 +8,15 @@ const client = new RestClientV5({
   secret: 'YOUR_API_SECRET',
 });
 
-async function createSupplyOrder() {
-  try {
-    const response = await client.createSupplyOrderFixed({
-      orderCurrency: 'USDT',
-      orderAmount: '2002.21',
-      annualRate: '0.35',
-      term: '7',
-    });
-
+client.createSupplyOrderFixed({
+  orderCurrency: 'USDT',
+  orderAmount: '2002.21',
+  annualRate: '0.35',
+  term: '7',
+})
+  .then(response => {
     console.log(response);
-  } catch (error) {
+  })
+  .catch(error => {
     console.error('Error:', error);
-  }
-}
-
-createSupplyOrder();
+  });
