@@ -145,3 +145,17 @@ export async function signMessage(
     }
   }
 }
+
+export function checkWebCryptoAPISupported() {
+  if (!globalThis.crypto) {
+    throw new Error(
+      `Web Crypto API unavailable. Authentication will not work.
+
+Are you using an old Node.js release? Refer to the current Node.js LTS version. Node.js v18 reached end of life in April 2025! You should be using Node LTS or newer (v22 or above)!
+
+If you prefer to continue using an outdated Node.js version, check github for an example on using the node:crypto module for sign instead:
+https://github.com/tiagosiebler/bybit-api/blob/master/examples/fasterHmacSign.ts
+`,
+    );
+  }
+}

@@ -12,6 +12,7 @@ import {
 } from '../types';
 import { WsOperation } from '../types/websockets/ws-api';
 import { DefaultLogger } from './logger';
+import { checkWebCryptoAPISupported } from './webCryptoAPI';
 import {
   getNormalisedTopicRequests,
   safeTerminateWs,
@@ -174,6 +175,15 @@ export abstract class BaseWebsocketClient<
 
       ...options,
     };
+
+    // Check Web Crypto API support when credentials are provided and no custom sign function is used
+    if (
+      this.options.key &&
+      this.options.secret &&
+      !this.options.customSignMessageFn
+    ) {
+      checkWebCryptoAPISupported();
+    }
   }
 
   /**

@@ -10,7 +10,12 @@ import {
   RestClientType,
   serializeParams,
 } from './requestUtils';
-import { SignAlgorithm, SignEncodeMethod, signMessage } from './webCryptoAPI';
+import {
+  checkWebCryptoAPISupported,
+  SignAlgorithm,
+  SignEncodeMethod,
+  signMessage,
+} from './webCryptoAPI';
 
 const ENABLE_HTTP_TRACE =
   typeof process === 'object' &&
@@ -162,6 +167,11 @@ export default abstract class BaseRestClient {
       throw new Error(
         'API Key & Secret are both required for private endpoints',
       );
+    }
+
+    // Check Web Crypto API support when credentials are provided and no custom sign function is used
+    if (this.key && this.secret && !this.options.customSignMessageFn) {
+      checkWebCryptoAPISupported();
     }
 
     if (this.options.enable_time_sync) {
