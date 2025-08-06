@@ -29,10 +29,10 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSo
     - Rate limits are raised to 400 requests per second, higher than the highest VIP tier.
     - No action required. This is automatic for any API calls made with this SDK, for any user.
     - Read more in the announcement: [here](https://github.com/tiagosiebler/bybit-api/issues/458).
-  - Lower minimum order notional value with this SDK!*
+  - Lower minimum order notional value with this SDK!\*
     - Place orders with a notional value as low as $1.
     - Lower than the default minimum notional order value $5.
-    - *Note: the lower min notional requirement is an undocumented benefit that may end at any time.
+    - \*Note: the lower min notional requirement is an undocumented benefit that may end at any time.
 - Automatic support for HMAC & RSA authentication.
 - TypeScript support (thorough type declarations for most API requests & responses, including WS API).
 - JavaScript support (TypeScript not required but definitely recommended).
@@ -46,21 +46,22 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSo
     - Emit `reconnected` event when dropped connection is restored.
 - WebSocket API integration, with two design patterns to choose from:
   1. Asynchronous **promise**-driven responses:
-      - Make requests like a REST API, using the WebSocket API. No need to subscribe to asynchronous events.
-      - Import the `WebsocketAPIClient` and use it like the REST API client. Call functions and await responses.
-        - See example for more details: [examples/ws-api-client.ts](./examples/ws-api-client.ts).
-      - Prefer something more raw? Use the `sendWSAPIRequest(...)` method and await responses
-        - See example for more details: [examples/ws-api-raw-promises.ts](./examples/ws-api-raw-promises.ts)
+     - Make requests like a REST API, using the WebSocket API. No need to subscribe to asynchronous events.
+     - Import the `WebsocketAPIClient` and use it like the REST API client. Call functions and await responses.
+       - See example for more details: [examples/ws-api-client.ts](./examples/ws-api-client.ts).
+     - Prefer something more raw? Use the `sendWSAPIRequest(...)` method and await responses
+       - See example for more details: [examples/ws-api-raw-promises.ts](./examples/ws-api-raw-promises.ts)
   2. Asynchronous **event**-driven responses:
-      - Subscribe to `response` and `error` events from WebsocketClient's event emitter.
-      - Send commands with the `sendWSAPIRequest(...)` method.
-      - Responses to commands will arrive via the `response` and `error` events emitted by the client.
-      - See example for more details: [examples/ws-api-raw-events.ts](./examples/ws-api-raw-events.ts)
+     - Subscribe to `response` and `error` events from WebsocketClient's event emitter.
+     - Send commands with the `sendWSAPIRequest(...)` method.
+     - Responses to commands will arrive via the `response` and `error` events emitted by the client.
+     - See example for more details: [examples/ws-api-raw-events.ts](./examples/ws-api-raw-events.ts)
 - Active community support & collaboration in telegram: [Node.js Algo Traders](https://t.me/nodetraders).
 
 # Table of Contents
 
 ## Overview
+
 - [Installation](#installation)
 - [Issues & Discussion](#issues--discussion)
 - [Related Projects](#related-projects)
@@ -68,16 +69,19 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSo
 - [Examples](#examples)
 
 ## REST API Examples
+
 - [API Clients](#api-clients)
 - [REST API Usage](#rest-api-usage)
 
 ## WebSocket Integration & Examples
+
 - [WebSockets](#websockets)
 - [WebSocket Subscriptions - Consuming Events](#websocket-subscriptions---consuming-events)
 - [Websocket API - Sending Orders via WebSockets](#websocket-api---sending-orders-via-websockets)
 - [Consumer Load Balancing](#balancing-load-across-multiple-connections)
 
 ## Additional Features
+
 - [Logging](#logging)
   - [Customise Logging](#customise-logging)
   - [Debug HTTP Requests](#debug-http-requests)
@@ -85,11 +89,13 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSo
   - [Import](#import)
   - [Webpack](#webpack)
 - [Use with LLMs & AI](#use-with-llms--ai)
+- [Used By](#used-by)
 
 ## Contributing
+
 - [Contributions & Thanks](#contributions--thanks)
 
-------
+---
 
 ## Installation
 
@@ -135,7 +141,6 @@ Most methods accept JS objects. These can be populated using parameters specifie
 
 The SDK is written in TypeScript, but fully compatible with both TypeScript and pure JavaScript projects. A pure JavaScript version can be built using `npm run build`. The output of the `build` command is the version published to npm, packaged as a JavaScript module (with types available for you TypeScript users).
 
-
 - [src](./src) - the complete SDK written in TypeScript.
 - [lib](./lib) - the JavaScript version of the project (built from TypeScript) that is published to npm. This should not be edited directly, as it will be overwritten with each release.
 - [examples](./examples) - examples & demonstrations. Contributions are welcome!
@@ -160,13 +165,12 @@ Refer to the [V5 interface mapping page](https://bybit-exchange.github.io/docs/v
 
 Here are the available REST clients and the corresponding API groups described in the documentation:
 
-|                         Class                          |                                                                                                      Description                       |
-| :----------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------: |
-|                     [ **V5 API** ]                     | The new unified V5 APIs (successor to previously fragmented APIs for all API groups).                                                  |
-|         [RestClientV5](src/rest-client-v5.ts)          |   Unified V5 all-in-one REST client for all [V5 REST APIs](https://bybit-exchange.github.io/docs/v5/intro)                             |
-|       [WebsocketClient](src/websocket-client.ts)       |   All WebSocket features (Public & Private consumers for all API categories & the WebSocket API)                                       |
-|    [WebsocketAPIClient](src/websocket-api-client.ts)   |   Use the WebSocket API like a REST API. Call functions and await responses, powered by WebSockets.                                    |
-
+|                       Class                       |                                               Description                                                |
+| :-----------------------------------------------: | :------------------------------------------------------------------------------------------------------: |
+|                  [ **V5 API** ]                   |          The new unified V5 APIs (successor to previously fragmented APIs for all API groups).           |
+|       [RestClientV5](src/rest-client-v5.ts)       | Unified V5 all-in-one REST client for all [V5 REST APIs](https://bybit-exchange.github.io/docs/v5/intro) |
+|    [WebsocketClient](src/websocket-client.ts)     |      All WebSocket features (Public & Private consumers for all API categories & the WebSocket API)      |
+| [WebsocketAPIClient](src/websocket-api-client.ts) |    Use the WebSocket API like a REST API. Call functions and await responses, powered by WebSockets.     |
 
 ## REST API Usage
 
@@ -174,7 +178,6 @@ Create API credentials on Bybit's website:
 
 - [Livenet](https://bybit.com/app/user/api-management?affiliate_id=9410&language=en-US&group_id=0&group_type=1)
 - [Testnet](https://testnet.bybit.com/app/user/api-management)
-
 
 The following is a minimal example for using the REST clients included with this SDK. For more detailed examples, refer to the [examples](./examples/) folder in the repository on GitHub:
 
@@ -242,34 +245,37 @@ const restClientOptions = {
 const API_KEY = 'xxx';
 const API_SECRET = 'yyy';
 
-const client = new RestClientV5({
-  key: API_KEY,
-  secret: API_SECRET,
-  // demoTrading: true,
+const client = new RestClientV5(
+  {
+    key: API_KEY,
+    secret: API_SECRET,
+    // demoTrading: true,
 
-  // Optional: enable to try parsing rate limit values from responses
-  // parseAPIRateLimits: true
-},
+    // Optional: enable to try parsing rate limit values from responses
+    // parseAPIRateLimits: true
+  },
   // requestLibraryOptions
 );
 
 // For public-only API calls, simply don't provide a key & secret or set them to undefined
 // const client = new RestClientV5();
 
-client.getAccountInfo()
-  .then(result => {
-    console.log("getAccountInfo result: ", result);
+client
+  .getAccountInfo()
+  .then((result) => {
+    console.log('getAccountInfo result: ', result);
   })
-  .catch(err => {
-    console.error("getAccountInfo error: ", err);
+  .catch((err) => {
+    console.error('getAccountInfo error: ', err);
   });
 
-client.getOrderbook({ category: 'linear', symbol: 'BTCUSDT' })
-  .then(result => {
-    console.log("getOrderBook result: ", result);
+client
+  .getOrderbook({ category: 'linear', symbol: 'BTCUSDT' })
+  .then((result) => {
+    console.log('getOrderBook result: ', result);
   })
-  .catch(err => {
-    console.error("getOrderBook error: ", err);
+  .catch((err) => {
+    console.error('getOrderBook error: ', err);
   });
 ```
 
@@ -416,6 +422,7 @@ ws.on('reconnected', (data) => {
 Bybit supports sending, amending and cancelling orders over a WebSocket connection. The [WebsocketClient](./src/WebsocketClient.ts) fully supports Bybit's WebSocket API via the `sendWSAPIRequest(...)` method. There is also a dedicated [WebsocketAPIClient](./src/websocket-api-client.ts), built over the WSClient's sendWSAPIRequest mechanism for a simpler experience.
 
 Links for reference:
+
 - [Bybit WebSocket API Documentation](https://bybit-exchange.github.io/docs/v5/websocket/trade/guideline)
 - [WebsocketAPIClient example, use the Websocket API like a REST API](./examples/ws-api-client.ts)
 - [Raw Asynchronous Websocket API Node.js/TypeScript/JavaScript example](./examples/ws-api-raw-promises.ts)
@@ -423,16 +430,17 @@ Links for reference:
 Note: as of January 2025, the demo trading environment does not support the WebSocket API.
 
 There are two ways to use the WS API, depending on individual preference:
+
 1. event-driven:
-    - send requests via `client.sendWSAPIRequest(wsKey, operation, params)`, fire and forget
-    - handle async replies via event handlers on `client.on('exception', cb)` and `client.on('response', cb)`
-    - See example for more details: [examples/ws-api-raw-events.ts](./examples/ws-api-raw-events.ts)
+   - send requests via `client.sendWSAPIRequest(wsKey, operation, params)`, fire and forget
+   - handle async replies via event handlers on `client.on('exception', cb)` and `client.on('response', cb)`
+   - See example for more details: [examples/ws-api-raw-events.ts](./examples/ws-api-raw-events.ts)
 2. promise-driven:
-    - import the `WebsocketAPIClient` and use it much like a REST API.
-    - make an instance & call the Websocket API with a function.
-    - await responses, much like a REST API.
-    - use try/catch blocks to handle promise rejections
-    - See example for more details: [examples/ws-api-client.ts](./examples/ws-api-client.ts)
+   - import the `WebsocketAPIClient` and use it much like a REST API.
+   - make an instance & call the Websocket API with a function.
+   - await responses, much like a REST API.
+   - use try/catch blocks to handle promise rejections
+   - See example for more details: [examples/ws-api-client.ts](./examples/ws-api-client.ts)
 
 The below example demonstrates the promise-driven approach, which behaves similar to a REST API. The WebSocket API even accepts the same parameters as the corresponding REST API endpoints, so this approach should be compatible with existing REST implementations.
 
@@ -448,25 +456,23 @@ const { WS_KEY_MAP, WebsocketAPIClient } = require('bybit-api');
 // top of the WebsocketClient and will automatically handle WebSocket
 // persistence and authentication for you.
 // supports HMAC & RSA API keys - automatically detected
-const wsClient = new WebsocketAPIClient(
-  {
-    key: 'yourApiKeyHere',
-    secret: 'yourApiSecretHere',
+const wsClient = new WebsocketAPIClient({
+  key: 'yourApiKeyHere',
+  secret: 'yourApiSecretHere',
 
-    // Whether to use the testnet environment.
-    // Create testnet API keys here: https://testnet.bybit.com/app/user/api-management
-    // testnet: true,
+  // Whether to use the testnet environment.
+  // Create testnet API keys here: https://testnet.bybit.com/app/user/api-management
+  // testnet: true,
 
-    // Whether to use the livenet demo trading environment
-    // Note: As of Jan 2025, demo trading only supports consuming events, it does
-    // NOT support the WS API.
-    // demoTrading: false,
+  // Whether to use the livenet demo trading environment
+  // Note: As of Jan 2025, demo trading only supports consuming events, it does
+  // NOT support the WS API.
+  // demoTrading: false,
 
-    // If you want your own event handlers instead of the default ones with logs,
-    // disable this setting and see ws-api-client example for more details.
-    // attachEventListeners: false
-  }
-);
+  // If you want your own event handlers instead of the default ones with logs,
+  // disable this setting and see ws-api-client example for more details.
+  // attachEventListeners: false
+});
 
 // This example is wrapped in an async function, so "await" can be used
 async function main() {
@@ -523,7 +529,6 @@ async function main() {
 
 // Start executing the example workflow
 main();
-
 ```
 
 ---
@@ -561,7 +566,10 @@ const customLogger = {
   trace: (...params) => console.log('trace', ...params),
 };
 
-const wsClient = new WebsocketClient({ key: 'xxx', secret: 'yyy' }, customLogger);
+const wsClient = new WebsocketClient(
+  { key: 'xxx', secret: 'yyy' },
+  customLogger,
+);
 ```
 
 ### Debug HTTP requests
@@ -610,6 +618,12 @@ The bundle can be found in `dist/`. Altough usage should be largely consistent, 
 This SDK includes a bundled `llms.txt` file in the root of the repository. If you're developing with LLMs, use the included `llms.txt` with your LLM - it will significantly improve the LLMs understanding of how to correctly use this SDK.
 
 This file contains AI optimised structure of all the functions in this package, and their parameters for easier use with any learning models or artificial intelligence.
+
+---
+
+## Used By
+
+[![Repository Users Preview Image](https://dependents.info/tiagosiebler/bybit-api/image)](https://github.com/tiagosiebler/bybit-api/network/dependents)
 
 ---
 

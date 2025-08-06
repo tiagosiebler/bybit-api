@@ -148,7 +148,7 @@ examples/
           get-borrow-history.js
           get-ongoing-flexible-loans.js
           get-repayment-history.js
-          repay.ts
+          repay.js
         adjust-collateral-amount.js
         get-borrowable-coins.js
         get-collateral-adjustment-history.js
@@ -1537,6 +1537,350 @@ File: examples/apidoc/V5/Market/README.md
 # V5 - REST - Market
 
 https://bybit-exchange.github.io/docs/v5/market/kline
+
+================
+File: examples/apidoc/V5/P2P/get-account-information.js
+================
+// Initialize the client with testnet mode
+const client = new RestClientV5({
+⋮----
+// Call the function
+⋮----
+.getP2PUserInfo()
+.then((response) => {
+console.log('Response:', response);
+⋮----
+.catch((error) => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/P2P/get-ad-detail.js
+================
+// Initialize the client with testnet mode
+const client = new RestClientV5({
+⋮----
+// Example parameters
+⋮----
+itemId: '1898988222063644672', // Replace with your ad ID
+⋮----
+// Call the function
+⋮----
+.getP2PAdDetail(params)
+.then((response) => {
+console.log('Response:', response);
+⋮----
+.catch((error) => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/P2P/get-all-orders.js
+================
+// Initialize the client with testnet mode
+const client = new RestClientV5({
+⋮----
+// Example parameters
+⋮----
+status: null, // Optional: filter by order status
+beginTime: null, // Optional: filter by start time
+endTime: null, // Optional: filter by end time
+tokenId: null, // Optional: filter by token ID
+side: null, // Optional: filter by side (0: Buy, 1: Sell)
+page: 1, // Required: page number
+size: 1, // Required: rows per page
+⋮----
+// Call the function
+⋮----
+.getP2POrders(params)
+.then((response) => {
+console.log('Response:', response);
+⋮----
+.catch((error) => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/P2P/get-chat-message.js
+================
+// Initialize the client with testnet mode
+const client = new RestClientV5({
+⋮----
+// Example parameters
+⋮----
+orderId: '1898976123321221120', // Replace with your order ID
+size: '1', // Number of messages per page
+currentPage: '1', // Optional: current page number
+⋮----
+// Call the function
+⋮----
+.getP2POrderMessages(params)
+.then((response) => {
+console.log('Response:', response);
+⋮----
+.catch((error) => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/P2P/get-coin-balance.js
+================
+// Create a client
+const client = new RestClientV5({
+⋮----
+// Get account coins balance
+⋮----
+.getP2PAccountCoinsBalance({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/P2P/get-counterparty-user-info.js
+================
+// Initialize the client with testnet mode
+const client = new RestClientV5({
+⋮----
+// Example parameters
+⋮----
+originalUid: '290118', // Replace with the counterparty user ID
+orderId: '1900004704665923584', // Replace with your order ID
+⋮----
+// Call the function
+⋮----
+.getP2PCounterpartyUserInfo(params)
+.then((response) => {
+console.log('Response:', response);
+⋮----
+.catch((error) => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/P2P/get-market-online-ads-list.js
+================
+// Create a client
+const client = new RestClientV5({
+⋮----
+// Get market online ads list
+⋮----
+.getP2POnlineAds({
+⋮----
+side: '0', // 0: buy; 1: sell
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/P2P/get-my-ads-list.js
+================
+// Initialize the client with testnet mode
+const client = new RestClientV5({
+⋮----
+// Example parameters for getting personal P2P ads
+⋮----
+itemId: '123456789', // Optional: Specific advertisement ID
+status: 1, // Optional: Advertisement status (1: active, 2: completed, 3: cancelled)
+side: 1, // Optional: 0: buy; 1: sell
+tokenId: 'USDT', // Optional: Token ID
+page: 1, // Optional: Page number
+size: 20, // Optional: Page size
+currencyId: 'USD' // Optional: Currency ID
+⋮----
+// Get personal P2P ads
+client.getP2PPersonalAds(params)
+.then(response => {
+console.log('Response:', response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/P2P/get-order-detail.js
+================
+// Initialize the client with testnet mode
+const client = new RestClientV5({
+⋮----
+// Example parameters
+⋮----
+orderId: '1900004704665923584', // Replace with your order ID
+⋮----
+// Call the function
+⋮----
+.getP2POrderDetail(params)
+.then((response) => {
+console.log('Response:', response);
+⋮----
+.catch((error) => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/P2P/get-pending-orders.js
+================
+// Initialize the client with testnet mode
+const client = new RestClientV5({
+⋮----
+// Example parameters
+⋮----
+status: 10, // waiting for buy pay
+beginTime: '1741831397000', // Optional: filter by start time
+endTime: '1741831424861', // Optional: filter by end time
+tokenId: 'USDT', // Optional: filter by token
+side: [0, 1], // Optional: filter by side (0: Buy, 1: Sell)
+⋮----
+// Call the function
+⋮----
+.getP2PPendingOrders(params)
+.then((response) => {
+console.log('Response:', response);
+⋮----
+.catch((error) => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/P2P/get-user-payment.js
+================
+// Initialize the client with testnet mode
+const client = new RestClientV5({
+⋮----
+// Call the function
+⋮----
+.getP2PUserPayments()
+.then((response) => {
+console.log('Response:', response);
+⋮----
+.catch((error) => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/P2P/mark-order-as-paid.js
+================
+// Initialize the client with testnet mode
+const client = new RestClientV5({
+⋮----
+// Example parameters
+⋮----
+orderId: '1899736339155943424', // Replace with your order ID
+paymentType: '14', // Payment method used
+paymentId: '7110', // Payment method ID used
+⋮----
+// Call the function
+⋮----
+.markP2POrderAsPaid(params)
+.then((response) => {
+console.log('Response:', response);
+⋮----
+.catch((error) => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/P2P/post-new-ad.js
+================
+// Create a client
+const client = new RestClientV5({
+⋮----
+// Create new P2P advertisement
+⋮----
+.createP2PAd({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/P2P/release-digital-asset.js
+================
+// Initialize the client with testnet mode
+const client = new RestClientV5({
+⋮----
+// Example parameters
+⋮----
+orderId: '1899736339155943424', // Replace with your order ID
+⋮----
+// Call the function
+⋮----
+.releaseP2POrder(params)
+.then((response) => {
+console.log('Response:', response);
+⋮----
+.catch((error) => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/P2P/remove-my-ad.js
+================
+// Create a client
+const client = new RestClientV5({
+⋮----
+// Cancel P2P advertisement
+⋮----
+.cancelP2PAd({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/P2P/send-chat-message.js
+================
+// Initialize the client with testnet mode
+const client = new RestClientV5({
+⋮----
+// Example parameters
+⋮----
+orderId: '1898976123321221120', // Replace with your order ID
+// Optional parameters:
+// msgUuid: 'your-message-uuid',
+// fileName: 'example.pdf'
+⋮----
+// Call the function
+⋮----
+.sendP2POrderMessage(params)
+.then((response) => {
+console.log('Response:', response);
+⋮----
+.catch((error) => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/P2P/update-relist-my-ad.js
+================
+// Create a client
+const client = new RestClientV5({
+⋮----
+// Update P2P advertisement
+⋮----
+.updateP2PAd({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/P2P/upload-chat-file.js
+================
+// Initialize the client with testnet mode
+const client = new RestClientV5({
+⋮----
+// Create form data
+const formData = new FormData();
+formData.append('upload_file', fs.createReadStream('path/to/your/file.jpg')); // Replace with your file path
+⋮----
+// Call the function
+⋮----
+.uploadP2PChatFile(formData)
+.then((response) => {
+console.log('Response:', response);
+⋮----
+.catch((error) => {
+console.error('Error:', error);
 
 ================
 File: examples/apidoc/V5/Position/add-or-reduce-margin.js
@@ -3217,6 +3561,11 @@ export interface CopyTradingTransferRequest {
 }
 
 ================
+File: src/types/request/index.ts
+================
+
+
+================
 File: src/types/request/inverse.ts
 ================
 export interface InverseOrderRequest {
@@ -4097,6 +4446,166 @@ export interface USDCPositionsRequest {
 }
 
 ================
+File: src/types/request/v5-earn.ts
+================
+export interface SubmitStakeRedeemParamsV5 {
+  category: string;
+  orderType: 'Stake' | 'Redeem';
+  accountType: 'FUND' | 'UNIFIED';
+  amount: string;
+  coin: string;
+  productId: string;
+  orderLinkId: string;
+}
+⋮----
+export interface GetEarnOrderHistoryParamsV5 {
+  category: string;
+  orderId?: string;
+  orderLinkId?: string;
+}
+⋮----
+export interface GetEarnPositionParamsV5 {
+  category: string;
+  productId?: string;
+  coin?: string;
+}
+
+================
+File: src/types/request/v5-p2p-trading.ts
+================
+export interface GetP2PAccountCoinsBalanceParamsV5 {
+  memberId?: string;
+  accountType: string;
+  coin?: string;
+  withBonus?: 0 | 1;
+}
+⋮----
+export interface GetP2POnlineAdsParamsV5 {
+  tokenId: string;
+  currencyId: string;
+  side: '0' | '1'; // 0: buy; 1: sell
+  page?: string;
+  size?: string;
+}
+⋮----
+side: '0' | '1'; // 0: buy; 1: sell
+⋮----
+export interface P2PTradingPreferenceSetV5 {
+  hasUnPostAd?: 0 | 1;
+  isKyc?: 0 | 1;
+  isEmail?: 0 | 1;
+  isMobile?: 0 | 1;
+  hasRegisterTime?: 0 | 1;
+  registerTimeThreshold?: number;
+  orderFinishNumberDay30?: number;
+  completeRateDay30?: string;
+  nationalLimit?: string;
+  hasOrderFinishNumberDay30?: 0 | 1;
+  hasCompleteRateDay30?: 0 | 1;
+  hasNationalLimit?: 0 | 1;
+}
+⋮----
+export interface CreateP2PAdParamsV5 {
+  tokenId: string;
+  currencyId: string;
+  side: '0' | '1'; // 0: buy; 1: sell
+  priceType: '0' | '1'; // 0: fixed rate; 1: floating rate
+  premium: string;
+  price: string;
+  minAmount: string;
+  maxAmount: string;
+  remark: string;
+  tradingPreferenceSet: P2PTradingPreferenceSetV5;
+  paymentIds: string[];
+  quantity: string;
+  paymentPeriod: string;
+  itemType: 'ORIGIN' | 'BULK';
+}
+⋮----
+side: '0' | '1'; // 0: buy; 1: sell
+priceType: '0' | '1'; // 0: fixed rate; 1: floating rate
+⋮----
+export interface UpdateP2PAdParamsV5 {
+  id: string;
+  priceType: '0' | '1'; // 0: fixed rate; 1: floating rate
+  premium: string;
+  price: string;
+  minAmount: string;
+  maxAmount: string;
+  remark: string;
+  tradingPreferenceSet: P2PTradingPreferenceSetV5;
+  paymentIds: string[];
+  actionType: 'MODIFY' | 'ACTIVE'; // MODIFY: modify adv; ACTIVE: reonline adv
+  quantity: string;
+  paymentPeriod: string;
+  itemType?: 'ORIGIN' | 'BULK';
+  subsidyAd?: boolean;
+  securityRiskToken?: string;
+}
+⋮----
+priceType: '0' | '1'; // 0: fixed rate; 1: floating rate
+⋮----
+actionType: 'MODIFY' | 'ACTIVE'; // MODIFY: modify adv; ACTIVE: reonline adv
+⋮----
+export interface GetP2PPersonalAdsParamsV5 {
+  itemId?: string;
+  status?: '1' | '2'; // 1: Sold Out; 2: Available
+  side?: '0' | '1'; // 0: buy; 1: sell
+  tokenId?: string;
+  page?: string;
+  size?: string;
+  currencyId?: string;
+}
+⋮----
+status?: '1' | '2'; // 1: Sold Out; 2: Available
+side?: '0' | '1'; // 0: buy; 1: sell
+⋮----
+export interface GetP2POrdersParamsV5 {
+  status?: number;
+  beginTime?: string;
+  endTime?: string;
+  tokenId?: string;
+  side?: number[];
+  page: number;
+  size: number;
+}
+⋮----
+export interface GetP2PPendingOrdersParamsV5 {
+  status?: number;
+  beginTime?: string;
+  endTime?: string;
+  tokenId?: string;
+  side?: number[];
+  page: number;
+  size: number;
+}
+⋮----
+export interface MarkP2POrderAsPaidParamsV5 {
+  orderId: string;
+  paymentType: string;
+  paymentId: string;
+}
+⋮----
+export interface SendP2POrderMessageParamsV5 {
+  message: string;
+  contentType: string;
+  orderId: string;
+  msgUuid?: string;
+  fileName?: string;
+}
+⋮----
+export interface GetP2POrderMessagesParamsV5 {
+  orderId: string;
+  currentPage?: string;
+  size: string;
+}
+⋮----
+export interface GetP2PCounterpartyUserInfoParamsV5 {
+  originalUid: string;
+  orderId: string;
+}
+
+================
 File: src/types/request/v5-pre-upgrade.ts
 ================
 import { ExecTypeV5 } from '../shared-v5';
@@ -4750,6 +5259,647 @@ export interface LinearOrder {
   tp_trigger_by: string;
   sl_trigger_by: string;
   position_idx: number;
+}
+
+================
+File: src/types/response/v5-earn.ts
+================
+export interface EarnProductV5 {
+  category: string;
+  estimateApr: string;
+  coin: string;
+  minStakeAmount: string;
+  maxStakeAmount: string;
+  precision: string;
+  productId: string;
+  status: 'Available' | 'NotAvailable';
+}
+⋮----
+export interface EarnOrderHistoryV5 {
+  coin: string;
+  orderValue: string;
+  orderType: 'Redeem' | 'Stake';
+  orderId: string;
+  orderLinkId: string;
+  status: 'Success' | 'Fail' | 'Pending';
+  createdAt: string;
+  productId: string;
+  updatedAt: string;
+}
+⋮----
+export interface EarnPositionV5 {
+  coin: string;
+  productId: string;
+  amount: string;
+  totalPnl: string;
+  claimableYield: string;
+}
+
+================
+File: src/types/response/v5-p2p-trading.ts
+================
+import { P2PTradingPreferenceSetV5 } from '../request/v5-p2p-trading';
+⋮----
+export interface P2PCoinBalanceV5 {
+  coin: string;
+  transferBalance: string;
+  walletBalance: string;
+  bonus: string;
+}
+⋮----
+export interface P2PAccountCoinsBalanceV5 {
+  memberId: string;
+  accountType: string;
+  balance: P2PCoinBalanceV5[];
+}
+⋮----
+export interface P2POnlineAdV5 {
+  id: string;
+  nickName: string;
+  tokenId: string;
+  currencyId: string;
+  side: string;
+  price: string;
+  lastQuantity: string;
+  minAmount: string;
+  maxAmount: string;
+  payments: string[];
+  recentOrderNum: number;
+  recentExecuteRate: number;
+  isOnline: boolean;
+  authTag: string[];
+  paymentPeriod: number;
+  accountId: number;
+  userId: number;
+  priceType: number;
+  premium: string;
+  quantity: string;
+  frozenQuantity: string;
+  executedQuantity: string;
+  remark: string;
+  status: number;
+  createDate: string;
+  orderNum: string;
+  finishNum: string;
+  fee: string;
+  lastLogoutTime: string;
+  blocked: string;
+  makerContact: boolean;
+  symbolInfo: {
+    id: string;
+    exchangeId: string;
+    orgId: string;
+    tokenId: string;
+    currencyId: string;
+    status: string;
+    lowerLimitAlarm: number;
+    upperLimitAlarm: number;
+    itemDownRange: string;
+    itemUpRange: string;
+    currencyMinQuote: string;
+    currencyMaxQuote: string;
+    currencyLowerMaxQuote: string;
+    tokenMinQuote: string;
+    tokenMaxQuote: string;
+    kycCurrencyLimit: string;
+    itemSideLimit: string;
+    buyFeeRate: string;
+    sellFeeRate: string;
+    orderAutoCancelMinute: number;
+    orderFinishMinute: number;
+    tradeSide: number;
+    currency: {
+      id: string;
+      exchangeId: string;
+      orgId: string;
+      currencyId: string;
+      scale: number;
+    };
+    token: {
+      id: string;
+      exchangeId: string;
+      orgId: string;
+      tokenId: string;
+      scale: number;
+      sequence: number;
+    };
+    buyAd: number;
+    sellAd: number;
+  };
+  tradingPreferenceSet: {
+    hasUnPostAd: number;
+    isKyc: number;
+    isEmail: number;
+    isMobile: number;
+    hasRegisterTime: number;
+    registerTimeThreshold: number;
+    orderFinishNumberDay30: number;
+    completeRateDay30: number;
+    nationalLimit: number;
+    hasOrderFinishNumberDay30: number;
+    hasCompleteRateDay30: number;
+    hasNationalLimit: number;
+  };
+  version: number;
+  authStatus: number;
+  recommend: boolean;
+  recommendTag: string;
+  userType: string;
+  itemType: string;
+}
+⋮----
+export interface P2POnlineAdsResponseV5 {
+  count: number;
+  items: P2POnlineAdV5[];
+}
+⋮----
+export interface P2PCreateAdResponseV5 {
+  itemId: string;
+  securityRiskToken: string;
+  riskTokenType: string;
+  riskVersion: string;
+  needSecurityRisk: boolean;
+}
+⋮----
+export interface P2PPaymentTermV5 {
+  id: string;
+  realName: string;
+  paymentType: number;
+  bankName: string;
+  branchName: string;
+  accountNo: string;
+  qrcode: string;
+  visible: number;
+  payMessage: string;
+  firstName: string;
+  lastName: string;
+  secondLastName: string;
+  clabe: string;
+  debitCardNumber: string;
+  mobile: string;
+  businessName: string;
+  concept: string;
+  paymentExt1: string;
+  paymentExt2: string;
+  paymentExt3: string;
+  paymentExt4: string;
+  paymentExt5: string;
+  paymentExt6: string;
+  paymentTemplateVersion: number;
+  paymentConfig: {
+    paymentType: number;
+    paymentName: string;
+    paymentDialect: string;
+  };
+  realNameVerified: boolean;
+}
+⋮----
+export interface P2PAdDetailV5 {
+  id: string;
+  accountId: string;
+  userId: string;
+  nickName: string;
+  tokenId: string;
+  tokenName: string;
+  currencyId: string;
+  side: number;
+  priceType: number;
+  price: string;
+  premium: string;
+  lastQuantity: string;
+  quantity: string;
+  frozenQuantity: string;
+  executedQuantity: string;
+  minAmount: string;
+  maxAmount: string;
+  remark: string;
+  status: number;
+  createDate: string;
+  payments: string[];
+  orderNum: number;
+  finishNum: number;
+  recentOrderNum: number;
+  recentExecuteRate: number;
+  fee: string;
+  isOnline: boolean;
+  lastLogoutTime: string;
+  symbolInfo: {
+    id: string;
+    exchangeId: string;
+    orgId: string;
+    tokenId: string;
+    currencyId: string;
+    status: number;
+    lowerLimitAlarm: number;
+    upperLimitAlarm: number;
+    itemDownRange: string;
+    itemUpRange: string;
+    currencyMinQuote: string;
+    currencyMaxQuote: string;
+    currencyLowerMaxQuote: string;
+    tokenMinQuote: string;
+    tokenMaxQuote: string;
+    kycCurrencyLimit: string;
+    itemSideLimit: number;
+    buyFeeRate: string;
+    sellFeeRate: string;
+    orderAutoCancelMinute: number;
+    orderFinishMinute: number;
+    tradeSide: number;
+    currency: {
+      id: string;
+      exchangeId: string;
+      orgId: string;
+      currencyId: string;
+      scale: number;
+    };
+    token: {
+      id: string;
+      exchangeId: string;
+      orgId: string;
+      tokenId: string;
+      scale: number;
+      sequence: number;
+    };
+    buyAd: {
+      paymentPeriods: number[];
+    };
+    sellAd: {
+      paymentPeriods: number[];
+    };
+  };
+  tradingPreferenceSet: P2PTradingPreferenceSetV5;
+  paymentTerms: P2PPaymentTermV5[];
+  version: number;
+  updateDate: string;
+  feeRate: string;
+  paymentPeriod: number;
+  itemType: string;
+}
+⋮----
+export interface P2PPersonalAdsResponseV5 {
+  count: number;
+  items: P2PAdDetailV5[];
+  hiddenFlag: boolean;
+}
+⋮----
+export interface P2POrderExtensionV5 {
+  isDelayWithdraw: boolean;
+  delayTime: string;
+  startTime: string;
+}
+⋮----
+export interface P2POrderV5 {
+  id: string;
+  side: number;
+  tokenId: string;
+  orderType: string;
+  amount: string;
+  currencyId: string;
+  price: string;
+  notifyTokenQuantity?: string;
+  notifyTokenId?: string;
+  fee: string;
+  targetNickName: string;
+  targetUserId: string;
+  status: number;
+  selfUnreadMsgCount: string;
+  createDate: string;
+  transferLastSeconds: string;
+  appealLastSeconds: string;
+  userId: string;
+  sellerRealName: string;
+  buyerRealName: string;
+  judgeInfo: {
+    autoJudgeUnlockTime: string;
+    dissentResult: string;
+    preDissent: string;
+    postDissent: string;
+  };
+  unreadMsgCount: string;
+  extension: P2POrderExtensionV5;
+  bulkOrderFlag: boolean;
+}
+⋮----
+export interface P2POrdersResponseV5 {
+  count: number;
+  items: P2POrderV5[];
+}
+⋮----
+export interface P2PPaymentConfigItemV5 {
+  view: boolean;
+  name: string;
+  label: string;
+  placeholder: string;
+  type: string;
+  maxLength: string;
+  required: boolean;
+}
+⋮----
+export interface P2PPaymentConfigV5 {
+  paymentType: string;
+  checkType: number;
+  sort: number;
+  paymentName: string;
+  addTips: string;
+  itemTips: string;
+  online: number;
+  items: P2PPaymentConfigItemV5[];
+}
+⋮----
+export interface P2PPaymentTermDetailV5 {
+  id: string;
+  realName: string;
+  paymentType: number;
+  bankName: string;
+  branchName: string;
+  accountNo: string;
+  qrcode: string;
+  visible: number;
+  payMessage: string;
+  firstName: string;
+  lastName: string;
+  secondLastName: string;
+  clabe: string;
+  debitCardNumber: string;
+  mobile: string;
+  businessName: string;
+  concept: string;
+  online: string;
+  paymentExt1: string;
+  paymentExt2: string;
+  paymentExt3: string;
+  paymentExt4: string;
+  paymentExt5: string;
+  paymentExt6: string;
+  paymentTemplateVersion: number;
+  paymentConfigVo: P2PPaymentConfigV5;
+  ruPaymentPrompt: boolean;
+}
+⋮----
+export interface P2PAppraiseInfoV5 {
+  anonymous: string;
+  appraiseContent: string;
+  appraiseId: string;
+  appraiseType: string;
+  modifyFlag: string;
+  updateDate: string;
+}
+⋮----
+export interface P2PJudgeInfoV5 {
+  autoJudgeUnlockTime: string;
+  dissentResult: string;
+  preDissent: string;
+  postDissent: string;
+}
+⋮----
+export interface P2POrderDetailV5 {
+  id: string;
+  side: number;
+  itemId: string;
+  accountId: string;
+  userId: string;
+  nickName: string;
+  makerUserId: string;
+  targetAccountId: string;
+  targetUserId: string;
+  targetNickName: string;
+  targetFirstName: string;
+  targetSecondName: string;
+  targetUserAuthStatus: number;
+  targetConnectInformation: string;
+  payerRealName: string;
+  sellerRealName: string;
+  buyerRealName: string;
+  tokenId: string;
+  tokenName: string;
+  currencyId: string;
+  price: string;
+  quantity: string;
+  amount: string;
+  payCode: string;
+  paymentType: number;
+  transferDate: string;
+  status: number;
+  createDate: string;
+  paymentTermList: P2PPaymentTermDetailV5[];
+  remark: string;
+  transferLastSeconds: string;
+  recentOrderNum: number;
+  recentExecuteRate: number;
+  appealLastSeconds: string;
+  appealContent: string;
+  appealType: number;
+  appealNickName: string;
+  canAppeal: string;
+  totalAppealTimes: string;
+  appealedTimes: string;
+  paymentTermResult: P2PPaymentTermDetailV5;
+  orderFinishMinute: number;
+  confirmedPayTerm: P2PPaymentTermDetailV5;
+  makerFee: string;
+  takerFee: string;
+  fee: string;
+  showContact: boolean;
+  tokenBalance: string;
+  fiatBalance: string;
+  unreadMsgCount: string;
+  updateDate: string;
+  extension: P2POrderExtensionV5;
+  selfUnreadMsgCount: string;
+  judgeType: string;
+  canReport: boolean;
+  canReportDisagree: boolean;
+  canReportType: string[];
+  canReportDisagreeType: string[];
+  appraiseStatus: string;
+  appraiseInfo: P2PAppraiseInfoV5;
+  canReportDisagreeTypes: string[];
+  canReportTypes: string[];
+  orderType: string;
+  middleToken: string;
+  beforePrice: string;
+  beforeQuantity: string;
+  beforeToken: string;
+  alternative: string;
+  appealUserId: string;
+  notifyTokenId: string;
+  notifyTokenQuantity: string;
+  cancelResponsible: string;
+  chainType: string;
+  chainAddress: string;
+  tradeHashCode: string;
+  estimatedGasFee: string;
+  gasFeeTokenId: string;
+  tradingFeeTokenId: string;
+  onChainInfo: string;
+  transactionId: string;
+  displayRefund: string;
+  chainWithdrawLastSeconds: string;
+  chainTransferLastSeconds: string;
+  orderSource: string;
+  cancelReason: string;
+  sellerCancelExamineRemainTime: string;
+  needSellerExamineCancel: boolean;
+  couponCurrencyAmount: string;
+  totalCurrencyAmount: string;
+  usedCoupon: boolean;
+  couponTokenId: string;
+  couponQuantity: string;
+  completedOrderAppealCount: number;
+  totalCompletedOrderAppealCount: number;
+  realOrderStatus: number;
+  appealVersion: number;
+  judgeInfo: P2PJudgeInfoV5;
+  helpType: string;
+  appealFlowStatus: string;
+  appealSubStatus: string;
+  bulkOrderFlag: boolean;
+  targetUserType: string;
+  targetUserDisplays: string[];
+  appealProcessChangeFlag: boolean;
+  appealNegotiationNode: number;
+}
+⋮----
+export interface P2POrderMessageV5 {
+  id: string;
+  message: string;
+  userId: string;
+  msgType: number;
+  msgCode: number;
+  createDate: string;
+  contentType: string;
+  orderId: string;
+  msgUuid: string;
+  nickName: string;
+  fileName: string;
+  accountId: string;
+  isRead: number;
+  read: number;
+  roleType: string;
+  onlyForCustomer: number;
+}
+⋮----
+export interface P2PUserInfoV5 {
+  nickName: string;
+  defaultNickName: boolean;
+  isOnline: boolean;
+  kycLevel: string;
+  email: string;
+  mobile: string;
+  lastLogoutTime: string;
+  recentRate: string;
+  totalFinishCount: number;
+  totalFinishSellCount: number;
+  totalFinishBuyCount: number;
+  recentFinishCount: number;
+  averageReleaseTime: string;
+  averageTransferTime: string;
+  accountCreateDays: number;
+  firstTradeDays: number;
+  realName: string;
+  recentTradeAmount: string;
+  totalTradeAmount: string;
+  registerTime: string;
+  authStatus: number;
+  kycCountryCode: string;
+  blocked: string;
+  goodAppraiseRate: string;
+  goodAppraiseCount: number;
+  badAppraiseCount: number;
+  accountId: number;
+  paymentCount: number;
+  contactCount: number;
+  vipLevel: number;
+  userCancelCountLimit: number;
+  paymentRealNameUneditable: boolean;
+  userId: string;
+  realNameEn: string;
+}
+⋮----
+export interface P2PCounterpartyUserInfoV5 {
+  nickName: string;
+  defaultNickName: boolean;
+  whiteFlag: number;
+  contactConfig: boolean;
+  isOnline: boolean;
+  email: string;
+  mobile: string;
+  kycLevel: number;
+  lastLogoutTime: string;
+  recentRate: number;
+  totalFinishCount: number;
+  totalFinishSellCount: number;
+  totalFinishBuyCount: number;
+  recentFinishCount: number;
+  averageReleaseTime: string;
+  averageTransferTime: string;
+  accountCreateDays: number;
+  firstTradeDays: number;
+  realName: string;
+  recentTradeAmount: string;
+  totalTradeAmount: string;
+  executeNum: number;
+  orderNum: number;
+  hasUnPostAd: number;
+  registerTime: string;
+  authStatus: number;
+  kycCountryCode: string;
+  blocked: string;
+  goodAppraiseRate: string;
+  goodAppraiseCount: number;
+  badAppraiseCount: number;
+  accountId: string;
+  paymentCount: number;
+  contactCount: number;
+  realNameMask: string;
+  vipLevel: number;
+  vipProfit: [];
+  userTag: [];
+  userCancelCountLimit: number;
+  paymentRealNameUneditable: boolean;
+  lostRoleAffected: boolean;
+  userCurPrivilege: string[];
+  userType: string;
+  userId: string;
+  realNameEn: string;
+  canSubOnline: boolean;
+  curPrivilegeInfo: [];
+  openApiSwitch: number;
+}
+⋮----
+export interface P2PUserPaymentV5 {
+  id: string;
+  realName: string;
+  paymentType: string;
+  bankName: string;
+  branchName: string;
+  accountNo: string;
+  qrcode: string;
+  visible: number;
+  payMessage: string;
+  firstName: string;
+  lastName: string;
+  secondLastName: string;
+  clabe: string;
+  debitCardNumber: string;
+  mobile: string;
+  businessName: string;
+  concept: string;
+  online: string;
+  countNo: string;
+  paymentExt1: string;
+  paymentExt2: string;
+  paymentExt3: string;
+  paymentExt4: string;
+  paymentExt5: string;
+  paymentExt6: string;
+  paymentTemplateVersion: number;
+  hasPaymentTemplateChanged: boolean;
+  paymentConfigVo: P2PPaymentConfigV5;
+  realNameVerified: boolean;
+  channel: string;
+  currencyBalance: string[];
 }
 
 ================
@@ -5680,675 +6830,11 @@ console.log(response);
 console.error(error);
 
 ================
-File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/cancel-borrow-order.js
-================
-const client = new RestClientV5({
-⋮----
-async function cancelBorrowOrder() {
-⋮----
-const response = await client.cancelBorrowOrderFixed({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-cancelBorrowOrder();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/cancel-supply-order.js
-================
-const client = new RestClientV5({
-⋮----
-async function cancelSupplyOrder() {
-⋮----
-const response = await client.cancelSupplyOrderFixed({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-cancelSupplyOrder();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/create-borrow-order.js
-================
-const client = new RestClientV5({
-⋮----
-async function createBorrowOrder() {
-⋮----
-const response = await client.createBorrowOrderFixed({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-createBorrowOrder();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/create-supply-order.js
-================
-const client = new RestClientV5({
-⋮----
-async function createSupplyOrder() {
-⋮----
-const response = await client.createSupplyOrderFixed({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-createSupplyOrder();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-borrow-contract-info.js
-================
-const client = new RestClientV5({
-⋮----
-async function getBorrowContractInfo() {
-⋮----
-const response = await client.getBorrowContractInfoFixed({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-getBorrowContractInfo();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-borrow-order-info.js
-================
-const client = new RestClientV5({
-⋮----
-async function getBorrowOrderInfo() {
-⋮----
-const response = await client.getBorrowOrderInfoFixed({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-getBorrowOrderInfo();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-borrow-order-quote.js
-================
-const client = new RestClientV5({
-⋮----
-async function getBorrowOrderQuote() {
-⋮----
-const response = await client.getBorrowOrderQuoteFixed({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-getBorrowOrderQuote();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-repayment-history.js
-================
-const client = new RestClientV5({
-⋮----
-async function getRepaymentHistory() {
-⋮----
-const response = await client.getRepaymentHistoryFixed({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-getRepaymentHistory();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-supply-contract-info.js
-================
-const client = new RestClientV5({
-⋮----
-async function getSupplyContractInfo() {
-⋮----
-const response = await client.getSupplyContractInfoFixed({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-getSupplyContractInfo();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-supply-order-info.js
-================
-const client = new RestClientV5({
-⋮----
-async function getSupplyOrderInfo() {
-⋮----
-const response = await client.getSupplyOrderInfoFixed({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-getSupplyOrderInfo();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-supply-order-quote.js
-================
-const client = new RestClientV5({
-⋮----
-async function getSupplyOrderQuote() {
-⋮----
-const response = await client.getSupplyOrderQuoteFixed({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-getSupplyOrderQuote();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/repay.js
-================
-const client = new RestClientV5({
-⋮----
-async function repayFixed() {
-⋮----
-const response = await client.repayFixed({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-repayFixed();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/Flexible-Loan/borrow.js
-================
-const client = new RestClientV5({
-⋮----
-async function borrowFlexible() {
-⋮----
-const response = await client.borrowFlexible({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-borrowFlexible();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/Flexible-Loan/get-borrow-history.js
-================
-const client = new RestClientV5({
-⋮----
-async function getBorrowHistory() {
-⋮----
-const response = await client.getBorrowHistoryFlexible({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-getBorrowHistory();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/Flexible-Loan/get-ongoing-flexible-loans.js
-================
-const client = new RestClientV5({
-⋮----
-async function getOngoingFlexibleLoans() {
-⋮----
-const response = await client.getOngoingFlexibleLoans({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-getOngoingFlexibleLoans();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/Flexible-Loan/get-repayment-history.js
-================
-const client = new RestClientV5({
-⋮----
-async function getRepaymentHistory() {
-⋮----
-const response = await client.getRepaymentHistoryFlexible({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-getRepaymentHistory();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/Flexible-Loan/repay.ts
-================
-import { RestClientV5 } from 'bybit-api';
-⋮----
-async function repayFlexible()
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/adjust-collateral-amount.js
-================
-const client = new RestClientV5({
-⋮----
-async function adjustCollateralAmount() {
-⋮----
-const response = await client.adjustCollateralAmountNew({
-⋮----
-direction: '1', // 0: add collateral; 1: reduce collateral
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-adjustCollateralAmount();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/get-borrowable-coins.js
-================
-const client = new RestClientV5({
-⋮----
-async function getBorrowableCoins() {
-⋮----
-const response = await client.getBorrowableCoinsNew({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-getBorrowableCoins();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/get-collateral-adjustment-history.js
-================
-const client = new RestClientV5({
-⋮----
-async function getCollateralAdjustmentHistory() {
-⋮----
-const response = await client.getCollateralAdjustmentHistoryNew({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-getCollateralAdjustmentHistory();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/get-collateral-coins.js
-================
-const client = new RestClientV5({
-⋮----
-async function getCollateralCoins() {
-⋮----
-const response = await client.getCollateralCoinsNew({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-getCollateralCoins();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/get-crypto-loan-position.js
-================
-const client = new RestClientV5({
-⋮----
-async function getCryptoLoanPosition() {
-⋮----
-const response = await client.getCryptoLoanPositionNew();
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-getCryptoLoanPosition();
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/get-max-collateral-amount.js
-================
-const client = new RestClientV5({
-⋮----
-async function getMaxCollateralAmount() {
-⋮----
-const response = await client.getMaxCollateralAmountNew({
-⋮----
-console.log(response);
-⋮----
-console.error('Error:', error);
-⋮----
-getMaxCollateralAmount();
-
-================
 File: examples/apidoc/V5/Market/get-order-price-limit.js
 ================
 const client = new RestClientV5({
 ⋮----
 .getOrderPriceLimit({
-⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/P2P/get-account-information.js
-================
-// Initialize the client with testnet mode
-const client = new RestClientV5({
-⋮----
-// Call the function
-⋮----
-.getP2PUserInfo()
-.then((response) => {
-console.log('Response:', response);
-⋮----
-.catch((error) => {
-console.error('Error:', error);
-
-================
-File: examples/apidoc/V5/P2P/get-ad-detail.js
-================
-// Initialize the client with testnet mode
-const client = new RestClientV5({
-⋮----
-// Example parameters
-⋮----
-itemId: '1898988222063644672', // Replace with your ad ID
-⋮----
-// Call the function
-⋮----
-.getP2PAdDetail(params)
-.then((response) => {
-console.log('Response:', response);
-⋮----
-.catch((error) => {
-console.error('Error:', error);
-
-================
-File: examples/apidoc/V5/P2P/get-all-orders.js
-================
-// Initialize the client with testnet mode
-const client = new RestClientV5({
-⋮----
-// Example parameters
-⋮----
-status: null, // Optional: filter by order status
-beginTime: null, // Optional: filter by start time
-endTime: null, // Optional: filter by end time
-tokenId: null, // Optional: filter by token ID
-side: null, // Optional: filter by side (0: Buy, 1: Sell)
-page: 1, // Required: page number
-size: 1, // Required: rows per page
-⋮----
-// Call the function
-⋮----
-.getP2POrders(params)
-.then((response) => {
-console.log('Response:', response);
-⋮----
-.catch((error) => {
-console.error('Error:', error);
-
-================
-File: examples/apidoc/V5/P2P/get-chat-message.js
-================
-// Initialize the client with testnet mode
-const client = new RestClientV5({
-⋮----
-// Example parameters
-⋮----
-orderId: '1898976123321221120', // Replace with your order ID
-size: '1', // Number of messages per page
-currentPage: '1', // Optional: current page number
-⋮----
-// Call the function
-⋮----
-.getP2POrderMessages(params)
-.then((response) => {
-console.log('Response:', response);
-⋮----
-.catch((error) => {
-console.error('Error:', error);
-
-================
-File: examples/apidoc/V5/P2P/get-coin-balance.js
-================
-// Create a client
-const client = new RestClientV5({
-⋮----
-// Get account coins balance
-⋮----
-.getP2PAccountCoinsBalance({
-⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/P2P/get-counterparty-user-info.js
-================
-// Initialize the client with testnet mode
-const client = new RestClientV5({
-⋮----
-// Example parameters
-⋮----
-originalUid: '290118', // Replace with the counterparty user ID
-orderId: '1900004704665923584', // Replace with your order ID
-⋮----
-// Call the function
-⋮----
-.getP2PCounterpartyUserInfo(params)
-.then((response) => {
-console.log('Response:', response);
-⋮----
-.catch((error) => {
-console.error('Error:', error);
-
-================
-File: examples/apidoc/V5/P2P/get-market-online-ads-list.js
-================
-// Create a client
-const client = new RestClientV5({
-⋮----
-// Get market online ads list
-⋮----
-.getP2POnlineAds({
-⋮----
-side: '0', // 0: buy; 1: sell
-⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/P2P/get-my-ads-list.js
-================
-// Initialize the client with testnet mode
-const client = new RestClientV5({
-⋮----
-// Example parameters for getting personal P2P ads
-⋮----
-itemId: '123456789', // Optional: Specific advertisement ID
-status: 1, // Optional: Advertisement status (1: active, 2: completed, 3: cancelled)
-side: 1, // Optional: 0: buy; 1: sell
-tokenId: 'USDT', // Optional: Token ID
-page: 1, // Optional: Page number
-size: 20, // Optional: Page size
-currencyId: 'USD' // Optional: Currency ID
-⋮----
-// Get personal P2P ads
-client.getP2PPersonalAds(params)
-.then(response => {
-console.log('Response:', response);
-⋮----
-.catch(error => {
-console.error('Error:', error);
-
-================
-File: examples/apidoc/V5/P2P/get-order-detail.js
-================
-// Initialize the client with testnet mode
-const client = new RestClientV5({
-⋮----
-// Example parameters
-⋮----
-orderId: '1900004704665923584', // Replace with your order ID
-⋮----
-// Call the function
-⋮----
-.getP2POrderDetail(params)
-.then((response) => {
-console.log('Response:', response);
-⋮----
-.catch((error) => {
-console.error('Error:', error);
-
-================
-File: examples/apidoc/V5/P2P/get-pending-orders.js
-================
-// Initialize the client with testnet mode
-const client = new RestClientV5({
-⋮----
-// Example parameters
-⋮----
-status: 10, // waiting for buy pay
-beginTime: '1741831397000', // Optional: filter by start time
-endTime: '1741831424861', // Optional: filter by end time
-tokenId: 'USDT', // Optional: filter by token
-side: [0, 1], // Optional: filter by side (0: Buy, 1: Sell)
-⋮----
-// Call the function
-⋮----
-.getP2PPendingOrders(params)
-.then((response) => {
-console.log('Response:', response);
-⋮----
-.catch((error) => {
-console.error('Error:', error);
-
-================
-File: examples/apidoc/V5/P2P/get-user-payment.js
-================
-// Initialize the client with testnet mode
-const client = new RestClientV5({
-⋮----
-// Call the function
-⋮----
-.getP2PUserPayments()
-.then((response) => {
-console.log('Response:', response);
-⋮----
-.catch((error) => {
-console.error('Error:', error);
-
-================
-File: examples/apidoc/V5/P2P/mark-order-as-paid.js
-================
-// Initialize the client with testnet mode
-const client = new RestClientV5({
-⋮----
-// Example parameters
-⋮----
-orderId: '1899736339155943424', // Replace with your order ID
-paymentType: '14', // Payment method used
-paymentId: '7110', // Payment method ID used
-⋮----
-// Call the function
-⋮----
-.markP2POrderAsPaid(params)
-.then((response) => {
-console.log('Response:', response);
-⋮----
-.catch((error) => {
-console.error('Error:', error);
-
-================
-File: examples/apidoc/V5/P2P/post-new-ad.js
-================
-// Create a client
-const client = new RestClientV5({
-⋮----
-// Create new P2P advertisement
-⋮----
-.createP2PAd({
-⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/P2P/release-digital-asset.js
-================
-// Initialize the client with testnet mode
-const client = new RestClientV5({
-⋮----
-// Example parameters
-⋮----
-orderId: '1899736339155943424', // Replace with your order ID
-⋮----
-// Call the function
-⋮----
-.releaseP2POrder(params)
-.then((response) => {
-console.log('Response:', response);
-⋮----
-.catch((error) => {
-console.error('Error:', error);
-
-================
-File: examples/apidoc/V5/P2P/remove-my-ad.js
-================
-// Create a client
-const client = new RestClientV5({
-⋮----
-// Cancel P2P advertisement
-⋮----
-.cancelP2PAd({
-⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/P2P/send-chat-message.js
-================
-// Initialize the client with testnet mode
-const client = new RestClientV5({
-⋮----
-// Example parameters
-⋮----
-orderId: '1898976123321221120', // Replace with your order ID
-// Optional parameters:
-// msgUuid: 'your-message-uuid',
-// fileName: 'example.pdf'
-⋮----
-// Call the function
-⋮----
-.sendP2POrderMessage(params)
-.then((response) => {
-console.log('Response:', response);
-⋮----
-.catch((error) => {
-console.error('Error:', error);
-
-================
-File: examples/apidoc/V5/P2P/update-relist-my-ad.js
-================
-// Create a client
-const client = new RestClientV5({
-⋮----
-// Update P2P advertisement
-⋮----
-.updateP2PAd({
 ⋮----
 .then((response) => {
 console.log(response);
@@ -6694,11 +7180,6 @@ import { DefaultLogger, WebsocketClient, WS_KEY_MAP } from '../src';
 // Get a list of subscribed topics (e.g. for public v3 spot topics) (after a 5 second delay)
 
 ================
-File: src/types/request/index.ts
-================
-
-
-================
 File: src/types/request/v5-account.ts
 ================
 import { AccountTypeV5, CategoryV5, TransactionTypeV5 } from '../shared-v5';
@@ -6802,31 +7283,6 @@ export interface GetBrokerIssuedVoucherParamsV5 {
   awardId: string;
   specCode: string;
   withUsedAmount?: boolean;
-}
-
-================
-File: src/types/request/v5-earn.ts
-================
-export interface SubmitStakeRedeemParamsV5 {
-  category: string;
-  orderType: 'Stake' | 'Redeem';
-  accountType: 'FUND' | 'UNIFIED';
-  amount: string;
-  coin: string;
-  productId: string;
-  orderLinkId: string;
-}
-⋮----
-export interface GetEarnOrderHistoryParamsV5 {
-  category: string;
-  orderId?: string;
-  orderLinkId?: string;
-}
-⋮----
-export interface GetEarnPositionParamsV5 {
-  category: string;
-  productId?: string;
-  coin?: string;
 }
 
 ================
@@ -6970,141 +7426,6 @@ export interface GetLongShortRatioParamsV5 {
   endTime?: string;
   limit?: number;
   cursor?: string;
-}
-
-================
-File: src/types/request/v5-p2p-trading.ts
-================
-export interface GetP2PAccountCoinsBalanceParamsV5 {
-  memberId?: string;
-  accountType: string;
-  coin?: string;
-  withBonus?: 0 | 1;
-}
-⋮----
-export interface GetP2POnlineAdsParamsV5 {
-  tokenId: string;
-  currencyId: string;
-  side: '0' | '1'; // 0: buy; 1: sell
-  page?: string;
-  size?: string;
-}
-⋮----
-side: '0' | '1'; // 0: buy; 1: sell
-⋮----
-export interface P2PTradingPreferenceSetV5 {
-  hasUnPostAd?: 0 | 1;
-  isKyc?: 0 | 1;
-  isEmail?: 0 | 1;
-  isMobile?: 0 | 1;
-  hasRegisterTime?: 0 | 1;
-  registerTimeThreshold?: number;
-  orderFinishNumberDay30?: number;
-  completeRateDay30?: string;
-  nationalLimit?: string;
-  hasOrderFinishNumberDay30?: 0 | 1;
-  hasCompleteRateDay30?: 0 | 1;
-  hasNationalLimit?: 0 | 1;
-}
-⋮----
-export interface CreateP2PAdParamsV5 {
-  tokenId: string;
-  currencyId: string;
-  side: '0' | '1'; // 0: buy; 1: sell
-  priceType: '0' | '1'; // 0: fixed rate; 1: floating rate
-  premium: string;
-  price: string;
-  minAmount: string;
-  maxAmount: string;
-  remark: string;
-  tradingPreferenceSet: P2PTradingPreferenceSetV5;
-  paymentIds: string[];
-  quantity: string;
-  paymentPeriod: string;
-  itemType: 'ORIGIN' | 'BULK';
-}
-⋮----
-side: '0' | '1'; // 0: buy; 1: sell
-priceType: '0' | '1'; // 0: fixed rate; 1: floating rate
-⋮----
-export interface UpdateP2PAdParamsV5 {
-  id: string;
-  priceType: '0' | '1'; // 0: fixed rate; 1: floating rate
-  premium: string;
-  price: string;
-  minAmount: string;
-  maxAmount: string;
-  remark: string;
-  tradingPreferenceSet: P2PTradingPreferenceSetV5;
-  paymentIds: string[];
-  actionType: 'MODIFY' | 'ACTIVE'; // MODIFY: modify adv; ACTIVE: reonline adv
-  quantity: string;
-  paymentPeriod: string;
-  itemType?: 'ORIGIN' | 'BULK';
-  subsidyAd?: boolean;
-  securityRiskToken?: string;
-}
-⋮----
-priceType: '0' | '1'; // 0: fixed rate; 1: floating rate
-⋮----
-actionType: 'MODIFY' | 'ACTIVE'; // MODIFY: modify adv; ACTIVE: reonline adv
-⋮----
-export interface GetP2PPersonalAdsParamsV5 {
-  itemId?: string;
-  status?: '1' | '2'; // 1: Sold Out; 2: Available
-  side?: '0' | '1'; // 0: buy; 1: sell
-  tokenId?: string;
-  page?: string;
-  size?: string;
-  currencyId?: string;
-}
-⋮----
-status?: '1' | '2'; // 1: Sold Out; 2: Available
-side?: '0' | '1'; // 0: buy; 1: sell
-⋮----
-export interface GetP2POrdersParamsV5 {
-  status?: number;
-  beginTime?: string;
-  endTime?: string;
-  tokenId?: string;
-  side?: number[];
-  page: number;
-  size: number;
-}
-⋮----
-export interface GetP2PPendingOrdersParamsV5 {
-  status?: number;
-  beginTime?: string;
-  endTime?: string;
-  tokenId?: string;
-  side?: number[];
-  page: number;
-  size: number;
-}
-⋮----
-export interface MarkP2POrderAsPaidParamsV5 {
-  orderId: string;
-  paymentType: string;
-  paymentId: string;
-}
-⋮----
-export interface SendP2POrderMessageParamsV5 {
-  message: string;
-  contentType: string;
-  orderId: string;
-  msgUuid?: string;
-  fileName?: string;
-}
-⋮----
-export interface GetP2POrderMessagesParamsV5 {
-  orderId: string;
-  currentPage?: string;
-  size: string;
-}
-⋮----
-export interface GetP2PCounterpartyUserInfoParamsV5 {
-  originalUid: string;
-  orderId: string;
 }
 
 ================
@@ -7480,6 +7801,11 @@ export interface BatchCancelOrderParamsV5 {
 }
 
 ================
+File: src/types/response/index.ts
+================
+
+
+================
 File: src/types/response/v5-broker.ts
 ================
 interface EarningDetailV5 {
@@ -7568,647 +7894,6 @@ export interface BrokerIssuedVoucherV5 {
   effectiveAt: string;
   ineffectiveAt: string;
   usedAmount: string;
-}
-
-================
-File: src/types/response/v5-earn.ts
-================
-export interface EarnProductV5 {
-  category: string;
-  estimateApr: string;
-  coin: string;
-  minStakeAmount: string;
-  maxStakeAmount: string;
-  precision: string;
-  productId: string;
-  status: 'Available' | 'NotAvailable';
-}
-⋮----
-export interface EarnOrderHistoryV5 {
-  coin: string;
-  orderValue: string;
-  orderType: 'Redeem' | 'Stake';
-  orderId: string;
-  orderLinkId: string;
-  status: 'Success' | 'Fail' | 'Pending';
-  createdAt: string;
-  productId: string;
-  updatedAt: string;
-}
-⋮----
-export interface EarnPositionV5 {
-  coin: string;
-  productId: string;
-  amount: string;
-  totalPnl: string;
-  claimableYield: string;
-}
-
-================
-File: src/types/response/v5-p2p-trading.ts
-================
-import { P2PTradingPreferenceSetV5 } from '../request/v5-p2p-trading';
-⋮----
-export interface P2PCoinBalanceV5 {
-  coin: string;
-  transferBalance: string;
-  walletBalance: string;
-  bonus: string;
-}
-⋮----
-export interface P2PAccountCoinsBalanceV5 {
-  memberId: string;
-  accountType: string;
-  balance: P2PCoinBalanceV5[];
-}
-⋮----
-export interface P2POnlineAdV5 {
-  id: string;
-  nickName: string;
-  tokenId: string;
-  currencyId: string;
-  side: string;
-  price: string;
-  lastQuantity: string;
-  minAmount: string;
-  maxAmount: string;
-  payments: string[];
-  recentOrderNum: number;
-  recentExecuteRate: number;
-  isOnline: boolean;
-  authTag: string[];
-  paymentPeriod: number;
-  accountId: number;
-  userId: number;
-  priceType: number;
-  premium: string;
-  quantity: string;
-  frozenQuantity: string;
-  executedQuantity: string;
-  remark: string;
-  status: number;
-  createDate: string;
-  orderNum: string;
-  finishNum: string;
-  fee: string;
-  lastLogoutTime: string;
-  blocked: string;
-  makerContact: boolean;
-  symbolInfo: {
-    id: string;
-    exchangeId: string;
-    orgId: string;
-    tokenId: string;
-    currencyId: string;
-    status: string;
-    lowerLimitAlarm: number;
-    upperLimitAlarm: number;
-    itemDownRange: string;
-    itemUpRange: string;
-    currencyMinQuote: string;
-    currencyMaxQuote: string;
-    currencyLowerMaxQuote: string;
-    tokenMinQuote: string;
-    tokenMaxQuote: string;
-    kycCurrencyLimit: string;
-    itemSideLimit: string;
-    buyFeeRate: string;
-    sellFeeRate: string;
-    orderAutoCancelMinute: number;
-    orderFinishMinute: number;
-    tradeSide: number;
-    currency: {
-      id: string;
-      exchangeId: string;
-      orgId: string;
-      currencyId: string;
-      scale: number;
-    };
-    token: {
-      id: string;
-      exchangeId: string;
-      orgId: string;
-      tokenId: string;
-      scale: number;
-      sequence: number;
-    };
-    buyAd: number;
-    sellAd: number;
-  };
-  tradingPreferenceSet: {
-    hasUnPostAd: number;
-    isKyc: number;
-    isEmail: number;
-    isMobile: number;
-    hasRegisterTime: number;
-    registerTimeThreshold: number;
-    orderFinishNumberDay30: number;
-    completeRateDay30: number;
-    nationalLimit: number;
-    hasOrderFinishNumberDay30: number;
-    hasCompleteRateDay30: number;
-    hasNationalLimit: number;
-  };
-  version: number;
-  authStatus: number;
-  recommend: boolean;
-  recommendTag: string;
-  userType: string;
-  itemType: string;
-}
-⋮----
-export interface P2POnlineAdsResponseV5 {
-  count: number;
-  items: P2POnlineAdV5[];
-}
-⋮----
-export interface P2PCreateAdResponseV5 {
-  itemId: string;
-  securityRiskToken: string;
-  riskTokenType: string;
-  riskVersion: string;
-  needSecurityRisk: boolean;
-}
-⋮----
-export interface P2PPaymentTermV5 {
-  id: string;
-  realName: string;
-  paymentType: number;
-  bankName: string;
-  branchName: string;
-  accountNo: string;
-  qrcode: string;
-  visible: number;
-  payMessage: string;
-  firstName: string;
-  lastName: string;
-  secondLastName: string;
-  clabe: string;
-  debitCardNumber: string;
-  mobile: string;
-  businessName: string;
-  concept: string;
-  paymentExt1: string;
-  paymentExt2: string;
-  paymentExt3: string;
-  paymentExt4: string;
-  paymentExt5: string;
-  paymentExt6: string;
-  paymentTemplateVersion: number;
-  paymentConfig: {
-    paymentType: number;
-    paymentName: string;
-    paymentDialect: string;
-  };
-  realNameVerified: boolean;
-}
-⋮----
-export interface P2PAdDetailV5 {
-  id: string;
-  accountId: string;
-  userId: string;
-  nickName: string;
-  tokenId: string;
-  tokenName: string;
-  currencyId: string;
-  side: number;
-  priceType: number;
-  price: string;
-  premium: string;
-  lastQuantity: string;
-  quantity: string;
-  frozenQuantity: string;
-  executedQuantity: string;
-  minAmount: string;
-  maxAmount: string;
-  remark: string;
-  status: number;
-  createDate: string;
-  payments: string[];
-  orderNum: number;
-  finishNum: number;
-  recentOrderNum: number;
-  recentExecuteRate: number;
-  fee: string;
-  isOnline: boolean;
-  lastLogoutTime: string;
-  symbolInfo: {
-    id: string;
-    exchangeId: string;
-    orgId: string;
-    tokenId: string;
-    currencyId: string;
-    status: number;
-    lowerLimitAlarm: number;
-    upperLimitAlarm: number;
-    itemDownRange: string;
-    itemUpRange: string;
-    currencyMinQuote: string;
-    currencyMaxQuote: string;
-    currencyLowerMaxQuote: string;
-    tokenMinQuote: string;
-    tokenMaxQuote: string;
-    kycCurrencyLimit: string;
-    itemSideLimit: number;
-    buyFeeRate: string;
-    sellFeeRate: string;
-    orderAutoCancelMinute: number;
-    orderFinishMinute: number;
-    tradeSide: number;
-    currency: {
-      id: string;
-      exchangeId: string;
-      orgId: string;
-      currencyId: string;
-      scale: number;
-    };
-    token: {
-      id: string;
-      exchangeId: string;
-      orgId: string;
-      tokenId: string;
-      scale: number;
-      sequence: number;
-    };
-    buyAd: {
-      paymentPeriods: number[];
-    };
-    sellAd: {
-      paymentPeriods: number[];
-    };
-  };
-  tradingPreferenceSet: P2PTradingPreferenceSetV5;
-  paymentTerms: P2PPaymentTermV5[];
-  version: number;
-  updateDate: string;
-  feeRate: string;
-  paymentPeriod: number;
-  itemType: string;
-}
-⋮----
-export interface P2PPersonalAdsResponseV5 {
-  count: number;
-  items: P2PAdDetailV5[];
-  hiddenFlag: boolean;
-}
-⋮----
-export interface P2POrderExtensionV5 {
-  isDelayWithdraw: boolean;
-  delayTime: string;
-  startTime: string;
-}
-⋮----
-export interface P2POrderV5 {
-  id: string;
-  side: number;
-  tokenId: string;
-  orderType: string;
-  amount: string;
-  currencyId: string;
-  price: string;
-  notifyTokenQuantity?: string;
-  notifyTokenId?: string;
-  fee: string;
-  targetNickName: string;
-  targetUserId: string;
-  status: number;
-  selfUnreadMsgCount: string;
-  createDate: string;
-  transferLastSeconds: string;
-  appealLastSeconds: string;
-  userId: string;
-  sellerRealName: string;
-  buyerRealName: string;
-  judgeInfo: {
-    autoJudgeUnlockTime: string;
-    dissentResult: string;
-    preDissent: string;
-    postDissent: string;
-  };
-  unreadMsgCount: string;
-  extension: P2POrderExtensionV5;
-  bulkOrderFlag: boolean;
-}
-⋮----
-export interface P2POrdersResponseV5 {
-  count: number;
-  items: P2POrderV5[];
-}
-⋮----
-export interface P2PPaymentConfigItemV5 {
-  view: boolean;
-  name: string;
-  label: string;
-  placeholder: string;
-  type: string;
-  maxLength: string;
-  required: boolean;
-}
-⋮----
-export interface P2PPaymentConfigV5 {
-  paymentType: string;
-  checkType: number;
-  sort: number;
-  paymentName: string;
-  addTips: string;
-  itemTips: string;
-  online: number;
-  items: P2PPaymentConfigItemV5[];
-}
-⋮----
-export interface P2PPaymentTermDetailV5 {
-  id: string;
-  realName: string;
-  paymentType: number;
-  bankName: string;
-  branchName: string;
-  accountNo: string;
-  qrcode: string;
-  visible: number;
-  payMessage: string;
-  firstName: string;
-  lastName: string;
-  secondLastName: string;
-  clabe: string;
-  debitCardNumber: string;
-  mobile: string;
-  businessName: string;
-  concept: string;
-  online: string;
-  paymentExt1: string;
-  paymentExt2: string;
-  paymentExt3: string;
-  paymentExt4: string;
-  paymentExt5: string;
-  paymentExt6: string;
-  paymentTemplateVersion: number;
-  paymentConfigVo: P2PPaymentConfigV5;
-  ruPaymentPrompt: boolean;
-}
-⋮----
-export interface P2PAppraiseInfoV5 {
-  anonymous: string;
-  appraiseContent: string;
-  appraiseId: string;
-  appraiseType: string;
-  modifyFlag: string;
-  updateDate: string;
-}
-⋮----
-export interface P2PJudgeInfoV5 {
-  autoJudgeUnlockTime: string;
-  dissentResult: string;
-  preDissent: string;
-  postDissent: string;
-}
-⋮----
-export interface P2POrderDetailV5 {
-  id: string;
-  side: number;
-  itemId: string;
-  accountId: string;
-  userId: string;
-  nickName: string;
-  makerUserId: string;
-  targetAccountId: string;
-  targetUserId: string;
-  targetNickName: string;
-  targetFirstName: string;
-  targetSecondName: string;
-  targetUserAuthStatus: number;
-  targetConnectInformation: string;
-  payerRealName: string;
-  sellerRealName: string;
-  buyerRealName: string;
-  tokenId: string;
-  tokenName: string;
-  currencyId: string;
-  price: string;
-  quantity: string;
-  amount: string;
-  payCode: string;
-  paymentType: number;
-  transferDate: string;
-  status: number;
-  createDate: string;
-  paymentTermList: P2PPaymentTermDetailV5[];
-  remark: string;
-  transferLastSeconds: string;
-  recentOrderNum: number;
-  recentExecuteRate: number;
-  appealLastSeconds: string;
-  appealContent: string;
-  appealType: number;
-  appealNickName: string;
-  canAppeal: string;
-  totalAppealTimes: string;
-  appealedTimes: string;
-  paymentTermResult: P2PPaymentTermDetailV5;
-  orderFinishMinute: number;
-  confirmedPayTerm: P2PPaymentTermDetailV5;
-  makerFee: string;
-  takerFee: string;
-  fee: string;
-  showContact: boolean;
-  tokenBalance: string;
-  fiatBalance: string;
-  unreadMsgCount: string;
-  updateDate: string;
-  extension: P2POrderExtensionV5;
-  selfUnreadMsgCount: string;
-  judgeType: string;
-  canReport: boolean;
-  canReportDisagree: boolean;
-  canReportType: string[];
-  canReportDisagreeType: string[];
-  appraiseStatus: string;
-  appraiseInfo: P2PAppraiseInfoV5;
-  canReportDisagreeTypes: string[];
-  canReportTypes: string[];
-  orderType: string;
-  middleToken: string;
-  beforePrice: string;
-  beforeQuantity: string;
-  beforeToken: string;
-  alternative: string;
-  appealUserId: string;
-  notifyTokenId: string;
-  notifyTokenQuantity: string;
-  cancelResponsible: string;
-  chainType: string;
-  chainAddress: string;
-  tradeHashCode: string;
-  estimatedGasFee: string;
-  gasFeeTokenId: string;
-  tradingFeeTokenId: string;
-  onChainInfo: string;
-  transactionId: string;
-  displayRefund: string;
-  chainWithdrawLastSeconds: string;
-  chainTransferLastSeconds: string;
-  orderSource: string;
-  cancelReason: string;
-  sellerCancelExamineRemainTime: string;
-  needSellerExamineCancel: boolean;
-  couponCurrencyAmount: string;
-  totalCurrencyAmount: string;
-  usedCoupon: boolean;
-  couponTokenId: string;
-  couponQuantity: string;
-  completedOrderAppealCount: number;
-  totalCompletedOrderAppealCount: number;
-  realOrderStatus: number;
-  appealVersion: number;
-  judgeInfo: P2PJudgeInfoV5;
-  helpType: string;
-  appealFlowStatus: string;
-  appealSubStatus: string;
-  bulkOrderFlag: boolean;
-  targetUserType: string;
-  targetUserDisplays: string[];
-  appealProcessChangeFlag: boolean;
-  appealNegotiationNode: number;
-}
-⋮----
-export interface P2POrderMessageV5 {
-  id: string;
-  message: string;
-  userId: string;
-  msgType: number;
-  msgCode: number;
-  createDate: string;
-  contentType: string;
-  orderId: string;
-  msgUuid: string;
-  nickName: string;
-  fileName: string;
-  accountId: string;
-  isRead: number;
-  read: number;
-  roleType: string;
-  onlyForCustomer: number;
-}
-⋮----
-export interface P2PUserInfoV5 {
-  nickName: string;
-  defaultNickName: boolean;
-  isOnline: boolean;
-  kycLevel: string;
-  email: string;
-  mobile: string;
-  lastLogoutTime: string;
-  recentRate: string;
-  totalFinishCount: number;
-  totalFinishSellCount: number;
-  totalFinishBuyCount: number;
-  recentFinishCount: number;
-  averageReleaseTime: string;
-  averageTransferTime: string;
-  accountCreateDays: number;
-  firstTradeDays: number;
-  realName: string;
-  recentTradeAmount: string;
-  totalTradeAmount: string;
-  registerTime: string;
-  authStatus: number;
-  kycCountryCode: string;
-  blocked: string;
-  goodAppraiseRate: string;
-  goodAppraiseCount: number;
-  badAppraiseCount: number;
-  accountId: number;
-  paymentCount: number;
-  contactCount: number;
-  vipLevel: number;
-  userCancelCountLimit: number;
-  paymentRealNameUneditable: boolean;
-  userId: string;
-  realNameEn: string;
-}
-⋮----
-export interface P2PCounterpartyUserInfoV5 {
-  nickName: string;
-  defaultNickName: boolean;
-  whiteFlag: number;
-  contactConfig: boolean;
-  isOnline: boolean;
-  email: string;
-  mobile: string;
-  kycLevel: number;
-  lastLogoutTime: string;
-  recentRate: number;
-  totalFinishCount: number;
-  totalFinishSellCount: number;
-  totalFinishBuyCount: number;
-  recentFinishCount: number;
-  averageReleaseTime: string;
-  averageTransferTime: string;
-  accountCreateDays: number;
-  firstTradeDays: number;
-  realName: string;
-  recentTradeAmount: string;
-  totalTradeAmount: string;
-  executeNum: number;
-  orderNum: number;
-  hasUnPostAd: number;
-  registerTime: string;
-  authStatus: number;
-  kycCountryCode: string;
-  blocked: string;
-  goodAppraiseRate: string;
-  goodAppraiseCount: number;
-  badAppraiseCount: number;
-  accountId: string;
-  paymentCount: number;
-  contactCount: number;
-  realNameMask: string;
-  vipLevel: number;
-  vipProfit: [];
-  userTag: [];
-  userCancelCountLimit: number;
-  paymentRealNameUneditable: boolean;
-  lostRoleAffected: boolean;
-  userCurPrivilege: string[];
-  userType: string;
-  userId: string;
-  realNameEn: string;
-  canSubOnline: boolean;
-  curPrivilegeInfo: [];
-  openApiSwitch: number;
-}
-⋮----
-export interface P2PUserPaymentV5 {
-  id: string;
-  realName: string;
-  paymentType: string;
-  bankName: string;
-  branchName: string;
-  accountNo: string;
-  qrcode: string;
-  visible: number;
-  payMessage: string;
-  firstName: string;
-  lastName: string;
-  secondLastName: string;
-  clabe: string;
-  debitCardNumber: string;
-  mobile: string;
-  businessName: string;
-  concept: string;
-  online: string;
-  countNo: string;
-  paymentExt1: string;
-  paymentExt2: string;
-  paymentExt3: string;
-  paymentExt4: string;
-  paymentExt5: string;
-  paymentExt6: string;
-  paymentTemplateVersion: number;
-  hasPaymentTemplateChanged: boolean;
-  paymentConfigVo: P2PPaymentConfigV5;
-  realNameVerified: boolean;
-  channel: string;
-  currencyBalance: string[];
 }
 
 ================
@@ -8554,22 +8239,19 @@ restClientRegex.ts
 repomix.sh
 
 ================
-File: examples/apidoc/V5/P2P/upload-chat-file.js
+File: examples/apidoc/V5/Crypto-Loan-New/Flexible-Loan/repay.js
 ================
-// Initialize the client with testnet mode
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
 const client = new RestClientV5({
 ⋮----
-// Create form data
-const formData = new FormData();
-formData.append('upload_file', fs.createReadStream('path/to/your/file.jpg')); // Replace with your file path
+client.repayFlexible({
 ⋮----
-// Call the function
+.then(response => {
+console.log(response);
 ⋮----
-.uploadP2PChatFile(formData)
-.then((response) => {
-console.log('Response:', response);
-⋮----
-.catch((error) => {
+.catch(error => {
 console.error('Error:', error);
 
 ================
@@ -8977,11 +8659,6 @@ export interface GetConvertHistoryParamsV5 {
 }
 
 ================
-File: src/types/response/index.ts
-================
-
-
-================
 File: src/types/index.ts
 ================
 
@@ -9184,6 +8861,262 @@ File: .eslintrc.cjs
 // 'plugin:require-extensions/recommended', // only once moved to ESM
 ⋮----
 // 'no-unused-vars': ['warn'],
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/cancel-borrow-order.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.cancelBorrowOrderFixed({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/cancel-supply-order.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.cancelSupplyOrderFixed({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/create-borrow-order.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.createBorrowOrderFixed({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/create-supply-order.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.createSupplyOrderFixed({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-borrow-contract-info.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getBorrowContractInfoFixed({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-borrow-order-info.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getBorrowOrderInfoFixed({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-borrow-order-quote.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getBorrowOrderQuoteFixed({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-repayment-history.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getRepaymentHistoryFixed({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-supply-contract-info.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getSupplyContractInfoFixed({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-supply-order-info.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getSupplyOrderInfoFixed({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/get-supply-order-quote.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getSupplyOrderQuoteFixed({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/repay.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.repayFixed({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Flexible-Loan/borrow.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.borrowFlexible({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Flexible-Loan/get-borrow-history.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getBorrowHistoryFlexible({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Flexible-Loan/get-ongoing-flexible-loans.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getOngoingFlexibleLoans({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Flexible-Loan/get-repayment-history.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getRepaymentHistoryFlexible({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
 
 ================
 File: src/types/response/v5-account.ts
@@ -10498,6 +10431,103 @@ export interface SystemStatusItemV5 {
 }
 
 ================
+File: examples/apidoc/V5/Crypto-Loan-New/adjust-collateral-amount.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.updateCollateralAmount({
+⋮----
+direction: '1', // 0: add collateral; 1: reduce collateral
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/get-borrowable-coins.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getLoanBorrowableCoins({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/get-collateral-adjustment-history.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getCollateralAdjustmentHistory({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/get-collateral-coins.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getLoanCollateralCoins({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/get-crypto-loan-position.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getCryptoLoanPosition()
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/get-max-collateral-amount.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getMaxCollateralAmount({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
 File: src/types/response/v5-asset.ts
 ================
 import { AccountTypeV5, OrderSideV5, WithdrawalTypeV5 } from '../shared-v5';
@@ -10903,522 +10933,6 @@ postImrE4: number; // Initial margin rate after checking (in basis points)
 postMmrE4: number; // Maintenance margin rate after checking (in basis points)
 
 ================
-File: src/types/request/v5-crypto-loan.ts
-================
-export interface BorrowCryptoLoanParamsV5 {
-  loanCurrency: string;
-  loanAmount?: string;
-  loanTerm?: string;
-  collateralCurrency: string;
-  collateralAmount?: string;
-}
-⋮----
-export interface GetUnpaidLoanOrdersParamsV5 {
-  orderId?: string;
-  loanCurrency?: string;
-  collateralCurrency?: string;
-  loanTermType?: string;
-  loanTerm?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface GetRepaymentHistoryParamsV5 {
-  orderId?: string;
-  repayId?: string;
-  loanCurrency?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface GetCompletedLoanOrderHistoryParamsV5 {
-  orderId?: string;
-  loanCurrency?: string;
-  collateralCurrency?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface GetLoanLTVAdjustmentHistoryParamsV5 {
-  orderId?: string;
-  adjustId?: string;
-  collateralCurrency?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-// New Crypto Loan Request Types
-⋮----
-export interface GetBorrowableCoinsNewParamsV5 {
-  vipLevel?: string;
-  currency?: string;
-}
-⋮----
-export interface GetCollateralCoinsNewParamsV5 {
-  currency?: string;
-}
-⋮----
-export interface GetMaxCollateralAmountNewParamsV5 {
-  currency: string;
-}
-⋮----
-export interface AdjustCollateralAmountNewParamsV5 {
-  currency: string;
-  amount: string;
-  direction: '0' | '1';
-}
-⋮----
-export interface GetCollateralAdjustmentHistoryNewParamsV5 {
-  adjustId?: string;
-  collateralCurrency?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-// Flexible Loan Request Types
-⋮----
-export interface BorrowFlexibleParamsV5 {
-  loanCurrency: string;
-  loanAmount: string;
-  collateralList?: {
-    currency: string;
-    amount: string;
-  }[];
-}
-⋮----
-export interface RepayFlexibleParamsV5 {
-  loanCurrency: string;
-  amount: string;
-}
-⋮----
-export interface GetOngoingFlexibleLoansParamsV5 {
-  loanCurrency?: string;
-}
-⋮----
-export interface GetBorrowHistoryFlexibleParamsV5 {
-  orderId?: string;
-  loanCurrency?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface GetRepaymentHistoryFlexibleParamsV5 {
-  repayId?: string;
-  loanCurrency?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-// Fixed Loan Request Types
-⋮----
-export interface GetSupplyOrderQuoteFixedParamsV5 {
-  orderCurrency: string;
-  term?: string;
-  orderBy: 'apy' | 'term' | 'quantity';
-  sort?: number;
-  limit?: number;
-}
-⋮----
-export interface GetBorrowOrderQuoteFixedParamsV5 {
-  orderCurrency: string;
-  term?: string;
-  orderBy: 'apy' | 'term' | 'quantity';
-  sort?: number;
-  limit?: number;
-}
-⋮----
-export interface CreateBorrowOrderFixedParamsV5 {
-  orderCurrency: string;
-  orderAmount: string;
-  annualRate: string;
-  term: string;
-  autoRepay?: string;
-  collateralList?: {
-    currency: string;
-    amount: string;
-  }[];
-}
-⋮----
-export interface CreateSupplyOrderFixedParamsV5 {
-  orderCurrency: string;
-  orderAmount: string;
-  annualRate: string;
-  term: string;
-}
-⋮----
-export interface CancelBorrowOrderFixedParamsV5 {
-  orderId: string;
-}
-⋮----
-export interface CancelSupplyOrderFixedParamsV5 {
-  orderId: string;
-}
-⋮----
-export interface GetBorrowContractInfoFixedParamsV5 {
-  orderId?: string;
-  loanId?: string;
-  orderCurrency?: string;
-  term?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface GetSupplyContractInfoFixedParamsV5 {
-  orderId?: string;
-  supplyId?: string;
-  supplyCurrency?: string;
-  term?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface GetBorrowOrderInfoFixedParamsV5 {
-  orderId?: string;
-  orderCurrency?: string;
-  state?: string;
-  term?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface GetSupplyOrderInfoFixedParamsV5 {
-  orderId?: string;
-  orderCurrency?: string;
-  state?: string;
-  term?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface RepayFixedParamsV5 {
-  loanId?: string;
-  loanCurrency?: string;
-}
-⋮----
-export interface GetRepaymentHistoryFixedParamsV5 {
-  repayId?: string;
-  loanCurrency?: string;
-  limit?: string;
-  cursor?: string;
-}
-
-================
-File: src/types/response/v5-crypto-loan.ts
-================
-export interface CollateralCoinV5 {
-  collateralAccuracy: number;
-  initialLTV: string;
-  liquidationLTV: string;
-  marginCallLTV: string;
-  maxLimit: string;
-}
-⋮----
-export interface VipCollateralCoinsV5 {
-  list: CollateralCoinV5[];
-  vipLevel: string;
-}
-⋮----
-export interface BorrowableCoinV5 {
-  borrowingAccuracy: number;
-  currency: string;
-  flexibleHourlyInterestRate: string;
-  hourlyInterestRate7D: string;
-  hourlyInterestRate14D: string;
-  hourlyInterestRate30D: string;
-  hourlyInterestRate90D: string;
-  hourlyInterestRate180D: string;
-  maxBorrowingAmount: string;
-  minBorrowingAmount: string;
-}
-⋮----
-export interface VipBorrowableCoinsV5 {
-  list: BorrowableCoinV5[];
-  vipLevel: string;
-}
-⋮----
-export interface AccountBorrowCollateralLimitV5 {
-  collateralCurrency: string;
-  loanCurrency: string;
-  maxCollateralAmount: string;
-  maxLoanAmount: string;
-  minCollateralAmount: string;
-  minLoanAmount: string;
-}
-⋮----
-export interface UnpaidLoanOrderV5 {
-  collateralAmount: string;
-  collateralCurrency: string;
-  currentLTV: string;
-  expirationTime: string;
-  hourlyInterestRate: string;
-  loanCurrency: string;
-  loanTerm: string;
-  orderId: string;
-  residualInterest: string;
-  residualPenaltyInterest: string;
-  totalDebt: string;
-}
-⋮----
-export interface RepaymentHistoryV5 {
-  collateralCurrency: string;
-  collateralReturn: string;
-  loanCurrency: string;
-  loanTerm: string;
-  orderId: string;
-  repayAmount: string;
-  repayId: string;
-  repayStatus: number;
-  repayTime: string;
-  repayType: string;
-}
-⋮----
-export interface CompletedLoanOrderV5 {
-  borrowTime: string;
-  collateralCurrency: string;
-  expirationTime: string;
-  hourlyInterestRate: string;
-  initialCollateralAmount: string;
-  initialLoanAmount: string;
-  loanCurrency: string;
-  loanTerm: string;
-  orderId: string;
-  repaidInterest: string;
-  repaidPenaltyInterest: string;
-  status: number;
-}
-export interface LoanLTVAdjustmentHistoryV5 {
-  collateralCurrency: string;
-  orderId: string;
-  adjustId: string;
-  adjustTime: string;
-  preLTV: string;
-  afterLTV: string;
-  direction: number;
-  amount: string;
-}
-⋮----
-// New Crypto Loan Types
-⋮----
-export interface BorrowableCoinNewV5 {
-  currency: string;
-  fixedBorrowable: boolean;
-  fixedBorrowingAccuracy: number;
-  flexibleBorrowable: boolean;
-  flexibleBorrowingAccuracy: number;
-  maxBorrowingAmount: string;
-  minFixedBorrowingAmount: string;
-  minFlexibleBorrowingAmount: string;
-  vipLevel: string;
-  flexibleAnnualizedInterestRate: string;
-  annualizedInterestRate7D: string;
-  annualizedInterestRate14D: string;
-  annualizedInterestRate30D: string;
-  annualizedInterestRate60D: string;
-  annualizedInterestRate90D: string;
-  annualizedInterestRate180D: string;
-}
-⋮----
-export interface CollateralRatioV5 {
-  collateralRatio: string;
-  maxValue: string;
-  minValue: string;
-}
-⋮----
-export interface CollateralRatioConfigV5 {
-  collateralRatioList: CollateralRatioV5[];
-  currencies: string;
-}
-⋮----
-export interface CurrencyLiquidationV5 {
-  currency: string;
-  liquidationOrder: number;
-}
-⋮----
-export interface CollateralDataNewV5 {
-  collateralRatioConfigList: CollateralRatioConfigV5[];
-  currencyLiquidationList: CurrencyLiquidationV5[];
-}
-⋮----
-export interface MaxCollateralAmountNewV5 {
-  maxCollateralAmount: string;
-}
-⋮----
-// Additional New Crypto Loan Types
-⋮----
-export interface AdjustCollateralAmountNewV5 {
-  adjustId: number;
-}
-⋮----
-export interface CollateralAdjustmentHistoryNewV5 {
-  adjustId: number;
-  adjustTime: number;
-  afterLTV: string;
-  amount: string;
-  collateralCurrency: string;
-  direction: number;
-  preLTV: string;
-  status: number;
-}
-⋮----
-export interface BorrowListNewV5 {
-  fixedTotalDebt: string;
-  fixedTotalDebtUSD: string;
-  flexibleHourlyInterestRate: string;
-  flexibleTotalDebt: string;
-  flexibleTotalDebtUSD: string;
-  loanCurrency: string;
-}
-⋮----
-export interface CollateralListNewV5 {
-  amount: string;
-  amountUSD: string;
-  currency: string;
-  ltv: string;
-}
-⋮----
-export interface SupplyListNewV5 {
-  amount: string;
-  amountUSD: string;
-  currency: string;
-}
-⋮----
-export interface CryptoLoanPositionNewV5 {
-  borrowList: BorrowListNewV5[];
-  collateralList: CollateralListNewV5[];
-  supplyList: SupplyListNewV5[];
-  totalCollateral: string;
-  totalDebt: string;
-  totalSupply: string;
-}
-⋮----
-// Flexible Loan Types
-⋮----
-export interface BorrowFlexibleV5 {
-  orderId: string;
-}
-⋮----
-export interface RepayFlexibleV5 {
-  repayId: string;
-}
-⋮----
-export interface OngoingFlexibleLoanV5 {
-  hourlyInterestRate: string;
-  loanCurrency: string;
-  totalDebt: string;
-}
-⋮----
-export interface BorrowHistoryFlexibleV5 {
-  borrowTime: number;
-  initialLoanAmount: string;
-  loanCurrency: string;
-  orderId: string;
-  status: number;
-}
-⋮----
-export interface RepaymentHistoryFlexibleV5 {
-  loanCurrency: string;
-  repayAmount: string;
-  repayId: string;
-  repayStatus: number;
-  repayTime: number;
-  repayType: number;
-}
-⋮----
-// Fixed Loan Types
-⋮----
-export interface SupplyOrderQuoteFixedV5 {
-  orderCurrency: string;
-  term: number;
-  annualRate: string;
-  qty: string;
-}
-⋮----
-export interface BorrowOrderQuoteFixedV5 {
-  orderCurrency: string;
-  term: number;
-  annualRate: string;
-  qty: string;
-}
-⋮----
-export interface CreateBorrowOrderFixedV5 {
-  orderId: string;
-}
-⋮----
-export interface CreateSupplyOrderFixedV5 {
-  orderId: string;
-}
-⋮----
-export interface BorrowContractInfoFixedV5 {
-  annualRate: string;
-  autoRepay: string;
-  borrowCurrency: string;
-  borrowTime: string;
-  interestPaid: string;
-  loanId: string;
-  orderId: string;
-  repaymentTime: string;
-  residualPenaltyInterest: string;
-  residualPrincipal: string;
-  status: number;
-  term: string;
-}
-⋮----
-export interface SupplyContractInfoFixedV5 {
-  annualRate: string;
-  supplyCurrency: string;
-  supplyTime: string;
-  supplyAmount: string;
-  interestPaid: string;
-  supplyId: string;
-  orderId: string;
-  redemptionTime: string;
-  penaltyInterest: string;
-  actualRedemptionTime: string;
-  status: number;
-  term: string;
-}
-⋮----
-export interface BorrowOrderInfoFixedV5 {
-  annualRate: string;
-  orderId: number;
-  orderTime: string;
-  filledQty: string;
-  orderQty: string;
-  orderCurrency: string;
-  state: number;
-  term: number;
-}
-⋮----
-export interface SupplyOrderInfoFixedV5 {
-  annualRate: string;
-  orderId: number;
-  orderTime: string;
-  filledQty: string;
-  orderQty: string;
-  orderCurrency: string;
-  state: number;
-  term: number;
-}
-⋮----
-export interface RepayFixedV5 {
-  repayId: string;
-}
-⋮----
-export interface RepaymentHistoryFixedV5 {
-  details: {
-    loanCurrency: string;
-    loanId: string;
-    repayAmount: string;
-  }[];
-  loanCurrency: string;
-  repayAmount: string;
-  repayId: string;
-  repayStatus: number;
-  repayTime: number;
-  repayType: number;
-}
-
-================
 File: src/websocket-api-client.ts
 ================
 import {
@@ -11694,6 +11208,518 @@ logger, // Optional: inject a custom logger
 // Optional: prepare the WebSocket API connection in advance.
 // This happens automatically but you can do this early before making any API calls, to prevent delays from a cold start.
 // await wsClient.getWSClient().connectWSAPI();
+
+================
+File: src/types/request/v5-crypto-loan.ts
+================
+export interface BorrowCryptoLoanParamsV5 {
+  loanCurrency: string;
+  loanAmount?: string;
+  loanTerm?: string;
+  collateralCurrency: string;
+  collateralAmount?: string;
+}
+⋮----
+export interface GetUnpaidLoanOrdersParamsV5 {
+  orderId?: string;
+  loanCurrency?: string;
+  collateralCurrency?: string;
+  loanTermType?: string;
+  loanTerm?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetRepaymentHistoryParamsV5 {
+  orderId?: string;
+  repayId?: string;
+  loanCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetCompletedLoanOrderHistoryParamsV5 {
+  orderId?: string;
+  loanCurrency?: string;
+  collateralCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetLoanLTVAdjustmentHistoryParamsV5 {
+  orderId?: string;
+  adjustId?: string;
+  collateralCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+// New Crypto Loan Request Types
+⋮----
+export interface GetBorrowableCoinsParamsV5 {
+  vipLevel?: string;
+  currency?: string;
+}
+⋮----
+export interface GetCollateralCoinsParamsV5 {
+  currency?: string;
+}
+⋮----
+export interface GetMaxCollateralAmountParamsV5 {
+  currency: string;
+}
+⋮----
+export interface AdjustCollateralAmountParamsV5 {
+  currency: string;
+  amount: string;
+  direction: '0' | '1';
+}
+⋮----
+export interface GetCollateralAdjustmentHistoryParamsV5 {
+  adjustId?: string;
+  collateralCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+// Flexible Loan Request Types
+⋮----
+export interface BorrowFlexibleParamsV5 {
+  loanCurrency: string;
+  loanAmount: string;
+  collateralList?: {
+    currency: string;
+    amount: string;
+  }[];
+}
+⋮----
+export interface RepayFlexibleParamsV5 {
+  loanCurrency: string;
+  amount: string;
+}
+⋮----
+export interface GetOngoingFlexibleLoansParamsV5 {
+  loanCurrency?: string;
+}
+⋮----
+export interface GetBorrowHistoryFlexibleParamsV5 {
+  orderId?: string;
+  loanCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetRepaymentHistoryFlexibleParamsV5 {
+  repayId?: string;
+  loanCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+// Fixed Loan Request Types
+⋮----
+export interface GetSupplyOrderQuoteFixedParamsV5 {
+  orderCurrency: string;
+  term?: string;
+  orderBy: 'apy' | 'term' | 'quantity';
+  sort?: number;
+  limit?: number;
+}
+⋮----
+export interface GetBorrowOrderQuoteFixedParamsV5 {
+  orderCurrency: string;
+  term?: string;
+  orderBy: 'apy' | 'term' | 'quantity';
+  sort?: number;
+  limit?: number;
+}
+⋮----
+export interface CreateBorrowOrderFixedParamsV5 {
+  orderCurrency: string;
+  orderAmount: string;
+  annualRate: string;
+  term: string;
+  autoRepay?: string;
+  collateralList?: {
+    currency: string;
+    amount: string;
+  }[];
+}
+⋮----
+export interface CreateSupplyOrderFixedParamsV5 {
+  orderCurrency: string;
+  orderAmount: string;
+  annualRate: string;
+  term: string;
+}
+⋮----
+export interface CancelBorrowOrderFixedParamsV5 {
+  orderId: string;
+}
+⋮----
+export interface CancelSupplyOrderFixedParamsV5 {
+  orderId: string;
+}
+⋮----
+export interface GetBorrowContractInfoFixedParamsV5 {
+  orderId?: string;
+  loanId?: string;
+  orderCurrency?: string;
+  term?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetSupplyContractInfoFixedParamsV5 {
+  orderId?: string;
+  supplyId?: string;
+  supplyCurrency?: string;
+  term?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetBorrowOrderInfoFixedParamsV5 {
+  orderId?: string;
+  orderCurrency?: string;
+  state?: string;
+  term?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetSupplyOrderInfoFixedParamsV5 {
+  orderId?: string;
+  orderCurrency?: string;
+  state?: string;
+  term?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface RepayFixedParamsV5 {
+  loanId?: string;
+  loanCurrency?: string;
+}
+⋮----
+export interface GetRepaymentHistoryFixedParamsV5 {
+  repayId?: string;
+  loanCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+
+================
+File: src/types/response/v5-crypto-loan.ts
+================
+export interface CollateralCoinV5 {
+  collateralAccuracy: number;
+  initialLTV: string;
+  liquidationLTV: string;
+  marginCallLTV: string;
+  maxLimit: string;
+}
+⋮----
+export interface VipCollateralCoinsV5 {
+  list: CollateralCoinV5[];
+  vipLevel: string;
+}
+⋮----
+export interface BorrowableCoinV5 {
+  borrowingAccuracy: number;
+  currency: string;
+  flexibleHourlyInterestRate: string;
+  hourlyInterestRate7D: string;
+  hourlyInterestRate14D: string;
+  hourlyInterestRate30D: string;
+  hourlyInterestRate90D: string;
+  hourlyInterestRate180D: string;
+  maxBorrowingAmount: string;
+  minBorrowingAmount: string;
+}
+⋮----
+export interface VipBorrowableCoinsV5 {
+  list: BorrowableCoinV5[];
+  vipLevel: string;
+}
+⋮----
+export interface AccountBorrowCollateralLimitV5 {
+  collateralCurrency: string;
+  loanCurrency: string;
+  maxCollateralAmount: string;
+  maxLoanAmount: string;
+  minCollateralAmount: string;
+  minLoanAmount: string;
+}
+⋮----
+export interface UnpaidLoanOrderV5 {
+  collateralAmount: string;
+  collateralCurrency: string;
+  currentLTV: string;
+  expirationTime: string;
+  hourlyInterestRate: string;
+  loanCurrency: string;
+  loanTerm: string;
+  orderId: string;
+  residualInterest: string;
+  residualPenaltyInterest: string;
+  totalDebt: string;
+}
+⋮----
+export interface RepaymentHistoryV5 {
+  collateralCurrency: string;
+  collateralReturn: string;
+  loanCurrency: string;
+  loanTerm: string;
+  orderId: string;
+  repayAmount: string;
+  repayId: string;
+  repayStatus: number;
+  repayTime: string;
+  repayType: string;
+}
+⋮----
+export interface CompletedLoanOrderV5 {
+  borrowTime: string;
+  collateralCurrency: string;
+  expirationTime: string;
+  hourlyInterestRate: string;
+  initialCollateralAmount: string;
+  initialLoanAmount: string;
+  loanCurrency: string;
+  loanTerm: string;
+  orderId: string;
+  repaidInterest: string;
+  repaidPenaltyInterest: string;
+  status: number;
+}
+export interface LoanLTVAdjustmentHistoryV5 {
+  collateralCurrency: string;
+  orderId: string;
+  adjustId: string;
+  adjustTime: string;
+  preLTV: string;
+  afterLTV: string;
+  direction: number;
+  amount: string;
+}
+⋮----
+// New Crypto Loan Types
+⋮----
+export interface BorrowCoinV5 {
+  currency: string;
+  fixedBorrowable: boolean;
+  fixedBorrowingAccuracy: number;
+  flexibleBorrowable: boolean;
+  flexibleBorrowingAccuracy: number;
+  maxBorrowingAmount: string;
+  minFixedBorrowingAmount: string;
+  minFlexibleBorrowingAmount: string;
+  vipLevel: string;
+  flexibleAnnualizedInterestRate: string;
+  annualizedInterestRate7D: string;
+  annualizedInterestRate14D: string;
+  annualizedInterestRate30D: string;
+  annualizedInterestRate60D: string;
+  annualizedInterestRate90D: string;
+  annualizedInterestRate180D: string;
+}
+⋮----
+export interface CollateralRatioV5 {
+  collateralRatio: string;
+  maxValue: string;
+  minValue: string;
+}
+⋮----
+export interface CollateralRatioConfigV5 {
+  collateralRatioList: CollateralRatioV5[];
+  currencies: string;
+}
+⋮----
+export interface CurrencyLiquidationV5 {
+  currency: string;
+  liquidationOrder: number;
+}
+⋮----
+export interface CollateralDataV5 {
+  collateralRatioConfigList: CollateralRatioConfigV5[];
+  currencyLiquidationList: CurrencyLiquidationV5[];
+}
+⋮----
+// Additional New Crypto Loan Types
+⋮----
+export interface AdjustCollateralAmountV5 {
+  adjustId: number;
+}
+⋮----
+export interface CollateralAdjustmentHistoryV5 {
+  adjustId: number;
+  adjustTime: number;
+  afterLTV: string;
+  amount: string;
+  collateralCurrency: string;
+  direction: number;
+  preLTV: string;
+  status: number;
+}
+⋮----
+export interface BorrowListV5 {
+  fixedTotalDebt: string;
+  fixedTotalDebtUSD: string;
+  flexibleHourlyInterestRate: string;
+  flexibleTotalDebt: string;
+  flexibleTotalDebtUSD: string;
+  loanCurrency: string;
+}
+⋮----
+export interface CollateralListV5 {
+  amount: string;
+  amountUSD: string;
+  currency: string;
+  ltv: string;
+}
+⋮----
+export interface SupplyListV5 {
+  amount: string;
+  amountUSD: string;
+  currency: string;
+}
+⋮----
+export interface CryptoLoanPositionV5 {
+  borrowList: BorrowListV5[];
+  collateralList: CollateralListV5[];
+  supplyList: SupplyListV5[];
+  totalCollateral: string;
+  totalDebt: string;
+  totalSupply: string;
+}
+⋮----
+// Flexible Loan Types
+⋮----
+export interface BorrowFlexibleV5 {
+  orderId: string;
+}
+⋮----
+export interface RepayFlexibleV5 {
+  repayId: string;
+}
+⋮----
+export interface OngoingFlexibleLoanV5 {
+  hourlyInterestRate: string;
+  loanCurrency: string;
+  totalDebt: string;
+}
+⋮----
+export interface BorrowHistoryFlexibleV5 {
+  borrowTime: number;
+  initialLoanAmount: string;
+  loanCurrency: string;
+  orderId: string;
+  status: number;
+}
+⋮----
+export interface RepaymentHistoryFlexibleV5 {
+  loanCurrency: string;
+  repayAmount: string;
+  repayId: string;
+  repayStatus: number;
+  repayTime: number;
+  repayType: number;
+}
+⋮----
+// Fixed Loan Types
+⋮----
+export interface SupplyOrderQuoteFixedV5 {
+  orderCurrency: string;
+  term: number;
+  annualRate: string;
+  qty: string;
+}
+⋮----
+export interface BorrowOrderQuoteFixedV5 {
+  orderCurrency: string;
+  term: number;
+  annualRate: string;
+  qty: string;
+}
+⋮----
+export interface CreateBorrowOrderFixedV5 {
+  orderId: string;
+}
+⋮----
+export interface CreateSupplyOrderFixedV5 {
+  orderId: string;
+}
+⋮----
+export interface BorrowContractInfoFixedV5 {
+  annualRate: string;
+  autoRepay: string;
+  borrowCurrency: string;
+  borrowTime: string;
+  interestPaid: string;
+  loanId: string;
+  orderId: string;
+  repaymentTime: string;
+  residualPenaltyInterest: string;
+  residualPrincipal: string;
+  status: number;
+  term: string;
+}
+⋮----
+export interface SupplyContractInfoFixedV5 {
+  annualRate: string;
+  supplyCurrency: string;
+  supplyTime: string;
+  supplyAmount: string;
+  interestPaid: string;
+  supplyId: string;
+  orderId: string;
+  redemptionTime: string;
+  penaltyInterest: string;
+  actualRedemptionTime: string;
+  status: number;
+  term: string;
+}
+⋮----
+export interface BorrowOrderInfoFixedV5 {
+  annualRate: string;
+  orderId: number;
+  orderTime: string;
+  filledQty: string;
+  orderQty: string;
+  orderCurrency: string;
+  state: number;
+  term: number;
+}
+⋮----
+export interface SupplyOrderInfoFixedV5 {
+  annualRate: string;
+  orderId: number;
+  orderTime: string;
+  filledQty: string;
+  orderQty: string;
+  orderCurrency: string;
+  state: number;
+  term: number;
+}
+⋮----
+export interface RepayFixedV5 {
+  repayId: string;
+}
+⋮----
+export interface RepaymentHistoryFixedV5 {
+  details: {
+    loanCurrency: string;
+    loanId: string;
+    repayAmount: string;
+  }[];
+  loanCurrency: string;
+  repayAmount: string;
+  repayId: string;
+  repayStatus: number;
+  repayTime: number;
+  repayType: number;
+}
 
 ================
 File: src/websocket-client.ts
@@ -12645,10 +12671,10 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSo
     - Rate limits are raised to 400 requests per second, higher than the highest VIP tier.
     - No action required. This is automatic for any API calls made with this SDK, for any user.
     - Read more in the announcement: [here](https://github.com/tiagosiebler/bybit-api/issues/458).
-  - Lower minimum order notional value with this SDK!*
+  - Lower minimum order notional value with this SDK!\*
     - Place orders with a notional value as low as $1.
     - Lower than the default minimum notional order value $5.
-    - *Note: the lower min notional requirement is an undocumented benefit that may end at any time.
+    - \*Note: the lower min notional requirement is an undocumented benefit that may end at any time.
 - Automatic support for HMAC & RSA authentication.
 - TypeScript support (thorough type declarations for most API requests & responses, including WS API).
 - JavaScript support (TypeScript not required but definitely recommended).
@@ -12662,21 +12688,22 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSo
     - Emit `reconnected` event when dropped connection is restored.
 - WebSocket API integration, with two design patterns to choose from:
   1. Asynchronous **promise**-driven responses:
-      - Make requests like a REST API, using the WebSocket API. No need to subscribe to asynchronous events.
-      - Import the `WebsocketAPIClient` and use it like the REST API client. Call functions and await responses.
-        - See example for more details: [examples/ws-api-client.ts](./examples/ws-api-client.ts).
-      - Prefer something more raw? Use the `sendWSAPIRequest(...)` method and await responses
-        - See example for more details: [examples/ws-api-raw-promises.ts](./examples/ws-api-raw-promises.ts)
+     - Make requests like a REST API, using the WebSocket API. No need to subscribe to asynchronous events.
+     - Import the `WebsocketAPIClient` and use it like the REST API client. Call functions and await responses.
+       - See example for more details: [examples/ws-api-client.ts](./examples/ws-api-client.ts).
+     - Prefer something more raw? Use the `sendWSAPIRequest(...)` method and await responses
+       - See example for more details: [examples/ws-api-raw-promises.ts](./examples/ws-api-raw-promises.ts)
   2. Asynchronous **event**-driven responses:
-      - Subscribe to `response` and `error` events from WebsocketClient's event emitter.
-      - Send commands with the `sendWSAPIRequest(...)` method.
-      - Responses to commands will arrive via the `response` and `error` events emitted by the client.
-      - See example for more details: [examples/ws-api-raw-events.ts](./examples/ws-api-raw-events.ts)
+     - Subscribe to `response` and `error` events from WebsocketClient's event emitter.
+     - Send commands with the `sendWSAPIRequest(...)` method.
+     - Responses to commands will arrive via the `response` and `error` events emitted by the client.
+     - See example for more details: [examples/ws-api-raw-events.ts](./examples/ws-api-raw-events.ts)
 - Active community support & collaboration in telegram: [Node.js Algo Traders](https://t.me/nodetraders).
 
 # Table of Contents
 
 ## Overview
+
 - [Installation](#installation)
 - [Issues & Discussion](#issues--discussion)
 - [Related Projects](#related-projects)
@@ -12684,16 +12711,19 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSo
 - [Examples](#examples)
 
 ## REST API Examples
+
 - [API Clients](#api-clients)
 - [REST API Usage](#rest-api-usage)
 
 ## WebSocket Integration & Examples
+
 - [WebSockets](#websockets)
 - [WebSocket Subscriptions - Consuming Events](#websocket-subscriptions---consuming-events)
 - [Websocket API - Sending Orders via WebSockets](#websocket-api---sending-orders-via-websockets)
 - [Consumer Load Balancing](#balancing-load-across-multiple-connections)
 
 ## Additional Features
+
 - [Logging](#logging)
   - [Customise Logging](#customise-logging)
   - [Debug HTTP Requests](#debug-http-requests)
@@ -12701,11 +12731,13 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSo
   - [Import](#import)
   - [Webpack](#webpack)
 - [Use with LLMs & AI](#use-with-llms--ai)
+- [Used By](#used-by)
 
 ## Contributing
+
 - [Contributions & Thanks](#contributions--thanks)
 
-------
+---
 
 ## Installation
 
@@ -12751,7 +12783,6 @@ Most methods accept JS objects. These can be populated using parameters specifie
 
 The SDK is written in TypeScript, but fully compatible with both TypeScript and pure JavaScript projects. A pure JavaScript version can be built using `npm run build`. The output of the `build` command is the version published to npm, packaged as a JavaScript module (with types available for you TypeScript users).
 
-
 - [src](./src) - the complete SDK written in TypeScript.
 - [lib](./lib) - the JavaScript version of the project (built from TypeScript) that is published to npm. This should not be edited directly, as it will be overwritten with each release.
 - [examples](./examples) - examples & demonstrations. Contributions are welcome!
@@ -12776,13 +12807,12 @@ Refer to the [V5 interface mapping page](https://bybit-exchange.github.io/docs/v
 
 Here are the available REST clients and the corresponding API groups described in the documentation:
 
-|                         Class                          |                                                                                                      Description                       |
-| :----------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------: |
-|                     [ **V5 API** ]                     | The new unified V5 APIs (successor to previously fragmented APIs for all API groups).                                                  |
-|         [RestClientV5](src/rest-client-v5.ts)          |   Unified V5 all-in-one REST client for all [V5 REST APIs](https://bybit-exchange.github.io/docs/v5/intro)                             |
-|       [WebsocketClient](src/websocket-client.ts)       |   All WebSocket features (Public & Private consumers for all API categories & the WebSocket API)                                       |
-|    [WebsocketAPIClient](src/websocket-api-client.ts)   |   Use the WebSocket API like a REST API. Call functions and await responses, powered by WebSockets.                                    |
-
+|                       Class                       |                                               Description                                                |
+| :-----------------------------------------------: | :------------------------------------------------------------------------------------------------------: |
+|                  [ **V5 API** ]                   |          The new unified V5 APIs (successor to previously fragmented APIs for all API groups).           |
+|       [RestClientV5](src/rest-client-v5.ts)       | Unified V5 all-in-one REST client for all [V5 REST APIs](https://bybit-exchange.github.io/docs/v5/intro) |
+|    [WebsocketClient](src/websocket-client.ts)     |      All WebSocket features (Public & Private consumers for all API categories & the WebSocket API)      |
+| [WebsocketAPIClient](src/websocket-api-client.ts) |    Use the WebSocket API like a REST API. Call functions and await responses, powered by WebSockets.     |
 
 ## REST API Usage
 
@@ -12790,7 +12820,6 @@ Create API credentials on Bybit's website:
 
 - [Livenet](https://bybit.com/app/user/api-management?affiliate_id=9410&language=en-US&group_id=0&group_type=1)
 - [Testnet](https://testnet.bybit.com/app/user/api-management)
-
 
 The following is a minimal example for using the REST clients included with this SDK. For more detailed examples, refer to the [examples](./examples/) folder in the repository on GitHub:
 
@@ -12858,34 +12887,37 @@ const restClientOptions = {
 const API_KEY = 'xxx';
 const API_SECRET = 'yyy';
 
-const client = new RestClientV5({
-  key: API_KEY,
-  secret: API_SECRET,
-  // demoTrading: true,
+const client = new RestClientV5(
+  {
+    key: API_KEY,
+    secret: API_SECRET,
+    // demoTrading: true,
 
-  // Optional: enable to try parsing rate limit values from responses
-  // parseAPIRateLimits: true
-},
+    // Optional: enable to try parsing rate limit values from responses
+    // parseAPIRateLimits: true
+  },
   // requestLibraryOptions
 );
 
 // For public-only API calls, simply don't provide a key & secret or set them to undefined
 // const client = new RestClientV5();
 
-client.getAccountInfo()
-  .then(result => {
-    console.log("getAccountInfo result: ", result);
+client
+  .getAccountInfo()
+  .then((result) => {
+    console.log('getAccountInfo result: ', result);
   })
-  .catch(err => {
-    console.error("getAccountInfo error: ", err);
+  .catch((err) => {
+    console.error('getAccountInfo error: ', err);
   });
 
-client.getOrderbook({ category: 'linear', symbol: 'BTCUSDT' })
-  .then(result => {
-    console.log("getOrderBook result: ", result);
+client
+  .getOrderbook({ category: 'linear', symbol: 'BTCUSDT' })
+  .then((result) => {
+    console.log('getOrderBook result: ', result);
   })
-  .catch(err => {
-    console.error("getOrderBook error: ", err);
+  .catch((err) => {
+    console.error('getOrderBook error: ', err);
   });
 ```
 
@@ -13032,6 +13064,7 @@ ws.on('reconnected', (data) => {
 Bybit supports sending, amending and cancelling orders over a WebSocket connection. The [WebsocketClient](./src/WebsocketClient.ts) fully supports Bybit's WebSocket API via the `sendWSAPIRequest(...)` method. There is also a dedicated [WebsocketAPIClient](./src/websocket-api-client.ts), built over the WSClient's sendWSAPIRequest mechanism for a simpler experience.
 
 Links for reference:
+
 - [Bybit WebSocket API Documentation](https://bybit-exchange.github.io/docs/v5/websocket/trade/guideline)
 - [WebsocketAPIClient example, use the Websocket API like a REST API](./examples/ws-api-client.ts)
 - [Raw Asynchronous Websocket API Node.js/TypeScript/JavaScript example](./examples/ws-api-raw-promises.ts)
@@ -13039,16 +13072,17 @@ Links for reference:
 Note: as of January 2025, the demo trading environment does not support the WebSocket API.
 
 There are two ways to use the WS API, depending on individual preference:
+
 1. event-driven:
-    - send requests via `client.sendWSAPIRequest(wsKey, operation, params)`, fire and forget
-    - handle async replies via event handlers on `client.on('exception', cb)` and `client.on('response', cb)`
-    - See example for more details: [examples/ws-api-raw-events.ts](./examples/ws-api-raw-events.ts)
+   - send requests via `client.sendWSAPIRequest(wsKey, operation, params)`, fire and forget
+   - handle async replies via event handlers on `client.on('exception', cb)` and `client.on('response', cb)`
+   - See example for more details: [examples/ws-api-raw-events.ts](./examples/ws-api-raw-events.ts)
 2. promise-driven:
-    - import the `WebsocketAPIClient` and use it much like a REST API.
-    - make an instance & call the Websocket API with a function.
-    - await responses, much like a REST API.
-    - use try/catch blocks to handle promise rejections
-    - See example for more details: [examples/ws-api-client.ts](./examples/ws-api-client.ts)
+   - import the `WebsocketAPIClient` and use it much like a REST API.
+   - make an instance & call the Websocket API with a function.
+   - await responses, much like a REST API.
+   - use try/catch blocks to handle promise rejections
+   - See example for more details: [examples/ws-api-client.ts](./examples/ws-api-client.ts)
 
 The below example demonstrates the promise-driven approach, which behaves similar to a REST API. The WebSocket API even accepts the same parameters as the corresponding REST API endpoints, so this approach should be compatible with existing REST implementations.
 
@@ -13064,25 +13098,23 @@ const { WS_KEY_MAP, WebsocketAPIClient } = require('bybit-api');
 // top of the WebsocketClient and will automatically handle WebSocket
 // persistence and authentication for you.
 // supports HMAC & RSA API keys - automatically detected
-const wsClient = new WebsocketAPIClient(
-  {
-    key: 'yourApiKeyHere',
-    secret: 'yourApiSecretHere',
+const wsClient = new WebsocketAPIClient({
+  key: 'yourApiKeyHere',
+  secret: 'yourApiSecretHere',
 
-    // Whether to use the testnet environment.
-    // Create testnet API keys here: https://testnet.bybit.com/app/user/api-management
-    // testnet: true,
+  // Whether to use the testnet environment.
+  // Create testnet API keys here: https://testnet.bybit.com/app/user/api-management
+  // testnet: true,
 
-    // Whether to use the livenet demo trading environment
-    // Note: As of Jan 2025, demo trading only supports consuming events, it does
-    // NOT support the WS API.
-    // demoTrading: false,
+  // Whether to use the livenet demo trading environment
+  // Note: As of Jan 2025, demo trading only supports consuming events, it does
+  // NOT support the WS API.
+  // demoTrading: false,
 
-    // If you want your own event handlers instead of the default ones with logs,
-    // disable this setting and see ws-api-client example for more details.
-    // attachEventListeners: false
-  }
-);
+  // If you want your own event handlers instead of the default ones with logs,
+  // disable this setting and see ws-api-client example for more details.
+  // attachEventListeners: false
+});
 
 // This example is wrapped in an async function, so "await" can be used
 async function main() {
@@ -13139,7 +13171,6 @@ async function main() {
 
 // Start executing the example workflow
 main();
-
 ```
 
 ---
@@ -13177,7 +13208,10 @@ const customLogger = {
   trace: (...params) => console.log('trace', ...params),
 };
 
-const wsClient = new WebsocketClient({ key: 'xxx', secret: 'yyy' }, customLogger);
+const wsClient = new WebsocketClient(
+  { key: 'xxx', secret: 'yyy' },
+  customLogger,
+);
 ```
 
 ### Debug HTTP requests
@@ -13229,6 +13263,12 @@ This file contains AI optimised structure of all the functions in this package, 
 
 ---
 
+## Used By
+
+[![Repository Users Preview Image](https://dependents.info/tiagosiebler/bybit-api/image)](https://github.com/tiagosiebler/bybit-api/network/dependents)
+
+---
+
 <!-- template_contributions -->
 
 ### Contributions & Thanks
@@ -13269,8 +13309,8 @@ import {
   AccountTypeV5,
   AddOrReduceMarginParamsV5,
   AddOrReduceMarginResultV5,
-  AdjustCollateralAmountNewParamsV5,
-  AdjustCollateralAmountNewV5,
+  AdjustCollateralAmountParamsV5,
+  AdjustCollateralAmountV5,
   AffiliateUserInfoV5,
   AffiliateUserListItemV5,
   AllCoinsBalanceV5,
@@ -13288,11 +13328,9 @@ import {
   BatchCreateOrderResultV5,
   BatchOrderParamsV5,
   BatchOrdersRetExtInfoV5,
-  // New Crypto Loan Types
-  BorrowableCoinNewV5,
+  BorrowableCoinV5,
   BorrowContractInfoFixedV5,
   BorrowCryptoLoanParamsV5,
-  // Flexible Loan Types
   BorrowFlexibleParamsV5,
   BorrowFlexibleV5,
   BorrowHistoryFlexibleV5,
@@ -13314,8 +13352,8 @@ import {
   CoinExchangeRecordV5,
   CoinGreeksV5,
   CoinInfoV5,
-  CollateralAdjustmentHistoryNewV5,
-  CollateralDataNewV5,
+  CollateralAdjustmentHistoryV5,
+  CollateralDataV5,
   CollateralInfoV5,
   CompletedLoanOrderV5,
   ConfirmNewRiskLimitParamsV5,
@@ -13333,7 +13371,7 @@ import {
   CreateSubMemberResultV5,
   CreateSupplyOrderFixedParamsV5,
   CreateSupplyOrderFixedV5,
-  CryptoLoanPositionNewV5,
+  CryptoLoanPositionV5,
   CursorListV5,
   CursorRowsV5,
   DCPInfoV5,
@@ -13357,8 +13395,7 @@ import {
   GetAllCoinsBalanceParamsV5,
   GetAllowedDepositCoinInfoParamsV5,
   GetAssetInfoParamsV5,
-  GetBorrowableCoinsNewParamsV5,
-  // Additional Fixed Loan Types
+  GetBorrowableCoinsParamsV5,
   GetBorrowContractInfoFixedParamsV5,
   GetBorrowHistoryFlexibleParamsV5,
   GetBorrowHistoryParamsV5,
@@ -13370,8 +13407,8 @@ import {
   GetClosedOptionsPositionsParamsV5,
   GetClosedPnLParamsV5,
   GetCoinExchangeRecordParamsV5,
-  GetCollateralAdjustmentHistoryNewParamsV5,
-  GetCollateralCoinsNewParamsV5,
+  GetCollateralAdjustmentHistoryParamsV5,
+  GetCollateralCoinsParamsV5,
   GetCompletedLoanOrderHistoryParamsV5,
   GetConvertHistoryParamsV5,
   GetDeliveryPriceParamsV5,
@@ -13393,7 +13430,7 @@ import {
   GetLoanLTVAdjustmentHistoryParamsV5,
   GetLongShortRatioParamsV5,
   GetMarkPriceKlineParamsV5,
-  GetMaxCollateralAmountNewParamsV5,
+  GetMaxCollateralAmountParamsV5,
   GetMovePositionHistoryParamsV5,
   GetOngoingFlexibleLoansParamsV5,
   GetOpenInterestParamsV5,
@@ -13427,7 +13464,6 @@ import {
   GetSubAccountDepositRecordParamsV5,
   GetSupplyContractInfoFixedParamsV5,
   GetSupplyOrderInfoFixedParamsV5,
-  // Fixed Loan Types
   GetSupplyOrderQuoteFixedParamsV5,
   GetSystemStatusParamsV5,
   GetTickersParamsV5,
@@ -13446,7 +13482,6 @@ import {
   LoanLTVAdjustmentHistoryV5,
   LongShortRatioV5,
   MarkP2POrderAsPaidParamsV5,
-  MaxCollateralAmountNewV5,
   MMPModifyParamsV5,
   MMPStateV5,
   MovePositionHistoryV5,
@@ -13540,15 +13575,6 @@ import {
   WithdrawalRecordV5,
   WithdrawParamsV5,
 } from './types';
-⋮----
-// New Crypto Loan Types
-⋮----
-// Flexible Loan Types
-⋮----
-// Additional Fixed Loan Types
-⋮----
-// Fixed Loan Types
-⋮----
 import { REST_CLIENT_TYPE_ENUM } from './util';
 import BaseRestClient from './util/BaseRestClient';
 ⋮----
@@ -15400,7 +15426,9 @@ toggleSpotCrossMarginTrade(params: {
 ⋮----
 /**
    *
-   ****** Crypto Loan
+   ****** Crypto Loan - Legacy
+   *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    */
 ⋮----
@@ -15408,6 +15436,7 @@ toggleSpotCrossMarginTrade(params: {
    * Get Collateral Coins
    *
    * INFO: Do not need authentication
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    */
 getCollateralCoins(params?: {
     vipLevel?: string;
@@ -15423,6 +15452,7 @@ getCollateralCoins(params?: {
    * Get Borrowable Coins
    *
    * INFO: Do not need authentication
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    */
 getBorrowableCoins(params?: {
     vipLevel?: string;
@@ -15439,6 +15469,7 @@ getBorrowableCoins(params?: {
    * Query the account borrowable/collateral limit
    *
    * Permission: "Spot trade"
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    */
 getAccountBorrowCollateralLimit(params: {
     loanCurrency: string;
@@ -15447,6 +15478,7 @@ getAccountBorrowCollateralLimit(params: {
 ⋮----
 /**
    * Borrow Crypto Loan
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    * Permission: "Spot trade"
    *
@@ -15463,6 +15495,8 @@ borrowCryptoLoan(params: BorrowCryptoLoanParamsV5): Promise<
 ⋮----
 /**
    * Repay Crypto Loan
+   *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    * You can repay partial loan. If there is interest occurred, interest will be repaid in priority
    *
@@ -15483,6 +15517,8 @@ repayCryptoLoan(params: { orderId: string; amount: string }): Promise<
    * Get Unpaid Loan Orders
    * Query the ongoing loan orders, which are not fully repaid
    *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
+   *
    * Permission: "Spot trade"
    */
 getUnpaidLoanOrders(params?: GetUnpaidLoanOrdersParamsV5): Promise<
@@ -15496,6 +15532,8 @@ getUnpaidLoanOrders(params?: GetUnpaidLoanOrdersParamsV5): Promise<
 /**
    * Get Repayment Transaction History
    * Query repaid transaction history
+   *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    * Permission: "Spot trade"
    *
@@ -15514,6 +15552,8 @@ getRepaymentHistory(params?: GetRepaymentHistoryParamsV5): Promise<
 /**
    * Get Completed Loan Order History
    * Query the completed loan orders
+   *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    * Permission: "Spot trade"
    *
@@ -15534,6 +15574,8 @@ getCompletedLoanOrderHistory(
    * Get Max. Allowed Reduction Collateral Amount
    * Query the maximum allowed reduction collateral amount
    *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
+   *
    * Permission: "Spot trade"
    */
 getMaxAllowedReductionCollateralAmount(params: { orderId: string }): Promise<
@@ -15546,6 +15588,8 @@ getMaxAllowedReductionCollateralAmount(params: { orderId: string }): Promise<
 /**
    * Adjust Collateral Amount
    * You can increase or reduce collateral amount. When you reduce, please follow the max. allowed reduction amount.
+   *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    * Permission: "Spot trade"
    *
@@ -15566,6 +15610,8 @@ adjustCollateralAmount(params: {
 /**
    * Get Loan LTV Adjustment History
    * Query the transaction history of collateral amount adjustment
+   *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    * Permission: "Spot trade"
    *
@@ -15593,9 +15639,9 @@ getLoanLTVAdjustmentHistory(
    * Get Borrowable Coins New
    *
    */
-getBorrowableCoinsNew(params?: GetBorrowableCoinsNewParamsV5): Promise<
+getLoanBorrowableCoins(params?: GetBorrowableCoinsParamsV5): Promise<
     APIResponseV3WithTime<{
-      list: BorrowableCoinNewV5[];
+      list: BorrowableCoinV5[];
     }>
   > {
     return this.get('/v5/crypto-loan-common/loanable-data', params);
@@ -15604,36 +15650,42 @@ getBorrowableCoinsNew(params?: GetBorrowableCoinsNewParamsV5): Promise<
    * Get Collateral Coins New
    *
    */
-getCollateralCoinsNew(
-    params?: GetCollateralCoinsNewParamsV5,
-): Promise<APIResponseV3WithTime<CollateralDataNewV5>>
+getLoanCollateralCoins(
+    params?: GetCollateralCoinsParamsV5,
+): Promise<APIResponseV3WithTime<CollateralDataV5>>
 ⋮----
 /**
    * Get Max. Allowed Collateral Reduction Amount New
    *
    */
-getMaxCollateralAmountNew(
-    params: GetMaxCollateralAmountNewParamsV5,
-): Promise<APIResponseV3WithTime<MaxCollateralAmountNewV5>>
+getMaxCollateralAmount(params: GetMaxCollateralAmountParamsV5): Promise<
+    APIResponseV3WithTime<{
+      maxCollateralAmount: string;
+    }>
+  > {
+    return this.getPrivate(
+      '/v5/crypto-loan-common/max-collateral-amount',
+      params,
+    );
 ⋮----
 /**
    * Adjust Collateral Amount New
    * You can increase or reduce your collateral amount. When you reduce, please obey the Get Max. Allowed Collateral Reduction Amount
    */
-adjustCollateralAmountNew(
-    params: AdjustCollateralAmountNewParamsV5,
-): Promise<APIResponseV3WithTime<AdjustCollateralAmountNewV5>>
+updateCollateralAmount(
+    params: AdjustCollateralAmountParamsV5,
+): Promise<APIResponseV3WithTime<AdjustCollateralAmountV5>>
 ⋮----
 /**
    * Get Collateral Adjustment History New
    * Query for your LTV adjustment history.
    *
    */
-getCollateralAdjustmentHistoryNew(
-    params?: GetCollateralAdjustmentHistoryNewParamsV5,
+getCollateralAdjustmentHistory(
+    params?: GetCollateralAdjustmentHistoryParamsV5,
   ): Promise<
     APIResponseV3WithTime<{
-      list: CollateralAdjustmentHistoryNewV5[];
+      list: CollateralAdjustmentHistoryV5[];
       nextPageCursor: string;
     }>
   > {
@@ -15643,8 +15695,8 @@ getCollateralAdjustmentHistoryNew(
    * Get Crypto Loan Position New
    *
    */
-getCryptoLoanPositionNew(): Promise<
-    APIResponseV3WithTime<CryptoLoanPositionNewV5>
+getCryptoLoanPosition(): Promise<
+    APIResponseV3WithTime<CryptoLoanPositionV5>
   > {
     return this.getPrivate('/v5/crypto-loan-common/position');
 ⋮----
@@ -16246,7 +16298,7 @@ File: package.json
 ================
 {
   "name": "bybit-api",
-  "version": "4.2.1",
+  "version": "4.2.2",
   "description": "Complete & robust Node.js SDK for Bybit's REST APIs and WebSockets, with TypeScript & strong end to end tests.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
