@@ -9,6 +9,8 @@ import {
   AccountTypeV5,
   AddOrReduceMarginParamsV5,
   AddOrReduceMarginResultV5,
+  AdjustCollateralAmountParamsV5,
+  AdjustCollateralAmountV5,
   AffiliateUserInfoV5,
   AffiliateUserListItemV5,
   AllCoinsBalanceV5,
@@ -26,12 +28,21 @@ import {
   BatchCreateOrderResultV5,
   BatchOrderParamsV5,
   BatchOrdersRetExtInfoV5,
+  BorrowableCoinV5,
+  BorrowContractInfoFixedV5,
   BorrowCryptoLoanParamsV5,
+  BorrowFlexibleParamsV5,
+  BorrowFlexibleV5,
+  BorrowHistoryFlexibleV5,
   BorrowHistoryRecordV5,
+  BorrowOrderInfoFixedV5,
+  BorrowOrderQuoteFixedV5,
   BrokerIssuedVoucherV5,
   BrokerVoucherSpecV5,
   CancelAllOrdersParamsV5,
+  CancelBorrowOrderFixedParamsV5,
   CancelOrderParamsV5,
+  CancelSupplyOrderFixedParamsV5,
   CategoryCursorListV5,
   CategoryListV5,
   CategorySymbolListV5,
@@ -41,6 +52,8 @@ import {
   CoinExchangeRecordV5,
   CoinGreeksV5,
   CoinInfoV5,
+  CollateralAdjustmentHistoryV5,
+  CollateralDataV5,
   CollateralInfoV5,
   CompletedLoanOrderV5,
   ConfirmNewRiskLimitParamsV5,
@@ -49,11 +62,16 @@ import {
   ConvertHistoryRecordV5,
   ConvertQuoteV5,
   ConvertStatusV5,
+  CreateBorrowOrderFixedParamsV5,
+  CreateBorrowOrderFixedV5,
   CreateP2PAdParamsV5,
   CreateSubApiKeyParamsV5,
   CreateSubApiKeyResultV5,
   CreateSubMemberParamsV5,
   CreateSubMemberResultV5,
+  CreateSupplyOrderFixedParamsV5,
+  CreateSupplyOrderFixedV5,
+  CryptoLoanPositionV5,
   CursorListV5,
   CursorRowsV5,
   DCPInfoV5,
@@ -77,13 +95,20 @@ import {
   GetAllCoinsBalanceParamsV5,
   GetAllowedDepositCoinInfoParamsV5,
   GetAssetInfoParamsV5,
+  GetBorrowableCoinsParamsV5,
+  GetBorrowContractInfoFixedParamsV5,
+  GetBorrowHistoryFlexibleParamsV5,
   GetBorrowHistoryParamsV5,
+  GetBorrowOrderInfoFixedParamsV5,
+  GetBorrowOrderQuoteFixedParamsV5,
   GetBrokerIssuedVoucherParamsV5,
   GetBrokerSubAccountDepositsV5,
   GetClassicTransactionLogsParamsV5,
   GetClosedOptionsPositionsParamsV5,
   GetClosedPnLParamsV5,
   GetCoinExchangeRecordParamsV5,
+  GetCollateralAdjustmentHistoryParamsV5,
+  GetCollateralCoinsParamsV5,
   GetCompletedLoanOrderHistoryParamsV5,
   GetConvertHistoryParamsV5,
   GetDeliveryPriceParamsV5,
@@ -105,7 +130,9 @@ import {
   GetLoanLTVAdjustmentHistoryParamsV5,
   GetLongShortRatioParamsV5,
   GetMarkPriceKlineParamsV5,
+  GetMaxCollateralAmountParamsV5,
   GetMovePositionHistoryParamsV5,
+  GetOngoingFlexibleLoansParamsV5,
   GetOpenInterestParamsV5,
   GetOptionDeliveryPriceParamsV5,
   GetOrderbookParamsV5,
@@ -124,6 +151,8 @@ import {
   GetPreUpgradeTransactionLogParamsV5,
   GetPreUpgradeUSDCSessionParamsV5,
   GetPublicTradingHistoryParamsV5,
+  GetRepaymentHistoryFixedParamsV5,
+  GetRepaymentHistoryFlexibleParamsV5,
   GetRepaymentHistoryParamsV5,
   GetRiskLimitParamsV5,
   GetSettlementRecordParamsV5,
@@ -133,6 +162,10 @@ import {
   GetSpreadTradeHistoryParamsV5,
   GetSubAccountAllApiKeysParamsV5,
   GetSubAccountDepositRecordParamsV5,
+  GetSupplyContractInfoFixedParamsV5,
+  GetSupplyOrderInfoFixedParamsV5,
+  GetSupplyOrderQuoteFixedParamsV5,
+  GetSystemStatusParamsV5,
   GetTickersParamsV5,
   GetTransactionLogParamsV5,
   GetUniversalTransferRecordsParamsV5,
@@ -156,6 +189,7 @@ import {
   MovePositionResultV5,
   OHLCKlineV5,
   OHLCVKlineV5,
+  OngoingFlexibleLoanV5,
   OpenInterestResponseV5,
   OptionDeliveryPriceV5,
   OrderbookResponseV5,
@@ -181,8 +215,14 @@ import {
   PreUpgradeTransaction,
   PreUpgradeUSDCSessionSettlement,
   PublicTradeV5,
+  RepayFixedParamsV5,
+  RepayFixedV5,
+  RepayFlexibleParamsV5,
+  RepayFlexibleV5,
   RepayLiabilityParamsV5,
   RepayLiabilityResultV5,
+  RepaymentHistoryFixedV5,
+  RepaymentHistoryFlexibleV5,
   RepaymentHistoryV5,
   RequestConvertQuoteParamsV5,
   RiskLimitV5,
@@ -190,6 +230,7 @@ import {
   SetAutoAddMarginParamsV5,
   SetCollateralCoinParamsV5,
   SetLeverageParamsV5,
+  SetLimitPriceActionParamsV5,
   SetRiskLimitParamsV5,
   SetRiskLimitResultV5,
   SettlementRecordV5,
@@ -207,8 +248,12 @@ import {
   SubMemberV5,
   SubmitSpreadOrderParamsV5,
   SubmitStakeRedeemParamsV5,
+  SupplyContractInfoFixedV5,
+  SupplyOrderInfoFixedV5,
+  SupplyOrderQuoteFixedV5,
   SwitchIsolatedMarginParamsV5,
   SwitchPositionModeParamsV5,
+  SystemStatusItemV5,
   TickerLinearInverseV5,
   TickerOptionV5,
   TickerSpotV5,
@@ -306,6 +351,14 @@ export class RestClientV5 extends BaseRestClient {
    ****** Misc Bybit APIs
    *
    */
+
+  getSystemStatus(params?: GetSystemStatusParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: SystemStatusItemV5[];
+    }>
+  > {
+    return this.getPrivate('/v5/system/status', params);
+  }
 
   getClientType() {
     return REST_CLIENT_TYPE_ENUM.v5;
@@ -1446,6 +1499,19 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Set Limit Price Behaviour
+   * You can configure how the system behaves when your limit order price exceeds the highest bid or lowest ask price.
+   *
+   * Spot: If the order price exceeds the boundary, the system rejects the request.
+   * Futures: If the order price exceeds the boundary, the system will automatically adjust the price to the nearest allowed boundary.
+   */
+  setLimitPriceAction(
+    params: SetLimitPriceActionParamsV5,
+  ): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate('/v5/account/set-limit-px-action', params);
+  }
+
+  /**
    * Configure Market Maker Protection (MMP)
    */
   setMMP(params: MMPModifyParamsV5): Promise<APIResponseV3<undefined>> {
@@ -2381,7 +2447,9 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    *
-   ****** Crypto Loan
+   ****** Crypto Loan - Legacy
+   *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    */
 
@@ -2389,6 +2457,7 @@ export class RestClientV5 extends BaseRestClient {
    * Get Collateral Coins
    *
    * INFO: Do not need authentication
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    */
   getCollateralCoins(params?: {
     vipLevel?: string;
@@ -2405,6 +2474,7 @@ export class RestClientV5 extends BaseRestClient {
    * Get Borrowable Coins
    *
    * INFO: Do not need authentication
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    */
   getBorrowableCoins(params?: {
     vipLevel?: string;
@@ -2422,6 +2492,7 @@ export class RestClientV5 extends BaseRestClient {
    * Query the account borrowable/collateral limit
    *
    * Permission: "Spot trade"
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    */
   getAccountBorrowCollateralLimit(params: {
     loanCurrency: string;
@@ -2435,6 +2506,7 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * Borrow Crypto Loan
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    * Permission: "Spot trade"
    *
@@ -2452,6 +2524,8 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * Repay Crypto Loan
+   *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    * You can repay partial loan. If there is interest occurred, interest will be repaid in priority
    *
@@ -2473,6 +2547,8 @@ export class RestClientV5 extends BaseRestClient {
    * Get Unpaid Loan Orders
    * Query the ongoing loan orders, which are not fully repaid
    *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
+   *
    * Permission: "Spot trade"
    */
   getUnpaidLoanOrders(params?: GetUnpaidLoanOrdersParamsV5): Promise<
@@ -2487,6 +2563,8 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Get Repayment Transaction History
    * Query repaid transaction history
+   *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    * Permission: "Spot trade"
    *
@@ -2506,6 +2584,8 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Get Completed Loan Order History
    * Query the completed loan orders
+   *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    * Permission: "Spot trade"
    *
@@ -2527,6 +2607,8 @@ export class RestClientV5 extends BaseRestClient {
    * Get Max. Allowed Reduction Collateral Amount
    * Query the maximum allowed reduction collateral amount
    *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
+   *
    * Permission: "Spot trade"
    */
   getMaxAllowedReductionCollateralAmount(params: { orderId: string }): Promise<
@@ -2540,6 +2622,8 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Adjust Collateral Amount
    * You can increase or reduce collateral amount. When you reduce, please follow the max. allowed reduction amount.
+   *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
    *
    * Permission: "Spot trade"
    *
@@ -2562,6 +2646,8 @@ export class RestClientV5 extends BaseRestClient {
    * Get Loan LTV Adjustment History
    * Query the transaction history of collateral amount adjustment
    *
+   * @deprecated - Use "Crypto Loan - New" Endpoints instead
+   *
    * Permission: "Spot trade"
    *
    * INFO:
@@ -2577,6 +2663,322 @@ export class RestClientV5 extends BaseRestClient {
     }>
   > {
     return this.getPrivate('/v5/crypto-loan/adjustment-history', params);
+  }
+
+  /**
+   *
+   ****** Crypto Loan New
+   *
+   */
+
+  /**
+   * Get Borrowable Coins New
+   *
+   */
+  getLoanBorrowableCoins(params?: GetBorrowableCoinsParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: BorrowableCoinV5[];
+    }>
+  > {
+    return this.get('/v5/crypto-loan-common/loanable-data', params);
+  }
+
+  /**
+   * Get Collateral Coins New
+   *
+   */
+  getLoanCollateralCoins(
+    params?: GetCollateralCoinsParamsV5,
+  ): Promise<APIResponseV3WithTime<CollateralDataV5>> {
+    return this.get('/v5/crypto-loan-common/collateral-data', params);
+  }
+
+  /**
+   * Get Max. Allowed Collateral Reduction Amount New
+   *
+   */
+  getMaxCollateralAmount(params: GetMaxCollateralAmountParamsV5): Promise<
+    APIResponseV3WithTime<{
+      maxCollateralAmount: string;
+    }>
+  > {
+    return this.getPrivate(
+      '/v5/crypto-loan-common/max-collateral-amount',
+      params,
+    );
+  }
+
+  /**
+   * Adjust Collateral Amount New
+   * You can increase or reduce your collateral amount. When you reduce, please obey the Get Max. Allowed Collateral Reduction Amount
+   */
+  updateCollateralAmount(
+    params: AdjustCollateralAmountParamsV5,
+  ): Promise<APIResponseV3WithTime<AdjustCollateralAmountV5>> {
+    return this.postPrivate('/v5/crypto-loan-common/adjust-ltv', params);
+  }
+
+  /**
+   * Get Collateral Adjustment History New
+   * Query for your LTV adjustment history.
+   *
+   */
+  getCollateralAdjustmentHistory(
+    params?: GetCollateralAdjustmentHistoryParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      list: CollateralAdjustmentHistoryV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-common/adjustment-history', params);
+  }
+
+  /**
+   * Get Crypto Loan Position New
+   *
+   */
+  getCryptoLoanPosition(): Promise<
+    APIResponseV3WithTime<CryptoLoanPositionV5>
+  > {
+    return this.getPrivate('/v5/crypto-loan-common/position');
+  }
+
+  /**
+   *
+   ****** Crypto Loan New - Flexible Loan
+   *
+   */
+
+  /**
+   * Borrow Flexible Loan
+   * Fully or partially repay a loan. If interest is due, that is paid off first, with the loaned amount being paid off only after due interest.
+   *
+   */
+  borrowFlexible(
+    params: BorrowFlexibleParamsV5,
+  ): Promise<APIResponseV3WithTime<BorrowFlexibleV5>> {
+    return this.postPrivate('/v5/crypto-loan-flexible/borrow', params);
+  }
+
+  /**
+   * Repay Flexible Loan
+   * Fully or partially repay a loan. If interest is due, that is paid off first, with the loaned amount being paid off only after due interest.
+   *
+   */
+  repayFlexible(
+    params: RepayFlexibleParamsV5,
+  ): Promise<APIResponseV3WithTime<RepayFlexibleV5>> {
+    return this.postPrivate('/v5/crypto-loan-flexible/repay', params);
+  }
+
+  /**
+   * Get Flexible Loans
+   * Query for your ongoing loans
+   *
+   */
+  getOngoingFlexibleLoans(params?: GetOngoingFlexibleLoansParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: OngoingFlexibleLoanV5[];
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-flexible/ongoing-coin', params);
+  }
+
+  /**
+   * Get Borrow Orders History
+   *
+   */
+  getBorrowHistoryFlexible(params?: GetBorrowHistoryFlexibleParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: BorrowHistoryFlexibleV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-flexible/borrow-history', params);
+  }
+
+  /**
+   * Get Repayment Orders History
+   *
+   */
+  getRepaymentHistoryFlexible(
+    params?: GetRepaymentHistoryFlexibleParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      list: RepaymentHistoryFlexibleV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate(
+      '/v5/crypto-loan-flexible/repayment-history',
+      params,
+    );
+  }
+
+  /**
+   *
+   ****** Fixed Loan
+   *
+   */
+
+  /**
+   * Get Supplying Market
+   * If you want to supply, you can use this endpoint to check whether there are any suitable counterparty borrow orders available.
+   *
+   */
+  getSupplyOrderQuoteFixed(params: GetSupplyOrderQuoteFixedParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: SupplyOrderQuoteFixedV5[];
+    }>
+  > {
+    return this.get('/v5/crypto-loan-fixed/supply-order-quote', params);
+  }
+
+  /**
+   * Get Borrowing Market
+   * If you want to borrow, you can use this endpoint to check whether there are any suitable counterparty supply orders available.
+   *
+   */
+  getBorrowOrderQuoteFixed(params: GetBorrowOrderQuoteFixedParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: BorrowOrderQuoteFixedV5[];
+    }>
+  > {
+    return this.get('/v5/crypto-loan-fixed/borrow-order-quote', params);
+  }
+
+  /**
+   * Create Borrow Order
+   * The loan funds are released to the Funding wallet.
+   * The collateral funds are deducted from the Funding wallet, so make sure you have enough collateral amount in the Funding wallet.
+   */
+  createBorrowOrderFixed(
+    params: CreateBorrowOrderFixedParamsV5,
+  ): Promise<APIResponseV3WithTime<CreateBorrowOrderFixedV5>> {
+    return this.postPrivate('/v5/crypto-loan-fixed/borrow', params);
+  }
+
+  /**
+   * Create Supply Order
+   *
+   * Permission: "Spot trade"
+   */
+  createSupplyOrderFixed(
+    params: CreateSupplyOrderFixedParamsV5,
+  ): Promise<APIResponseV3WithTime<CreateSupplyOrderFixedV5>> {
+    return this.postPrivate('/v5/crypto-loan-fixed/supply', params);
+  }
+
+  /**
+   * Cancel Borrow Order
+   *
+   */
+  cancelBorrowOrderFixed(
+    params: CancelBorrowOrderFixedParamsV5,
+  ): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate(
+      '/v5/crypto-loan-fixed/borrow-order-cancel',
+      params,
+    );
+  }
+
+  /**
+   * Cancel Supply Order
+   */
+  cancelSupplyOrderFixed(
+    params: CancelSupplyOrderFixedParamsV5,
+  ): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate(
+      '/v5/crypto-loan-fixed/supply-order-cancel',
+      params,
+    );
+  }
+
+  /**
+   * Get Borrow Contract Info
+   *
+   */
+  getBorrowContractInfoFixed(
+    params?: GetBorrowContractInfoFixedParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      list: BorrowContractInfoFixedV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate(
+      '/v5/crypto-loan-fixed/borrow-contract-info',
+      params,
+    );
+  }
+
+  /**
+   * Get Supply Contract Info
+   *
+   */
+  getSupplyContractInfoFixed(
+    params?: GetSupplyContractInfoFixedParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      list: SupplyContractInfoFixedV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate(
+      '/v5/crypto-loan-fixed/supply-contract-info',
+      params,
+    );
+  }
+
+  /**
+   * Get Borrow Order Info
+   *
+   */
+  getBorrowOrderInfoFixed(params?: GetBorrowOrderInfoFixedParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: BorrowOrderInfoFixedV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-fixed/borrow-order-info', params);
+  }
+
+  /**
+   * Get Supply Order Info
+   *
+   */
+  getSupplyOrderInfoFixed(params?: GetSupplyOrderInfoFixedParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: SupplyOrderInfoFixedV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-fixed/supply-order-info', params);
+  }
+
+  /**
+   * Repay Fixed Loan
+   * Either loanId or loanCurrency needs to be passed
+   *
+   */
+  repayFixed(
+    params: RepayFixedParamsV5,
+  ): Promise<APIResponseV3WithTime<RepayFixedV5>> {
+    return this.postPrivate('/v5/crypto-loan-fixed/fully-repay', params);
+  }
+
+  /**
+   * Get Repayment History
+   *
+   */
+  getRepaymentHistoryFixed(params?: GetRepaymentHistoryFixedParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: RepaymentHistoryFixedV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-fixed/repayment-history', params);
   }
 
   /**

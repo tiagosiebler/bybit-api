@@ -123,6 +123,7 @@ export interface TransactionLogV5 {
   tradeId: string;
   orderId: string;
   orderLinkId: string;
+  extraFees: string;
   transSubType: string;
 }
 
