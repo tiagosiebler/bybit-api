@@ -16,6 +16,8 @@ export * from './v5-market';
 export * from './v5-p2p-trading';
 export * from './v5-position';
 export * from './v5-pre-upgrade';
+export * from './v5-rfq';
 export * from './v5-spot-leverage-token';
+export * from './v5-spreadtrading';
 export * from './v5-trade';
 export * from './v5-user';
