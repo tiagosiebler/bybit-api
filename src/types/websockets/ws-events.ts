@@ -1,6 +1,12 @@
 import WebSocket from 'isomorphic-ws';
 
 import {
+  RFQItemV5,
+  RFQPublicTradeV5,
+  RFQQuoteItemV5,
+  RFQTradeItemV5,
+} from '../response/v5-rfq';
+import {
   CategoryV5,
   ExecTypeV5,
   OCOTriggerTypeV5,
@@ -531,4 +537,49 @@ export type WSSystemStatusEventV5 = WSPublicTopicEventV5<
   'system.status',
   'snapshot',
   SystemStatusItemV5[]
+>;
+
+/**
+ * RFQ WebSocket Events
+ */
+
+/**
+ * RFQ Inquiry Channel
+ * Private push for RFQ inquiries sent or received by the user
+ * Topics: rfq.open.rfqs, rfq.site.rfqs
+ */
+export type WSRFQInquiryEventV5 = WSPrivateTopicEventV5<
+  'rfq.open.rfqs' | 'rfq.site.rfqs',
+  RFQItemV5[]
+>;
+
+/**
+ * RFQ Quote Channel
+ * Private push for quotes sent or received by the user
+ * Topics: rfq.open.quotes, rfq.site.quotes
+ */
+export type WSRFQQuoteEventV5 = WSPrivateTopicEventV5<
+  'rfq.open.quotes' | 'rfq.site.quotes',
+  RFQQuoteItemV5[]
+>;
+
+/**
+ * RFQ Trade Channel
+ * Private push for block trades executed by the user
+ * Topics: rfq.open.trades, rfq.site.trades
+ */
+export type WSRFQTradeEventV5 = WSPrivateTopicEventV5<
+  'rfq.open.trades' | 'rfq.site.trades',
+  RFQTradeItemV5[]
+>;
+
+/**
+ * RFQ Public Trade Channel
+ * Public push for all block trades
+ * Topics: rfq.open.public.trades, rfq.site.public.trades
+ */
+export type WSRFQPublicTradeEventV5 = WSPublicTopicEventV5<
+  'rfq.open.public.trades' | 'rfq.site.public.trades',
+  'snapshot',
+  RFQPublicTradeV5[]
 >;
