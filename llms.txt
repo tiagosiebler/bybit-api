@@ -341,6 +341,7 @@ src/
       v5-p2p-trading.ts
       v5-position.ts
       v5-pre-upgrade.ts
+      v5-rfq.ts
       v5-spot-leverage-token.ts
       v5-spreadtrading.ts
       v5-trade.ts
@@ -362,6 +363,7 @@ src/
       v5-p2p-trading.ts
       v5-position.ts
       v5-preupgrade.ts
+      v5-rfq.ts
       v5-spot-leverage-token.ts
       v5-spreadtrading.ts
       v5-trade.ts
@@ -2407,6 +2409,135 @@ console.log(response);
 console.error(error);
 
 ================
+File: examples/apidoc/V5/Spread-Trading/amend-spread-order.js
+================
+const client = new RestClientV5({
+⋮----
+.amendSpreadOrder({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Spread-Trading/cancel-all-spread-orders.js
+================
+const client = new RestClientV5({
+⋮----
+.cancelAllSpreadOrders()
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Spread-Trading/cancel-spread-order.js
+================
+const client = new RestClientV5({
+⋮----
+.cancelSpreadOrder({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Spread-Trading/create-spread-order.js
+================
+const client = new RestClientV5({
+⋮----
+.submitSpreadOrder({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Spread-Trading/get-spread-instruments-info.js
+================
+const client = new RestClientV5({
+⋮----
+.getSpreadInstrumentsInfo()
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Spread-Trading/get-spread-open-orders.js
+================
+const client = new RestClientV5({
+⋮----
+.getSpreadOpenOrders()
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Spread-Trading/get-spread-order-history.js
+================
+const client = new RestClientV5({
+⋮----
+.getSpreadOrderHistory({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Spread-Trading/get-spread-orderbook.js
+================
+const client = new RestClientV5({
+⋮----
+.getSpreadOrderbook({
+⋮----
+limit: 1, // Show 5 levels of depth
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Spread-Trading/get-spread-tickers.js
+================
+const client = new RestClientV5({
+⋮----
+.getSpreadTickers({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Spread-Trading/get-spread-trade-history.js
+================
+const client = new RestClientV5({
+⋮----
+.getSpreadTradeHistory({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
 File: examples/apidoc/V5/Trade/amend-order.js
 ================
 const client = new RestClientV5({
@@ -3561,11 +3692,6 @@ export interface CopyTradingTransferRequest {
 }
 
 ================
-File: src/types/request/index.ts
-================
-
-
-================
 File: src/types/request/inverse.ts
 ================
 export interface InverseOrderRequest {
@@ -4701,6 +4827,63 @@ export interface GetSpotLeveragedTokenOrderHistoryParamsV5 {
 export interface GetVIPMarginDataParamsV5 {
   vipLevel?: string;
   currency?: string;
+}
+
+================
+File: src/types/request/v5-spreadtrading.ts
+================
+export interface GetSpreadInstrumentsInfoParamsV5 {
+  symbol?: string;
+  baseCoin?: string;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface SubmitSpreadOrderParamsV5 {
+  symbol: string;
+  side: 'Buy' | 'Sell';
+  orderType: 'Limit' | 'Market';
+  qty: string;
+  price: string;
+  orderLinkId: string;
+  timeInForce: 'IOC' | 'FOK' | 'GTC' | 'PostOnly';
+}
+⋮----
+export interface AmendSpreadOrderParamsV5 {
+  symbol: string;
+  orderId?: string;
+  orderLinkId?: string;
+  qty?: string;
+  price?: string;
+}
+⋮----
+export interface GetSpreadOpenOrdersParamsV5 {
+  symbol?: string;
+  baseCoin?: string;
+  orderId?: string;
+  orderLinkId?: string;
+  limit?: number;
+  cursor?: string;
+}
+export interface GetSpreadOrderHistoryParamsV5 {
+  symbol?: string;
+  baseCoin?: string;
+  orderId?: string;
+  orderLinkId?: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface GetSpreadTradeHistoryParamsV5 {
+  symbol?: string;
+  orderId?: string;
+  orderLinkId?: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
 }
 
 ================
@@ -6856,135 +7039,6 @@ console.log(response);
 console.error(error);
 
 ================
-File: examples/apidoc/V5/Spread-Trading/amend-spread-order.js
-================
-const client = new RestClientV5({
-⋮----
-.amendSpreadOrder({
-⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Spread-Trading/cancel-all-spread-orders.js
-================
-const client = new RestClientV5({
-⋮----
-.cancelAllSpreadOrders()
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Spread-Trading/cancel-spread-order.js
-================
-const client = new RestClientV5({
-⋮----
-.cancelSpreadOrder({
-⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Spread-Trading/create-spread-order.js
-================
-const client = new RestClientV5({
-⋮----
-.submitSpreadOrder({
-⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Spread-Trading/get-spread-instruments-info.js
-================
-const client = new RestClientV5({
-⋮----
-.getSpreadInstrumentsInfo()
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Spread-Trading/get-spread-open-orders.js
-================
-const client = new RestClientV5({
-⋮----
-.getSpreadOpenOrders()
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Spread-Trading/get-spread-order-history.js
-================
-const client = new RestClientV5({
-⋮----
-.getSpreadOrderHistory({
-⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Spread-Trading/get-spread-orderbook.js
-================
-const client = new RestClientV5({
-⋮----
-.getSpreadOrderbook({
-⋮----
-limit: 1, // Show 5 levels of depth
-⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Spread-Trading/get-spread-tickers.js
-================
-const client = new RestClientV5({
-⋮----
-.getSpreadTickers({
-⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Spread-Trading/get-spread-trade-history.js
-================
-const client = new RestClientV5({
-⋮----
-.getSpreadTradeHistory({
-⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
 File: examples/apidoc/V5/Trade/pre-check-order.js
 ================
 const client = new RestClientV5({
@@ -7180,6 +7234,11 @@ import { DefaultLogger, WebsocketClient, WS_KEY_MAP } from '../src';
 // Get a list of subscribed topics (e.g. for public v3 spot topics) (after a 5 second delay)
 
 ================
+File: src/types/request/index.ts
+================
+
+
+================
 File: src/types/request/v5-account.ts
 ================
 import { AccountTypeV5, CategoryV5, TransactionTypeV5 } from '../shared-v5';
@@ -7245,6 +7304,195 @@ export interface GetClassicTransactionLogsParamsV5 {
 export interface SetLimitPriceActionParamsV5 {
   category: CategoryV5;
   modifyEnable: boolean;
+}
+
+================
+File: src/types/request/v5-asset.ts
+================
+import { AccountTypeV5, CategoryV5 } from '../shared-v5';
+⋮----
+export interface GetCoinExchangeRecordParamsV5 {
+  fromCoin?: string;
+  toCoin?: string;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface GetDeliveryRecordParamsV5 {
+  category: CategoryV5;
+  symbol?: string;
+  startTime?: number;
+  endTime?: number;
+  expDate?: string;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface GetSettlementRecordParamsV5 {
+  category: CategoryV5;
+  symbol?: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface GetAssetInfoParamsV5 {
+  accountType: AccountTypeV5;
+  coin?: string;
+}
+⋮----
+export interface GetAllCoinsBalanceParamsV5 {
+  memberId?: string;
+  accountType: AccountTypeV5;
+  coin?: string;
+  withBonus?: number;
+}
+⋮----
+export interface GetAccountCoinBalanceParamsV5 {
+  memberId?: string;
+  toMemberId?: string;
+  accountType: AccountTypeV5;
+  coin: string;
+  toAccountType?: AccountTypeV5;
+  withBonus?: number;
+  withTransferSafeAmount?: 0 | 1;
+  withLtvTransferSafeAmount?: 0 | 1;
+}
+⋮----
+export interface GetInternalTransferParamsV5 {
+  transferId?: string;
+  coin?: string;
+  status?: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface UniversalTransferParamsV5 {
+  transferId: string;
+  coin: string;
+  amount: string;
+  fromMemberId: number;
+  toMemberId: number;
+  fromAccountType: AccountTypeV5;
+  toAccountType: AccountTypeV5;
+}
+⋮----
+export interface GetUniversalTransferRecordsParamsV5 {
+  transferId?: string;
+  coin?: string;
+  status?: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface GetAllowedDepositCoinInfoParamsV5 {
+  coin?: string;
+  chain?: string;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface GetDepositRecordParamsV5 {
+  id?: string;
+  txID?: string;
+  coin?: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface GetSubAccountDepositRecordParamsV5 {
+  id?: string;
+  txID?: string;
+  subMemberId: string;
+  coin?: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface GetInternalDepositRecordParamsV5 {
+  txID?: string;
+  startTime?: number;
+  endTime?: number;
+  coin?: string;
+  cursor?: string;
+  limit?: number;
+}
+⋮----
+export interface GetWithdrawalRecordsParamsV5 {
+  withdrawID?: string;
+  txID?: string;
+  coin?: string;
+  withdrawType?: number;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface WithdrawParamsV5 {
+  coin: string;
+  chain: string;
+  address: string;
+  tag?: string;
+  amount: string;
+  timestamp: number;
+  forceChain?: number;
+  accountType?: 'SPOT' | 'FUND';
+  feeType?: 0 | 1;
+  requestId?: string;
+  beneficiary?: {
+    vaspEntityId?: string;
+    beneficiaryName?: string;
+    beneficiaryLegalType?: string;
+    beneficiaryWalletType?: string;
+    beneficiaryUnhostedWalletType?: string;
+    beneficiaryPoiNumber?: string;
+    beneficiaryPoiType?: string;
+    beneficiaryPoiIssuingCountry?: string;
+    beneficiaryPoiExpiredDate?: string;
+  };
+}
+⋮----
+export interface ConvertCoinsParamsV5 {
+  coin?: string;
+  side?: number;
+  accountType:
+    | 'eb_convert_funding'
+    | 'eb_convert_uta'
+    | 'eb_convert_spot'
+    | 'eb_convert_contract'
+    | 'eb_convert_inverse';
+}
+⋮----
+export interface RequestConvertQuoteParamsV5 {
+  fromCoin: string;
+  toCoin: string;
+  fromCoinType?: string;
+  toCoinType?: string;
+  requestCoin: string;
+  requestAmount: string;
+  accountType:
+    | 'eb_convert_funding'
+    | 'eb_convert_uta'
+    | 'eb_convert_spot'
+    | 'eb_convert_contract'
+    | 'eb_convert_inverse';
+  requestId?: string;
+}
+⋮----
+export interface GetConvertHistoryParamsV5 {
+  accountType?: string;
+  index?: number;
+  limit?: number;
 }
 
 ================
@@ -7577,61 +7825,191 @@ export interface GetClosedOptionsPositionsParamsV5 {
 }
 
 ================
-File: src/types/request/v5-spreadtrading.ts
+File: src/types/request/v5-rfq.ts
 ================
-export interface GetSpreadInstrumentsInfoParamsV5 {
-  symbol?: string;
-  baseCoin?: string;
-  limit?: number;
-  cursor?: string;
+export interface RFQTransactionV5 {
+  category: 'spot' | 'linear' | 'inverse' | 'option'; // Product type
+  symbol: string; // Name of the trading contract
+  side: 'buy' | 'sell'; // Inquiry transaction direction
+  qty: string; // Transaction quantity
+  isLeverage?: boolean; // For spot lending, default false
 }
 ⋮----
-export interface SubmitSpreadOrderParamsV5 {
-  symbol: string;
-  side: 'Buy' | 'Sell';
-  orderType: 'Limit' | 'Market';
-  qty: string;
-  price: string;
-  orderLinkId: string;
-  timeInForce: 'IOC' | 'FOK' | 'GTC' | 'PostOnly';
+category: 'spot' | 'linear' | 'inverse' | 'option'; // Product type
+symbol: string; // Name of the trading contract
+side: 'buy' | 'sell'; // Inquiry transaction direction
+qty: string; // Transaction quantity
+isLeverage?: boolean; // For spot lending, default false
+⋮----
+export interface CreateRFQParamsV5 {
+  counterparties: string[]; // Array of deskCode
+  rfqLinkId?: string; // Custom ID for inquiry form, 1-32 characters
+  anonymous?: boolean; // Whether it is anonymous inquiry, default false
+  strategyType?: string; // Inquiry label, max 36 characters
+  list: RFQTransactionV5[]; // Transaction list, up to 10 sets
 }
 ⋮----
-export interface AmendSpreadOrderParamsV5 {
-  symbol: string;
-  orderId?: string;
-  orderLinkId?: string;
-  qty?: string;
-  price?: string;
+counterparties: string[]; // Array of deskCode
+rfqLinkId?: string; // Custom ID for inquiry form, 1-32 characters
+anonymous?: boolean; // Whether it is anonymous inquiry, default false
+strategyType?: string; // Inquiry label, max 36 characters
+list: RFQTransactionV5[]; // Transaction list, up to 10 sets
+⋮----
+export interface CancelRFQParamsV5 {
+  rfqId?: string; // Inquiry ID
+  rfqLinkId?: string; // Inquiry Custom ID
 }
 ⋮----
-export interface GetSpreadOpenOrdersParamsV5 {
-  symbol?: string;
-  baseCoin?: string;
-  orderId?: string;
-  orderLinkId?: string;
-  limit?: number;
-  cursor?: string;
-}
-export interface GetSpreadOrderHistoryParamsV5 {
-  symbol?: string;
-  baseCoin?: string;
-  orderId?: string;
-  orderLinkId?: string;
-  startTime?: number;
-  endTime?: number;
-  limit?: number;
-  cursor?: string;
+rfqId?: string; // Inquiry ID
+rfqLinkId?: string; // Inquiry Custom ID
+⋮----
+export interface RFQQuoteV5 {
+  category: 'spot' | 'linear' | 'option'; // Product type
+  symbol: string; // Name of the trading contract
+  price: string; // Quote price
+  isLeverage?: boolean; // For spot lending, default false
 }
 ⋮----
-export interface GetSpreadTradeHistoryParamsV5 {
-  symbol?: string;
-  orderId?: string;
-  orderLinkId?: string;
-  startTime?: number;
-  endTime?: number;
-  limit?: number;
-  cursor?: string;
+category: 'spot' | 'linear' | 'option'; // Product type
+symbol: string; // Name of the trading contract
+price: string; // Quote price
+isLeverage?: boolean; // For spot lending, default false
+⋮----
+export interface CreateRFQQuoteParamsV5 {
+  rfqId: string; // Inquiry ID
+  quoteLinkId?: string; // Quotation custom ID, 1-32 characters
+  anonymous?: boolean; // Whether it is anonymous quotation, default false
+  expiresIn?: number; // Validity period in seconds, default 60
+  quoteBuyList?: RFQQuoteV5[]; // Quotation buy direction
+  quoteSellList?: RFQQuoteV5[]; // Quotation sell direction
 }
+⋮----
+rfqId: string; // Inquiry ID
+quoteLinkId?: string; // Quotation custom ID, 1-32 characters
+anonymous?: boolean; // Whether it is anonymous quotation, default false
+expiresIn?: number; // Validity period in seconds, default 60
+quoteBuyList?: RFQQuoteV5[]; // Quotation buy direction
+quoteSellList?: RFQQuoteV5[]; // Quotation sell direction
+⋮----
+export interface ExecuteRFQQuoteParamsV5 {
+  rfqId: string; // Inquiry ID
+  quoteId: string; // Quotation ID
+  quoteSide: 'buy' | 'sell'; // The direction of the quote
+}
+⋮----
+rfqId: string; // Inquiry ID
+quoteId: string; // Quotation ID
+quoteSide: 'buy' | 'sell'; // The direction of the quote
+⋮----
+export interface CancelRFQQuoteParamsV5 {
+  quoteId?: string; // Quotation ID
+  rfqId?: string; // Inquiry ID
+  quoteLinkId?: string; // Quotation Custom ID
+}
+⋮----
+quoteId?: string; // Quotation ID
+rfqId?: string; // Inquiry ID
+quoteLinkId?: string; // Quotation Custom ID
+⋮----
+export interface GetRFQRealtimeParamsV5 {
+  rfqId?: string; // Inquiry ID
+  rfqLinkId?: string; // Inquiry Custom ID
+  traderType?: 'quote' | 'request'; // Trader type, default 'request'
+}
+⋮----
+rfqId?: string; // Inquiry ID
+rfqLinkId?: string; // Inquiry Custom ID
+traderType?: 'quote' | 'request'; // Trader type, default 'request'
+⋮----
+export interface GetRFQListParamsV5 {
+  rfqId?: string; // Inquiry ID
+  rfqLinkId?: string; // Custom ID for inquiry form
+  traderType?: 'quoter' | 'request'; // Trader type, default 'request'
+  status?:
+    | 'Active'
+    | 'Canceled'
+    | 'PendingFill'
+    | 'Filled'
+    | 'Expired'
+    | 'Failed'; // Status of the inquiry form
+  limit?: number; // Return number of items, max 100, default 50
+  cursor?: string; // Page turning mark
+}
+⋮----
+rfqId?: string; // Inquiry ID
+rfqLinkId?: string; // Custom ID for inquiry form
+traderType?: 'quoter' | 'request'; // Trader type, default 'request'
+⋮----
+| 'Failed'; // Status of the inquiry form
+limit?: number; // Return number of items, max 100, default 50
+cursor?: string; // Page turning mark
+⋮----
+export interface GetRFQQuoteRealtimeParamsV5 {
+  rfqId?: string; // Inquiry ID
+  quoteId?: string; // Quotation ID
+  quoteLinkId?: string; // Quotation Custom ID
+  traderType?: 'quote' | 'request'; // Trader type, default 'quote'
+}
+⋮----
+rfqId?: string; // Inquiry ID
+quoteId?: string; // Quotation ID
+quoteLinkId?: string; // Quotation Custom ID
+traderType?: 'quote' | 'request'; // Trader type, default 'quote'
+⋮----
+export interface GetRFQHistoryParamsV5 {
+  rfqId?: string; // Inquiry ID
+  quoteId?: string; // Quotation ID
+  quoteLinkId?: string; // Quotation custom ID, can only check last 3 months
+  traderType?: 'quote' | 'request'; // Trader type, default 'quote'
+  status?:
+    | 'Active'
+    | 'Canceled'
+    | 'PendingFill'
+    | 'Filled'
+    | 'Expired'
+    | 'Failed'; // Status of quotation
+  limit?: number; // Return number of items, max 100, default 50
+  cursor?: string; // Page turning mark
+}
+⋮----
+rfqId?: string; // Inquiry ID
+quoteId?: string; // Quotation ID
+quoteLinkId?: string; // Quotation custom ID, can only check last 3 months
+traderType?: 'quote' | 'request'; // Trader type, default 'quote'
+⋮----
+| 'Failed'; // Status of quotation
+limit?: number; // Return number of items, max 100, default 50
+cursor?: string; // Page turning mark
+⋮----
+export interface GetRFQTradeListParamsV5 {
+  rfqId?: string; // Inquiry ID
+  rfqLinkId?: string; // Custom ID for inquiry form, can only check last 3 months
+  quoteId?: string; // Quotation ID
+  quoteLinkId?: string; // Quotation custom ID, can only check last 3 months
+  status?: 'Filled' | 'Rejected'; // Status
+  limit?: number; // Return number of items, max 100, default 50
+  cursor?: string; // Page turning mark
+}
+⋮----
+rfqId?: string; // Inquiry ID
+rfqLinkId?: string; // Custom ID for inquiry form, can only check last 3 months
+quoteId?: string; // Quotation ID
+quoteLinkId?: string; // Quotation custom ID, can only check last 3 months
+status?: 'Filled' | 'Rejected'; // Status
+limit?: number; // Return number of items, max 100, default 50
+cursor?: string; // Page turning mark
+⋮----
+export interface GetRFQPublicTradesParamsV5 {
+  startTime?: number; // Timestamp in milliseconds, time range is 7 days
+  endTime?: number; // Timestamp in milliseconds, time range is 7 days
+  limit?: number; // Return number of items, max 100, default 50
+  cursor?: string; // Page turning mark
+}
+⋮----
+startTime?: number; // Timestamp in milliseconds, time range is 7 days
+endTime?: number; // Timestamp in milliseconds, time range is 7 days
+limit?: number; // Return number of items, max 100, default 50
+cursor?: string; // Page turning mark
 
 ================
 File: src/types/request/v5-trade.ts
@@ -7801,11 +8179,6 @@ export interface BatchCancelOrderParamsV5 {
 }
 
 ================
-File: src/types/response/index.ts
-================
-
-
-================
 File: src/types/response/v5-broker.ts
 ================
 interface EarningDetailV5 {
@@ -7942,6 +8315,333 @@ export interface PreUpgradeUSDCSessionSettlement {
   realisedPnl: string;
   createdTime: string;
 }
+
+================
+File: src/types/response/v5-rfq.ts
+================
+export interface RFQConfigV5 {
+  deskCode: string; // Own deskCode, unique identification code
+  maxLegs: number; // Maximum number of legs
+  maxLP: number; // Maximum number of LPs selected in inquiry form
+  maxActiveRfq: number; // Maximum number of unfinished inquiry orders allowed
+  minLimitQtySpotOrder: number; // Spot minimum order quantity multiplier
+  minLimitQtyContractOrder: number; // Contract minimum order quantity multiplier
+  minLimitQtyOptionOrder: number; // Option minimum order multiplier
+  strategyTypes: {
+    strategyName: string; // Policy name
+  }[];
+  counterparties: {
+    strategyName: string; // Policy name
+  }[];
+}
+⋮----
+deskCode: string; // Own deskCode, unique identification code
+maxLegs: number; // Maximum number of legs
+maxLP: number; // Maximum number of LPs selected in inquiry form
+maxActiveRfq: number; // Maximum number of unfinished inquiry orders allowed
+minLimitQtySpotOrder: number; // Spot minimum order quantity multiplier
+minLimitQtyContractOrder: number; // Contract minimum order quantity multiplier
+minLimitQtyOptionOrder: number; // Option minimum order multiplier
+⋮----
+strategyName: string; // Policy name
+⋮----
+strategyName: string; // Policy name
+⋮----
+export interface RFQCounterpartyV5 {
+  traderName: string; // Name of the bidder
+  deskCode: string; // Unique identification code of the quotation party
+  type: string | null; // Quoter type. LP is automated market maker, null means normal quote party
+}
+⋮----
+traderName: string; // Name of the bidder
+deskCode: string; // Unique identification code of the quotation party
+type: string | null; // Quoter type. LP is automated market maker, null means normal quote party
+⋮----
+export interface CreateRFQResultV5 {
+  rfqId: string; // Inquiry ID
+  rfqLinkId: string; // Inquiry Custom ID
+  status: 'Active' | 'Canceled' | 'Filled' | 'Expired' | 'Failed'; // Status of the inquiry form
+  expiresAt: string; // Expiration time in milliseconds Unix timestamp
+  deskCode: string; // Inquiry party unique identification code
+}
+⋮----
+rfqId: string; // Inquiry ID
+rfqLinkId: string; // Inquiry Custom ID
+status: 'Active' | 'Canceled' | 'Filled' | 'Expired' | 'Failed'; // Status of the inquiry form
+expiresAt: string; // Expiration time in milliseconds Unix timestamp
+deskCode: string; // Inquiry party unique identification code
+⋮----
+export interface CancelRFQResultV5 {
+  rfqId: string; // Inquiry ID
+  rfqLinkId: string; // Inquiry Custom ID
+}
+⋮----
+rfqId: string; // Inquiry ID
+rfqLinkId: string; // Inquiry Custom ID
+⋮----
+export interface CancelRFQItemV5 {
+  rfqId: string; // Inquiry ID
+  rfqLinkId: string; // Inquiry Custom ID
+  code: number; // Cancel success or failure, 0 means success
+  msg: string; // Cancellation failure reason
+}
+⋮----
+rfqId: string; // Inquiry ID
+rfqLinkId: string; // Inquiry Custom ID
+code: number; // Cancel success or failure, 0 means success
+msg: string; // Cancellation failure reason
+⋮----
+export interface CancelAllRFQResultV5 {
+  data: CancelRFQItemV5[]; // Array of cancellation results
+}
+⋮----
+data: CancelRFQItemV5[]; // Array of cancellation results
+⋮----
+export interface CreateRFQQuoteResultV5 {
+  rfqId: string; // Inquiry ID
+  quoteId: string; // Quotation ID
+  quoteLinkId: string; // Quotation Custom ID
+  expiresAt: string; // Expiration time in milliseconds Unix timestamp
+  deskCode: string; // Quoter's unique identification code
+  status: 'Active' | 'Canceled' | 'Filled' | 'Expired' | 'Failed'; // Status of quotation
+}
+⋮----
+rfqId: string; // Inquiry ID
+quoteId: string; // Quotation ID
+quoteLinkId: string; // Quotation Custom ID
+expiresAt: string; // Expiration time in milliseconds Unix timestamp
+deskCode: string; // Quoter's unique identification code
+status: 'Active' | 'Canceled' | 'Filled' | 'Expired' | 'Failed'; // Status of quotation
+⋮----
+export interface ExecuteRFQQuoteResultV5 {
+  rfqId: string; // Inquiry ID
+  rfqLinkId: string; // Inquiry Custom ID
+  quoteId: string; // Quotation ID
+  status: 'Processing' | 'Rejected'; // Order status
+  rejectParty: string; // Empty means passed, "Taker", "Maker", "Bybit" when rejected
+}
+⋮----
+rfqId: string; // Inquiry ID
+rfqLinkId: string; // Inquiry Custom ID
+quoteId: string; // Quotation ID
+status: 'Processing' | 'Rejected'; // Order status
+rejectParty: string; // Empty means passed, "Taker", "Maker", "Bybit" when rejected
+⋮----
+export interface CancelRFQQuoteResultV5 {
+  rfqId: string; // Inquiry ID
+  quoteId: string; // Quotation ID
+  quoteLinkId: string; // Quotation Custom ID
+}
+⋮----
+rfqId: string; // Inquiry ID
+quoteId: string; // Quotation ID
+quoteLinkId: string; // Quotation Custom ID
+⋮----
+export interface CancelRFQQuoteItemV5 {
+  rfqId: string; // Inquiry ID
+  quoteId: string; // Quotation ID
+  quoteLinkId: string; // Quotation Custom ID
+  code: number; // Cancel success or failure, 0 means success
+  msg: string; // Cancellation failure reason
+}
+⋮----
+rfqId: string; // Inquiry ID
+quoteId: string; // Quotation ID
+quoteLinkId: string; // Quotation Custom ID
+code: number; // Cancel success or failure, 0 means success
+msg: string; // Cancellation failure reason
+⋮----
+export interface RFQLegV5 {
+  category: 'linear' | 'option' | 'spot'; // Product category
+  symbol: string; // The unique instrument ID
+  side: 'buy' | 'sell'; // Inquiry direction
+  qty: string; // Order quantity of the instrument
+  isLeverage?: boolean; // For spot lending
+}
+⋮----
+category: 'linear' | 'option' | 'spot'; // Product category
+symbol: string; // The unique instrument ID
+side: 'buy' | 'sell'; // Inquiry direction
+qty: string; // Order quantity of the instrument
+isLeverage?: boolean; // For spot lending
+⋮----
+export interface RFQItemV5 {
+  rfqId: string; // Inquiry ID
+  rfqLinkId: string; // Custom ID for inquiry form
+  counterparties: string[]; // List of bidders
+  expiresAt: string; // Expiration time in milliseconds Unix timestamp
+  strategyType: string; // Inquiry label
+  status:
+    | 'Active'
+    | 'Canceled'
+    | 'PendingFill'
+    | 'Filled'
+    | 'Expired'
+    | 'Failed'; // Status
+  deskCode: string; // Unique identification code of the inquiry party
+  createdAt: number; // Time when the trade is created in epoch
+  updatedAt: number; // Time when the trade is updated in epoch
+  legs: RFQLegV5[]; // Combination transaction
+}
+⋮----
+rfqId: string; // Inquiry ID
+rfqLinkId: string; // Custom ID for inquiry form
+counterparties: string[]; // List of bidders
+expiresAt: string; // Expiration time in milliseconds Unix timestamp
+strategyType: string; // Inquiry label
+⋮----
+| 'Failed'; // Status
+deskCode: string; // Unique identification code of the inquiry party
+createdAt: number; // Time when the trade is created in epoch
+updatedAt: number; // Time when the trade is updated in epoch
+legs: RFQLegV5[]; // Combination transaction
+⋮----
+export interface GetRFQRealtimeResultV5 {
+  list: RFQItemV5[]; // Array of RFQ items
+}
+⋮----
+list: RFQItemV5[]; // Array of RFQ items
+⋮----
+export interface RFQHistory {
+  cursor: string; // Page turning mark
+  list: RFQItemV5[]; // Array of RFQ items
+}
+⋮----
+cursor: string; // Page turning mark
+list: RFQItemV5[]; // Array of RFQ items
+⋮----
+export interface QuoteLegV5 {
+  category: 'spot' | 'linear' | 'option'; // Product type
+  symbol: string; // The unique instrument ID or name of trading contract
+  price: string; // Order price or quote price
+  qty?: string; // Order quantity
+  isLeverage?: boolean; // For spot lending
+}
+⋮----
+category: 'spot' | 'linear' | 'option'; // Product type
+symbol: string; // The unique instrument ID or name of trading contract
+price: string; // Order price or quote price
+qty?: string; // Order quantity
+isLeverage?: boolean; // For spot lending
+⋮----
+export interface RFQQuoteItemV5 {
+  rfqId: string; // Inquiry ID
+  rfqLinkId: string; // Custom ID for inquiry form
+  quoteId: string; // Quotation ID
+  quoteLinkId: string; // Quotation custom ID
+  expiresAt: string; // Expiration time in milliseconds Unix timestamp
+  deskCode: string; // Unique identification code of quotation party
+  status:
+    | 'Active'
+    | 'Canceled'
+    | 'PendingFill'
+    | 'Filled'
+    | 'Expired'
+    | 'Failed'; // Status
+  execQuoteSide: string; // Execute quote direction, buy or sell
+  createdAt: number; // Time when the trade is created in epoch
+  updatedAt: number; // Time when the trade is updated in epoch
+  quoteBuyList: QuoteLegV5[]; // Quotation buy direction
+  quoteSellList: QuoteLegV5[]; // Quotation sell direction
+}
+⋮----
+rfqId: string; // Inquiry ID
+rfqLinkId: string; // Custom ID for inquiry form
+quoteId: string; // Quotation ID
+quoteLinkId: string; // Quotation custom ID
+expiresAt: string; // Expiration time in milliseconds Unix timestamp
+deskCode: string; // Unique identification code of quotation party
+⋮----
+| 'Failed'; // Status
+execQuoteSide: string; // Execute quote direction, buy or sell
+createdAt: number; // Time when the trade is created in epoch
+updatedAt: number; // Time when the trade is updated in epoch
+quoteBuyList: QuoteLegV5[]; // Quotation buy direction
+quoteSellList: QuoteLegV5[]; // Quotation sell direction
+⋮----
+export interface RFQTradeLegV5 {
+  category: 'linear' | 'option' | 'spot'; // Product category
+  orderId: string; // Bybit order ID
+  symbol: string; // The unique instrument ID
+  side: 'buy' | 'sell'; // Direction
+  price: string; // Execution price
+  qty: string; // Number of executions
+  isLeverage?: boolean; // For spot lending
+  markPrice: string; // MarkPrice (contract) at transaction time, indexPrice for spot
+  execFee: string; // Fee for taker or maker in base currency
+  execId: string; // Unique exec(trade) ID from exchange
+  resultCode: number; // Status code, 0 means success
+  resultMessage: string; // Error message about resultCode
+  rejectParty: string; // Empty if Filled, "Taker"/"Maker"/"bybit" if Rejected
+}
+⋮----
+category: 'linear' | 'option' | 'spot'; // Product category
+orderId: string; // Bybit order ID
+symbol: string; // The unique instrument ID
+side: 'buy' | 'sell'; // Direction
+price: string; // Execution price
+qty: string; // Number of executions
+isLeverage?: boolean; // For spot lending
+markPrice: string; // MarkPrice (contract) at transaction time, indexPrice for spot
+execFee: string; // Fee for taker or maker in base currency
+execId: string; // Unique exec(trade) ID from exchange
+resultCode: number; // Status code, 0 means success
+resultMessage: string; // Error message about resultCode
+rejectParty: string; // Empty if Filled, "Taker"/"Maker"/"bybit" if Rejected
+⋮----
+export interface RFQTradeV5 {
+  rfqId: string; // Inquiry ID
+  quoteId: string; // Completed inquiry form and executed quotation ID
+  quoteSide: 'buy' | 'sell'; // Executed quotation direction
+  strategyType: string; // Inquiry label
+  status: 'Filled' | 'Rejected'; // Status
+  rfqDeskCode: string; // Unique identification code of inquiry party
+  quoteDestCode: string; // Unique identification code of quotation party
+  createdAt: number; // Time when trade is created in epoch
+  updatedAt: number; // Time when trade is updated in epoch
+  legs: RFQTradeLegV5[]; // Combination transaction
+}
+⋮----
+rfqId: string; // Inquiry ID
+quoteId: string; // Completed inquiry form and executed quotation ID
+quoteSide: 'buy' | 'sell'; // Executed quotation direction
+strategyType: string; // Inquiry label
+status: 'Filled' | 'Rejected'; // Status
+rfqDeskCode: string; // Unique identification code of inquiry party
+quoteDestCode: string; // Unique identification code of quotation party
+createdAt: number; // Time when trade is created in epoch
+updatedAt: number; // Time when trade is updated in epoch
+legs: RFQTradeLegV5[]; // Combination transaction
+⋮----
+export interface RFQPublicTradeLegV5 {
+  category: 'linear' | 'option' | 'spot'; // Product category
+  symbol: string; // The unique instrument ID
+  side: 'buy' | 'sell'; // Inquiry direction
+  price: string; // Execution price
+  qty: string; // Number of executions
+  markPrice: string; // MarkPrice (contract) at transaction time, indexPrice for spot
+}
+⋮----
+category: 'linear' | 'option' | 'spot'; // Product category
+symbol: string; // The unique instrument ID
+side: 'buy' | 'sell'; // Inquiry direction
+price: string; // Execution price
+qty: string; // Number of executions
+markPrice: string; // MarkPrice (contract) at transaction time, indexPrice for spot
+⋮----
+export interface RFQPublicTradeV5 {
+  rfqId: string; // Inquiry ID
+  strategyType: string; // Inquiry label
+  createdAt: number; // Time when trade is created in epoch
+  updatedAt: number; // Time when trade is updated in epoch
+  legs: RFQPublicTradeLegV5[]; // Combination transaction
+}
+⋮----
+rfqId: string; // Inquiry ID
+strategyType: string; // Inquiry label
+createdAt: number; // Time when trade is created in epoch
+updatedAt: number; // Time when trade is updated in epoch
+legs: RFQPublicTradeLegV5[]; // Combination transaction
 
 ================
 File: src/types/response/v5-spot-leverage-token.ts
@@ -8202,6 +8902,479 @@ export interface WsAPIOperationResponseMap {
     data: [string];
     connId: string;
   };
+}
+
+================
+File: src/types/index.ts
+================
+
+
+================
+File: src/types/shared-v5.ts
+================
+export type CategoryV5 = 'spot' | 'linear' | 'inverse' | 'option';
+export type ContractTypeV5 =
+  | 'InversePerpetual'
+  | 'LinearPerpetual'
+  | 'InverseFutures';
+export type CopyTradingV5 = 'none' | 'both' | 'utaOnly' | 'normalOnly';
+⋮----
+export type InstrumentStatusV5 =
+  | 'PreLaunch'
+  | 'Trading'
+  | 'Settling'
+  | 'Delivering'
+  | 'Closed';
+⋮----
+export type MarginTradingV5 = 'none' | 'both' | 'utaOnly' | 'normalSpotOnly';
+⋮----
+export type OrderFilterV5 = 'Order' | 'tpslOrder' | 'StopOrder';
+export type OrderSideV5 = 'Buy' | 'Sell';
+export type OrderTypeV5 = 'Market' | 'Limit';
+export type OrderTimeInForceV5 = 'GTC' | 'IOC' | 'FOK' | 'PostOnly' | 'RPI';
+export type OrderTriggerByV5 = 'LastPrice' | 'IndexPrice' | 'MarkPrice';
+export type OCOTriggerTypeV5 =
+  | 'OcoTriggerByUnknown'
+  | 'OcoTriggerTp'
+  | 'OcoTriggerBySl';
+⋮----
+export type OrderSMPTypeV5 =
+  | 'None'
+  | 'CancelMaker'
+  | 'CancelTaker'
+  | 'CancelBoth';
+⋮----
+export type OrderStatusV5 =
+  | 'Created'
+  | 'New'
+  | 'Rejected'
+  | 'PartiallyFilled'
+  | 'PartiallyFilledCanceled'
+  | 'Filled'
+  | 'Cancelled'
+  | 'Untriggered'
+  | 'Triggered'
+  | 'Deactivated'
+  | 'Active';
+⋮----
+/**
+ * Defines the types of order creation mechanisms.
+ */
+export type OrderCreateTypeV5 =
+  /** Represents an order created by a user. */
+  | 'CreateByUser'
+  /** Represents an order created by an admin closing. */
+  | 'CreateByAdminClosing'
+  /** Futures conditional order. */
+  | 'CreateByStopOrder'
+  /** Futures take profit order. */
+  | 'CreateByTakeProfit'
+  /** Futures partial take profit order. */
+  | 'CreateByPartialTakeProfit'
+  /** Futures stop loss order. */
+  | 'CreateByStopLoss'
+  /** Futures partial stop loss order. */
+  | 'CreateByPartialStopLoss'
+  /** Futures trailing stop order. */
+  | 'CreateByTrailingStop'
+  /** Laddered liquidation to reduce the required maintenance margin. */
+  | 'CreateByLiq'
+  /**
+   * If the position is still subject to liquidation (i.e., does not meet the required maintenance margin level),
+   * the position shall be taken over by the liquidation engine and closed at the bankruptcy price.
+   */
+  | 'CreateByTakeOver_PassThrough'
+  /** Auto-Deleveraging(ADL) */
+  | 'CreateByAdl_PassThrough'
+  /** Order placed via Paradigm. */
+  | 'CreateByBlock_PassThrough'
+  /** Order created by move position. */
+  | 'CreateByBlockTradeMovePosition_PassThrough'
+  /** The close order placed via web or app position area - web/app. */
+  | 'CreateByClosing'
+  /** Order created via grid bot - web/app. */
+  | 'CreateByFGridBot'
+  /** Order closed via grid bot - web/app. */
+  | 'CloseByFGridBot'
+  /** Order created by TWAP - web/app. */
+  | 'CreateByTWAP'
+  /** Order created by TV webhook - web/app. */
+  | 'CreateByTVSignal'
+  /** Order created by Mm rate close function - web/app. */
+  | 'CreateByMmRateClose'
+  /** Order created by Martingale bot - web/app. */
+  | 'CreateByMartingaleBot'
+  /** Order closed by Martingale bot - web/app. */
+  | 'CloseByMartingaleBot'
+  /** Order created by Ice berg strategy - web/app. */
+  | 'CreateByIceBerg'
+  /** Order created by arbitrage - web/app. */
+  | 'CreateByArbitrage'
+  /** Option dynamic delta hedge order - web/app */
+  | 'CreateByDdh';
+⋮----
+/** Represents an order created by a user. */
+⋮----
+/** Represents an order created by an admin closing. */
+⋮----
+/** Futures conditional order. */
+⋮----
+/** Futures take profit order. */
+⋮----
+/** Futures partial take profit order. */
+⋮----
+/** Futures stop loss order. */
+⋮----
+/** Futures partial stop loss order. */
+⋮----
+/** Futures trailing stop order. */
+⋮----
+/** Laddered liquidation to reduce the required maintenance margin. */
+⋮----
+/**
+   * If the position is still subject to liquidation (i.e., does not meet the required maintenance margin level),
+   * the position shall be taken over by the liquidation engine and closed at the bankruptcy price.
+   */
+⋮----
+/** Auto-Deleveraging(ADL) */
+⋮----
+/** Order placed via Paradigm. */
+⋮----
+/** Order created by move position. */
+⋮----
+/** The close order placed via web or app position area - web/app. */
+⋮----
+/** Order created via grid bot - web/app. */
+⋮----
+/** Order closed via grid bot - web/app. */
+⋮----
+/** Order created by TWAP - web/app. */
+⋮----
+/** Order created by TV webhook - web/app. */
+⋮----
+/** Order created by Mm rate close function - web/app. */
+⋮----
+/** Order created by Martingale bot - web/app. */
+⋮----
+/** Order closed by Martingale bot - web/app. */
+⋮----
+/** Order created by Ice berg strategy - web/app. */
+⋮----
+/** Order created by arbitrage - web/app. */
+⋮----
+/** Option dynamic delta hedge order - web/app */
+⋮----
+export type OrderCancelTypeV5 =
+  | 'CancelByUser'
+  | 'CancelByReduceOnly'
+  | 'CancelByPrepareLiq'
+  | 'CancelAllBeforeLiq'
+  | 'CancelByPrepareAdl'
+  | 'CancelAllBeforeAdl'
+  | 'CancelByAdmin'
+  | 'CancelByTpSlTsClear'
+  | 'CancelByPzSideCh'
+  | 'UNKNOWN';
+⋮----
+export type OrderRejectReasonV5 =
+  | 'EC_NoError'
+  | 'EC_Others'
+  | 'EC_UnknownMessageType'
+  | 'EC_MissingClOrdID'
+  | 'EC_MissingOrigClOrdID'
+  | 'EC_ClOrdIDOrigClOrdIDAreTheSame'
+  | 'EC_DuplicatedClOrdID'
+  | 'EC_OrigClOrdIDDoesNotExist'
+  | 'EC_TooLateToCancel'
+  | 'EC_UnknownOrderType'
+  | 'EC_UnknownSide'
+  | 'EC_UnknownTimeInForce'
+  | 'EC_WronglyRouted'
+  | 'EC_MarketOrderPriceIsNotZero'
+  | 'EC_LimitOrderInvalidPrice'
+  | 'EC_NoEnoughQtyToFill'
+  | 'EC_NoImmediateQtyToFill'
+  | 'EC_PerCancelRequest'
+  | 'EC_MarketOrderCannotBePostOnly'
+  | 'EC_PostOnlyWillTakeLiquidity'
+  | 'EC_CancelReplaceOrder'
+  | 'EC_InvalidSymbolStatus';
+⋮----
+export type StopOrderTypeV5 =
+  | 'TakeProfit'
+  | 'StopLoss'
+  | 'TrailingStop'
+  | 'Stop'
+  | 'PartialTakeProfit'
+  | 'PartialStopLoss'
+  | 'tpslOrder'
+  | 'OcoOrder'
+  | 'MmRateClose'
+  | 'BidirectionalTpslOrder';
+⋮----
+/**
+ * Position index. Used to identify positions in different position modes.
+ *
+ * - 0 one-way mode position
+ * - 1 Buy side of hedge-mode position
+ * - 2 Sell side of hedge-mode position
+ */
+export type PositionIdx = 0 | 1 | 2;
+⋮----
+/**
+ * Position status.
+ *
+ * - 'Normal'
+ * - 'Liq' in the liquidation progress
+ * - 'Adl' in the auto-deleverage progress
+ */
+export type PositionStatusV5 = 'Normal' | 'Liq' | 'Adl';
+export type PositionSideV5 = 'Buy' | 'Sell' | 'None' | '';
+⋮----
+export type OptionTypeV5 = 'Call' | 'Put';
+⋮----
+/**
+ * Trade mode.
+ *
+ * - 0 cross-margin,
+ * - 1 isolated margin
+ */
+export type TradeModeV5 = 0 | 1;
+⋮----
+export type TPSLModeV5 = 'Full' | 'Partial';
+export type AccountMarginModeV5 =
+  | 'ISOLATED_MARGIN'
+  | 'REGULAR_MARGIN'
+  | 'PORTFOLIO_MARGIN';
+export type UnifiedUpdateStatusV5 = 'FAIL' | 'PROCESS' | 'SUCCESS';
+⋮----
+export type AccountTypeV5 =
+  | 'CONTRACT'
+  | 'SPOT'
+  | 'INVESTMENT'
+  | 'OPTION'
+  | 'UNIFIED'
+  | 'FUND';
+⋮----
+export type TransactionTypeV5 =
+  | 'TRANSFER_IN'
+  | 'TRANSFER_OUT'
+  | 'TRADE'
+  | 'SETTLEMENT'
+  | 'DELIVERY'
+  | 'LIQUIDATION'
+  | 'ADL'
+  | 'AIRDROP'
+  | 'BONUS_RECOLLECT'
+  | 'BONUS_RECOLLECT'
+  | 'FEE_REFUND'
+  | 'INTEREST'
+  | 'CURRENCY_BUY'
+  | 'CURRENCY_SELL'
+  | 'BORROWED_AMOUNT_INS_LOAN'
+  | 'PRINCIPLE_REPAYMENT_INS_LOAN'
+  | 'INTEREST_REPAYMENT_INS_LOAN'
+  | 'AUTO_SOLD_COLLATERAL_INS_LOAN'
+  | 'AUTO_BUY_LIABILITY_INS_LOAN'
+  | 'AUTO_PRINCIPLE_REPAYMENT_INS_LOAN'
+  | 'AUTO_INTEREST_REPAYMENT_INS_LOAN'
+  | 'TRANSFER_IN_INS_LOAN'
+  | 'TRANSFER_OUT_INS_LOAN'
+  | 'SPOT_REPAYMENT_SELL'
+  | 'SPOT_REPAYMENT_BUY'
+  | 'TOKENS_SUBSCRIPTION'
+  | 'TOKENS_REDEMPTION'
+  | 'AUTO_DEDUCTION'
+  | 'FLEXIBLE_STAKING_SUBSCRIPTION'
+  | 'FLEXIBLE_STAKING_REDEMPTION'
+  | 'FIXED_STAKING_SUBSCRIPTION'
+  | 'BORROWED_AMOUNT_INS_LOAN'
+  | 'PRINCIPLE_REPAYMENT_INS_LOAN'
+  | 'INTEREST_REPAYMENT_INS_LOAN'
+  | 'AUTO_SOLD_COLLATERAL_INS_LOAN'
+  | 'AUTO_BUY_LIABILITY_INS_LOAN'
+  | 'AUTO_PRINCIPLE_REPAYMENT_INS_LOAN'
+  | 'AUTO_INTEREST_REPAYMENT_INS_LOAN'
+  | 'TRANSFER_IN_INS_LOAN'
+  | 'TRANSFER_OUT_INS_LOAN'
+  | 'SPOT_REPAYMENT_SELL'
+  | 'SPOT_REPAYMENT_BUY'
+  | 'TOKENS_SUBSCRIPTION'
+  | 'TOKENS_REDEMPTION'
+  | 'AUTO_DEDUCTION'
+  | 'FLEXIBLE_STAKING_SUBSCRIPTION'
+  | 'FLEXIBLE_STAKING_REDEMPTION'
+  | 'FIXED_STAKING_SUBSCRIPTION'
+  | 'FLEXIBLE_STAKING_REFUND'
+  | 'FIXED_STAKING_REFUND'
+  | 'PREMARKET_TRANSFER_OUT'
+  | 'PREMARKET_DELIVERY_SELL_NEW_COIN'
+  | 'PREMARKET_DELIVERY_BUY_NEW_COIN'
+  | 'PREMARKET_DELIVERY_PLEDGE_PAY_SELLER'
+  | 'PREMARKET_DELIVERY_PLEDGE_BACK'
+  | 'PREMARKET_ROLLBACK_PLEDGE_BACK'
+  | 'PREMARKET_ROLLBACK_PLEDGE_PENALTY_TO_BUYER'
+  | 'CUSTODY_NETWORK_FEE'
+  | 'CUSTODY_SETTLE_FEE'
+  | 'CUSTODY_LOCK'
+  | 'CUSTODY_UNLOCK'
+  | 'CUSTODY_UNLOCK_REFUND'
+  | 'LOANS_BORROW_FUNDS'
+  | 'LOANS_PLEDGE_ASSET'
+  | 'BONUS_TRANSFER_IN'
+  | 'BONUS_TRANSFER_OUT'
+  | 'PEF_TRANSFER_IN'
+  | 'PEF_TRANSFER_OUT'
+  | 'PEF_PROFIT_SHARE'
+  | 'ONCHAINEARN_SUBSCRIPTION'
+  | 'ONCHAINEARN_REDEMPTION'
+  | 'ONCHAINEARN_REFUND'
+  | 'STRUCTURE_PRODUCT_SUBSCRIPTION'
+  | 'STRUCTURE_PRODUCT_REFUND'
+  | 'CLASSIC_WEALTH_MANAGEMENT_SUBSCRIPTION'
+  | 'PREMIMUM_WEALTH_MANAGEMENT_SUBSCRIPTION'
+  | 'PREMIMUM_WEALTH_MANAGEMENT_REFUND'
+  | 'LIQUIDITY_MINING_SUBSCRIPTION'
+  | 'LIQUIDITY_MINING_REFUND'
+  | 'PWM_SUBSCRIPTION'
+  | 'PWM_REFUND'
+  | 'DEFI_INVESTMENT_SUBSCRIPTION'
+  | 'DEFI_INVESTMENT_REFUND'
+  | 'DEFI_INVESTMENT_REDEMPTION'
+  | 'INSTITUTION_LOAN_IN'
+  | 'INSTITUTION_PAYBACK_PRINCIPAL_OUT'
+  | 'INSTITUTION_PAYBACK_INTEREST_OUT'
+  | 'INSTITUTION_EXCHANGE_SELL'
+  | 'INSTITUTION_EXCHANGE_BUY'
+  | 'INSTITUTION_LIQ_PRINCIPAL_OUT'
+  | 'INSTITUTION_LIQ_INTEREST_OUT'
+  | 'INSTITUTION_LOAN_TRANSFER_IN'
+  | 'INSTITUTION_LOAN_TRANSFER_OUT'
+  | 'INSTITUTION_LOAN_WITHOUT_WITHDRAW'
+  | 'INSTITUTION_LOAN_RESERVE_IN'
+  | 'INSTITUTION_LOAN_RESERVE_OUT';
+⋮----
+export type PermissionTypeV5 =
+  | 'ContractTrade'
+  | 'Spot'
+  | 'Wallet'
+  | 'Options'
+  | 'Derivatives'
+  | 'Exchange'
+  | 'NFT';
+⋮----
+/**
+ * Leveraged token status:
+ *
+ * - '1' LT can be purchased and redeemed
+ * - '2' LT can be purchased, but not redeemed
+ * - '3' LT can be redeemed, but not purchased
+ * - '4' LT cannot be purchased nor redeemed
+ * - '5' Adjusting position
+ */
+export type LeverageTokenStatusV5 = '1' | '2' | '3' | '4' | '5';
+⋮----
+/**
+ * Leveraged token order type: '1': purchase, '2': redeem
+ */
+export type LTOrderTypeV5 = '1' | '2';
+⋮----
+/**
+ * Leveraged token order status: '1': completed, '2': in progress, '3': failed
+ */
+export type LTOrderStatusV5 = '1' | '2' | '3';
+⋮----
+export type ExecTypeV5 =
+  | 'Trade'
+  | 'AdlTrade'
+  | 'Funding'
+  | 'BustTrade'
+  | 'Settle'
+  | 'BlockTrade'
+  | 'MovePosition'
+  | 'UNKNOWN';
+⋮----
+/**
+ * Withdraw type. 0(default): on chain. 1: off chain. 2: all.
+ */
+export type WithdrawalTypeV5 = '0' | '1' | '2';
+⋮----
+export interface PermissionsV5 {
+  ContractTrade?: string[];
+  Spot?: string[];
+  Wallet?: string[];
+  Options?: string[];
+  Derivatives?: string[];
+  CopyTrading?: string[];
+  BlockTrade?: string[];
+  Exchange?: string[];
+  /** @deprecated , always returns []*/
+  NFT?: string[];
+}
+⋮----
+/** @deprecated , always returns []*/
+⋮----
+export interface CategoryCursorListV5<
+  T extends unknown[],
+  TCategory extends CategoryV5 = CategoryV5,
+> {
+  category: TCategory;
+  list: T;
+  nextPageCursor?: string;
+}
+⋮----
+/**
+ * Next page cursor does not exist for spot!
+ */
+export interface CursorListV5<T extends unknown[]> {
+  nextPageCursor: string;
+  list: T;
+}
+⋮----
+/**
+ * A wrapper type for any responses that have a "nextPageCursor" property, and a "rows" property with an array of elements
+ *
+ * ```{ nextPageCursor: "something", rows: someData[] }```
+ */
+export interface CursorRowsV5<T extends unknown[]> {
+  nextPageCursor: string;
+  rows: T;
+}
+⋮----
+export interface CategoryListV5<
+  T extends unknown[],
+  TCategory extends CategoryV5,
+> {
+  category: TCategory;
+  list: T;
+}
+⋮----
+export interface CategorySymbolListV5<
+  T extends unknown[],
+  TCategory extends CategoryV5,
+> {
+  category: TCategory;
+  symbol: string;
+  list: T;
+}
+⋮----
+export interface GetSystemStatusParamsV5 {
+  id?: string;
+  state?: string;
+}
+⋮----
+export interface SystemStatusItemV5 {
+  id: string;
+  title: string;
+  state: string;
+  begin: string;
+  end: string;
+  href: string;
+  serviceTypes: number[];
+  product: number[];
+  uidSuffix: number[];
+  maintainType: string;
+  env: string;
 }
 
 ================
@@ -8470,198 +9643,511 @@ import { DefaultLogger, WebsocketClient, WS_KEY_MAP } from '../src';
 // Get a list of subscribed topics (e.g. for public v3 spot topics) (after a 5 second delay)
 
 ================
-File: src/types/request/v5-asset.ts
+File: src/types/response/index.ts
 ================
-import { AccountTypeV5, CategoryV5 } from '../shared-v5';
+
+
+================
+File: src/types/response/v5-market.ts
+================
+import {
+  CategoryCursorListV5,
+  CategoryV5,
+  ContractTypeV5,
+  CopyTradingV5,
+  InstrumentStatusV5,
+  MarginTradingV5,
+  OptionTypeV5,
+  OrderSideV5,
+} from '../shared-v5';
 ⋮----
-export interface GetCoinExchangeRecordParamsV5 {
-  fromCoin?: string;
-  toCoin?: string;
-  limit?: number;
-  cursor?: string;
+/**
+ * OHLCVT candle used by v5 APIs
+ *
+ * - list[0]: startTime	string	Start time of the candle (ms)
+ * - list[1]: openPrice	string	Open price
+ * - list[2]: highPrice	string	Highest price
+ * - list[3]: lowPrice	string	Lowest price
+ * - list[4]: closePrice	string	Close price. Is the last traded price when the candle is not closed
+ * - list[5]: volume	string	Trade volume. Unit of contract: pieces of contract. Unit of spot: quantity of coins
+ * - list[6]: turnover	string	Turnover. Unit of figure: quantity of quota coin
+ */
+export type OHLCVKlineV5 = [
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+];
+⋮----
+/**
+ * OHLC candle used by v5 APIs
+ *
+ * - list[0]: startTime	string	Start time of the candle (ms)
+ * - list[1]: openPrice	string	Open price
+ * - list[2]: highPrice	string	Highest price
+ * - list[3]: lowPrice	string	Lowest price
+ * - list[4]: closePrice	string	Close price. Is the last traded price when the candle is not closed
+ */
+export type OHLCKlineV5 = [string, string, string, string, string];
+⋮----
+export interface LinearInverseInstrumentInfoV5 {
+  symbol: string;
+  contractType: ContractTypeV5;
+  status: InstrumentStatusV5;
+  baseCoin: string;
+  quoteCoin: string;
+  launchTime: string;
+  deliveryTime?: string;
+  deliveryFeeRate?: string;
+  priceScale: string;
+  leverageFilter: {
+    minLeverage: string;
+    maxLeverage: string;
+    leverageStep: string;
+  };
+  priceFilter: {
+    minPrice: string;
+    maxPrice: string;
+    tickSize: string;
+  };
+  lotSizeFilter: {
+    maxOrderQty: string;
+    maxMktOrderQty: string;
+    minOrderQty: string;
+    qtyStep: string;
+    postOnlyMaxOrderQty?: string;
+    minNotionalValue?: string;
+  };
+  unifiedMarginTrade: boolean;
+  fundingInterval: number;
+  settleCoin: string;
+  copyTrading: CopyTradingV5;
+  upperFundingRate: string;
+  lowerFundingRate: string;
+  riskParameters: {
+    priceLimitRatioX: string;
+    priceLimitRatioY: string;
+  };
+  isPreListing: boolean;
+  preListingInfo: {
+    curAuctionPhase: string;
+    phases: {
+      phase: string;
+      startTime: string;
+      endTime: string;
+    }[];
+    auctionFeeInfo: {
+      auctionFeeRate: string;
+      takerFeeRate: string;
+      makerFeeRate: string;
+    };
+  } | null;
+  displayName: string;
 }
 ⋮----
-export interface GetDeliveryRecordParamsV5 {
-  category: CategoryV5;
-  symbol?: string;
-  startTime?: number;
-  endTime?: number;
-  expDate?: string;
-  limit?: number;
-  cursor?: string;
+export interface OptionInstrumentInfoV5 {
+  symbol: string;
+  optionsType: OptionTypeV5;
+  status: InstrumentStatusV5;
+  baseCoin: string;
+  quoteCoin: string;
+  settleCoin: string;
+  launchTime: string;
+  deliveryTime: string;
+  deliveryFeeRate: string;
+  priceFilter: {
+    minPrice: string;
+    maxPrice: string;
+    tickSize: string;
+  };
+  lotSizeFilter: {
+    maxOrderQty: string;
+    minOrderQty: string;
+    qtyStep: string;
+  };
+  displayName: string;
 }
 ⋮----
-export interface GetSettlementRecordParamsV5 {
-  category: CategoryV5;
-  symbol?: string;
-  startTime?: number;
-  endTime?: number;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface GetAssetInfoParamsV5 {
-  accountType: AccountTypeV5;
-  coin?: string;
-}
-⋮----
-export interface GetAllCoinsBalanceParamsV5 {
-  memberId?: string;
-  accountType: AccountTypeV5;
-  coin?: string;
-  withBonus?: number;
-}
-⋮----
-export interface GetAccountCoinBalanceParamsV5 {
-  memberId?: string;
-  toMemberId?: string;
-  accountType: AccountTypeV5;
-  coin: string;
-  toAccountType?: AccountTypeV5;
-  withBonus?: number;
-  withTransferSafeAmount?: 0 | 1;
-  withLtvTransferSafeAmount?: 0 | 1;
-}
-⋮----
-export interface GetInternalTransferParamsV5 {
-  transferId?: string;
-  coin?: string;
-  status?: string;
-  startTime?: number;
-  endTime?: number;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface UniversalTransferParamsV5 {
-  transferId: string;
-  coin: string;
-  amount: string;
-  fromMemberId: number;
-  toMemberId: number;
-  fromAccountType: AccountTypeV5;
-  toAccountType: AccountTypeV5;
-}
-⋮----
-export interface GetUniversalTransferRecordsParamsV5 {
-  transferId?: string;
-  coin?: string;
-  status?: string;
-  startTime?: number;
-  endTime?: number;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface GetAllowedDepositCoinInfoParamsV5 {
-  coin?: string;
-  chain?: string;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface GetDepositRecordParamsV5 {
-  id?: string;
-  txID?: string;
-  coin?: string;
-  startTime?: number;
-  endTime?: number;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface GetSubAccountDepositRecordParamsV5 {
-  id?: string;
-  txID?: string;
-  subMemberId: string;
-  coin?: string;
-  startTime?: number;
-  endTime?: number;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface GetInternalDepositRecordParamsV5 {
-  txID?: string;
-  startTime?: number;
-  endTime?: number;
-  coin?: string;
-  cursor?: string;
-  limit?: number;
-}
-⋮----
-export interface GetWithdrawalRecordsParamsV5 {
-  withdrawID?: string;
-  txID?: string;
-  coin?: string;
-  withdrawType?: number;
-  startTime?: number;
-  endTime?: number;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface WithdrawParamsV5 {
-  coin: string;
-  chain: string;
-  address: string;
-  tag?: string;
-  amount: string;
-  timestamp: number;
-  forceChain?: number;
-  accountType?: 'SPOT' | 'FUND';
-  feeType?: 0 | 1;
-  requestId?: string;
-  beneficiary?: {
-    vaspEntityId?: string;
-    beneficiaryName?: string;
-    beneficiaryLegalType?: string;
-    beneficiaryWalletType?: string;
-    beneficiaryUnhostedWalletType?: string;
-    beneficiaryPoiNumber?: string;
-    beneficiaryPoiType?: string;
-    beneficiaryPoiIssuingCountry?: string;
-    beneficiaryPoiExpiredDate?: string;
+export interface SpotInstrumentInfoV5 {
+  symbol: string;
+  baseCoin: string;
+  quoteCoin: string;
+  innovation: '0' | '1';
+  status: InstrumentStatusV5;
+  marginTrading: MarginTradingV5;
+  stTag: '0' | '1';
+  lotSizeFilter: {
+    basePrecision: string;
+    quotePrecision: string;
+    minOrderQty: string;
+    maxOrderQty: string;
+    minOrderAmt: string;
+    maxOrderAmt: string;
+  };
+  priceFilter: {
+    tickSize: string;
+  };
+  riskParameters: {
+    priceLimitRatioX: string;
+    priceLimitRatioY: string;
   };
 }
 ⋮----
-export interface ConvertCoinsParamsV5 {
-  coin?: string;
-  side?: number;
-  accountType:
-    | 'eb_convert_funding'
-    | 'eb_convert_uta'
-    | 'eb_convert_spot'
-    | 'eb_convert_contract'
-    | 'eb_convert_inverse';
+type InstrumentInfoV5Mapping = {
+  linear: LinearInverseInstrumentInfoV5[];
+  inverse: LinearInverseInstrumentInfoV5[];
+  option: OptionInstrumentInfoV5[];
+  spot: SpotInstrumentInfoV5[];
+};
+⋮----
+export type InstrumentInfoResponseV5<C extends CategoryV5> =
+  CategoryCursorListV5<InstrumentInfoV5Mapping[C], C>;
+⋮----
+/**
+ * [price, size]
+ */
+export type OrderbookLevelV5 = [string, string];
+⋮----
+export interface OrderbookResponseV5 {
+  s: string;
+  b: OrderbookLevelV5[];
+  a: OrderbookLevelV5[];
+  ts: number;
+  u: number;
+  seq: number;
+  cts: number;
 }
 ⋮----
-export interface RequestConvertQuoteParamsV5 {
-  fromCoin: string;
-  toCoin: string;
-  fromCoinType?: string;
-  toCoinType?: string;
-  requestCoin: string;
-  requestAmount: string;
-  accountType:
-    | 'eb_convert_funding'
-    | 'eb_convert_uta'
-    | 'eb_convert_spot'
-    | 'eb_convert_contract'
-    | 'eb_convert_inverse';
-  requestId?: string;
+export interface TickerLinearInverseV5 {
+  symbol: string;
+  lastPrice: string;
+  indexPrice: string;
+  markPrice: string;
+  prevPrice24h: string;
+  price24hPcnt: string;
+  highPrice24h: string;
+  lowPrice24h: string;
+  prevPrice1h: string;
+  openInterest: string;
+  openInterestValue: string;
+  turnover24h: string;
+  volume24h: string;
+  fundingRate: string;
+  nextFundingTime: string;
+  predictedDeliveryPrice: string;
+  basisRate: string;
+  deliveryFeeRate: string;
+  deliveryTime: string;
+  ask1Size: string;
+  bid1Price: string;
+  ask1Price: string;
+  bid1Size: string;
+  preOpenPrice: string;
+  preQty: string;
+  curPreListingPhase: string;
+  basis: string;
 }
 ⋮----
-export interface GetConvertHistoryParamsV5 {
-  accountType?: string;
-  index?: number;
-  limit?: number;
+export interface TickerOptionV5 {
+  symbol: string;
+  bid1Price: string;
+  bid1Size: string;
+  bid1Iv: string;
+  ask1Price: string;
+  ask1Size: string;
+  ask1Iv: string;
+  lastPrice: string;
+  highPrice24h: string;
+  lowPrice24h: string;
+  markPrice: string;
+  indexPrice: string;
+  markIv: string;
+  underlyingPrice: string;
+  openInterest: string;
+  turnover24h: string;
+  volume24h: string;
+  totalVolume: string;
+  totalTurnover: string;
+  delta: string;
+  gamma: string;
+  vega: string;
+  theta: string;
+  predictedDeliveryPrice: string;
+  change24h: string;
+}
+⋮----
+export interface TickerSpotV5 {
+  symbol: string;
+  bid1Price: string;
+  bid1Size: string;
+  ask1Price: string;
+  ask1Size: string;
+  lastPrice: string;
+  prevPrice24h: string;
+  price24hPcnt: string;
+  highPrice24h: string;
+  lowPrice24h: string;
+  turnover24h: string;
+  volume24h: string;
+  usdIndexPrice: string;
+}
+⋮----
+export interface FundingRateHistoryResponseV5 {
+  symbol: string;
+  fundingRate: string;
+  fundingRateTimestamp: string;
+}
+⋮----
+export interface PublicTradeV5 {
+  execId: string;
+  symbol: string;
+  price: string;
+  size: string;
+  side: OrderSideV5;
+  time: string;
+  isBlockTrade: boolean;
+  isRPITrade: boolean;
+  mP?: string;
+  iP?: string;
+  mIv?: string;
+  iv?: string;
+}
+⋮----
+/**
+ *
+ * - openInterest	string	Open interest
+ * - timestamp	string	The timestamp (ms)
+ */
+export type OpenInterestV5 = {
+  openInterest: string;
+  timestamp: string;
+};
+⋮----
+export interface OpenInterestResponseV5 {
+  category: 'linear' | 'inverse';
+  symbol: string;
+  list: OpenInterestV5[];
+  nextPageCursor?: string;
+}
+⋮----
+export interface HistoricalVolatilityV5 {
+  period: number;
+  value: string;
+  time: string;
+}
+⋮----
+export interface InsuranceDataV5 {
+  coin: string;
+  symbols: string;
+  balance: string;
+  value: string;
+}
+⋮----
+export interface InsuranceResponseV5 {
+  updatedTime: string;
+  list: InsuranceDataV5[];
+}
+⋮----
+export interface RiskLimitV5 {
+  id: number;
+  symbol: string;
+  riskLimitValue: string;
+  maintenanceMargin: number;
+  initialMargin: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  section: any;
+  isLowestRisk: 0 | 1;
+  maxLeverage: string;
+  mmDeduction: string;
+  nextPageCursor?: string;
+}
+⋮----
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+⋮----
+/** @deprecated use DeliveryPriceV5 instead */
+export interface OptionDeliveryPriceV5 {
+  symbol: string;
+  deliveryPrice: string;
+  deliveryTime: string;
+}
+⋮----
+export interface DeliveryPriceV5 {
+  symbol: string;
+  deliveryPrice: string;
+  deliveryTime: string;
+}
+⋮----
+export interface LongShortRatioV5 {
+  symbol: string;
+  buyRatio: string;
+  sellRatio: string;
+  timestamp: string;
+}
+⋮----
+export interface OrderPriceLimitV5 {
+  symbol: string;
+  buyLmt: string;
+  sellLmt: string;
+  ts: string;
 }
 
 ================
-File: src/types/index.ts
+File: src/types/response/v5-spreadtrading.ts
 ================
-
+export interface SpreadInstrumentInfoV5 {
+  symbol: string;
+  contractType: 'FundingRateArb' | 'CarryTrade' | 'FutureSpread' | 'PerpBasis';
+  status: 'Trading' | 'Settling';
+  baseCoin: string;
+  quoteCoin: string;
+  settleCoin: string;
+  tickSize: string;
+  minPrice: string;
+  maxPrice: string;
+  lotSize: string;
+  minSize: string;
+  maxSize: string;
+  launchTime: string;
+  deliveryTime: string;
+  legs: {
+    symbol: string;
+    contractType: 'LinearPerpetual' | 'LinearFutures' | 'Spot';
+  }[];
+}
+⋮----
+export interface SpreadOrderbookResponseV5 {
+  s: string; // Symbol
+  b: [string, string][]; // Bids array [price, size]
+  a: [string, string][]; // Asks array [price, size]
+  u: number; // Update ID
+  ts: number; // Timestamp
+  seq: number; // Sequence
+  cts: number; // Cross timestamp
+}
+⋮----
+s: string; // Symbol
+b: [string, string][]; // Bids array [price, size]
+a: [string, string][]; // Asks array [price, size]
+u: number; // Update ID
+ts: number; // Timestamp
+seq: number; // Sequence
+cts: number; // Cross timestamp
+⋮----
+export interface SpreadTickerV5 {
+  symbol: string; // Spread combination symbol name
+  bidPrice: string; // Bid 1 price
+  bidSize: string; // Bid 1 size
+  askPrice: string; // Ask 1 price
+  askSize: string; // Ask 1 size
+  lastPrice: string; // Last trade price
+  highPrice24h: string; // The highest price in the last 24 hours
+  lowPrice24h: string; // The lowest price in the last 24 hours
+  prevPrice24h: string; // Price 24 hours ago
+  volume24h: string; // Volume for 24h
+}
+⋮----
+symbol: string; // Spread combination symbol name
+bidPrice: string; // Bid 1 price
+bidSize: string; // Bid 1 size
+askPrice: string; // Ask 1 price
+askSize: string; // Ask 1 size
+lastPrice: string; // Last trade price
+highPrice24h: string; // The highest price in the last 24 hours
+lowPrice24h: string; // The lowest price in the last 24 hours
+prevPrice24h: string; // Price 24 hours ago
+volume24h: string; // Volume for 24h
+⋮----
+export interface SpreadRecentTradeV5 {
+  execId: string; // Execution ID
+  symbol: string; // Spread combination symbol name
+  price: string; // Trade price
+  size: string; // Trade size
+  side: 'Buy' | 'Sell'; // Side of taker
+  time: string; // Trade time (ms)
+}
+⋮----
+execId: string; // Execution ID
+symbol: string; // Spread combination symbol name
+price: string; // Trade price
+size: string; // Trade size
+side: 'Buy' | 'Sell'; // Side of taker
+time: string; // Trade time (ms)
+⋮----
+export interface SpreadOpenOrderV5 {
+  symbol: string;
+  baseCoin: string;
+  orderType: 'Market' | 'Limit';
+  orderLinkId: string;
+  side: 'Buy' | 'Sell';
+  timeInForce: 'GTC' | 'FOK' | 'IOC' | 'PostOnly';
+  orderId: string;
+  leavesQty: string;
+  orderStatus: 'New' | 'PartiallyFilled';
+  cumExecQty: string;
+  price: string;
+  qty: string;
+  createdTime: string;
+  updatedTime: string;
+}
+⋮----
+export interface SpreadOrderHistoryV5 {
+  symbol: string;
+  orderType: 'Market' | 'Limit';
+  orderLinkId: string;
+  orderId: string;
+  contractType: 'FundingRateArb' | 'CarryTrade' | 'FutureSpread' | 'PerpBasis';
+  orderStatus: 'Rejected' | 'Cancelled' | 'Filled';
+  price: string;
+  orderQty: string;
+  timeInForce: 'GTC' | 'FOK' | 'IOC' | 'PostOnly';
+  baseCoin: string;
+  createdAt: string;
+  updatedAt: string;
+  side: 'Buy' | 'Sell';
+  leavesQty: string;
+  settleCoin: string;
+  cumExecQty: string;
+  qty: string;
+  leg1Symbol: string;
+  leg1ProdType: 'Futures' | 'Spot';
+  leg1OrderId: string;
+  leg1Side: string;
+  leg2ProdType: 'Futures' | 'Spot';
+  leg2OrderId: string;
+  leg2Symbol: string;
+  leg2Side: string;
+  cxlRejReason: string;
+}
+⋮----
+export interface SpreadTradeLegV5 {
+  symbol: string;
+  side: 'Buy' | 'Sell';
+  execPrice: string;
+  execTime: string;
+  execValue: string;
+  execType: string;
+  category: 'linear' | 'spot';
+  execQty: string;
+  execFee: string;
+  execId: string;
+}
+⋮----
+export interface SpreadTradeV5 {
+  symbol: string;
+  orderLinkId: string;
+  side: 'Buy' | 'Sell';
+  orderId: string;
+  execPrice: string;
+  execTime: string;
+  execType: 'Trade';
+  execQty: string;
+  execId: string;
+  legs: SpreadTradeLegV5[];
+  extraFees: string;
+}
 
 ================
 File: src/types/shared.ts
@@ -9278,1256 +10764,6 @@ export interface DCPInfoV5 {
 }
 
 ================
-File: src/types/response/v5-market.ts
-================
-import {
-  CategoryCursorListV5,
-  CategoryV5,
-  ContractTypeV5,
-  CopyTradingV5,
-  InstrumentStatusV5,
-  MarginTradingV5,
-  OptionTypeV5,
-  OrderSideV5,
-} from '../shared-v5';
-⋮----
-/**
- * OHLCVT candle used by v5 APIs
- *
- * - list[0]: startTime	string	Start time of the candle (ms)
- * - list[1]: openPrice	string	Open price
- * - list[2]: highPrice	string	Highest price
- * - list[3]: lowPrice	string	Lowest price
- * - list[4]: closePrice	string	Close price. Is the last traded price when the candle is not closed
- * - list[5]: volume	string	Trade volume. Unit of contract: pieces of contract. Unit of spot: quantity of coins
- * - list[6]: turnover	string	Turnover. Unit of figure: quantity of quota coin
- */
-export type OHLCVKlineV5 = [
-  string,
-  string,
-  string,
-  string,
-  string,
-  string,
-  string,
-];
-⋮----
-/**
- * OHLC candle used by v5 APIs
- *
- * - list[0]: startTime	string	Start time of the candle (ms)
- * - list[1]: openPrice	string	Open price
- * - list[2]: highPrice	string	Highest price
- * - list[3]: lowPrice	string	Lowest price
- * - list[4]: closePrice	string	Close price. Is the last traded price when the candle is not closed
- */
-export type OHLCKlineV5 = [string, string, string, string, string];
-⋮----
-export interface LinearInverseInstrumentInfoV5 {
-  symbol: string;
-  contractType: ContractTypeV5;
-  status: InstrumentStatusV5;
-  baseCoin: string;
-  quoteCoin: string;
-  launchTime: string;
-  deliveryTime?: string;
-  deliveryFeeRate?: string;
-  priceScale: string;
-  leverageFilter: {
-    minLeverage: string;
-    maxLeverage: string;
-    leverageStep: string;
-  };
-  priceFilter: {
-    minPrice: string;
-    maxPrice: string;
-    tickSize: string;
-  };
-  lotSizeFilter: {
-    maxOrderQty: string;
-    maxMktOrderQty: string;
-    minOrderQty: string;
-    qtyStep: string;
-    postOnlyMaxOrderQty?: string;
-    minNotionalValue?: string;
-  };
-  unifiedMarginTrade: boolean;
-  fundingInterval: number;
-  settleCoin: string;
-  copyTrading: CopyTradingV5;
-  upperFundingRate: string;
-  lowerFundingRate: string;
-  riskParameters: {
-    priceLimitRatioX: string;
-    priceLimitRatioY: string;
-  };
-  isPreListing: boolean;
-  preListingInfo: {
-    curAuctionPhase: string;
-    phases: {
-      phase: string;
-      startTime: string;
-      endTime: string;
-    }[];
-    auctionFeeInfo: {
-      auctionFeeRate: string;
-      takerFeeRate: string;
-      makerFeeRate: string;
-    };
-  } | null;
-  displayName: string;
-}
-⋮----
-export interface OptionInstrumentInfoV5 {
-  symbol: string;
-  optionsType: OptionTypeV5;
-  status: InstrumentStatusV5;
-  baseCoin: string;
-  quoteCoin: string;
-  settleCoin: string;
-  launchTime: string;
-  deliveryTime: string;
-  deliveryFeeRate: string;
-  priceFilter: {
-    minPrice: string;
-    maxPrice: string;
-    tickSize: string;
-  };
-  lotSizeFilter: {
-    maxOrderQty: string;
-    minOrderQty: string;
-    qtyStep: string;
-  };
-  displayName: string;
-}
-⋮----
-export interface SpotInstrumentInfoV5 {
-  symbol: string;
-  baseCoin: string;
-  quoteCoin: string;
-  innovation: '0' | '1';
-  status: InstrumentStatusV5;
-  marginTrading: MarginTradingV5;
-  stTag: '0' | '1';
-  lotSizeFilter: {
-    basePrecision: string;
-    quotePrecision: string;
-    minOrderQty: string;
-    maxOrderQty: string;
-    minOrderAmt: string;
-    maxOrderAmt: string;
-  };
-  priceFilter: {
-    tickSize: string;
-  };
-  riskParameters: {
-    priceLimitRatioX: string;
-    priceLimitRatioY: string;
-  };
-}
-⋮----
-type InstrumentInfoV5Mapping = {
-  linear: LinearInverseInstrumentInfoV5[];
-  inverse: LinearInverseInstrumentInfoV5[];
-  option: OptionInstrumentInfoV5[];
-  spot: SpotInstrumentInfoV5[];
-};
-⋮----
-export type InstrumentInfoResponseV5<C extends CategoryV5> =
-  CategoryCursorListV5<InstrumentInfoV5Mapping[C], C>;
-⋮----
-/**
- * [price, size]
- */
-export type OrderbookLevelV5 = [string, string];
-⋮----
-export interface OrderbookResponseV5 {
-  s: string;
-  b: OrderbookLevelV5[];
-  a: OrderbookLevelV5[];
-  ts: number;
-  u: number;
-  seq: number;
-  cts: number;
-}
-⋮----
-export interface TickerLinearInverseV5 {
-  symbol: string;
-  lastPrice: string;
-  indexPrice: string;
-  markPrice: string;
-  prevPrice24h: string;
-  price24hPcnt: string;
-  highPrice24h: string;
-  lowPrice24h: string;
-  prevPrice1h: string;
-  openInterest: string;
-  openInterestValue: string;
-  turnover24h: string;
-  volume24h: string;
-  fundingRate: string;
-  nextFundingTime: string;
-  predictedDeliveryPrice: string;
-  basisRate: string;
-  deliveryFeeRate: string;
-  deliveryTime: string;
-  ask1Size: string;
-  bid1Price: string;
-  ask1Price: string;
-  bid1Size: string;
-  preOpenPrice: string;
-  preQty: string;
-  curPreListingPhase: string;
-  basis: string;
-}
-⋮----
-export interface TickerOptionV5 {
-  symbol: string;
-  bid1Price: string;
-  bid1Size: string;
-  bid1Iv: string;
-  ask1Price: string;
-  ask1Size: string;
-  ask1Iv: string;
-  lastPrice: string;
-  highPrice24h: string;
-  lowPrice24h: string;
-  markPrice: string;
-  indexPrice: string;
-  markIv: string;
-  underlyingPrice: string;
-  openInterest: string;
-  turnover24h: string;
-  volume24h: string;
-  totalVolume: string;
-  totalTurnover: string;
-  delta: string;
-  gamma: string;
-  vega: string;
-  theta: string;
-  predictedDeliveryPrice: string;
-  change24h: string;
-}
-⋮----
-export interface TickerSpotV5 {
-  symbol: string;
-  bid1Price: string;
-  bid1Size: string;
-  ask1Price: string;
-  ask1Size: string;
-  lastPrice: string;
-  prevPrice24h: string;
-  price24hPcnt: string;
-  highPrice24h: string;
-  lowPrice24h: string;
-  turnover24h: string;
-  volume24h: string;
-  usdIndexPrice: string;
-}
-⋮----
-export interface FundingRateHistoryResponseV5 {
-  symbol: string;
-  fundingRate: string;
-  fundingRateTimestamp: string;
-}
-⋮----
-export interface PublicTradeV5 {
-  execId: string;
-  symbol: string;
-  price: string;
-  size: string;
-  side: OrderSideV5;
-  time: string;
-  isBlockTrade: boolean;
-  isRPITrade: boolean;
-  mP?: string;
-  iP?: string;
-  mIv?: string;
-  iv?: string;
-}
-⋮----
-/**
- *
- * - openInterest	string	Open interest
- * - timestamp	string	The timestamp (ms)
- */
-export type OpenInterestV5 = {
-  openInterest: string;
-  timestamp: string;
-};
-⋮----
-export interface OpenInterestResponseV5 {
-  category: 'linear' | 'inverse';
-  symbol: string;
-  list: OpenInterestV5[];
-  nextPageCursor?: string;
-}
-⋮----
-export interface HistoricalVolatilityV5 {
-  period: number;
-  value: string;
-  time: string;
-}
-⋮----
-export interface InsuranceDataV5 {
-  coin: string;
-  symbols: string;
-  balance: string;
-  value: string;
-}
-⋮----
-export interface InsuranceResponseV5 {
-  updatedTime: string;
-  list: InsuranceDataV5[];
-}
-⋮----
-export interface RiskLimitV5 {
-  id: number;
-  symbol: string;
-  riskLimitValue: string;
-  maintenanceMargin: number;
-  initialMargin: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  section: any;
-  isLowestRisk: 0 | 1;
-  maxLeverage: string;
-  mmDeduction: string;
-  nextPageCursor?: string;
-}
-⋮----
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-⋮----
-/** @deprecated use DeliveryPriceV5 instead */
-export interface OptionDeliveryPriceV5 {
-  symbol: string;
-  deliveryPrice: string;
-  deliveryTime: string;
-}
-⋮----
-export interface DeliveryPriceV5 {
-  symbol: string;
-  deliveryPrice: string;
-  deliveryTime: string;
-}
-⋮----
-export interface LongShortRatioV5 {
-  symbol: string;
-  buyRatio: string;
-  sellRatio: string;
-  timestamp: string;
-}
-⋮----
-export interface OrderPriceLimitV5 {
-  symbol: string;
-  buyLmt: string;
-  sellLmt: string;
-  ts: string;
-}
-
-================
-File: src/types/response/v5-position.ts
-================
-import {
-  CategoryV5,
-  ExecTypeV5,
-  OrderSideV5,
-  OrderTypeV5,
-  PositionIdx,
-  PositionSideV5,
-  PositionStatusV5,
-  StopOrderTypeV5,
-  TPSLModeV5,
-  TradeModeV5,
-} from '../shared-v5';
-⋮----
-export interface PositionV5 {
-  positionIdx: PositionIdx;
-  riskId: number;
-  riskLimitValue: string;
-  symbol: string;
-  side: PositionSideV5;
-  size: string;
-  avgPrice: string;
-  positionValue: string;
-  tradeMode: TradeModeV5;
-  autoAddMargin?: number;
-  positionStatus: PositionStatusV5;
-  leverage?: string;
-  markPrice: string;
-  liqPrice: string | '';
-  bustPrice?: string;
-  positionIM?: string;
-  positionMM?: string;
-  positionBalance?: string;
-  tpslMode?: TPSLModeV5;
-  takeProfit?: string;
-  stopLoss?: string;
-  trailingStop?: string;
-  sessionAvgPrice: string | '';
-  delta?: string;
-  gamma?: string;
-  vega?: string;
-  theta?: string;
-  unrealisedPnl: string;
-  curRealisedPnl: string;
-  cumRealisedPnl: string;
-  adlRankIndicator: number;
-  isReduceOnly: boolean;
-  mmrSysUpdatedTime: string | '';
-  leverageSysUpdatedTime: string | '';
-  createdTime: string;
-  updatedTime: string;
-  positionIMByMp: string;
-  positionMMByMp: string;
-  seq: number;
-}
-⋮----
-export interface SetRiskLimitResultV5 {
-  category: CategoryV5;
-  riskId: number;
-  riskLimitValue: string;
-}
-⋮----
-export interface AddOrReduceMarginResultV5 {
-  category: CategoryV5;
-  symbol: string;
-  positionIdx: PositionIdx;
-  riskId: number;
-  riskLimitValue: string;
-  size: string;
-  avgPrice: string;
-  liqPrice: string;
-  bustPrice: string;
-  markPrice: string;
-  positionValue: string;
-  leverage: string;
-  autoAddMargin: 0 | 1;
-  positionStatus: PositionStatusV5;
-  positionIM: string;
-  positionMM: string;
-  takeProfit: string;
-  stopLoss: string;
-  trailingStop: string;
-  unrealisedPnl: string;
-  cumRealisedPnl: string;
-  createdTime: string;
-  updatedTime: string;
-}
-⋮----
-export interface ExecutionV5 {
-  symbol: string;
-  orderId: string;
-  orderLinkId: string;
-  side: OrderSideV5;
-  orderPrice: string;
-  orderQty: string;
-  leavesQty: string;
-  orderType: OrderTypeV5;
-  stopOrderType?: StopOrderTypeV5;
-  execFee: string;
-  execFeeV2: string;
-  execId: string;
-  execPrice: string;
-  execQty: string;
-  execType: ExecTypeV5;
-  execValue: string;
-  execTime: string;
-  isMaker: boolean;
-  feeRate: string;
-  tradeIv?: string;
-  markIv?: string;
-  markPrice: string;
-  indexPrice: string;
-  underlyingPrice?: string;
-  blockTradeId?: string;
-  closedSize?: string;
-  seq: number;
-  extraFees: string;
-}
-⋮----
-export interface ClosedPnLV5 {
-  symbol: string;
-  orderId: string;
-  side: string;
-  qty: string;
-  orderPrice: string;
-  orderType: OrderTypeV5;
-  execType: ExecTypeV5;
-  closedSize: string;
-  openFee: string;
-  closeFee: string;
-  cumEntryValue: string;
-  avgEntryPrice: string;
-  cumExitValue: string;
-  avgExitPrice: string;
-  closedPnl: string;
-  fillCount: string;
-  leverage: string;
-  createdTime: string;
-  updatedTime: string;
-}
-⋮----
-export interface MovePositionResultV5 {
-  blockTradeId: string;
-  status: 'Processing' | 'Rejected';
-  rejectParty: '' | 'Taker' | 'Maker' | 'bybit';
-}
-⋮----
-export interface MovePositionHistoryV5 {
-  blockTradeId: string;
-  category: 'linear' | 'spot' | 'option';
-  orderId: string;
-  userId: number;
-  symbol: string;
-  side: 'Buy' | 'Sell';
-  price: string;
-  qty: string;
-  execFee: string;
-  status: 'Processing' | 'Filled' | 'Rejected';
-  execId: string;
-  resultCode: number;
-  resultMessage: string;
-  createdAt: number;
-  updatedAt: number;
-  rejectParty: '' | 'Taker' | 'Maker' | 'bybit';
-}
-⋮----
-export interface ClosedOptionsPositionV5 {
-  symbol: string;
-  side: 'Buy' | 'Sell';
-  totalOpenFee: string;
-  deliveryFee: string;
-  totalCloseFee: string;
-  qty: string;
-  closeTime: number;
-  avgExitPrice: string;
-  deliveryPrice: string;
-  openTime: number;
-  avgEntryPrice: string;
-  totalPnl: string;
-}
-
-================
-File: src/types/response/v5-spreadtrading.ts
-================
-export interface SpreadInstrumentInfoV5 {
-  symbol: string;
-  contractType: 'FundingRateArb' | 'CarryTrade' | 'FutureSpread' | 'PerpBasis';
-  status: 'Trading' | 'Settling';
-  baseCoin: string;
-  quoteCoin: string;
-  settleCoin: string;
-  tickSize: string;
-  minPrice: string;
-  maxPrice: string;
-  lotSize: string;
-  minSize: string;
-  maxSize: string;
-  launchTime: string;
-  deliveryTime: string;
-  legs: {
-    symbol: string;
-    contractType: 'LinearPerpetual' | 'LinearFutures' | 'Spot';
-  }[];
-}
-⋮----
-export interface SpreadOrderbookResponseV5 {
-  s: string; // Symbol
-  b: [string, string][]; // Bids array [price, size]
-  a: [string, string][]; // Asks array [price, size]
-  u: number; // Update ID
-  ts: number; // Timestamp
-  seq: number; // Sequence
-  cts: number; // Cross timestamp
-}
-⋮----
-s: string; // Symbol
-b: [string, string][]; // Bids array [price, size]
-a: [string, string][]; // Asks array [price, size]
-u: number; // Update ID
-ts: number; // Timestamp
-seq: number; // Sequence
-cts: number; // Cross timestamp
-⋮----
-export interface SpreadTickerV5 {
-  symbol: string; // Spread combination symbol name
-  bidPrice: string; // Bid 1 price
-  bidSize: string; // Bid 1 size
-  askPrice: string; // Ask 1 price
-  askSize: string; // Ask 1 size
-  lastPrice: string; // Last trade price
-  highPrice24h: string; // The highest price in the last 24 hours
-  lowPrice24h: string; // The lowest price in the last 24 hours
-  prevPrice24h: string; // Price 24 hours ago
-  volume24h: string; // Volume for 24h
-}
-⋮----
-symbol: string; // Spread combination symbol name
-bidPrice: string; // Bid 1 price
-bidSize: string; // Bid 1 size
-askPrice: string; // Ask 1 price
-askSize: string; // Ask 1 size
-lastPrice: string; // Last trade price
-highPrice24h: string; // The highest price in the last 24 hours
-lowPrice24h: string; // The lowest price in the last 24 hours
-prevPrice24h: string; // Price 24 hours ago
-volume24h: string; // Volume for 24h
-⋮----
-export interface SpreadRecentTradeV5 {
-  execId: string; // Execution ID
-  symbol: string; // Spread combination symbol name
-  price: string; // Trade price
-  size: string; // Trade size
-  side: 'Buy' | 'Sell'; // Side of taker
-  time: string; // Trade time (ms)
-}
-⋮----
-execId: string; // Execution ID
-symbol: string; // Spread combination symbol name
-price: string; // Trade price
-size: string; // Trade size
-side: 'Buy' | 'Sell'; // Side of taker
-time: string; // Trade time (ms)
-⋮----
-export interface SpreadOpenOrderV5 {
-  symbol: string;
-  baseCoin: string;
-  orderType: 'Market' | 'Limit';
-  orderLinkId: string;
-  side: 'Buy' | 'Sell';
-  timeInForce: 'GTC' | 'FOK' | 'IOC' | 'PostOnly';
-  orderId: string;
-  leavesQty: string;
-  orderStatus: 'New' | 'PartiallyFilled';
-  cumExecQty: string;
-  price: string;
-  qty: string;
-  createdTime: string;
-  updatedTime: string;
-}
-⋮----
-export interface SpreadOrderHistoryV5 {
-  symbol: string;
-  orderType: 'Market' | 'Limit';
-  orderLinkId: string;
-  orderId: string;
-  contractType: 'FundingRateArb' | 'CarryTrade' | 'FutureSpread' | 'PerpBasis';
-  orderStatus: 'Rejected' | 'Cancelled' | 'Filled';
-  price: string;
-  orderQty: string;
-  timeInForce: 'GTC' | 'FOK' | 'IOC' | 'PostOnly';
-  baseCoin: string;
-  createdAt: string;
-  updatedAt: string;
-  side: 'Buy' | 'Sell';
-  leavesQty: string;
-  settleCoin: string;
-  cumExecQty: string;
-  qty: string;
-  leg1Symbol: string;
-  leg1ProdType: 'Futures' | 'Spot';
-  leg1OrderId: string;
-  leg1Side: string;
-  leg2ProdType: 'Futures' | 'Spot';
-  leg2OrderId: string;
-  leg2Symbol: string;
-  leg2Side: string;
-  cxlRejReason: string;
-}
-⋮----
-export interface SpreadTradeLegV5 {
-  symbol: string;
-  side: 'Buy' | 'Sell';
-  execPrice: string;
-  execTime: string;
-  execValue: string;
-  execType: string;
-  category: 'linear' | 'spot';
-  execQty: string;
-  execFee: string;
-  execId: string;
-}
-⋮----
-export interface SpreadTradeV5 {
-  symbol: string;
-  orderLinkId: string;
-  side: 'Buy' | 'Sell';
-  orderId: string;
-  execPrice: string;
-  execTime: string;
-  execType: 'Trade';
-  execQty: string;
-  execId: string;
-  legs: SpreadTradeLegV5[];
-  extraFees: string;
-}
-
-================
-File: src/types/shared-v5.ts
-================
-export type CategoryV5 = 'spot' | 'linear' | 'inverse' | 'option';
-export type ContractTypeV5 =
-  | 'InversePerpetual'
-  | 'LinearPerpetual'
-  | 'InverseFutures';
-export type CopyTradingV5 = 'none' | 'both' | 'utaOnly' | 'normalOnly';
-⋮----
-export type InstrumentStatusV5 =
-  | 'PreLaunch'
-  | 'Trading'
-  | 'Settling'
-  | 'Delivering'
-  | 'Closed';
-⋮----
-export type MarginTradingV5 = 'none' | 'both' | 'utaOnly' | 'normalSpotOnly';
-⋮----
-export type OrderFilterV5 = 'Order' | 'tpslOrder' | 'StopOrder';
-export type OrderSideV5 = 'Buy' | 'Sell';
-export type OrderTypeV5 = 'Market' | 'Limit';
-export type OrderTimeInForceV5 = 'GTC' | 'IOC' | 'FOK' | 'PostOnly' | 'RPI';
-export type OrderTriggerByV5 = 'LastPrice' | 'IndexPrice' | 'MarkPrice';
-export type OCOTriggerTypeV5 =
-  | 'OcoTriggerByUnknown'
-  | 'OcoTriggerTp'
-  | 'OcoTriggerBySl';
-⋮----
-export type OrderSMPTypeV5 =
-  | 'None'
-  | 'CancelMaker'
-  | 'CancelTaker'
-  | 'CancelBoth';
-⋮----
-export type OrderStatusV5 =
-  | 'Created'
-  | 'New'
-  | 'Rejected'
-  | 'PartiallyFilled'
-  | 'PartiallyFilledCanceled'
-  | 'Filled'
-  | 'Cancelled'
-  | 'Untriggered'
-  | 'Triggered'
-  | 'Deactivated'
-  | 'Active';
-⋮----
-/**
- * Defines the types of order creation mechanisms.
- */
-export type OrderCreateTypeV5 =
-  /** Represents an order created by a user. */
-  | 'CreateByUser'
-  /** Represents an order created by an admin closing. */
-  | 'CreateByAdminClosing'
-  /** Futures conditional order. */
-  | 'CreateByStopOrder'
-  /** Futures take profit order. */
-  | 'CreateByTakeProfit'
-  /** Futures partial take profit order. */
-  | 'CreateByPartialTakeProfit'
-  /** Futures stop loss order. */
-  | 'CreateByStopLoss'
-  /** Futures partial stop loss order. */
-  | 'CreateByPartialStopLoss'
-  /** Futures trailing stop order. */
-  | 'CreateByTrailingStop'
-  /** Laddered liquidation to reduce the required maintenance margin. */
-  | 'CreateByLiq'
-  /**
-   * If the position is still subject to liquidation (i.e., does not meet the required maintenance margin level),
-   * the position shall be taken over by the liquidation engine and closed at the bankruptcy price.
-   */
-  | 'CreateByTakeOver_PassThrough'
-  /** Auto-Deleveraging(ADL) */
-  | 'CreateByAdl_PassThrough'
-  /** Order placed via Paradigm. */
-  | 'CreateByBlock_PassThrough'
-  /** Order created by move position. */
-  | 'CreateByBlockTradeMovePosition_PassThrough'
-  /** The close order placed via web or app position area - web/app. */
-  | 'CreateByClosing'
-  /** Order created via grid bot - web/app. */
-  | 'CreateByFGridBot'
-  /** Order closed via grid bot - web/app. */
-  | 'CloseByFGridBot'
-  /** Order created by TWAP - web/app. */
-  | 'CreateByTWAP'
-  /** Order created by TV webhook - web/app. */
-  | 'CreateByTVSignal'
-  /** Order created by Mm rate close function - web/app. */
-  | 'CreateByMmRateClose'
-  /** Order created by Martingale bot - web/app. */
-  | 'CreateByMartingaleBot'
-  /** Order closed by Martingale bot - web/app. */
-  | 'CloseByMartingaleBot'
-  /** Order created by Ice berg strategy - web/app. */
-  | 'CreateByIceBerg'
-  /** Order created by arbitrage - web/app. */
-  | 'CreateByArbitrage'
-  /** Option dynamic delta hedge order - web/app */
-  | 'CreateByDdh';
-⋮----
-/** Represents an order created by a user. */
-⋮----
-/** Represents an order created by an admin closing. */
-⋮----
-/** Futures conditional order. */
-⋮----
-/** Futures take profit order. */
-⋮----
-/** Futures partial take profit order. */
-⋮----
-/** Futures stop loss order. */
-⋮----
-/** Futures partial stop loss order. */
-⋮----
-/** Futures trailing stop order. */
-⋮----
-/** Laddered liquidation to reduce the required maintenance margin. */
-⋮----
-/**
-   * If the position is still subject to liquidation (i.e., does not meet the required maintenance margin level),
-   * the position shall be taken over by the liquidation engine and closed at the bankruptcy price.
-   */
-⋮----
-/** Auto-Deleveraging(ADL) */
-⋮----
-/** Order placed via Paradigm. */
-⋮----
-/** Order created by move position. */
-⋮----
-/** The close order placed via web or app position area - web/app. */
-⋮----
-/** Order created via grid bot - web/app. */
-⋮----
-/** Order closed via grid bot - web/app. */
-⋮----
-/** Order created by TWAP - web/app. */
-⋮----
-/** Order created by TV webhook - web/app. */
-⋮----
-/** Order created by Mm rate close function - web/app. */
-⋮----
-/** Order created by Martingale bot - web/app. */
-⋮----
-/** Order closed by Martingale bot - web/app. */
-⋮----
-/** Order created by Ice berg strategy - web/app. */
-⋮----
-/** Order created by arbitrage - web/app. */
-⋮----
-/** Option dynamic delta hedge order - web/app */
-⋮----
-export type OrderCancelTypeV5 =
-  | 'CancelByUser'
-  | 'CancelByReduceOnly'
-  | 'CancelByPrepareLiq'
-  | 'CancelAllBeforeLiq'
-  | 'CancelByPrepareAdl'
-  | 'CancelAllBeforeAdl'
-  | 'CancelByAdmin'
-  | 'CancelByTpSlTsClear'
-  | 'CancelByPzSideCh'
-  | 'UNKNOWN';
-⋮----
-export type OrderRejectReasonV5 =
-  | 'EC_NoError'
-  | 'EC_Others'
-  | 'EC_UnknownMessageType'
-  | 'EC_MissingClOrdID'
-  | 'EC_MissingOrigClOrdID'
-  | 'EC_ClOrdIDOrigClOrdIDAreTheSame'
-  | 'EC_DuplicatedClOrdID'
-  | 'EC_OrigClOrdIDDoesNotExist'
-  | 'EC_TooLateToCancel'
-  | 'EC_UnknownOrderType'
-  | 'EC_UnknownSide'
-  | 'EC_UnknownTimeInForce'
-  | 'EC_WronglyRouted'
-  | 'EC_MarketOrderPriceIsNotZero'
-  | 'EC_LimitOrderInvalidPrice'
-  | 'EC_NoEnoughQtyToFill'
-  | 'EC_NoImmediateQtyToFill'
-  | 'EC_PerCancelRequest'
-  | 'EC_MarketOrderCannotBePostOnly'
-  | 'EC_PostOnlyWillTakeLiquidity'
-  | 'EC_CancelReplaceOrder'
-  | 'EC_InvalidSymbolStatus';
-⋮----
-export type StopOrderTypeV5 =
-  | 'TakeProfit'
-  | 'StopLoss'
-  | 'TrailingStop'
-  | 'Stop'
-  | 'PartialTakeProfit'
-  | 'PartialStopLoss'
-  | 'tpslOrder'
-  | 'OcoOrder'
-  | 'MmRateClose'
-  | 'BidirectionalTpslOrder';
-⋮----
-/**
- * Position index. Used to identify positions in different position modes.
- *
- * - 0 one-way mode position
- * - 1 Buy side of hedge-mode position
- * - 2 Sell side of hedge-mode position
- */
-export type PositionIdx = 0 | 1 | 2;
-⋮----
-/**
- * Position status.
- *
- * - 'Normal'
- * - 'Liq' in the liquidation progress
- * - 'Adl' in the auto-deleverage progress
- */
-export type PositionStatusV5 = 'Normal' | 'Liq' | 'Adl';
-export type PositionSideV5 = 'Buy' | 'Sell' | 'None' | '';
-⋮----
-export type OptionTypeV5 = 'Call' | 'Put';
-⋮----
-/**
- * Trade mode.
- *
- * - 0 cross-margin,
- * - 1 isolated margin
- */
-export type TradeModeV5 = 0 | 1;
-⋮----
-export type TPSLModeV5 = 'Full' | 'Partial';
-export type AccountMarginModeV5 =
-  | 'ISOLATED_MARGIN'
-  | 'REGULAR_MARGIN'
-  | 'PORTFOLIO_MARGIN';
-export type UnifiedUpdateStatusV5 = 'FAIL' | 'PROCESS' | 'SUCCESS';
-⋮----
-export type AccountTypeV5 =
-  | 'CONTRACT'
-  | 'SPOT'
-  | 'INVESTMENT'
-  | 'OPTION'
-  | 'UNIFIED'
-  | 'FUND';
-⋮----
-export type TransactionTypeV5 =
-  | 'TRANSFER_IN'
-  | 'TRANSFER_OUT'
-  | 'TRADE'
-  | 'SETTLEMENT'
-  | 'DELIVERY'
-  | 'LIQUIDATION'
-  | 'ADL'
-  | 'AIRDROP'
-  | 'BONUS_RECOLLECT'
-  | 'BONUS_RECOLLECT'
-  | 'FEE_REFUND'
-  | 'INTEREST'
-  | 'CURRENCY_BUY'
-  | 'CURRENCY_SELL'
-  | 'BORROWED_AMOUNT_INS_LOAN'
-  | 'PRINCIPLE_REPAYMENT_INS_LOAN'
-  | 'INTEREST_REPAYMENT_INS_LOAN'
-  | 'AUTO_SOLD_COLLATERAL_INS_LOAN'
-  | 'AUTO_BUY_LIABILITY_INS_LOAN'
-  | 'AUTO_PRINCIPLE_REPAYMENT_INS_LOAN'
-  | 'AUTO_INTEREST_REPAYMENT_INS_LOAN'
-  | 'TRANSFER_IN_INS_LOAN'
-  | 'TRANSFER_OUT_INS_LOAN'
-  | 'SPOT_REPAYMENT_SELL'
-  | 'SPOT_REPAYMENT_BUY'
-  | 'TOKENS_SUBSCRIPTION'
-  | 'TOKENS_REDEMPTION'
-  | 'AUTO_DEDUCTION'
-  | 'FLEXIBLE_STAKING_SUBSCRIPTION'
-  | 'FLEXIBLE_STAKING_REDEMPTION'
-  | 'FIXED_STAKING_SUBSCRIPTION'
-  | 'BORROWED_AMOUNT_INS_LOAN'
-  | 'PRINCIPLE_REPAYMENT_INS_LOAN'
-  | 'INTEREST_REPAYMENT_INS_LOAN'
-  | 'AUTO_SOLD_COLLATERAL_INS_LOAN'
-  | 'AUTO_BUY_LIABILITY_INS_LOAN'
-  | 'AUTO_PRINCIPLE_REPAYMENT_INS_LOAN'
-  | 'AUTO_INTEREST_REPAYMENT_INS_LOAN'
-  | 'TRANSFER_IN_INS_LOAN'
-  | 'TRANSFER_OUT_INS_LOAN'
-  | 'SPOT_REPAYMENT_SELL'
-  | 'SPOT_REPAYMENT_BUY'
-  | 'TOKENS_SUBSCRIPTION'
-  | 'TOKENS_REDEMPTION'
-  | 'AUTO_DEDUCTION'
-  | 'FLEXIBLE_STAKING_SUBSCRIPTION'
-  | 'FLEXIBLE_STAKING_REDEMPTION'
-  | 'FIXED_STAKING_SUBSCRIPTION'
-  | 'FLEXIBLE_STAKING_REFUND'
-  | 'FIXED_STAKING_REFUND'
-  | 'PREMARKET_TRANSFER_OUT'
-  | 'PREMARKET_DELIVERY_SELL_NEW_COIN'
-  | 'PREMARKET_DELIVERY_BUY_NEW_COIN'
-  | 'PREMARKET_DELIVERY_PLEDGE_PAY_SELLER'
-  | 'PREMARKET_DELIVERY_PLEDGE_BACK'
-  | 'PREMARKET_ROLLBACK_PLEDGE_BACK'
-  | 'PREMARKET_ROLLBACK_PLEDGE_PENALTY_TO_BUYER'
-  | 'CUSTODY_NETWORK_FEE'
-  | 'CUSTODY_SETTLE_FEE'
-  | 'CUSTODY_LOCK'
-  | 'CUSTODY_UNLOCK'
-  | 'CUSTODY_UNLOCK_REFUND'
-  | 'LOANS_BORROW_FUNDS'
-  | 'LOANS_PLEDGE_ASSET'
-  | 'BONUS_TRANSFER_IN'
-  | 'BONUS_TRANSFER_OUT'
-  | 'PEF_TRANSFER_IN'
-  | 'PEF_TRANSFER_OUT'
-  | 'PEF_PROFIT_SHARE'
-  | 'ONCHAINEARN_SUBSCRIPTION'
-  | 'ONCHAINEARN_REDEMPTION'
-  | 'ONCHAINEARN_REFUND'
-  | 'STRUCTURE_PRODUCT_SUBSCRIPTION'
-  | 'STRUCTURE_PRODUCT_REFUND'
-  | 'CLASSIC_WEALTH_MANAGEMENT_SUBSCRIPTION'
-  | 'PREMIMUM_WEALTH_MANAGEMENT_SUBSCRIPTION'
-  | 'PREMIMUM_WEALTH_MANAGEMENT_REFUND'
-  | 'LIQUIDITY_MINING_SUBSCRIPTION'
-  | 'LIQUIDITY_MINING_REFUND'
-  | 'PWM_SUBSCRIPTION'
-  | 'PWM_REFUND'
-  | 'DEFI_INVESTMENT_SUBSCRIPTION'
-  | 'DEFI_INVESTMENT_REFUND'
-  | 'DEFI_INVESTMENT_REDEMPTION'
-  | 'INSTITUTION_LOAN_IN'
-  | 'INSTITUTION_PAYBACK_PRINCIPAL_OUT'
-  | 'INSTITUTION_PAYBACK_INTEREST_OUT'
-  | 'INSTITUTION_EXCHANGE_SELL'
-  | 'INSTITUTION_EXCHANGE_BUY'
-  | 'INSTITUTION_LIQ_PRINCIPAL_OUT'
-  | 'INSTITUTION_LIQ_INTEREST_OUT'
-  | 'INSTITUTION_LOAN_TRANSFER_IN'
-  | 'INSTITUTION_LOAN_TRANSFER_OUT'
-  | 'INSTITUTION_LOAN_WITHOUT_WITHDRAW'
-  | 'INSTITUTION_LOAN_RESERVE_IN'
-  | 'INSTITUTION_LOAN_RESERVE_OUT';
-⋮----
-export type PermissionTypeV5 =
-  | 'ContractTrade'
-  | 'Spot'
-  | 'Wallet'
-  | 'Options'
-  | 'Derivatives'
-  | 'Exchange'
-  | 'NFT';
-⋮----
-/**
- * Leveraged token status:
- *
- * - '1' LT can be purchased and redeemed
- * - '2' LT can be purchased, but not redeemed
- * - '3' LT can be redeemed, but not purchased
- * - '4' LT cannot be purchased nor redeemed
- * - '5' Adjusting position
- */
-export type LeverageTokenStatusV5 = '1' | '2' | '3' | '4' | '5';
-⋮----
-/**
- * Leveraged token order type: '1': purchase, '2': redeem
- */
-export type LTOrderTypeV5 = '1' | '2';
-⋮----
-/**
- * Leveraged token order status: '1': completed, '2': in progress, '3': failed
- */
-export type LTOrderStatusV5 = '1' | '2' | '3';
-⋮----
-export type ExecTypeV5 =
-  | 'Trade'
-  | 'AdlTrade'
-  | 'Funding'
-  | 'BustTrade'
-  | 'Settle'
-  | 'BlockTrade'
-  | 'MovePosition'
-  | 'UNKNOWN';
-⋮----
-/**
- * Withdraw type. 0(default): on chain. 1: off chain. 2: all.
- */
-export type WithdrawalTypeV5 = '0' | '1' | '2';
-⋮----
-export interface PermissionsV5 {
-  ContractTrade?: string[];
-  Spot?: string[];
-  Wallet?: string[];
-  Options?: string[];
-  Derivatives?: string[];
-  CopyTrading?: string[];
-  BlockTrade?: string[];
-  Exchange?: string[];
-  /** @deprecated , always returns []*/
-  NFT?: string[];
-}
-⋮----
-/** @deprecated , always returns []*/
-⋮----
-export interface CategoryCursorListV5<
-  T extends unknown[],
-  TCategory extends CategoryV5 = CategoryV5,
-> {
-  category: TCategory;
-  list: T;
-  nextPageCursor?: string;
-}
-⋮----
-/**
- * Next page cursor does not exist for spot!
- */
-export interface CursorListV5<T extends unknown[]> {
-  nextPageCursor: string;
-  list: T;
-}
-⋮----
-/**
- * A wrapper type for any responses that have a "nextPageCursor" property, and a "rows" property with an array of elements
- *
- * ```{ nextPageCursor: "something", rows: someData[] }```
- */
-export interface CursorRowsV5<T extends unknown[]> {
-  nextPageCursor: string;
-  rows: T;
-}
-⋮----
-export interface CategoryListV5<
-  T extends unknown[],
-  TCategory extends CategoryV5,
-> {
-  category: TCategory;
-  list: T;
-}
-⋮----
-export interface CategorySymbolListV5<
-  T extends unknown[],
-  TCategory extends CategoryV5,
-> {
-  category: TCategory;
-  symbol: string;
-  list: T;
-}
-⋮----
-export interface GetSystemStatusParamsV5 {
-  id?: string;
-  state?: string;
-}
-⋮----
-export interface SystemStatusItemV5 {
-  id: string;
-  title: string;
-  state: string;
-  begin: string;
-  end: string;
-  href: string;
-  serviceTypes: number[];
-  product: number[];
-  uidSuffix: number[];
-  maintainType: string;
-  env: string;
-}
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/adjust-collateral-amount.js
-================
-// or:
-// const { RestClientV5 } = require('bybit-api');
-⋮----
-const client = new RestClientV5({
-⋮----
-client.updateCollateralAmount({
-⋮----
-direction: '1', // 0: add collateral; 1: reduce collateral
-⋮----
-.then(response => {
-console.log(response);
-⋮----
-.catch(error => {
-console.error('Error:', error);
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/get-borrowable-coins.js
-================
-// or:
-// const { RestClientV5 } = require('bybit-api');
-⋮----
-const client = new RestClientV5({
-⋮----
-client.getLoanBorrowableCoins({
-⋮----
-.then(response => {
-console.log(response);
-⋮----
-.catch(error => {
-console.error('Error:', error);
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/get-collateral-adjustment-history.js
-================
-// or:
-// const { RestClientV5 } = require('bybit-api');
-⋮----
-const client = new RestClientV5({
-⋮----
-client.getCollateralAdjustmentHistory({
-⋮----
-.then(response => {
-console.log(response);
-⋮----
-.catch(error => {
-console.error('Error:', error);
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/get-collateral-coins.js
-================
-// or:
-// const { RestClientV5 } = require('bybit-api');
-⋮----
-const client = new RestClientV5({
-⋮----
-client.getLoanCollateralCoins({
-⋮----
-.then(response => {
-console.log(response);
-⋮----
-.catch(error => {
-console.error('Error:', error);
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/get-crypto-loan-position.js
-================
-// or:
-// const { RestClientV5 } = require('bybit-api');
-⋮----
-const client = new RestClientV5({
-⋮----
-client.getCryptoLoanPosition()
-.then(response => {
-console.log(response);
-⋮----
-.catch(error => {
-console.error('Error:', error);
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/get-max-collateral-amount.js
-================
-// or:
-// const { RestClientV5 } = require('bybit-api');
-⋮----
-const client = new RestClientV5({
-⋮----
-client.getMaxCollateralAmount({
-⋮----
-.then(response => {
-console.log(response);
-⋮----
-.catch(error => {
-console.error('Error:', error);
-
-================
 File: src/types/response/v5-asset.ts
 ================
 import { AccountTypeV5, OrderSideV5, WithdrawalTypeV5 } from '../shared-v5';
@@ -10802,6 +11038,286 @@ export interface ConvertHistoryRecordV5 {
   convertRate: string;
   createdAt: string;
 }
+
+================
+File: src/types/response/v5-position.ts
+================
+import {
+  CategoryV5,
+  ExecTypeV5,
+  OrderSideV5,
+  OrderTypeV5,
+  PositionIdx,
+  PositionSideV5,
+  PositionStatusV5,
+  StopOrderTypeV5,
+  TPSLModeV5,
+  TradeModeV5,
+} from '../shared-v5';
+⋮----
+export interface PositionV5 {
+  positionIdx: PositionIdx;
+  riskId: number;
+  riskLimitValue: string;
+  symbol: string;
+  side: PositionSideV5;
+  size: string;
+  avgPrice: string;
+  positionValue: string;
+  tradeMode: TradeModeV5;
+  autoAddMargin?: number;
+  positionStatus: PositionStatusV5;
+  leverage?: string;
+  markPrice: string;
+  liqPrice: string | '';
+  bustPrice?: string;
+  positionIM?: string;
+  positionMM?: string;
+  positionBalance?: string;
+  tpslMode?: TPSLModeV5;
+  takeProfit?: string;
+  stopLoss?: string;
+  trailingStop?: string;
+  sessionAvgPrice: string | '';
+  delta?: string;
+  gamma?: string;
+  vega?: string;
+  theta?: string;
+  unrealisedPnl: string;
+  curRealisedPnl: string;
+  cumRealisedPnl: string;
+  adlRankIndicator: number;
+  isReduceOnly: boolean;
+  mmrSysUpdatedTime: string | '';
+  leverageSysUpdatedTime: string | '';
+  createdTime: string;
+  updatedTime: string;
+  positionIMByMp: string;
+  positionMMByMp: string;
+  seq: number;
+}
+⋮----
+export interface SetRiskLimitResultV5 {
+  category: CategoryV5;
+  riskId: number;
+  riskLimitValue: string;
+}
+⋮----
+export interface AddOrReduceMarginResultV5 {
+  category: CategoryV5;
+  symbol: string;
+  positionIdx: PositionIdx;
+  riskId: number;
+  riskLimitValue: string;
+  size: string;
+  avgPrice: string;
+  liqPrice: string;
+  bustPrice: string;
+  markPrice: string;
+  positionValue: string;
+  leverage: string;
+  autoAddMargin: 0 | 1;
+  positionStatus: PositionStatusV5;
+  positionIM: string;
+  positionMM: string;
+  takeProfit: string;
+  stopLoss: string;
+  trailingStop: string;
+  unrealisedPnl: string;
+  cumRealisedPnl: string;
+  createdTime: string;
+  updatedTime: string;
+}
+⋮----
+export interface ExecutionV5 {
+  symbol: string;
+  orderId: string;
+  orderLinkId: string;
+  side: OrderSideV5;
+  orderPrice: string;
+  orderQty: string;
+  leavesQty: string;
+  orderType: OrderTypeV5;
+  stopOrderType?: StopOrderTypeV5;
+  execFee: string;
+  execFeeV2: string;
+  execId: string;
+  execPrice: string;
+  execQty: string;
+  execType: ExecTypeV5;
+  execValue: string;
+  execTime: string;
+  isMaker: boolean;
+  feeRate: string;
+  tradeIv?: string;
+  markIv?: string;
+  markPrice: string;
+  indexPrice: string;
+  underlyingPrice?: string;
+  blockTradeId?: string;
+  closedSize?: string;
+  seq: number;
+  extraFees: string;
+}
+⋮----
+export interface ClosedPnLV5 {
+  symbol: string;
+  orderId: string;
+  side: string;
+  qty: string;
+  orderPrice: string;
+  orderType: OrderTypeV5;
+  execType: ExecTypeV5;
+  closedSize: string;
+  openFee: string;
+  closeFee: string;
+  cumEntryValue: string;
+  avgEntryPrice: string;
+  cumExitValue: string;
+  avgExitPrice: string;
+  closedPnl: string;
+  fillCount: string;
+  leverage: string;
+  createdTime: string;
+  updatedTime: string;
+}
+⋮----
+export interface MovePositionResultV5 {
+  blockTradeId: string;
+  status: 'Processing' | 'Rejected';
+  rejectParty: '' | 'Taker' | 'Maker' | 'bybit';
+}
+⋮----
+export interface MovePositionHistoryV5 {
+  blockTradeId: string;
+  category: 'linear' | 'spot' | 'option';
+  orderId: string;
+  userId: number;
+  symbol: string;
+  side: 'Buy' | 'Sell';
+  price: string;
+  qty: string;
+  execFee: string;
+  status: 'Processing' | 'Filled' | 'Rejected';
+  execId: string;
+  resultCode: number;
+  resultMessage: string;
+  createdAt: number;
+  updatedAt: number;
+  rejectParty: '' | 'Taker' | 'Maker' | 'bybit';
+}
+⋮----
+export interface ClosedOptionsPositionV5 {
+  symbol: string;
+  side: 'Buy' | 'Sell';
+  totalOpenFee: string;
+  deliveryFee: string;
+  totalCloseFee: string;
+  qty: string;
+  closeTime: number;
+  avgExitPrice: string;
+  deliveryPrice: string;
+  openTime: number;
+  avgEntryPrice: string;
+  totalPnl: string;
+}
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/adjust-collateral-amount.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.updateCollateralAmount({
+⋮----
+direction: '1', // 0: add collateral; 1: reduce collateral
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/get-borrowable-coins.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getLoanBorrowableCoins({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/get-collateral-adjustment-history.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getCollateralAdjustmentHistory({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/get-collateral-coins.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getLoanCollateralCoins({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/get-crypto-loan-position.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getCryptoLoanPosition()
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/get-max-collateral-amount.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.getMaxCollateralAmount({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
 
 ================
 File: src/types/response/v5-trade.ts
@@ -12090,6 +12606,12 @@ File: src/types/websockets/ws-events.ts
 import WebSocket from 'isomorphic-ws';
 ⋮----
 import {
+  RFQItemV5,
+  RFQPublicTradeV5,
+  RFQQuoteItemV5,
+  RFQTradeV5,
+} from '../response/v5-rfq';
+import {
   CategoryV5,
   ExecTypeV5,
   OCOTriggerTypeV5,
@@ -12635,6 +13157,51 @@ export type WSSystemStatusEventV5 = WSPublicTopicEventV5<
   'system.status',
   'snapshot',
   SystemStatusItemV5[]
+>;
+⋮----
+/**
+ * RFQ WebSocket Events
+ */
+⋮----
+/**
+ * RFQ Inquiry Channel
+ * Private push for RFQ inquiries sent or received by the user
+ * Topics: rfq.open.rfqs, rfq.site.rfqs
+ */
+export type WSRFQInquiryEventV5 = WSPrivateTopicEventV5<
+  'rfq.open.rfqs' | 'rfq.site.rfqs',
+  RFQItemV5[]
+>;
+⋮----
+/**
+ * RFQ Quote Channel
+ * Private push for quotes sent or received by the user
+ * Topics: rfq.open.quotes, rfq.site.quotes
+ */
+export type WSRFQQuoteEventV5 = WSPrivateTopicEventV5<
+  'rfq.open.quotes' | 'rfq.site.quotes',
+  RFQQuoteItemV5[]
+>;
+⋮----
+/**
+ * RFQ Trade Channel
+ * Private push for block trades executed by the user
+ * Topics: rfq.open.trades, rfq.site.trades
+ */
+export type WSRFQTradeEventV5 = WSPrivateTopicEventV5<
+  'rfq.open.trades' | 'rfq.site.trades',
+  RFQTradeV5[]
+>;
+⋮----
+/**
+ * RFQ Public Trade Channel
+ * Public push for all block trades
+ * Topics: rfq.open.public.trades, rfq.site.public.trades
+ */
+export type WSRFQPublicTradeEventV5 = WSPublicTopicEventV5<
+  'rfq.open.public.trades' | 'rfq.site.public.trades',
+  'snapshot',
+  RFQPublicTradeV5[]
 >;
 
 ================
@@ -13340,8 +13907,14 @@ import {
   BrokerIssuedVoucherV5,
   BrokerVoucherSpecV5,
   CancelAllOrdersParamsV5,
+  CancelAllRFQResultV5,
   CancelBorrowOrderFixedParamsV5,
   CancelOrderParamsV5,
+  CancelRFQParamsV5,
+  CancelRFQQuoteItemV5,
+  CancelRFQQuoteParamsV5,
+  CancelRFQQuoteResultV5,
+  CancelRFQResultV5,
   CancelSupplyOrderFixedParamsV5,
   CategoryCursorListV5,
   CategoryListV5,
@@ -13365,6 +13938,10 @@ import {
   CreateBorrowOrderFixedParamsV5,
   CreateBorrowOrderFixedV5,
   CreateP2PAdParamsV5,
+  CreateRFQParamsV5,
+  CreateRFQQuoteParamsV5,
+  CreateRFQQuoteResultV5,
+  CreateRFQResultV5,
   CreateSubApiKeyParamsV5,
   CreateSubApiKeyResultV5,
   CreateSubMemberParamsV5,
@@ -13386,6 +13963,8 @@ import {
   ExchangeBrokerAccountInfoV5,
   ExchangeBrokerEarningResultV5,
   ExchangeBrokerSubAccountDepositRecordV5,
+  ExecuteRFQQuoteParamsV5,
+  ExecuteRFQQuoteResultV5,
   ExecutionV5,
   FeeRateV5,
   FundingRateHistoryResponseV5,
@@ -13454,6 +14033,13 @@ import {
   GetRepaymentHistoryFixedParamsV5,
   GetRepaymentHistoryFlexibleParamsV5,
   GetRepaymentHistoryParamsV5,
+  GetRFQHistoryParamsV5,
+  GetRFQListParamsV5,
+  GetRFQPublicTradesParamsV5,
+  GetRFQQuoteRealtimeParamsV5,
+  GetRFQRealtimeParamsV5,
+  GetRFQRealtimeResultV5,
+  GetRFQTradeListParamsV5,
   GetRiskLimitParamsV5,
   GetSettlementRecordParamsV5,
   GetSpreadInstrumentsInfoParamsV5,
@@ -13525,6 +14111,11 @@ import {
   RepaymentHistoryFlexibleV5,
   RepaymentHistoryV5,
   RequestConvertQuoteParamsV5,
+  RFQConfigV5,
+  RFQHistory,
+  RFQPublicTradeV5,
+  RFQQuoteItemV5,
+  RFQTradeV5,
   RiskLimitV5,
   SendP2POrderMessageParamsV5,
   SetAutoAddMarginParamsV5,
@@ -16134,6 +16725,165 @@ getEarnPosition(params: GetEarnPositionParamsV5): Promise<
 ⋮----
 /**
    *
+   ****** RFQ APIs
+   *
+   */
+⋮----
+/**
+   * Create RFQ
+   * Create a new request for quote (RFQ) to specified counterparties
+   */
+createRFQ(
+    params: CreateRFQParamsV5,
+): Promise<APIResponseV3WithTime<CreateRFQResultV5>>
+⋮----
+/**
+   * Get RFQ Configuration
+   * Query the information of the quoting party that can participate in the transaction
+   * and your own deskCode and other configuration information
+   */
+getRFQConfig(): Promise<APIResponseV3WithTime<RFQConfigV5>>
+⋮----
+/**
+   * Cancel RFQ
+   * Cancel your inquiry
+   * Pass at least one rfqId or rfqLinkId
+   */
+cancelRFQ(
+    params: CancelRFQParamsV5,
+): Promise<APIResponseV3WithTime<CancelRFQResultV5>>
+⋮----
+/**
+   * Cancel All RFQ
+   * Cancel all your inquiry forms
+   */
+cancelAllRFQ(): Promise<APIResponseV3WithTime<CancelAllRFQResultV5>>
+⋮----
+/**
+   * Create Quote
+   * Allow the quotation party specified in the inquiry form to quote
+   * Pass at least one quoteBuyList and quoteSellList
+   */
+createRFQQuote(
+    params: CreateRFQQuoteParamsV5,
+): Promise<APIResponseV3WithTime<CreateRFQQuoteResultV5>>
+⋮----
+/**
+   * Execute Quote
+   * Execute quotes, only for the creator of the inquiry form
+   * Need to view the execution result through the /v5/rfq/blocktrade-list interface
+   */
+executeRFQQuote(
+    params: ExecuteRFQQuoteParamsV5,
+): Promise<APIResponseV3WithTime<ExecuteRFQQuoteResultV5>>
+⋮----
+/**
+   * Cancel Quote
+   * Cancel a quotation
+   * Pass at least one quoteId, rfqId, and quoteLinkId
+   */
+cancelRFQQuote(
+    params: CancelRFQQuoteParamsV5,
+): Promise<APIResponseV3WithTime<CancelRFQQuoteResultV5>>
+⋮----
+/**
+   * Cancel All Quotes
+   * Cancel all quotations
+   */
+cancelAllRFQQuotes(): Promise<
+    APIResponseV3WithTime<{
+      data: CancelRFQQuoteItemV5[]; // Array of cancellation results
+    }>
+  > {
+    return this.postPrivate('/v5/rfq/cancel-all-quotes');
+⋮----
+data: CancelRFQQuoteItemV5[]; // Array of cancellation results
+⋮----
+/**
+   * Get Real-time RFQ Information
+   * Obtain the inquiry information sent or received by the user, query from rfq-engine without delay
+   * Pass both rfqId and rfqLinkId, rfqId shall prevail
+   * Sort in reverse order according to the creation time of rfq and return it
+   */
+getRFQRealtimeInfo(
+    params?: GetRFQRealtimeParamsV5,
+): Promise<APIResponseV3WithTime<GetRFQRealtimeResultV5>>
+⋮----
+/**
+   * Get Historical RFQ Information
+   * Obtain the information of the inquiry form sent or received by the user, query from the database
+   * Pass both rfqId and rfqLinkId, rfqId shall prevail
+   * Sort in reverse order according to the creation time of rfq and return it
+   */
+getRFQHistory(
+    params?: GetRFQListParamsV5,
+): Promise<APIResponseV3WithTime<RFQHistory>>
+⋮----
+/**
+   * Get Real-time Quote Information
+   * Obtain quotation information sent or received by users, query from rfq-engine without delay
+   * Pass quoteId and quoteLinkId, quoteId shall prevail
+   * Pass both rfqId and rfqLinkId, rfqId shall prevail
+   * Sort in reverse order according to the creation time of the quotation
+   * Return all non-final quotes
+   */
+getRFQRealtimeQuote(params?: GetRFQQuoteRealtimeParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: RFQQuoteItemV5[];
+    }>
+  > {
+    return this.getPrivate('/v5/rfq/quote-realtime', params);
+⋮----
+/**
+   * Get Historical Quote Information
+   * Obtain the quotation information sent or received by the user, query from the database
+   * Pass quoteId and quoteLinkId, quoteId shall prevail
+   * Pass both rfqId and rfqLinkId, rfqId shall prevail
+   * Sort in reverse order according to the creation time of the quotation
+   */
+getRFQHistoryQuote(params?: GetRFQHistoryParamsV5): Promise<
+    APIResponseV3WithTime<{
+      cursor: string; // Page turning mark
+      list: RFQQuoteItemV5[]; // Array of quote items
+    }>
+  > {
+    return this.getPrivate('/v5/rfq/quote-list', params);
+⋮----
+cursor: string; // Page turning mark
+list: RFQQuoteItemV5[]; // Array of quote items
+⋮----
+/**
+   * Get Trade Information
+   * Obtain transaction information executed by the user
+   */
+getRFQTrades(params?: GetRFQTradeListParamsV5): Promise<
+    APIResponseV3WithTime<{
+      cursor: string; // Page turning mark
+      list: RFQTradeV5[]; // Array of trade items
+    }>
+  > {
+    return this.getPrivate('/v5/rfq/trade-list', params);
+⋮----
+cursor: string; // Page turning mark
+list: RFQTradeV5[]; // Array of trade items
+⋮----
+/**
+   * Get RFQ Public Transaction Data
+   * Get the recently executed RFQ successfullys
+   */
+getRFQPublicTrades(params?: GetRFQPublicTradesParamsV5): Promise<
+    APIResponseV3WithTime<{
+      cursor: string; // Page turning mark
+      list: RFQPublicTradeV5[]; // Array of public trade items
+    }>
+  > {
+    return this.getPrivate('/v5/rfq/public-trades', params);
+⋮----
+cursor: string; // Page turning mark
+list: RFQPublicTradeV5[]; // Array of public trade items
+⋮----
+/**
+   *
    ****** P2P TRADING
    *
    */
@@ -16298,7 +17048,7 @@ File: package.json
 ================
 {
   "name": "bybit-api",
-  "version": "4.2.2",
+  "version": "4.2.4",
   "description": "Complete & robust Node.js SDK for Bybit's REST APIs and WebSockets, with TypeScript & strong end to end tests.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -16322,7 +17072,7 @@ File: package.json
   "author": "Tiago Siebler (https://github.com/tiagosiebler)",
   "contributors": [],
   "dependencies": {
-    "axios": "^1.7.9",
+    "axios": "^1.10.0",
     "isomorphic-ws": "^4.0.1",
     "ws": "^7.4.0"
   },
