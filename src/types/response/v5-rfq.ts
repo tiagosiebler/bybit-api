@@ -156,7 +156,7 @@ export interface RFQTradeLegV5 {
   rejectParty: string; // Empty if Filled, "Taker"/"Maker"/"bybit" if Rejected
 }
 
-export interface RFQTradeItemV5 {
+export interface RFQTradeV5 {
   rfqId: string; // Inquiry ID
   quoteId: string; // Completed inquiry form and executed quotation ID
   quoteSide: 'buy' | 'sell'; // Executed quotation direction

@@ -248,7 +248,7 @@ import {
   RFQHistory,
   RFQPublicTradeV5,
   RFQQuoteItemV5,
-  RFQTradeItemV5 as RfqTradeV5,
+  RFQTradeV5,
   RiskLimitV5,
   SendP2POrderMessageParamsV5,
   SetAutoAddMarginParamsV5,
@@ -577,177 +577,6 @@ export class RestClientV5 extends BaseRestClient {
     }>
   > {
     return this.getPrivate('/v5/spread/execution/list', params);
-  }
-
-  /**
-   *
-   ****** RFQ APIs
-   *
-   */
-
-  /**
-   * Create RFQ
-   * Create a new request for quote (RFQ) to specified counterparties
-   */
-  createRFQ(
-    params: CreateRFQParamsV5,
-  ): Promise<APIResponseV3WithTime<CreateRFQResultV5>> {
-    return this.postPrivate('/v5/rfq/create-rfq', params);
-  }
-
-  /**
-   * Get RFQ Configuration
-   * Query the information of the quoting party that can participate in the transaction
-   * and your own deskCode and other configuration information
-   */
-  getRFQConfig(): Promise<APIResponseV3WithTime<RFQConfigV5>> {
-    return this.getPrivate('/v5/rfq/config');
-  }
-
-  /**
-   * Cancel RFQ
-   * Cancel your inquiry
-   * Pass at least one rfqId or rfqLinkId
-   */
-  cancelRFQ(
-    params: CancelRFQParamsV5,
-  ): Promise<APIResponseV3WithTime<CancelRFQResultV5>> {
-    return this.postPrivate('/v5/rfq/cancel-rfq', params);
-  }
-
-  /**
-   * Cancel All RFQ
-   * Cancel all your inquiry forms
-   */
-  cancelAllRFQ(): Promise<APIResponseV3WithTime<CancelAllRFQResultV5>> {
-    return this.postPrivate('/v5/rfq/cancel-all-rfq');
-  }
-
-  /**
-   * Create Quote
-   * Allow the quotation party specified in the inquiry form to quote
-   * Pass at least one quoteBuyList and quoteSellList
-   */
-  createRFQQuote(
-    params: CreateRFQQuoteParamsV5,
-  ): Promise<APIResponseV3WithTime<CreateRFQQuoteResultV5>> {
-    return this.postPrivate('/v5/rfq/create-quote', params);
-  }
-
-  /**
-   * Execute Quote
-   * Execute quotes, only for the creator of the inquiry form
-   * Need to view the execution result through the /v5/rfq/blocktrade-list interface
-   */
-  executeRFQQuote(
-    params: ExecuteRFQQuoteParamsV5,
-  ): Promise<APIResponseV3WithTime<ExecuteRFQQuoteResultV5>> {
-    return this.postPrivate('/v5/rfq/execute-quote', params);
-  }
-
-  /**
-   * Cancel Quote
-   * Cancel a quotation
-   * Pass at least one quoteId, rfqId, and quoteLinkId
-   */
-  cancelRFQQuote(
-    params: CancelRFQQuoteParamsV5,
-  ): Promise<APIResponseV3WithTime<CancelRFQQuoteResultV5>> {
-    return this.postPrivate('/v5/rfq/cancel-quote', params);
-  }
-
-  /**
-   * Cancel All Quotes
-   * Cancel all quotations
-   */
-  cancelAllRFQQuotes(): Promise<
-    APIResponseV3WithTime<{
-      data: CancelRFQQuoteItemV5[]; // Array of cancellation results
-    }>
-  > {
-    return this.postPrivate('/v5/rfq/cancel-all-quotes');
-  }
-
-  /**
-   * Get Real-time RFQ Information
-   * Obtain the inquiry information sent or received by the user, query from rfq-engine without delay
-   * Pass both rfqId and rfqLinkId, rfqId shall prevail
-   * Sort in reverse order according to the creation time of rfq and return it
-   */
-  getRFQRealtimeInfo(
-    params?: GetRFQRealtimeParamsV5,
-  ): Promise<APIResponseV3WithTime<GetRFQRealtimeResultV5>> {
-    return this.getPrivate('/v5/rfq/rfq-realtime', params);
-  }
-
-  /**
-   * Get Historical RFQ Information
-   * Obtain the information of the inquiry form sent or received by the user, query from the database
-   * Pass both rfqId and rfqLinkId, rfqId shall prevail
-   * Sort in reverse order according to the creation time of rfq and return it
-   */
-  getRFQHistory(
-    params?: GetRFQListParamsV5,
-  ): Promise<APIResponseV3WithTime<RFQHistory>> {
-    return this.getPrivate('/v5/rfq/rfq-list', params);
-  }
-
-  /**
-   * Get Real-time Quote Information
-   * Obtain quotation information sent or received by users, query from rfq-engine without delay
-   * Pass quoteId and quoteLinkId, quoteId shall prevail
-   * Pass both rfqId and rfqLinkId, rfqId shall prevail
-   * Sort in reverse order according to the creation time of the quotation
-   * Return all non-final quotes
-   */
-  getRFQRealtimeQuote(params?: GetRFQQuoteRealtimeParamsV5): Promise<
-    APIResponseV3WithTime<{
-      list: RFQQuoteItemV5[];
-    }>
-  > {
-    return this.getPrivate('/v5/rfq/quote-realtime', params);
-  }
-
-  /**
-   * Get Historical Quote Information
-   * Obtain the quotation information sent or received by the user, query from the database
-   * Pass quoteId and quoteLinkId, quoteId shall prevail
-   * Pass both rfqId and rfqLinkId, rfqId shall prevail
-   * Sort in reverse order according to the creation time of the quotation
-   */
-  getRFQHistoryQuote(params?: GetRFQHistoryParamsV5): Promise<
-    APIResponseV3WithTime<{
-      cursor: string; // Page turning mark
-      list: RFQQuoteItemV5[]; // Array of quote items
-    }>
-  > {
-    return this.getPrivate('/v5/rfq/quote-list', params);
-  }
-
-  /**
-   * Get Trade Information
-   * Obtain transaction information executed by the user
-   */
-  getRFQTrades(params?: GetRFQTradeListParamsV5): Promise<
-    APIResponseV3WithTime<{
-      cursor: string; // Page turning mark
-      list: RfqTradeV5[]; // Array of trade items
-    }>
-  > {
-    return this.getPrivate('/v5/rfq/trade-list', params);
-  }
-
-  /**
-   * Get RFQ Public Transaction Data
-   * Get the recently executed RFQ successfullys
-   */
-  getRFQPublicTrades(params?: GetRFQPublicTradesParamsV5): Promise<
-    APIResponseV3WithTime<{
-      cursor: string; // Page turning mark
-      list: RFQPublicTradeV5[]; // Array of public trade items
-    }>
-  > {
-    return this.getPrivate('/v5/rfq/public-trades', params);
   }
 
   /**
@@ -3426,6 +3255,177 @@ export class RestClientV5 extends BaseRestClient {
     }>
   > {
     return this.getPrivate('/v5/earn/position', params);
+  }
+
+  /**
+   *
+   ****** RFQ APIs
+   *
+   */
+
+  /**
+   * Create RFQ
+   * Create a new request for quote (RFQ) to specified counterparties
+   */
+  createRFQ(
+    params: CreateRFQParamsV5,
+  ): Promise<APIResponseV3WithTime<CreateRFQResultV5>> {
+    return this.postPrivate('/v5/rfq/create-rfq', params);
+  }
+
+  /**
+   * Get RFQ Configuration
+   * Query the information of the quoting party that can participate in the transaction
+   * and your own deskCode and other configuration information
+   */
+  getRFQConfig(): Promise<APIResponseV3WithTime<RFQConfigV5>> {
+    return this.getPrivate('/v5/rfq/config');
+  }
+
+  /**
+   * Cancel RFQ
+   * Cancel your inquiry
+   * Pass at least one rfqId or rfqLinkId
+   */
+  cancelRFQ(
+    params: CancelRFQParamsV5,
+  ): Promise<APIResponseV3WithTime<CancelRFQResultV5>> {
+    return this.postPrivate('/v5/rfq/cancel-rfq', params);
+  }
+
+  /**
+   * Cancel All RFQ
+   * Cancel all your inquiry forms
+   */
+  cancelAllRFQ(): Promise<APIResponseV3WithTime<CancelAllRFQResultV5>> {
+    return this.postPrivate('/v5/rfq/cancel-all-rfq');
+  }
+
+  /**
+   * Create Quote
+   * Allow the quotation party specified in the inquiry form to quote
+   * Pass at least one quoteBuyList and quoteSellList
+   */
+  createRFQQuote(
+    params: CreateRFQQuoteParamsV5,
+  ): Promise<APIResponseV3WithTime<CreateRFQQuoteResultV5>> {
+    return this.postPrivate('/v5/rfq/create-quote', params);
+  }
+
+  /**
+   * Execute Quote
+   * Execute quotes, only for the creator of the inquiry form
+   * Need to view the execution result through the /v5/rfq/blocktrade-list interface
+   */
+  executeRFQQuote(
+    params: ExecuteRFQQuoteParamsV5,
+  ): Promise<APIResponseV3WithTime<ExecuteRFQQuoteResultV5>> {
+    return this.postPrivate('/v5/rfq/execute-quote', params);
+  }
+
+  /**
+   * Cancel Quote
+   * Cancel a quotation
+   * Pass at least one quoteId, rfqId, and quoteLinkId
+   */
+  cancelRFQQuote(
+    params: CancelRFQQuoteParamsV5,
+  ): Promise<APIResponseV3WithTime<CancelRFQQuoteResultV5>> {
+    return this.postPrivate('/v5/rfq/cancel-quote', params);
+  }
+
+  /**
+   * Cancel All Quotes
+   * Cancel all quotations
+   */
+  cancelAllRFQQuotes(): Promise<
+    APIResponseV3WithTime<{
+      data: CancelRFQQuoteItemV5[]; // Array of cancellation results
+    }>
+  > {
+    return this.postPrivate('/v5/rfq/cancel-all-quotes');
+  }
+
+  /**
+   * Get Real-time RFQ Information
+   * Obtain the inquiry information sent or received by the user, query from rfq-engine without delay
+   * Pass both rfqId and rfqLinkId, rfqId shall prevail
+   * Sort in reverse order according to the creation time of rfq and return it
+   */
+  getRFQRealtimeInfo(
+    params?: GetRFQRealtimeParamsV5,
+  ): Promise<APIResponseV3WithTime<GetRFQRealtimeResultV5>> {
+    return this.getPrivate('/v5/rfq/rfq-realtime', params);
+  }
+
+  /**
+   * Get Historical RFQ Information
+   * Obtain the information of the inquiry form sent or received by the user, query from the database
+   * Pass both rfqId and rfqLinkId, rfqId shall prevail
+   * Sort in reverse order according to the creation time of rfq and return it
+   */
+  getRFQHistory(
+    params?: GetRFQListParamsV5,
+  ): Promise<APIResponseV3WithTime<RFQHistory>> {
+    return this.getPrivate('/v5/rfq/rfq-list', params);
+  }
+
+  /**
+   * Get Real-time Quote Information
+   * Obtain quotation information sent or received by users, query from rfq-engine without delay
+   * Pass quoteId and quoteLinkId, quoteId shall prevail
+   * Pass both rfqId and rfqLinkId, rfqId shall prevail
+   * Sort in reverse order according to the creation time of the quotation
+   * Return all non-final quotes
+   */
+  getRFQRealtimeQuote(params?: GetRFQQuoteRealtimeParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: RFQQuoteItemV5[];
+    }>
+  > {
+    return this.getPrivate('/v5/rfq/quote-realtime', params);
+  }
+
+  /**
+   * Get Historical Quote Information
+   * Obtain the quotation information sent or received by the user, query from the database
+   * Pass quoteId and quoteLinkId, quoteId shall prevail
+   * Pass both rfqId and rfqLinkId, rfqId shall prevail
+   * Sort in reverse order according to the creation time of the quotation
+   */
+  getRFQHistoryQuote(params?: GetRFQHistoryParamsV5): Promise<
+    APIResponseV3WithTime<{
+      cursor: string; // Page turning mark
+      list: RFQQuoteItemV5[]; // Array of quote items
+    }>
+  > {
+    return this.getPrivate('/v5/rfq/quote-list', params);
+  }
+
+  /**
+   * Get Trade Information
+   * Obtain transaction information executed by the user
+   */
+  getRFQTrades(params?: GetRFQTradeListParamsV5): Promise<
+    APIResponseV3WithTime<{
+      cursor: string; // Page turning mark
+      list: RFQTradeV5[]; // Array of trade items
+    }>
+  > {
+    return this.getPrivate('/v5/rfq/trade-list', params);
+  }
+
+  /**
+   * Get RFQ Public Transaction Data
+   * Get the recently executed RFQ successfullys
+   */
+  getRFQPublicTrades(params?: GetRFQPublicTradesParamsV5): Promise<
+    APIResponseV3WithTime<{
+      cursor: string; // Page turning mark
+      list: RFQPublicTradeV5[]; // Array of public trade items
+    }>
+  > {
+    return this.getPrivate('/v5/rfq/public-trades', params);
   }
 
   /**

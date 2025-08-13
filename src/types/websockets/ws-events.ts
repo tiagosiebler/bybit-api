@@ -4,7 +4,7 @@ import {
   RFQItemV5,
   RFQPublicTradeV5,
   RFQQuoteItemV5,
-  RFQTradeItemV5,
+  RFQTradeV5,
 } from '../response/v5-rfq';
 import {
   CategoryV5,
@@ -570,7 +570,7 @@ export type WSRFQQuoteEventV5 = WSPrivateTopicEventV5<
  */
 export type WSRFQTradeEventV5 = WSPrivateTopicEventV5<
   'rfq.open.trades' | 'rfq.site.trades',
-  RFQTradeItemV5[]
+  RFQTradeV5[]
 >;
 
 /**
