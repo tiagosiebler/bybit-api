@@ -296,7 +296,8 @@ export function getMaxTopicsPerSubscribeEvent(
       if (wsKey === WS_KEY_MAP.v5SpotPublic) {
         return 10;
       }
-      return null;
+
+      return 500;
     }
     default: {
       throw neverGuard(market, 'getWsKeyForTopic(): Unhandled market');
