@@ -135,7 +135,10 @@ export class WebsocketClient extends BaseWebsocketClient<
         perWsKeyTopics[derivedWsKey] = [];
       }
 
-      perWsKeyTopics[derivedWsKey]!.push(wsRequest);
+      // Prevent duplicate requests to the same topic
+      if (!this.getWsStore().getMatchingTopic(derivedWsKey, wsRequest)) {
+        perWsKeyTopics[derivedWsKey]!.push(wsRequest);
+      }
     }
 
     const promises: Promise<unknown>[] = [];
@@ -245,7 +248,7 @@ export class WebsocketClient extends BaseWebsocketClient<
     requests:
       | (WsTopicRequest<WsTopic> | WsTopic)
       | (WsTopicRequest<WsTopic> | WsTopic)[],
-    wsKey?: WsKey,
+    requestedWsKey?: WsKey,
   ) {
     const topicRequests = Array.isArray(requests) ? requests : [requests];
     const normalisedTopicRequests = getNormalisedTopicRequests(topicRequests);
@@ -253,12 +256,15 @@ export class WebsocketClient extends BaseWebsocketClient<
     const perWsKeyTopics = getTopicsPerWSKey(
       this.options.market,
       normalisedTopicRequests,
-      wsKey,
+      requestedWsKey,
     );
 
     // Batch sub topics per ws key
     for (const wsKey in perWsKeyTopics) {
-      const wsKeyTopicRequests = perWsKeyTopics[wsKey];
+      const wsKeyTopicRequests = perWsKeyTopics[wsKey]?.filter((request) => {
+        return !this.getWsStore().getMatchingTopic(wsKey as WsKey, request);
+      });
+
       if (wsKeyTopicRequests?.length) {
         this.subscribeTopicsForWsKey(wsKeyTopicRequests, wsKey as WsKey);
       }

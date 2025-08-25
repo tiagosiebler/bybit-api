@@ -392,15 +392,9 @@ export abstract class BaseWebsocketClient<
   ) {
     const normalisedTopicRequests = getNormalisedTopicRequests(wsTopicRequests);
 
-    // Automatically dedupe topics we're already subscribed to, since linear perps reject subscribe calls for topics we've already requested
-    const dedupedTopicRequests: WsTopicRequest<string>[] = [];
-
     // Store topics, so future automation (post-auth, post-reconnect) has everything needed to resubscribe automatically
     for (const topic of normalisedTopicRequests) {
-      if (!this.wsStore.getMatchingTopic(wsKey, topic)) {
-        dedupedTopicRequests.push(topic);
-        this.wsStore.addTopic(wsKey, topic);
-      }
+      this.wsStore.addTopic(wsKey, topic);
     }
 
     const isConnected = this.wsStore.isConnectionState(
@@ -445,7 +439,7 @@ export abstract class BaseWebsocketClient<
     }
 
     // Finally, request subscription to topics if the connection is healthy and ready
-    return this.requestSubscribeTopics(wsKey, dedupedTopicRequests);
+    return this.requestSubscribeTopics(wsKey, normalisedTopicRequests);
   }
 
   protected async unsubscribeTopicsForWsKey(
