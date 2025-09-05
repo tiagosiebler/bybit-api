@@ -345,10 +345,16 @@ export default abstract class BaseRestClient {
               )
             : undefined;
 
-          return {
+          const result = {
             rateLimitApi: perAPIRateLimits,
             ...response.data,
           };
+
+          if (this.options.throwExceptions && result.retCode !== 0) {
+            throw result;
+          }
+
+          return result;
         }
 
         throw response;
@@ -366,7 +372,7 @@ export default abstract class BaseRestClient {
 
     // Something happened in setting up the request that triggered an Error
     if (!e.response) {
-      if (!e.request) {
+      if (!e.request && e.message) {
         throw e.message;
       }
 
