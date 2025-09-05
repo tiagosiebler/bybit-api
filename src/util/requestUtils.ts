@@ -74,6 +74,9 @@ export interface RestClientOptions {
   /** Default: false. Enable to throw error if rate limit parser fails */
   throwOnFailedRateLimitParse?: boolean;
 
+  /** Default: false. Enable to automatically throw responses for failed REST API requests */
+  throwExceptions?: boolean;
+
   /**
    * Allows you to provide a custom "signMessage" function, e.g. to use node's much faster createHmac method
    *

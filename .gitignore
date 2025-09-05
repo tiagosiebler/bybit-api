@@ -29,3 +29,4 @@ privaterepotracker
 restClientRegex.ts
 repomix.sh
 
+examples/ignored
