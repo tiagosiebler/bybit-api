@@ -809,7 +809,7 @@ export class RestClientV5 extends BaseRestClient {
     symbol: string;
     category: 'spot' | 'linear' | 'inverse';
   }): Promise<APIResponseV3WithTime<OrderPriceLimitV5>> {
-    return this.get('/v5/order/price-limit', params);
+    return this.get('/v5/market/price-limit', params);
   }
 
   /**
