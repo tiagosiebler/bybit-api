@@ -262,6 +262,7 @@ export interface PublicTradeV5 {
   iP?: string;
   mIv?: string;
   iv?: string;
+  seq?: string;
 }
 
 /**

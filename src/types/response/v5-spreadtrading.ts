@@ -49,6 +49,7 @@ export interface SpreadRecentTradeV5 {
   size: string; // Trade size
   side: 'Buy' | 'Sell'; // Side of taker
   time: string; // Trade time (ms)
+  seq?: string;
 }
 
 export interface SpreadOpenOrderV5 {
