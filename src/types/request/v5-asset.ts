@@ -135,7 +135,7 @@ export interface WithdrawParamsV5 {
   amount: string;
   timestamp: number;
   forceChain?: number;
-  accountType?: 'SPOT' | 'FUND';
+  accountType: 'SPOT' | 'FUND';
   feeType?: 0 | 1;
   requestId?: string;
   beneficiary?: {
