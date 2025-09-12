@@ -6,6 +6,7 @@ export interface SubmitStakeRedeemParamsV5 {
   coin: string;
   productId: string;
   orderLinkId: string;
+  toAccountType?: 'FUND' | 'UNIFIED';
 }
 
 export interface GetEarnOrderHistoryParamsV5 {

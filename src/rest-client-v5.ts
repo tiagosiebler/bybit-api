@@ -799,6 +799,32 @@ export class RestClientV5 extends BaseRestClient {
     return this.get('/v5/market/delivery-price', params);
   }
 
+  /**
+   * Get New Delivery Price
+   * Get historical option delivery prices.
+   *
+   * Covers: Option
+   *
+   * INFO
+   * - It is recommended to query this endpoint 1 minute after settlement is completed, because the data returned by this endpoint may be delayed by 1 minute.
+   * - By default, the most recent 50 records are returned in reverse order of "deliveryTime".
+   */
+  getNewDeliveryPrice(params: {
+    category: 'option';
+    baseCoin: string;
+    settleCoin?: string;
+  }): Promise<
+    APIResponseV3WithTime<{
+      category: string;
+      list: {
+        deliveryPrice: string;
+        deliveryTime: string;
+      }[];
+    }>
+  > {
+    return this.get('/v5/market/new-delivery-price', params);
+  }
+
   getLongShortRatio(
     params: GetLongShortRatioParamsV5,
   ): Promise<APIResponseV3WithTime<CursorListV5<LongShortRatioV5[]>>> {
@@ -809,7 +835,7 @@ export class RestClientV5 extends BaseRestClient {
     symbol: string;
     category: 'spot' | 'linear' | 'inverse';
   }): Promise<APIResponseV3WithTime<OrderPriceLimitV5>> {
-    return this.get('/v5/order/price-limit', params);
+    return this.get('/v5/market/price-limit', params);
   }
 
   /**
@@ -1533,6 +1559,19 @@ export class RestClientV5 extends BaseRestClient {
     params: SetLimitPriceActionParamsV5,
   ): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate('/v5/account/set-limit-px-action', params);
+  }
+
+  /**
+   * Get Limit Price Behaviour
+   * You can get configuration how the system behaves when your limit order price exceeds the highest bid or lowest ask price.
+   */
+  getLimitPriceAction(): Promise<
+    APIResponseV3WithTime<{
+      lpaSpot: boolean;
+      lpaPerp: boolean;
+    }>
+  > {
+    return this.getPrivate('/v5/account/user-setting-config');
   }
 
   /**
@@ -3623,5 +3662,62 @@ export class RestClientV5 extends BaseRestClient {
    */
   getP2PUserPayments(): Promise<APIResponseV3WithTime<P2PUserPaymentV5[]>> {
     return this.postPrivate('/v5/p2p/user/payment/list');
+  }
+
+  /**
+   *
+   ****** API Rate Limit Management APIs
+   *
+   */
+
+  /**
+   * Set API rate limit
+   *
+   * API rate limit: 50 req per second
+   *
+   * INFO
+   * - If UID requesting this endpoint is a master account, uids in the input parameter must be subaccounts of the master account.
+   * - If UID requesting this endpoint is not a master account, uids in the input parameter must be the UID requesting this endpoint
+   * - UID requesting this endpoint must be an institutional user.
+   */
+  setApiRateLimit(params: {
+    list: {
+      uids: string;
+      bizType: string;
+      limit: number;
+    }[];
+  }): Promise<
+    APIResponseV3WithTime<{
+      result: {
+        uids: string;
+        bizType: string;
+        limit: number;
+        success: boolean;
+        msg: string;
+      }[];
+    }>
+  > {
+    return this.postPrivate('/v5/apilimit/set', params);
+  }
+
+  /**
+   * Query API rate limit
+   *
+   * API rate limit: 50 req per second
+   *
+   * INFO
+   * - A master account can query api rate limit of its own and subaccounts.
+   * - A subaccount can only query its own api rate limit.
+   */
+  queryApiRateLimit(params: { uids: string }): Promise<
+    APIResponseV3WithTime<{
+      list: {
+        uids: string;
+        bizType: string;
+        limit: number;
+      }[];
+    }>
+  > {
+    return this.getPrivate('/v5/apilimit/query', params);
   }
 }
