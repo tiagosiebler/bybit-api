@@ -234,6 +234,8 @@ import {
   PreUpgradeTransaction,
   PreUpgradeUSDCSessionSettlement,
   PublicTradeV5,
+  RepayCollateralFixedParamsV5,
+  RepayCollateralFlexibleParamsV5,
   RepayFixedParamsV5,
   RepayFixedV5,
   RepayFlexibleParamsV5,
@@ -2836,6 +2838,19 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Collateral Repayment
+   * Pay interest first, then repay the principal.
+   */
+  repayCollateralFlexible(
+    params: RepayCollateralFlexibleParamsV5,
+  ): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate(
+      '/v5/crypto-loan-flexible/repay-collateral',
+      params,
+    );
+  }
+
+  /**
    * Get Flexible Loans
    * Query for your ongoing loans
    *
@@ -3029,6 +3044,20 @@ export class RestClientV5 extends BaseRestClient {
     params: RepayFixedParamsV5,
   ): Promise<APIResponseV3WithTime<RepayFixedV5>> {
     return this.postPrivate('/v5/crypto-loan-fixed/fully-repay', params);
+  }
+
+  /**
+   * Collateral Repayment
+   * Pay interest first, then repay the principal.
+   *
+   */
+  repayCollateralFixed(
+    params: RepayCollateralFixedParamsV5,
+  ): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate(
+      '/v5/crypto-loan-flexible/repay-collateral',
+      params,
+    );
   }
 
   /**

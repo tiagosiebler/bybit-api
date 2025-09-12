@@ -376,6 +376,7 @@ describe('Private WRITE V5 REST API Endpoints', () => {
           chain: 'TRC20',
           coin: settleCoin,
           timestamp: Date.now(),
+          accountType: 'FUND',
         }),
       ).toMatchObject({
         // ...successResponseObjectV3(),
