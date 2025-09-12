@@ -84,6 +84,12 @@ export interface RepayFlexibleParamsV5 {
   amount: string;
 }
 
+export interface RepayCollateralFlexibleParamsV5 {
+  loanCurrency: string;
+  collateralCoin: string;
+  amount: string;
+}
+
 export interface GetOngoingFlexibleLoansParamsV5 {
   loanCurrency?: string;
 }
@@ -186,6 +192,12 @@ export interface GetSupplyOrderInfoFixedParamsV5 {
 export interface RepayFixedParamsV5 {
   loanId?: string;
   loanCurrency?: string;
+}
+
+export interface RepayCollateralFixedParamsV5 {
+  loanCurrency: string;
+  collateralCoin: string;
+  amount: string;
 }
 
 export interface GetRepaymentHistoryFixedParamsV5 {

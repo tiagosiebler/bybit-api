@@ -134,6 +134,7 @@ examples/
         Fixed-Loan/
           cancel-borrow-order.js
           cancel-supply-order.js
+          collateral-repayment.js
           create-borrow-order.js
           create-supply-order.js
           get-borrow-contract-info.js
@@ -146,6 +147,7 @@ examples/
           repay.js
         Flexible-Loan/
           borrow.js
+          collateral-repayment.js
           get-borrow-history.js
           get-ongoing-flexible-loans.js
           get-repayment-history.js
@@ -489,18 +491,6 @@ const client = new RestClientV5({
 ⋮----
 .getFeeRate({
 ⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Account/get-limit-price-behaviour.js
-================
-const client = new RestClientV5({
-⋮----
-.getLimitPriceAction()
 .then((response) => {
 console.log(response);
 ⋮----
@@ -1187,6 +1177,38 @@ console.log(response);
 console.error(error);
 
 ================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/collateral-repayment.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.repayCollateralFixed({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Flexible-Loan/collateral-repayment.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.repayCollateralFlexible({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
 File: examples/apidoc/V5/Earn/get-product-info.js
 ================
 const client = new RestClientV5({
@@ -1465,19 +1487,6 @@ console.error(error);
 
 ================
 File: examples/apidoc/V5/Market/get-long-short-ratio.js
-================
-const client = new RestClientV5({
-⋮----
-.getLongShortRatio({
-⋮----
-.then((response) => {
-console.log(response);
-⋮----
-.catch((error) => {
-console.error(error);
-
-================
-File: examples/apidoc/V5/Market/get-new-delivery-price.js
 ================
 const client = new RestClientV5({
 ⋮----
@@ -4599,32 +4608,6 @@ export interface USDCPositionsRequest {
 }
 
 ================
-File: src/types/request/v5-earn.ts
-================
-export interface SubmitStakeRedeemParamsV5 {
-  category: string;
-  orderType: 'Stake' | 'Redeem';
-  accountType: 'FUND' | 'UNIFIED';
-  amount: string;
-  coin: string;
-  productId: string;
-  orderLinkId: string;
-  toAccountType?: 'FUND' | 'UNIFIED';
-}
-⋮----
-export interface GetEarnOrderHistoryParamsV5 {
-  category: string;
-  orderId?: string;
-  orderLinkId?: string;
-}
-⋮----
-export interface GetEarnPositionParamsV5 {
-  category: string;
-  productId?: string;
-  coin?: string;
-}
-
-================
 File: src/types/request/v5-p2p-trading.ts
 ================
 export interface GetP2PAccountCoinsBalanceParamsV5 {
@@ -7075,6 +7058,18 @@ File: tsconfig.test.json
 }
 
 ================
+File: examples/apidoc/V5/Account/get-limit-price-behaviour.js
+================
+const client = new RestClientV5({
+⋮----
+.getLimitPriceAction()
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
 File: examples/apidoc/V5/Account/set-limit-price-behaviour.js
 ================
 const client = new RestClientV5({
@@ -7218,6 +7213,19 @@ File: examples/apidoc/V5/Crypto-Loan-Legacy/repay.js
 const client = new RestClientV5({
 ⋮----
 .repayCryptoLoan({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Market/get-new-delivery-price.js
+================
+const client = new RestClientV5({
+⋮----
+.getLongShortRatio({
 ⋮----
 .then((response) => {
 console.log(response);
@@ -7579,195 +7587,6 @@ export interface SetLimitPriceActionParamsV5 {
 }
 
 ================
-File: src/types/request/v5-asset.ts
-================
-import { AccountTypeV5, CategoryV5 } from '../shared-v5';
-⋮----
-export interface GetCoinExchangeRecordParamsV5 {
-  fromCoin?: string;
-  toCoin?: string;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface GetDeliveryRecordParamsV5 {
-  category: CategoryV5;
-  symbol?: string;
-  startTime?: number;
-  endTime?: number;
-  expDate?: string;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface GetSettlementRecordParamsV5 {
-  category: CategoryV5;
-  symbol?: string;
-  startTime?: number;
-  endTime?: number;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface GetAssetInfoParamsV5 {
-  accountType: AccountTypeV5;
-  coin?: string;
-}
-⋮----
-export interface GetAllCoinsBalanceParamsV5 {
-  memberId?: string;
-  accountType: AccountTypeV5;
-  coin?: string;
-  withBonus?: number;
-}
-⋮----
-export interface GetAccountCoinBalanceParamsV5 {
-  memberId?: string;
-  toMemberId?: string;
-  accountType: AccountTypeV5;
-  coin: string;
-  toAccountType?: AccountTypeV5;
-  withBonus?: number;
-  withTransferSafeAmount?: 0 | 1;
-  withLtvTransferSafeAmount?: 0 | 1;
-}
-⋮----
-export interface GetInternalTransferParamsV5 {
-  transferId?: string;
-  coin?: string;
-  status?: string;
-  startTime?: number;
-  endTime?: number;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface UniversalTransferParamsV5 {
-  transferId: string;
-  coin: string;
-  amount: string;
-  fromMemberId: number;
-  toMemberId: number;
-  fromAccountType: AccountTypeV5;
-  toAccountType: AccountTypeV5;
-}
-⋮----
-export interface GetUniversalTransferRecordsParamsV5 {
-  transferId?: string;
-  coin?: string;
-  status?: string;
-  startTime?: number;
-  endTime?: number;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface GetAllowedDepositCoinInfoParamsV5 {
-  coin?: string;
-  chain?: string;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface GetDepositRecordParamsV5 {
-  id?: string;
-  txID?: string;
-  coin?: string;
-  startTime?: number;
-  endTime?: number;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface GetSubAccountDepositRecordParamsV5 {
-  id?: string;
-  txID?: string;
-  subMemberId: string;
-  coin?: string;
-  startTime?: number;
-  endTime?: number;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface GetInternalDepositRecordParamsV5 {
-  txID?: string;
-  startTime?: number;
-  endTime?: number;
-  coin?: string;
-  cursor?: string;
-  limit?: number;
-}
-⋮----
-export interface GetWithdrawalRecordsParamsV5 {
-  withdrawID?: string;
-  txID?: string;
-  coin?: string;
-  withdrawType?: number;
-  startTime?: number;
-  endTime?: number;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface WithdrawParamsV5 {
-  coin: string;
-  chain: string;
-  address: string;
-  tag?: string;
-  amount: string;
-  timestamp: number;
-  forceChain?: number;
-  accountType: 'SPOT' | 'FUND';
-  feeType?: 0 | 1;
-  requestId?: string;
-  beneficiary?: {
-    vaspEntityId?: string;
-    beneficiaryName?: string;
-    beneficiaryLegalType?: string;
-    beneficiaryWalletType?: string;
-    beneficiaryUnhostedWalletType?: string;
-    beneficiaryPoiNumber?: string;
-    beneficiaryPoiType?: string;
-    beneficiaryPoiIssuingCountry?: string;
-    beneficiaryPoiExpiredDate?: string;
-  };
-}
-⋮----
-export interface ConvertCoinsParamsV5 {
-  coin?: string;
-  side?: number;
-  accountType:
-    | 'eb_convert_funding'
-    | 'eb_convert_uta'
-    | 'eb_convert_spot'
-    | 'eb_convert_contract'
-    | 'eb_convert_inverse';
-}
-⋮----
-export interface RequestConvertQuoteParamsV5 {
-  fromCoin: string;
-  toCoin: string;
-  fromCoinType?: string;
-  toCoinType?: string;
-  requestCoin: string;
-  requestAmount: string;
-  accountType:
-    | 'eb_convert_funding'
-    | 'eb_convert_uta'
-    | 'eb_convert_spot'
-    | 'eb_convert_contract'
-    | 'eb_convert_inverse';
-  requestId?: string;
-}
-⋮----
-export interface GetConvertHistoryParamsV5 {
-  accountType?: string;
-  index?: number;
-  limit?: number;
-}
-
-================
 File: src/types/request/v5-broker.ts
 ================
 export interface GetExchangeBrokerEarningsParamsV5 {
@@ -7803,6 +7622,32 @@ export interface GetBrokerIssuedVoucherParamsV5 {
   awardId: string;
   specCode: string;
   withUsedAmount?: boolean;
+}
+
+================
+File: src/types/request/v5-earn.ts
+================
+export interface SubmitStakeRedeemParamsV5 {
+  category: string;
+  orderType: 'Stake' | 'Redeem';
+  accountType: 'FUND' | 'UNIFIED';
+  amount: string;
+  coin: string;
+  productId: string;
+  orderLinkId: string;
+  toAccountType?: 'FUND' | 'UNIFIED';
+}
+⋮----
+export interface GetEarnOrderHistoryParamsV5 {
+  category: string;
+  orderId?: string;
+  orderLinkId?: string;
+}
+⋮----
+export interface GetEarnPositionParamsV5 {
+  category: string;
+  productId?: string;
+  coin?: string;
 }
 
 ================
@@ -8063,7 +7908,7 @@ export interface MovePositionParamsV5 {
   fromUid: string;
   toUid: string;
   list: {
-    category: 'linear' | 'spot' | 'option';
+    category: 'linear' | 'spot' | 'option' | 'inverse';
     symbol: string;
     price: string;
     side: 'Buy' | 'Sell';
@@ -8542,354 +8387,6 @@ export interface BrokerIssuedVoucherV5 {
 }
 
 ================
-File: src/types/response/v5-market.ts
-================
-import {
-  CategoryCursorListV5,
-  CategoryV5,
-  ContractTypeV5,
-  CopyTradingV5,
-  InstrumentStatusV5,
-  MarginTradingV5,
-  OptionTypeV5,
-  OrderSideV5,
-} from '../shared-v5';
-⋮----
-/**
- * OHLCVT candle used by v5 APIs
- *
- * - list[0]: startTime	string	Start time of the candle (ms)
- * - list[1]: openPrice	string	Open price
- * - list[2]: highPrice	string	Highest price
- * - list[3]: lowPrice	string	Lowest price
- * - list[4]: closePrice	string	Close price. Is the last traded price when the candle is not closed
- * - list[5]: volume	string	Trade volume. Unit of contract: pieces of contract. Unit of spot: quantity of coins
- * - list[6]: turnover	string	Turnover. Unit of figure: quantity of quota coin
- */
-export type OHLCVKlineV5 = [
-  string,
-  string,
-  string,
-  string,
-  string,
-  string,
-  string,
-];
-⋮----
-/**
- * OHLC candle used by v5 APIs
- *
- * - list[0]: startTime	string	Start time of the candle (ms)
- * - list[1]: openPrice	string	Open price
- * - list[2]: highPrice	string	Highest price
- * - list[3]: lowPrice	string	Lowest price
- * - list[4]: closePrice	string	Close price. Is the last traded price when the candle is not closed
- */
-export type OHLCKlineV5 = [string, string, string, string, string];
-⋮----
-export interface LinearInverseInstrumentInfoV5 {
-  symbol: string;
-  contractType: ContractTypeV5;
-  status: InstrumentStatusV5;
-  baseCoin: string;
-  quoteCoin: string;
-  launchTime: string;
-  deliveryTime?: string;
-  deliveryFeeRate?: string;
-  priceScale: string;
-  leverageFilter: {
-    minLeverage: string;
-    maxLeverage: string;
-    leverageStep: string;
-  };
-  priceFilter: {
-    minPrice: string;
-    maxPrice: string;
-    tickSize: string;
-  };
-  lotSizeFilter: {
-    maxOrderQty: string;
-    maxMktOrderQty: string;
-    minOrderQty: string;
-    qtyStep: string;
-    postOnlyMaxOrderQty?: string;
-    minNotionalValue?: string;
-  };
-  unifiedMarginTrade: boolean;
-  fundingInterval: number;
-  settleCoin: string;
-  copyTrading: CopyTradingV5;
-  upperFundingRate: string;
-  lowerFundingRate: string;
-  riskParameters: {
-    priceLimitRatioX: string;
-    priceLimitRatioY: string;
-  };
-  isPreListing: boolean;
-  preListingInfo: {
-    curAuctionPhase: string;
-    phases: {
-      phase: string;
-      startTime: string;
-      endTime: string;
-    }[];
-    auctionFeeInfo: {
-      auctionFeeRate: string;
-      takerFeeRate: string;
-      makerFeeRate: string;
-    };
-  } | null;
-  displayName: string;
-}
-⋮----
-export interface OptionInstrumentInfoV5 {
-  symbol: string;
-  optionsType: OptionTypeV5;
-  status: InstrumentStatusV5;
-  baseCoin: string;
-  quoteCoin: string;
-  settleCoin: string;
-  launchTime: string;
-  deliveryTime: string;
-  deliveryFeeRate: string;
-  priceFilter: {
-    minPrice: string;
-    maxPrice: string;
-    tickSize: string;
-  };
-  lotSizeFilter: {
-    maxOrderQty: string;
-    minOrderQty: string;
-    qtyStep: string;
-  };
-  displayName: string;
-}
-⋮----
-export interface SpotInstrumentInfoV5 {
-  symbol: string;
-  baseCoin: string;
-  quoteCoin: string;
-  innovation: '0' | '1';
-  status: InstrumentStatusV5;
-  marginTrading: MarginTradingV5;
-  stTag: '0' | '1';
-  lotSizeFilter: {
-    basePrecision: string;
-    quotePrecision: string;
-    minOrderQty: string;
-    maxOrderQty: string;
-    minOrderAmt: string;
-    maxOrderAmt: string;
-  };
-  priceFilter: {
-    tickSize: string;
-  };
-  riskParameters: {
-    priceLimitRatioX: string;
-    priceLimitRatioY: string;
-  };
-}
-⋮----
-type InstrumentInfoV5Mapping = {
-  linear: LinearInverseInstrumentInfoV5[];
-  inverse: LinearInverseInstrumentInfoV5[];
-  option: OptionInstrumentInfoV5[];
-  spot: SpotInstrumentInfoV5[];
-};
-⋮----
-export type InstrumentInfoResponseV5<C extends CategoryV5> =
-  CategoryCursorListV5<InstrumentInfoV5Mapping[C], C>;
-⋮----
-/**
- * [price, size]
- */
-export type OrderbookLevelV5 = [string, string];
-⋮----
-export interface OrderbookResponseV5 {
-  s: string;
-  b: OrderbookLevelV5[];
-  a: OrderbookLevelV5[];
-  ts: number;
-  u: number;
-  seq: number;
-  cts: number;
-}
-⋮----
-export interface TickerLinearInverseV5 {
-  symbol: string;
-  lastPrice: string;
-  indexPrice: string;
-  markPrice: string;
-  prevPrice24h: string;
-  price24hPcnt: string;
-  highPrice24h: string;
-  lowPrice24h: string;
-  prevPrice1h: string;
-  openInterest: string;
-  openInterestValue: string;
-  turnover24h: string;
-  volume24h: string;
-  fundingRate: string;
-  nextFundingTime: string;
-  predictedDeliveryPrice: string;
-  basisRate: string;
-  deliveryFeeRate: string;
-  deliveryTime: string;
-  ask1Size: string;
-  bid1Price: string;
-  ask1Price: string;
-  bid1Size: string;
-  preOpenPrice: string;
-  preQty: string;
-  curPreListingPhase: string;
-  basis: string;
-}
-⋮----
-export interface TickerOptionV5 {
-  symbol: string;
-  bid1Price: string;
-  bid1Size: string;
-  bid1Iv: string;
-  ask1Price: string;
-  ask1Size: string;
-  ask1Iv: string;
-  lastPrice: string;
-  highPrice24h: string;
-  lowPrice24h: string;
-  markPrice: string;
-  indexPrice: string;
-  markIv: string;
-  underlyingPrice: string;
-  openInterest: string;
-  turnover24h: string;
-  volume24h: string;
-  totalVolume: string;
-  totalTurnover: string;
-  delta: string;
-  gamma: string;
-  vega: string;
-  theta: string;
-  predictedDeliveryPrice: string;
-  change24h: string;
-}
-⋮----
-export interface TickerSpotV5 {
-  symbol: string;
-  bid1Price: string;
-  bid1Size: string;
-  ask1Price: string;
-  ask1Size: string;
-  lastPrice: string;
-  prevPrice24h: string;
-  price24hPcnt: string;
-  highPrice24h: string;
-  lowPrice24h: string;
-  turnover24h: string;
-  volume24h: string;
-  usdIndexPrice: string;
-}
-⋮----
-export interface FundingRateHistoryResponseV5 {
-  symbol: string;
-  fundingRate: string;
-  fundingRateTimestamp: string;
-}
-⋮----
-export interface PublicTradeV5 {
-  execId: string;
-  symbol: string;
-  price: string;
-  size: string;
-  side: OrderSideV5;
-  time: string;
-  isBlockTrade: boolean;
-  isRPITrade: boolean;
-  mP?: string;
-  iP?: string;
-  mIv?: string;
-  iv?: string;
-  seq?: string;
-}
-⋮----
-/**
- *
- * - openInterest	string	Open interest
- * - timestamp	string	The timestamp (ms)
- */
-export type OpenInterestV5 = {
-  openInterest: string;
-  timestamp: string;
-};
-⋮----
-export interface OpenInterestResponseV5 {
-  category: 'linear' | 'inverse';
-  symbol: string;
-  list: OpenInterestV5[];
-  nextPageCursor?: string;
-}
-⋮----
-export interface HistoricalVolatilityV5 {
-  period: number;
-  value: string;
-  time: string;
-}
-⋮----
-export interface InsuranceDataV5 {
-  coin: string;
-  symbols: string;
-  balance: string;
-  value: string;
-}
-⋮----
-export interface InsuranceResponseV5 {
-  updatedTime: string;
-  list: InsuranceDataV5[];
-}
-⋮----
-export interface RiskLimitV5 {
-  id: number;
-  symbol: string;
-  riskLimitValue: string;
-  maintenanceMargin: number;
-  initialMargin: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  section: any;
-  isLowestRisk: 0 | 1;
-  maxLeverage: string;
-  mmDeduction: string;
-  nextPageCursor?: string;
-}
-⋮----
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-⋮----
-/** @deprecated use DeliveryPriceV5 instead */
-export interface OptionDeliveryPriceV5 {
-  symbol: string;
-  deliveryPrice: string;
-  deliveryTime: string;
-}
-⋮----
-export interface DeliveryPriceV5 {
-  symbol: string;
-  deliveryPrice: string;
-  deliveryTime: string;
-}
-⋮----
-export interface LongShortRatioV5 {
-  symbol: string;
-  buyRatio: string;
-  sellRatio: string;
-  timestamp: string;
-}
-⋮----
-export interface OrderPriceLimitV5 {
-  symbol: string;
-  buyLmt: string;
-  sellLmt: string;
-  ts: string;
-}
-
-================
 File: src/types/response/v5-preupgrade.ts
 ================
 export interface PreUpgradeTransaction {
@@ -9029,162 +8526,6 @@ export interface SpotMarginStateV5 {
   spotLeverage: string;
   spotMarginMode: '1' | '0';
   effectiveLeverage: string;
-}
-
-================
-File: src/types/response/v5-spreadtrading.ts
-================
-export interface SpreadInstrumentInfoV5 {
-  symbol: string;
-  contractType: 'FundingRateArb' | 'CarryTrade' | 'FutureSpread' | 'PerpBasis';
-  status: 'Trading' | 'Settling';
-  baseCoin: string;
-  quoteCoin: string;
-  settleCoin: string;
-  tickSize: string;
-  minPrice: string;
-  maxPrice: string;
-  lotSize: string;
-  minSize: string;
-  maxSize: string;
-  launchTime: string;
-  deliveryTime: string;
-  legs: {
-    symbol: string;
-    contractType: 'LinearPerpetual' | 'LinearFutures' | 'Spot';
-  }[];
-}
-⋮----
-export interface SpreadOrderbookResponseV5 {
-  s: string; // Symbol
-  b: [string, string][]; // Bids array [price, size]
-  a: [string, string][]; // Asks array [price, size]
-  u: number; // Update ID
-  ts: number; // Timestamp
-  seq: number; // Sequence
-  cts: number; // Cross timestamp
-}
-⋮----
-s: string; // Symbol
-b: [string, string][]; // Bids array [price, size]
-a: [string, string][]; // Asks array [price, size]
-u: number; // Update ID
-ts: number; // Timestamp
-seq: number; // Sequence
-cts: number; // Cross timestamp
-⋮----
-export interface SpreadTickerV5 {
-  symbol: string; // Spread combination symbol name
-  bidPrice: string; // Bid 1 price
-  bidSize: string; // Bid 1 size
-  askPrice: string; // Ask 1 price
-  askSize: string; // Ask 1 size
-  lastPrice: string; // Last trade price
-  highPrice24h: string; // The highest price in the last 24 hours
-  lowPrice24h: string; // The lowest price in the last 24 hours
-  prevPrice24h: string; // Price 24 hours ago
-  volume24h: string; // Volume for 24h
-}
-⋮----
-symbol: string; // Spread combination symbol name
-bidPrice: string; // Bid 1 price
-bidSize: string; // Bid 1 size
-askPrice: string; // Ask 1 price
-askSize: string; // Ask 1 size
-lastPrice: string; // Last trade price
-highPrice24h: string; // The highest price in the last 24 hours
-lowPrice24h: string; // The lowest price in the last 24 hours
-prevPrice24h: string; // Price 24 hours ago
-volume24h: string; // Volume for 24h
-⋮----
-export interface SpreadRecentTradeV5 {
-  execId: string; // Execution ID
-  symbol: string; // Spread combination symbol name
-  price: string; // Trade price
-  size: string; // Trade size
-  side: 'Buy' | 'Sell'; // Side of taker
-  time: string; // Trade time (ms)
-  seq?: string;
-}
-⋮----
-execId: string; // Execution ID
-symbol: string; // Spread combination symbol name
-price: string; // Trade price
-size: string; // Trade size
-side: 'Buy' | 'Sell'; // Side of taker
-time: string; // Trade time (ms)
-⋮----
-export interface SpreadOpenOrderV5 {
-  symbol: string;
-  baseCoin: string;
-  orderType: 'Market' | 'Limit';
-  orderLinkId: string;
-  side: 'Buy' | 'Sell';
-  timeInForce: 'GTC' | 'FOK' | 'IOC' | 'PostOnly';
-  orderId: string;
-  leavesQty: string;
-  orderStatus: 'New' | 'PartiallyFilled';
-  cumExecQty: string;
-  price: string;
-  qty: string;
-  createdTime: string;
-  updatedTime: string;
-}
-⋮----
-export interface SpreadOrderHistoryV5 {
-  symbol: string;
-  orderType: 'Market' | 'Limit';
-  orderLinkId: string;
-  orderId: string;
-  contractType: 'FundingRateArb' | 'CarryTrade' | 'FutureSpread' | 'PerpBasis';
-  orderStatus: 'Rejected' | 'Cancelled' | 'Filled';
-  price: string;
-  orderQty: string;
-  timeInForce: 'GTC' | 'FOK' | 'IOC' | 'PostOnly';
-  baseCoin: string;
-  createdAt: string;
-  updatedAt: string;
-  side: 'Buy' | 'Sell';
-  leavesQty: string;
-  settleCoin: string;
-  cumExecQty: string;
-  qty: string;
-  leg1Symbol: string;
-  leg1ProdType: 'Futures' | 'Spot';
-  leg1OrderId: string;
-  leg1Side: string;
-  leg2ProdType: 'Futures' | 'Spot';
-  leg2OrderId: string;
-  leg2Symbol: string;
-  leg2Side: string;
-  cxlRejReason: string;
-}
-⋮----
-export interface SpreadTradeLegV5 {
-  symbol: string;
-  side: 'Buy' | 'Sell';
-  execPrice: string;
-  execTime: string;
-  execValue: string;
-  execType: string;
-  category: 'linear' | 'spot';
-  execQty: string;
-  execFee: string;
-  execId: string;
-}
-⋮----
-export interface SpreadTradeV5 {
-  symbol: string;
-  orderLinkId: string;
-  side: 'Buy' | 'Sell';
-  orderId: string;
-  execPrice: string;
-  execTime: string;
-  execType: 'Trade';
-  execQty: string;
-  execId: string;
-  legs: SpreadTradeLegV5[];
-  extraFees: string;
 }
 
 ================
@@ -9999,6 +9340,195 @@ async function main()
 // Start executing the example workflow
 
 ================
+File: src/types/request/v5-asset.ts
+================
+import { AccountTypeV5, CategoryV5 } from '../shared-v5';
+⋮----
+export interface GetCoinExchangeRecordParamsV5 {
+  fromCoin?: string;
+  toCoin?: string;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface GetDeliveryRecordParamsV5 {
+  category: CategoryV5;
+  symbol?: string;
+  startTime?: number;
+  endTime?: number;
+  expDate?: string;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface GetSettlementRecordParamsV5 {
+  category: CategoryV5;
+  symbol?: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface GetAssetInfoParamsV5 {
+  accountType: AccountTypeV5;
+  coin?: string;
+}
+⋮----
+export interface GetAllCoinsBalanceParamsV5 {
+  memberId?: string;
+  accountType: AccountTypeV5;
+  coin?: string;
+  withBonus?: number;
+}
+⋮----
+export interface GetAccountCoinBalanceParamsV5 {
+  memberId?: string;
+  toMemberId?: string;
+  accountType: AccountTypeV5;
+  coin: string;
+  toAccountType?: AccountTypeV5;
+  withBonus?: number;
+  withTransferSafeAmount?: 0 | 1;
+  withLtvTransferSafeAmount?: 0 | 1;
+}
+⋮----
+export interface GetInternalTransferParamsV5 {
+  transferId?: string;
+  coin?: string;
+  status?: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface UniversalTransferParamsV5 {
+  transferId: string;
+  coin: string;
+  amount: string;
+  fromMemberId: number;
+  toMemberId: number;
+  fromAccountType: AccountTypeV5;
+  toAccountType: AccountTypeV5;
+}
+⋮----
+export interface GetUniversalTransferRecordsParamsV5 {
+  transferId?: string;
+  coin?: string;
+  status?: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface GetAllowedDepositCoinInfoParamsV5 {
+  coin?: string;
+  chain?: string;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface GetDepositRecordParamsV5 {
+  id?: string;
+  txID?: string;
+  coin?: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface GetSubAccountDepositRecordParamsV5 {
+  id?: string;
+  txID?: string;
+  subMemberId: string;
+  coin?: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface GetInternalDepositRecordParamsV5 {
+  txID?: string;
+  startTime?: number;
+  endTime?: number;
+  coin?: string;
+  cursor?: string;
+  limit?: number;
+}
+⋮----
+export interface GetWithdrawalRecordsParamsV5 {
+  withdrawID?: string;
+  txID?: string;
+  coin?: string;
+  withdrawType?: number;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface WithdrawParamsV5 {
+  coin: string;
+  chain: string;
+  address: string;
+  tag?: string;
+  amount: string;
+  timestamp: number;
+  forceChain?: number;
+  accountType: 'SPOT' | 'FUND';
+  feeType?: 0 | 1;
+  requestId?: string;
+  beneficiary?: {
+    vaspEntityId?: string;
+    beneficiaryName?: string;
+    beneficiaryLegalType?: string;
+    beneficiaryWalletType?: string;
+    beneficiaryUnhostedWalletType?: string;
+    beneficiaryPoiNumber?: string;
+    beneficiaryPoiType?: string;
+    beneficiaryPoiIssuingCountry?: string;
+    beneficiaryPoiExpiredDate?: string;
+  };
+}
+⋮----
+export interface ConvertCoinsParamsV5 {
+  coin?: string;
+  side?: number;
+  accountType:
+    | 'eb_convert_funding'
+    | 'eb_convert_uta'
+    | 'eb_convert_spot'
+    | 'eb_convert_contract'
+    | 'eb_convert_inverse';
+}
+⋮----
+export interface RequestConvertQuoteParamsV5 {
+  fromCoin: string;
+  toCoin: string;
+  fromCoinType?: string;
+  toCoinType?: string;
+  requestCoin: string;
+  requestAmount: string;
+  accountType:
+    | 'eb_convert_funding'
+    | 'eb_convert_uta'
+    | 'eb_convert_spot'
+    | 'eb_convert_contract'
+    | 'eb_convert_inverse';
+  requestId?: string;
+}
+⋮----
+export interface GetConvertHistoryParamsV5 {
+  accountType?: string;
+  index?: number;
+  limit?: number;
+}
+
+================
 File: src/types/response/index.ts
 ================
 
@@ -10439,6 +9969,354 @@ export interface ConvertHistoryRecordV5 {
 }
 
 ================
+File: src/types/response/v5-market.ts
+================
+import {
+  CategoryCursorListV5,
+  CategoryV5,
+  ContractTypeV5,
+  CopyTradingV5,
+  InstrumentStatusV5,
+  MarginTradingV5,
+  OptionTypeV5,
+  OrderSideV5,
+} from '../shared-v5';
+⋮----
+/**
+ * OHLCVT candle used by v5 APIs
+ *
+ * - list[0]: startTime	string	Start time of the candle (ms)
+ * - list[1]: openPrice	string	Open price
+ * - list[2]: highPrice	string	Highest price
+ * - list[3]: lowPrice	string	Lowest price
+ * - list[4]: closePrice	string	Close price. Is the last traded price when the candle is not closed
+ * - list[5]: volume	string	Trade volume. Unit of contract: pieces of contract. Unit of spot: quantity of coins
+ * - list[6]: turnover	string	Turnover. Unit of figure: quantity of quota coin
+ */
+export type OHLCVKlineV5 = [
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+];
+⋮----
+/**
+ * OHLC candle used by v5 APIs
+ *
+ * - list[0]: startTime	string	Start time of the candle (ms)
+ * - list[1]: openPrice	string	Open price
+ * - list[2]: highPrice	string	Highest price
+ * - list[3]: lowPrice	string	Lowest price
+ * - list[4]: closePrice	string	Close price. Is the last traded price when the candle is not closed
+ */
+export type OHLCKlineV5 = [string, string, string, string, string];
+⋮----
+export interface LinearInverseInstrumentInfoV5 {
+  symbol: string;
+  contractType: ContractTypeV5;
+  status: InstrumentStatusV5;
+  baseCoin: string;
+  quoteCoin: string;
+  launchTime: string;
+  deliveryTime?: string;
+  deliveryFeeRate?: string;
+  priceScale: string;
+  leverageFilter: {
+    minLeverage: string;
+    maxLeverage: string;
+    leverageStep: string;
+  };
+  priceFilter: {
+    minPrice: string;
+    maxPrice: string;
+    tickSize: string;
+  };
+  lotSizeFilter: {
+    maxOrderQty: string;
+    maxMktOrderQty: string;
+    minOrderQty: string;
+    qtyStep: string;
+    postOnlyMaxOrderQty?: string;
+    minNotionalValue?: string;
+  };
+  unifiedMarginTrade: boolean;
+  fundingInterval: number;
+  settleCoin: string;
+  copyTrading: CopyTradingV5;
+  upperFundingRate: string;
+  lowerFundingRate: string;
+  riskParameters: {
+    priceLimitRatioX: string;
+    priceLimitRatioY: string;
+  };
+  isPreListing: boolean;
+  preListingInfo: {
+    curAuctionPhase: string;
+    phases: {
+      phase: string;
+      startTime: string;
+      endTime: string;
+    }[];
+    auctionFeeInfo: {
+      auctionFeeRate: string;
+      takerFeeRate: string;
+      makerFeeRate: string;
+    };
+  } | null;
+  displayName: string;
+}
+⋮----
+export interface OptionInstrumentInfoV5 {
+  symbol: string;
+  optionsType: OptionTypeV5;
+  status: InstrumentStatusV5;
+  baseCoin: string;
+  quoteCoin: string;
+  settleCoin: string;
+  launchTime: string;
+  deliveryTime: string;
+  deliveryFeeRate: string;
+  priceFilter: {
+    minPrice: string;
+    maxPrice: string;
+    tickSize: string;
+  };
+  lotSizeFilter: {
+    maxOrderQty: string;
+    minOrderQty: string;
+    qtyStep: string;
+  };
+  displayName: string;
+}
+⋮----
+export interface SpotInstrumentInfoV5 {
+  symbol: string;
+  baseCoin: string;
+  quoteCoin: string;
+  innovation: '0' | '1';
+  status: InstrumentStatusV5;
+  marginTrading: MarginTradingV5;
+  stTag: '0' | '1';
+  lotSizeFilter: {
+    basePrecision: string;
+    quotePrecision: string;
+    minOrderQty: string;
+    maxOrderQty: string;
+    minOrderAmt: string;
+    maxOrderAmt: string;
+  };
+  priceFilter: {
+    tickSize: string;
+  };
+  riskParameters: {
+    priceLimitRatioX: string;
+    priceLimitRatioY: string;
+  };
+}
+⋮----
+type InstrumentInfoV5Mapping = {
+  linear: LinearInverseInstrumentInfoV5[];
+  inverse: LinearInverseInstrumentInfoV5[];
+  option: OptionInstrumentInfoV5[];
+  spot: SpotInstrumentInfoV5[];
+};
+⋮----
+export type InstrumentInfoResponseV5<C extends CategoryV5> =
+  CategoryCursorListV5<InstrumentInfoV5Mapping[C], C>;
+⋮----
+/**
+ * [price, size]
+ */
+export type OrderbookLevelV5 = [string, string];
+⋮----
+export interface OrderbookResponseV5 {
+  s: string;
+  b: OrderbookLevelV5[];
+  a: OrderbookLevelV5[];
+  ts: number;
+  u: number;
+  seq: number;
+  cts: number;
+}
+⋮----
+export interface TickerLinearInverseV5 {
+  symbol: string;
+  lastPrice: string;
+  indexPrice: string;
+  markPrice: string;
+  prevPrice24h: string;
+  price24hPcnt: string;
+  highPrice24h: string;
+  lowPrice24h: string;
+  prevPrice1h: string;
+  openInterest: string;
+  openInterestValue: string;
+  turnover24h: string;
+  volume24h: string;
+  fundingRate: string;
+  nextFundingTime: string;
+  predictedDeliveryPrice: string;
+  basisRate: string;
+  deliveryFeeRate: string;
+  deliveryTime: string;
+  ask1Size: string;
+  bid1Price: string;
+  ask1Price: string;
+  bid1Size: string;
+  preOpenPrice: string;
+  preQty: string;
+  curPreListingPhase: string;
+  basis: string;
+}
+⋮----
+export interface TickerOptionV5 {
+  symbol: string;
+  bid1Price: string;
+  bid1Size: string;
+  bid1Iv: string;
+  ask1Price: string;
+  ask1Size: string;
+  ask1Iv: string;
+  lastPrice: string;
+  highPrice24h: string;
+  lowPrice24h: string;
+  markPrice: string;
+  indexPrice: string;
+  markIv: string;
+  underlyingPrice: string;
+  openInterest: string;
+  turnover24h: string;
+  volume24h: string;
+  totalVolume: string;
+  totalTurnover: string;
+  delta: string;
+  gamma: string;
+  vega: string;
+  theta: string;
+  predictedDeliveryPrice: string;
+  change24h: string;
+}
+⋮----
+export interface TickerSpotV5 {
+  symbol: string;
+  bid1Price: string;
+  bid1Size: string;
+  ask1Price: string;
+  ask1Size: string;
+  lastPrice: string;
+  prevPrice24h: string;
+  price24hPcnt: string;
+  highPrice24h: string;
+  lowPrice24h: string;
+  turnover24h: string;
+  volume24h: string;
+  usdIndexPrice: string;
+}
+⋮----
+export interface FundingRateHistoryResponseV5 {
+  symbol: string;
+  fundingRate: string;
+  fundingRateTimestamp: string;
+}
+⋮----
+export interface PublicTradeV5 {
+  execId: string;
+  symbol: string;
+  price: string;
+  size: string;
+  side: OrderSideV5;
+  time: string;
+  isBlockTrade: boolean;
+  isRPITrade: boolean;
+  mP?: string;
+  iP?: string;
+  mIv?: string;
+  iv?: string;
+  seq?: string;
+}
+⋮----
+/**
+ *
+ * - openInterest	string	Open interest
+ * - timestamp	string	The timestamp (ms)
+ */
+export type OpenInterestV5 = {
+  openInterest: string;
+  timestamp: string;
+};
+⋮----
+export interface OpenInterestResponseV5 {
+  category: 'linear' | 'inverse';
+  symbol: string;
+  list: OpenInterestV5[];
+  nextPageCursor?: string;
+}
+⋮----
+export interface HistoricalVolatilityV5 {
+  period: number;
+  value: string;
+  time: string;
+}
+⋮----
+export interface InsuranceDataV5 {
+  coin: string;
+  symbols: string;
+  balance: string;
+  value: string;
+}
+⋮----
+export interface InsuranceResponseV5 {
+  updatedTime: string;
+  list: InsuranceDataV5[];
+}
+⋮----
+export interface RiskLimitV5 {
+  id: number;
+  symbol: string;
+  riskLimitValue: string;
+  maintenanceMargin: number;
+  initialMargin: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  section: any;
+  isLowestRisk: 0 | 1;
+  maxLeverage: string;
+  mmDeduction: string;
+  nextPageCursor?: string;
+}
+⋮----
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+⋮----
+/** @deprecated use DeliveryPriceV5 instead */
+export interface OptionDeliveryPriceV5 {
+  symbol: string;
+  deliveryPrice: string;
+  deliveryTime: string;
+}
+⋮----
+export interface DeliveryPriceV5 {
+  symbol: string;
+  deliveryPrice: string;
+  deliveryTime: string;
+}
+⋮----
+export interface LongShortRatioV5 {
+  symbol: string;
+  buyRatio: string;
+  sellRatio: string;
+  timestamp: string;
+}
+⋮----
+export interface OrderPriceLimitV5 {
+  symbol: string;
+  buyLmt: string;
+  sellLmt: string;
+  ts: string;
+}
+
+================
 File: src/types/response/v5-rfq.ts
 ================
 export interface RFQConfigV5 {
@@ -10764,6 +10642,162 @@ strategyType: string; // Inquiry label
 createdAt: number; // Time when trade is created in epoch
 updatedAt: number; // Time when trade is updated in epoch
 legs: RFQPublicTradeLegV5[]; // Combination transaction
+
+================
+File: src/types/response/v5-spreadtrading.ts
+================
+export interface SpreadInstrumentInfoV5 {
+  symbol: string;
+  contractType: 'FundingRateArb' | 'CarryTrade' | 'FutureSpread' | 'PerpBasis';
+  status: 'Trading' | 'Settling';
+  baseCoin: string;
+  quoteCoin: string;
+  settleCoin: string;
+  tickSize: string;
+  minPrice: string;
+  maxPrice: string;
+  lotSize: string;
+  minSize: string;
+  maxSize: string;
+  launchTime: string;
+  deliveryTime: string;
+  legs: {
+    symbol: string;
+    contractType: 'LinearPerpetual' | 'LinearFutures' | 'Spot';
+  }[];
+}
+⋮----
+export interface SpreadOrderbookResponseV5 {
+  s: string; // Symbol
+  b: [string, string][]; // Bids array [price, size]
+  a: [string, string][]; // Asks array [price, size]
+  u: number; // Update ID
+  ts: number; // Timestamp
+  seq: number; // Sequence
+  cts: number; // Cross timestamp
+}
+⋮----
+s: string; // Symbol
+b: [string, string][]; // Bids array [price, size]
+a: [string, string][]; // Asks array [price, size]
+u: number; // Update ID
+ts: number; // Timestamp
+seq: number; // Sequence
+cts: number; // Cross timestamp
+⋮----
+export interface SpreadTickerV5 {
+  symbol: string; // Spread combination symbol name
+  bidPrice: string; // Bid 1 price
+  bidSize: string; // Bid 1 size
+  askPrice: string; // Ask 1 price
+  askSize: string; // Ask 1 size
+  lastPrice: string; // Last trade price
+  highPrice24h: string; // The highest price in the last 24 hours
+  lowPrice24h: string; // The lowest price in the last 24 hours
+  prevPrice24h: string; // Price 24 hours ago
+  volume24h: string; // Volume for 24h
+}
+⋮----
+symbol: string; // Spread combination symbol name
+bidPrice: string; // Bid 1 price
+bidSize: string; // Bid 1 size
+askPrice: string; // Ask 1 price
+askSize: string; // Ask 1 size
+lastPrice: string; // Last trade price
+highPrice24h: string; // The highest price in the last 24 hours
+lowPrice24h: string; // The lowest price in the last 24 hours
+prevPrice24h: string; // Price 24 hours ago
+volume24h: string; // Volume for 24h
+⋮----
+export interface SpreadRecentTradeV5 {
+  execId: string; // Execution ID
+  symbol: string; // Spread combination symbol name
+  price: string; // Trade price
+  size: string; // Trade size
+  side: 'Buy' | 'Sell'; // Side of taker
+  time: string; // Trade time (ms)
+  seq?: string;
+}
+⋮----
+execId: string; // Execution ID
+symbol: string; // Spread combination symbol name
+price: string; // Trade price
+size: string; // Trade size
+side: 'Buy' | 'Sell'; // Side of taker
+time: string; // Trade time (ms)
+⋮----
+export interface SpreadOpenOrderV5 {
+  symbol: string;
+  baseCoin: string;
+  orderType: 'Market' | 'Limit';
+  orderLinkId: string;
+  side: 'Buy' | 'Sell';
+  timeInForce: 'GTC' | 'FOK' | 'IOC' | 'PostOnly';
+  orderId: string;
+  leavesQty: string;
+  orderStatus: 'New' | 'PartiallyFilled';
+  cumExecQty: string;
+  price: string;
+  qty: string;
+  createdTime: string;
+  updatedTime: string;
+}
+⋮----
+export interface SpreadOrderHistoryV5 {
+  symbol: string;
+  orderType: 'Market' | 'Limit';
+  orderLinkId: string;
+  orderId: string;
+  contractType: 'FundingRateArb' | 'CarryTrade' | 'FutureSpread' | 'PerpBasis';
+  orderStatus: 'Rejected' | 'Cancelled' | 'Filled';
+  price: string;
+  orderQty: string;
+  timeInForce: 'GTC' | 'FOK' | 'IOC' | 'PostOnly';
+  baseCoin: string;
+  createdAt: string;
+  updatedAt: string;
+  side: 'Buy' | 'Sell';
+  leavesQty: string;
+  settleCoin: string;
+  cumExecQty: string;
+  qty: string;
+  leg1Symbol: string;
+  leg1ProdType: 'Futures' | 'Spot';
+  leg1OrderId: string;
+  leg1Side: string;
+  leg2ProdType: 'Futures' | 'Spot';
+  leg2OrderId: string;
+  leg2Symbol: string;
+  leg2Side: string;
+  cxlRejReason: string;
+}
+⋮----
+export interface SpreadTradeLegV5 {
+  symbol: string;
+  side: 'Buy' | 'Sell';
+  execPrice: string;
+  execTime: string;
+  execValue: string;
+  execType: string;
+  category: 'linear' | 'spot';
+  execQty: string;
+  execFee: string;
+  execId: string;
+}
+⋮----
+export interface SpreadTradeV5 {
+  symbol: string;
+  orderLinkId: string;
+  side: 'Buy' | 'Sell';
+  orderId: string;
+  execPrice: string;
+  execTime: string;
+  execType: 'Trade';
+  execQty: string;
+  execId: string;
+  legs: SpreadTradeLegV5[];
+  extraFees: string;
+}
 
 ================
 File: src/types/response/v5-trade.ts
@@ -11846,6 +11880,12 @@ export interface RepayFlexibleParamsV5 {
   amount: string;
 }
 ⋮----
+export interface RepayCollateralFlexibleParamsV5 {
+  loanCurrency: string;
+  collateralCoin: string;
+  amount: string;
+}
+⋮----
 export interface GetOngoingFlexibleLoansParamsV5 {
   loanCurrency?: string;
 }
@@ -11948,6 +11988,12 @@ export interface GetSupplyOrderInfoFixedParamsV5 {
 export interface RepayFixedParamsV5 {
   loanId?: string;
   loanCurrency?: string;
+}
+⋮----
+export interface RepayCollateralFixedParamsV5 {
+  loanCurrency: string;
+  collateralCoin: string;
+  amount: string;
 }
 ⋮----
 export interface GetRepaymentHistoryFixedParamsV5 {
@@ -14135,6 +14181,8 @@ import {
   PreUpgradeTransaction,
   PreUpgradeUSDCSessionSettlement,
   PublicTradeV5,
+  RepayCollateralFixedParamsV5,
+  RepayCollateralFlexibleParamsV5,
   RepayFixedParamsV5,
   RepayFixedV5,
   RepayFlexibleParamsV5,
@@ -16387,6 +16435,14 @@ repayFlexible(
 ): Promise<APIResponseV3WithTime<RepayFlexibleV5>>
 ⋮----
 /**
+   * Collateral Repayment
+   * Pay interest first, then repay the principal.
+   */
+repayCollateralFlexible(
+    params: RepayCollateralFlexibleParamsV5,
+): Promise<APIResponseV3WithTime<
+⋮----
+/**
    * Get Flexible Loans
    * Query for your ongoing loans
    *
@@ -16556,6 +16612,15 @@ getSupplyOrderInfoFixed(params?: GetSupplyOrderInfoFixedParamsV5): Promise<
 repayFixed(
     params: RepayFixedParamsV5,
 ): Promise<APIResponseV3WithTime<RepayFixedV5>>
+⋮----
+/**
+   * Collateral Repayment
+   * Pay interest first, then repay the principal.
+   *
+   */
+repayCollateralFixed(
+    params: RepayCollateralFixedParamsV5,
+): Promise<APIResponseV3WithTime<
 ⋮----
 /**
    * Get Repayment History

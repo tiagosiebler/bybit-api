@@ -110,7 +110,7 @@ export interface MovePositionParamsV5 {
   fromUid: string;
   toUid: string;
   list: {
-    category: 'linear' | 'spot' | 'option';
+    category: 'linear' | 'spot' | 'option' | 'inverse';
     symbol: string;
     price: string;
     side: 'Buy' | 'Sell';
