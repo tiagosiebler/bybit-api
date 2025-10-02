@@ -52,6 +52,25 @@ export interface GetOrderbookParamsV5 {
   limit?: number;
 }
 
+export interface GetRPIOrderbookParamsV5 {
+  category?: 'spot' | 'linear' | 'inverse';
+  symbol: string;
+  limit: number; // Required for RPI orderbook, [1, 50]
+}
+
+export interface GetIndexPriceComponentsParamsV5 {
+  indexName: string; // Index name, like BTCUSDT
+}
+
+export interface GetADLAlertParamsV5 {
+  symbol?: string; // Contract name, e.g. BTCUSDT. Uppercase only
+}
+
+export interface GetFeeGroupStructureParamsV5 {
+  productType: string; // Product type. contract only for now
+  groupId?: string; // Group ID. 1, 2, 3, 4, 5, 6, 7
+}
+
 export interface GetTickersParamsV5<TCategory = CategoryV5> {
   category: TCategory;
   symbol?: string;

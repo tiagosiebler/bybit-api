@@ -4,12 +4,9 @@ const client = new RestClientV5({
   testnet: true,
 });
 
-// linear
+// Get ADL alerts for all symbols
 client
-  .getInstrumentsInfo({
-    category: 'linear',
-    symbol: 'BTCUSDT',
-  })
+  .getADLAlert()
   .then((response) => {
     console.log(response);
   })
@@ -17,23 +14,9 @@ client
     console.error(error);
   });
 
-// option
+// Get ADL alerts for a specific symbol
 client
-  .getInstrumentsInfo({
-    category: 'option',
-    symbol: 'ETH-3JAN23-1250-P',
-  })
-  .then((response) => {
-    console.log(response);
-  })
-  .catch((error) => {
-    console.error(error);
-  });
-
-// spot
-client
-  .getInstrumentsInfo({
-    category: 'spot',
+  .getADLAlert({
     symbol: 'BTCUSDT',
   })
   .then((response) => {

@@ -321,6 +321,7 @@ export interface WSAccountOrderV5 {
   smpOrderId: string;
   createdTime: string;
   updatedTime: string;
+  cumFeeDetail?: Record<string, string>; // Cumulative trading fee details instead of cumExecFee and feeCurrency
 }
 
 export type WSAccountOrderEventV5 = WSPrivateTopicEventV5<
@@ -342,6 +343,7 @@ export interface WSExecutionV5 {
   orderType: OrderTypeV5;
   stopOrderType: StopOrderTypeV5;
   execFee: string;
+  feeCurrency: string; // Trading fee currency
   execId: string;
   execPrice: string;
   execQty: string;
@@ -407,6 +409,7 @@ export interface WSCoinV5 {
   bonus: string;
   collateralSwitch: boolean;
   marginCollateral: boolean;
+  spotBorrow: string;
 }
 
 export interface WSWalletV5 {
@@ -466,6 +469,7 @@ export interface WSSpreadOrderV5 {
   feeCurrency: string;
   createType: OrderCreateTypeV5;
   closedPnl: string;
+  cumFeeDetail?: Record<string, string>; // Cumulative trading fee details instead of cumExecFee and feeCurrency
 }
 
 export type WSSpreadOrderEventV5 = WSPrivateTopicEventV5<
@@ -487,7 +491,7 @@ export interface WSSpreadExecutionV5 {
   orderType: OrderTypeV5;
   execFee: string;
   execFeeV2: string;
-  feeCurrency: string;
+  feeCurrency: string; // Trading fee currency
   parentExecId: string;
   execId: string;
   execPrice: string;
@@ -531,6 +535,23 @@ export type WSPriceLimitEventV5 = WSPublicTopicEventV5<
   string,
   'snapshot',
   WSPriceLimitV5
+>;
+
+export interface WSADLAlertV5 {
+  c: string; // Token of the insurance pool
+  s: string; // Trading pair name
+  b: string; // Balance of the insurance fund. Used to determine if ADL is triggered
+  mb: string; // Maximum balance of the insurance pool in the last 8 hours
+  i_pr: string; // PnL ratio threshold for triggering contract PnL drawdown ADL
+  pr: string; // Symbol's PnL drawdown ratio in the last 8 hours. Used to determine whether ADL is triggered or stopped
+  adl_tt: string; // Trigger threshold for contract PnL drawdown ADL
+  adl_sr: string; // Stop ratio threshold for contract PnL drawdown ADL
+}
+
+export type WSADLAlertEventV5 = WSPublicTopicEventV5<
+  'adlAlert.USDT' | 'adlAlert.USDC' | 'adlAlert.inverse',
+  'snapshot',
+  WSADLAlertV5[]
 >;
 
 export type WSSystemStatusEventV5 = WSPublicTopicEventV5<

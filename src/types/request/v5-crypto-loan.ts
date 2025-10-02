@@ -131,7 +131,8 @@ export interface CreateBorrowOrderFixedParamsV5 {
   orderAmount: string;
   annualRate: string;
   term: string;
-  autoRepay?: string;
+  autoRepay?: string; // Deprecated
+  repayType?: string; // 1: Auto Repayment (default); 2: Transfer to flexible loan
   collateralList?: {
     currency: string;
     amount: string;
