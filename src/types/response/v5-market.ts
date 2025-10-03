@@ -47,6 +47,7 @@ export interface LinearInverseInstrumentInfoV5 {
   status: InstrumentStatusV5;
   baseCoin: string;
   quoteCoin: string;
+  symbolType: string; // The region to which the trading pair belongs
   launchTime: string;
   deliveryTime?: string;
   deliveryFeeRate?: string;
@@ -103,6 +104,7 @@ export interface OptionInstrumentInfoV5 {
   baseCoin: string;
   quoteCoin: string;
   settleCoin: string;
+  symbolType: string; // The region to which the trading pair belongs
   launchTime: string;
   deliveryTime: string;
   deliveryFeeRate: string;
@@ -123,7 +125,8 @@ export interface SpotInstrumentInfoV5 {
   symbol: string;
   baseCoin: string;
   quoteCoin: string;
-  innovation: '0' | '1';
+  symbolType: string; // The region to which the trading pair belongs
+  innovation: '0' | '1'; // Deprecated, always 0
   status: InstrumentStatusV5;
   marginTrading: MarginTradingV5;
   stTag: '0' | '1';
@@ -167,6 +170,21 @@ export interface OrderbookResponseV5 {
   u: number;
   seq: number;
   cts: number;
+}
+
+/**
+ * RPI Orderbook level: [price, nonRpiSize, rpiSize]
+ */
+export type RPIOrderbookLevelV5 = [string, string, string];
+
+export interface RPIOrderbookResponseV5 {
+  s: string; // Symbol name
+  b: RPIOrderbookLevelV5[]; // Bids. Sorted by price in descending order
+  a: RPIOrderbookLevelV5[]; // Asks. Sorted by price in ascending order
+  ts: number; // The timestamp (ms) that the system generates the data
+  u: number; // Update ID, is always in sequence corresponds to u in the 50-level WebSocket RPI orderbook stream
+  seq: number; // Cross sequence
+  cts: number; // The timestamp from the matching engine when this orderbook data is produced
 }
 
 export interface TickerLinearInverseV5 {
@@ -339,4 +357,61 @@ export interface OrderPriceLimitV5 {
   buyLmt: string;
   sellLmt: string;
   ts: string;
+}
+
+export interface IndexPriceComponentV5 {
+  exchange: string; // Name of the exchange
+  spotPair: string; // Spot trading pair on the exchange (e.g., BTCUSDT)
+  equivalentPrice: string; // Equivalent price
+  multiplier: string; // Multiplier used for the component price
+  price: string; // Actual price
+  weight: string; // Weight in the index calculation
+}
+
+export interface IndexPriceComponentsResponseV5 {
+  indexName: string; // Name of the index (e.g., BTCUSDT)
+  lastPrice: string; // Last price of the index
+  updateTime: string; // Timestamp of the last update in milliseconds
+  components: IndexPriceComponentV5[]; // List of components contributing to the index price
+}
+
+export interface ADLAlertItemV5 {
+  coin: string; // Token of the insurance pool
+  symbol: string; // Trading pair name
+  balance: string; // Balance of the insurance fund. Used to determine if ADL is triggered
+  maxBalance: string; // Maximum balance of the insurance pool in the last 8 hours
+  insurancePnlRatio: string; // PnL ratio threshold for triggering contract PnL drawdown ADL
+  pnlRatio: string; // Symbol's PnL drawdown ratio in the last 8 hours. Used to determine whether ADL is triggered or stopped
+  adlTriggerThreshold: string; // Trigger threshold for contract PnL drawdown ADL
+  adlStopRatio: string; // Stop ratio threshold for contract PnL drawdown ADL
+}
+
+export interface ADLAlertResponseV5 {
+  updateTime: string; // Latest data update timestamp (ms)
+  list: ADLAlertItemV5[]; // List of ADL alert items
+}
+
+export interface FeeGroupLevelV5 {
+  level: string; // Pro level name or Market Maker level name
+  takerFeeRate: string; // Taker fee rate
+  makerFeeRate: string; // Maker fee rate
+  makerRebate: string; // Maker rebate fee rate
+}
+
+export interface FeeGroupRatesV5 {
+  pro: FeeGroupLevelV5[]; // Pro-level fee structures
+  marketMaker: FeeGroupLevelV5[]; // Market Maker-level fee structures
+}
+
+export interface FeeGroupItemV5 {
+  groupName: string; // Fee group name
+  weightingFactor: number; // Group weighting factor
+  symbolsNumbers: number; // Symbols number
+  symbols: string[]; // Symbol names
+  feeRates: FeeGroupRatesV5; // Fee rate details for different categories
+  updateTime: string; // Latest data update timestamp (ms)
+}
+
+export interface FeeGroupStructureResponseV5 {
+  list: FeeGroupItemV5[]; // List of fee group objects
 }

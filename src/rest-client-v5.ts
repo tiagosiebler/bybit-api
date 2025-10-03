@@ -11,6 +11,7 @@ import {
   AddOrReduceMarginResultV5,
   AdjustCollateralAmountParamsV5,
   AdjustCollateralAmountV5,
+  ADLAlertResponseV5,
   AffiliateUserInfoV5,
   AffiliateUserListItemV5,
   AllCoinsBalanceV5,
@@ -99,11 +100,13 @@ import {
   ExecuteRFQQuoteParamsV5,
   ExecuteRFQQuoteResultV5,
   ExecutionV5,
+  FeeGroupStructureResponseV5,
   FeeRateV5,
   FundingRateHistoryResponseV5,
   GetAccountCoinBalanceParamsV5,
   GetAccountHistoricOrdersParamsV5,
   GetAccountOrdersParamsV5,
+  GetADLAlertParamsV5,
   GetAllCoinsBalanceParamsV5,
   GetAllowedDepositCoinInfoParamsV5,
   GetAssetInfoParamsV5,
@@ -130,9 +133,11 @@ import {
   GetEarnPositionParamsV5,
   GetExchangeBrokerEarningsParamsV5,
   GetExecutionListParamsV5,
+  GetFeeGroupStructureParamsV5,
   GetFeeRateParamsV5,
   GetFundingRateHistoryParamsV5,
   GetHistoricalVolatilityParamsV5,
+  GetIndexPriceComponentsParamsV5,
   GetIndexPriceKlineParamsV5,
   GetInstrumentsInfoParamsV5,
   GetInsuranceParamsV5,
@@ -174,6 +179,7 @@ import {
   GetRFQRealtimeResultV5,
   GetRFQTradeListParamsV5,
   GetRiskLimitParamsV5,
+  GetRPIOrderbookParamsV5,
   GetSettlementRecordParamsV5,
   GetSpreadInstrumentsInfoParamsV5,
   GetSpreadOpenOrdersParamsV5,
@@ -193,6 +199,7 @@ import {
   GetWalletBalanceParamsV5,
   GetWithdrawalRecordsParamsV5,
   HistoricalVolatilityV5,
+  IndexPriceComponentsResponseV5,
   InstrumentInfoResponseV5,
   InsuranceResponseV5,
   InternalDepositRecordV5,
@@ -252,6 +259,7 @@ import {
   RFQQuoteItemV5,
   RFQTradeV5,
   RiskLimitV5,
+  RPIOrderbookResponseV5,
   SendP2POrderMessageParamsV5,
   SetAutoAddMarginParamsV5,
   SetCollateralCoinParamsV5,
@@ -669,6 +677,20 @@ export class RestClientV5 extends BaseRestClient {
     return this.get('/v5/market/orderbook', params);
   }
 
+  /**
+   * Get RPI Orderbook
+   * Query for orderbook depth data with RPI (Retail Price Improvement) information.
+   *
+   * Covers: Spot / USDT contract / USDC contract / Inverse contract
+   * Contract: 50-level of RPI orderbook data
+   * Spot: 50-level of RPI orderbook data
+   */
+  getRPIOrderbook(
+    params: GetRPIOrderbookParamsV5,
+  ): Promise<APIResponseV3WithTime<RPIOrderbookResponseV5>> {
+    return this.get('/v5/market/rpi_orderbook', params);
+  }
+
   getTickers(
     params: GetTickersParamsV5<'linear' | 'inverse'>,
   ): Promise<
@@ -833,11 +855,47 @@ export class RestClientV5 extends BaseRestClient {
     return this.get('/v5/market/account-ratio', params);
   }
 
+  /**
+   * Get Index Price Components
+   * Query for index price components that contribute to the calculation of an index price.
+   */
+  getIndexPriceComponents(
+    params: GetIndexPriceComponentsParamsV5,
+  ): Promise<APIResponseV3WithTime<IndexPriceComponentsResponseV5>> {
+    return this.get('/v5/market/index-price-components', params);
+  }
+
   getOrderPriceLimit(params: {
     symbol: string;
     category: 'spot' | 'linear' | 'inverse';
   }): Promise<APIResponseV3WithTime<OrderPriceLimitV5>> {
     return this.get('/v5/market/price-limit', params);
+  }
+
+  /**
+   * Get ADL Alert
+   * Query for ADL (auto-deleveraging mechanism) alerts and insurance pool information.
+   *
+   * Covers: USDT Perpetual / USDT Delivery / USDC Perpetual / USDC Delivery / Inverse Contracts
+   * Data update frequency: every 1 minute
+   */
+  getADLAlert(
+    params?: GetADLAlertParamsV5,
+  ): Promise<APIResponseV3WithTime<ADLAlertResponseV5>> {
+    return this.get('/v5/market/adlAlert', params);
+  }
+
+  /**
+   * Get Fee Group Structure
+   * Query for the group fee structure and fee rates.
+   *
+   * The new grouped fee structure only applies to Pro-level and Market Maker clients.
+   * Covers: USDT Perpetual / USDT Delivery / USDC Perpetual / USDC Delivery / Inverse Contracts
+   */
+  getFeeGroupStructure(
+    params: GetFeeGroupStructureParamsV5,
+  ): Promise<APIResponseV3WithTime<FeeGroupStructureResponseV5>> {
+    return this.get('/v5/market/fee-group-info', params);
   }
 
   /**
@@ -3713,14 +3771,14 @@ export class RestClientV5 extends BaseRestClient {
     list: {
       uids: string;
       bizType: string;
-      limit: number;
+      rate: number;
     }[];
   }): Promise<
     APIResponseV3WithTime<{
       result: {
         uids: string;
         bizType: string;
-        limit: number;
+        rate: number;
         success: boolean;
         msg: string;
       }[];
@@ -3743,10 +3801,53 @@ export class RestClientV5 extends BaseRestClient {
       list: {
         uids: string;
         bizType: string;
-        limit: number;
+        rate: number;
       }[];
     }>
   > {
     return this.getPrivate('/v5/apilimit/query', params);
+  }
+
+  /**
+   * Get Rate Limit Cap
+   * Get your institution's total rate limit usage and cap, across the board.
+   *
+   * API rate limit: 50 req per second
+   * Main UIDs or sub UIDs can query this endpoint, but a main UID can only see the rate limits of subs below it.
+   */
+  getRateLimitCap(): Promise<
+    APIResponseV3WithTime<{
+      list: {
+        bizType: string;
+        totalRate: number;
+        insCap: number;
+        uidCap: number;
+      }[];
+    }>
+  > {
+    return this.getPrivate('/v5/apilimit/query-cap');
+  }
+
+  /**
+   * Get All Rate Limits
+   * Query for all your UID-level rate limits, including all master accounts and subaccounts.
+   *
+   * API rate limit: 50 req per second
+   */
+  getAllRateLimits(params?: {
+    limit?: string;
+    cursor?: string;
+    uids?: string;
+  }): Promise<
+    APIResponseV3WithTime<{
+      list: {
+        uids: string;
+        bizType: string;
+        rate: number;
+      }[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/apilimit/query-all', params);
   }
 }

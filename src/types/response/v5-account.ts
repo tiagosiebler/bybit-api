@@ -25,6 +25,7 @@ export interface WalletBalanceV5Coin {
   bonus: string;
   marginCollateral: boolean;
   collateralSwitch: boolean;
+  spotBorrow: string;
 }
 
 export interface WalletBalanceV5 {

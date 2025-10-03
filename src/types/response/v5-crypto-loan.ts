@@ -239,12 +239,13 @@ export interface CreateSupplyOrderFixedV5 {
 
 export interface BorrowContractInfoFixedV5 {
   annualRate: string;
-  autoRepay: string;
+  autoRepay: string; // Deprecated
   borrowCurrency: string;
   borrowTime: string;
   interestPaid: string;
   loanId: string;
   orderId: string;
+  repayType: string; // 1: Auto Repayment; 2: Transfer to flexible loan; 0: No Automatic Repayment
   repaymentTime: string;
   residualPenaltyInterest: string;
   residualPrincipal: string;
@@ -276,6 +277,7 @@ export interface BorrowOrderInfoFixedV5 {
   orderCurrency: string;
   state: number;
   term: number;
+  repayType: string; // 1: Auto Repayment; 2: Transfer to flexible loan; 0: No Automatic Repayment
 }
 
 export interface SupplyOrderInfoFixedV5 {

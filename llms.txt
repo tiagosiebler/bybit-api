@@ -78,6 +78,11 @@ examples/
       Affiliate/
         get-affiliate-user-info.js
         get-affiliate-user-list.js
+      API-Limit/
+        get-all-rate-limits.js
+        get-rate-limit-cap.js
+        get-rate-limit.js
+        set-rate-limit.js
       Asset/
         cancel-withdrawal.js
         confirm-convert-quote.js
@@ -171,10 +176,13 @@ examples/
         get-product-info.js
         get-repayment-orders.js
       Market/
+        get-adl-alert.js
         get-Bybit-server-time.js
         get-delivery-price.js
+        get-fee-group-structure.js
         get-funding-rate-history.js
         get-historical-volatility.js
+        get-index-price-components.js
         get-instruments-info.js
         get-insurance.js
         get-kline-index-price.js
@@ -188,6 +196,7 @@ examples/
         get-orderbook.js
         get-public-trading-history.js
         get-risk-limit.js
+        get-rpi-orderbook.js
         get-tickers.js
         README.md
       P2P/
@@ -697,6 +706,66 @@ console.log(response);
 console.error(error);
 
 ================
+File: examples/apidoc/V5/API-Limit/get-all-rate-limits.js
+================
+const client = new RestClientV5({
+⋮----
+// Get all rate limits without filters
+⋮----
+.getAllRateLimits()
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+⋮----
+// Get all rate limits with filters
+⋮----
+.getAllRateLimits({
+
+================
+File: examples/apidoc/V5/API-Limit/get-rate-limit-cap.js
+================
+const client = new RestClientV5({
+⋮----
+.getRateLimitCap()
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/API-Limit/get-rate-limit.js
+================
+const client = new RestClientV5({
+⋮----
+.queryApiRateLimit({
+⋮----
+.then((response) => {
+console.log(response);
+// Response now contains 'rate' field instead of 'limit'
+console.log('Rate limits:', response.result.list);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/API-Limit/set-rate-limit.js
+================
+const client = new RestClientV5({
+⋮----
+.setApiRateLimit({
+⋮----
+rate: 100, // Changed from 'limit' to 'rate'
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
 File: examples/apidoc/V5/Asset/cancel-withdrawal.js
 ================
 const client = new RestClientV5({
@@ -1177,38 +1246,6 @@ console.log(response);
 console.error(error);
 
 ================
-File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/collateral-repayment.js
-================
-// or:
-// const { RestClientV5 } = require('bybit-api');
-⋮----
-const client = new RestClientV5({
-⋮----
-client.repayCollateralFixed({
-⋮----
-.then(response => {
-console.log(response);
-⋮----
-.catch(error => {
-console.error('Error:', error);
-
-================
-File: examples/apidoc/V5/Crypto-Loan-New/Flexible-Loan/collateral-repayment.js
-================
-// or:
-// const { RestClientV5 } = require('bybit-api');
-⋮----
-const client = new RestClientV5({
-⋮----
-client.repayCollateralFlexible({
-⋮----
-.then(response => {
-console.log(response);
-⋮----
-.catch(error => {
-console.error('Error:', error);
-
-================
 File: examples/apidoc/V5/Earn/get-product-info.js
 ================
 const client = new RestClientV5({
@@ -1352,6 +1389,24 @@ console.log(response);
 console.error(error);
 
 ================
+File: examples/apidoc/V5/Market/get-adl-alert.js
+================
+const client = new RestClientV5({
+⋮----
+// Get ADL alerts for all symbols
+⋮----
+.getADLAlert()
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+⋮----
+// Get ADL alerts for a specific symbol
+⋮----
+.getADLAlert({
+
+================
 File: examples/apidoc/V5/Market/get-Bybit-server-time.js
 ================
 const client = new RestClientV5({
@@ -1376,6 +1431,23 @@ console.log(response);
 console.error(error);
 
 ================
+File: examples/apidoc/V5/Market/get-fee-group-structure.js
+================
+const client = new RestClientV5({
+⋮----
+// Get fee group structure for all groups
+⋮----
+.getFeeGroupStructure({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+⋮----
+// Get fee group structure for a specific group
+
+================
 File: examples/apidoc/V5/Market/get-funding-rate-history.js
 ================
 const client = new RestClientV5({
@@ -1394,6 +1466,19 @@ File: examples/apidoc/V5/Market/get-historical-volatility.js
 const client = new RestClientV5({
 ⋮----
 .getHistoricalVolatility({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Market/get-index-price-components.js
+================
+const client = new RestClientV5({
+⋮----
+.getIndexPriceComponents({
 ⋮----
 .then((response) => {
 console.log(response);
@@ -1543,6 +1628,19 @@ File: examples/apidoc/V5/Market/get-risk-limit.js
 const client = new RestClientV5({
 ⋮----
 .getRiskLimit({
+⋮----
+.then((response) => {
+console.log(response);
+⋮----
+.catch((error) => {
+console.error(error);
+
+================
+File: examples/apidoc/V5/Market/get-rpi-orderbook.js
+================
+const client = new RestClientV5({
+⋮----
+.getRPIOrderbook({
 ⋮----
 .then((response) => {
 console.log(response);
@@ -7221,6 +7319,38 @@ console.log(response);
 console.error(error);
 
 ================
+File: examples/apidoc/V5/Crypto-Loan-New/Fixed-Loan/collateral-repayment.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.repayCollateralFixed({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
+File: examples/apidoc/V5/Crypto-Loan-New/Flexible-Loan/collateral-repayment.js
+================
+// or:
+// const { RestClientV5 } = require('bybit-api');
+⋮----
+const client = new RestClientV5({
+⋮----
+client.repayCollateralFlexible({
+⋮----
+.then(response => {
+console.log(response);
+⋮----
+.catch(error => {
+console.error('Error:', error);
+
+================
 File: examples/apidoc/V5/Market/get-new-delivery-price.js
 ================
 const client = new RestClientV5({
@@ -7707,6 +7837,34 @@ export interface GetOrderbookParamsV5 {
   limit?: number;
 }
 ⋮----
+export interface GetRPIOrderbookParamsV5 {
+  category?: 'spot' | 'linear' | 'inverse';
+  symbol: string;
+  limit: number; // Required for RPI orderbook, [1, 50]
+}
+⋮----
+limit: number; // Required for RPI orderbook, [1, 50]
+⋮----
+export interface GetIndexPriceComponentsParamsV5 {
+  indexName: string; // Index name, like BTCUSDT
+}
+⋮----
+indexName: string; // Index name, like BTCUSDT
+⋮----
+export interface GetADLAlertParamsV5 {
+  symbol?: string; // Contract name, e.g. BTCUSDT. Uppercase only
+}
+⋮----
+symbol?: string; // Contract name, e.g. BTCUSDT. Uppercase only
+⋮----
+export interface GetFeeGroupStructureParamsV5 {
+  productType: string; // Product type. contract only for now
+  groupId?: string; // Group ID. 1, 2, 3, 4, 5, 6, 7
+}
+⋮----
+productType: string; // Product type. contract only for now
+groupId?: string; // Group ID. 1, 2, 3, 4, 5, 6, 7
+⋮----
 export interface GetTickersParamsV5<TCategory = CategoryV5> {
   category: TCategory;
   symbol?: string;
@@ -7789,154 +7947,6 @@ export interface GetLongShortRatioParamsV5 {
   period: OpenInterestIntervalV5;
   startTime?: string;
   endTime?: string;
-  limit?: number;
-  cursor?: string;
-}
-
-================
-File: src/types/request/v5-position.ts
-================
-import {
-  CategoryV5,
-  ExecTypeV5,
-  OrderTriggerByV5,
-  OrderTypeV5,
-  PositionIdx,
-  TPSLModeV5,
-} from '../shared-v5';
-⋮----
-export interface PositionInfoParamsV5 {
-  category: CategoryV5;
-  symbol?: string;
-  baseCoin?: string;
-  settleCoin?: string;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface SetLeverageParamsV5 {
-  category: 'linear' | 'inverse';
-  symbol: string;
-  buyLeverage: string;
-  sellLeverage: string;
-}
-⋮----
-export interface SwitchIsolatedMarginParamsV5 {
-  category: 'linear' | 'inverse';
-  symbol: string;
-  tradeMode: 0 | 1;
-  buyLeverage: string;
-  sellLeverage: string;
-}
-⋮----
-export interface SetTPSLModeParamsV5 {
-  category: 'linear' | 'inverse';
-  symbol: string;
-  tpSlMode: TPSLModeV5;
-}
-⋮----
-export interface SwitchPositionModeParamsV5 {
-  category: 'linear' | 'inverse';
-  symbol?: string;
-  coin?: string;
-  mode: 0 | 3;
-}
-⋮----
-export interface SetRiskLimitParamsV5 {
-  category: 'linear' | 'inverse';
-  symbol: string;
-  riskId: number;
-  positionIdx?: PositionIdx;
-}
-⋮----
-export interface SetTradingStopParamsV5 {
-  category: CategoryV5;
-  symbol: string;
-  takeProfit?: string;
-  stopLoss?: string;
-  trailingStop?: string;
-  tpTriggerBy?: OrderTriggerByV5;
-  slTriggerBy?: OrderTriggerByV5;
-  activePrice?: string;
-  tpslMode?: TPSLModeV5;
-  tpSize?: string;
-  slSize?: string;
-  tpLimitPrice?: string;
-  slLimitPrice?: string;
-  tpOrderType?: OrderTypeV5;
-  slOrderType?: OrderTypeV5;
-  positionIdx: PositionIdx;
-}
-⋮----
-export interface SetAutoAddMarginParamsV5 {
-  category: 'linear';
-  symbol: string;
-  autoAddMargin: 0 | 1;
-  positionIdx?: PositionIdx;
-}
-⋮----
-export interface AddOrReduceMarginParamsV5 {
-  category: 'linear' | 'inverse';
-  symbol: string;
-  margin: string;
-  positionIDex?: PositionIdx;
-}
-⋮----
-export interface GetExecutionListParamsV5 {
-  category: CategoryV5;
-  symbol?: string;
-  orderId?: string;
-  orderLinkId?: string;
-  baseCoin?: string;
-  startTime?: number;
-  endTime?: number;
-  execType?: ExecTypeV5;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface GetClosedPnLParamsV5 {
-  category: CategoryV5;
-  symbol?: string;
-  startTime?: number;
-  endTime?: number;
-  limit?: number;
-  cursor?: string;
-}
-⋮----
-export interface MovePositionParamsV5 {
-  fromUid: string;
-  toUid: string;
-  list: {
-    category: 'linear' | 'spot' | 'option' | 'inverse';
-    symbol: string;
-    price: string;
-    side: 'Buy' | 'Sell';
-    qty: string;
-  }[];
-}
-⋮----
-export interface GetMovePositionHistoryParamsV5 {
-  category?: 'linear' | 'spot' | 'option';
-  symbol?: string;
-  startTime?: number;
-  endTime?: number;
-  status?: 'Processing' | 'Filled' | 'Rejected';
-  blockTradeId?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface ConfirmNewRiskLimitParamsV5 {
-  category: 'linear' | 'inverse';
-  symbol: string;
-}
-⋮----
-export interface GetClosedOptionsPositionsParamsV5 {
-  category: 'option';
-  symbol?: string;
-  startTime?: number;
-  endTime?: number;
   limit?: number;
   cursor?: string;
 }
@@ -9042,7 +9052,9 @@ export type TransactionTypeV5 =
   | 'INSTITUTION_LOAN_TRANSFER_OUT'
   | 'INSTITUTION_LOAN_WITHOUT_WITHDRAW'
   | 'INSTITUTION_LOAN_RESERVE_IN'
-  | 'INSTITUTION_LOAN_RESERVE_OUT';
+  | 'INSTITUTION_LOAN_RESERVE_OUT'
+  | 'PLATFORM_TOKEN_MNT_LIQRECALLEDMMNT'
+  | 'PLATFORM_TOKEN_MNT_LIQRETURNEDMNT';
 ⋮----
 export type PermissionTypeV5 =
   | 'ContractTrade'
@@ -9529,6 +9541,154 @@ export interface GetConvertHistoryParamsV5 {
 }
 
 ================
+File: src/types/request/v5-position.ts
+================
+import {
+  CategoryV5,
+  ExecTypeV5,
+  OrderTriggerByV5,
+  OrderTypeV5,
+  PositionIdx,
+  TPSLModeV5,
+} from '../shared-v5';
+⋮----
+export interface PositionInfoParamsV5 {
+  category: CategoryV5;
+  symbol?: string;
+  baseCoin?: string;
+  settleCoin?: string;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface SetLeverageParamsV5 {
+  category: 'linear' | 'inverse';
+  symbol: string;
+  buyLeverage: string;
+  sellLeverage: string;
+}
+⋮----
+export interface SwitchIsolatedMarginParamsV5 {
+  category: 'linear' | 'inverse';
+  symbol: string;
+  tradeMode: 0 | 1;
+  buyLeverage: string;
+  sellLeverage: string;
+}
+⋮----
+export interface SetTPSLModeParamsV5 {
+  category: 'linear' | 'inverse';
+  symbol: string;
+  tpSlMode: TPSLModeV5;
+}
+⋮----
+export interface SwitchPositionModeParamsV5 {
+  category: 'linear' | 'inverse';
+  symbol?: string;
+  coin?: string;
+  mode: 0 | 3;
+}
+⋮----
+export interface SetRiskLimitParamsV5 {
+  category: 'linear' | 'inverse';
+  symbol: string;
+  riskId: number;
+  positionIdx?: PositionIdx;
+}
+⋮----
+export interface SetTradingStopParamsV5 {
+  category: CategoryV5;
+  symbol: string;
+  takeProfit?: string;
+  stopLoss?: string;
+  trailingStop?: string;
+  tpTriggerBy?: OrderTriggerByV5;
+  slTriggerBy?: OrderTriggerByV5;
+  activePrice?: string;
+  tpslMode?: TPSLModeV5;
+  tpSize?: string;
+  slSize?: string;
+  tpLimitPrice?: string;
+  slLimitPrice?: string;
+  tpOrderType?: OrderTypeV5;
+  slOrderType?: OrderTypeV5;
+  positionIdx: PositionIdx;
+}
+⋮----
+export interface SetAutoAddMarginParamsV5 {
+  category: 'linear';
+  symbol: string;
+  autoAddMargin: 0 | 1;
+  positionIdx?: PositionIdx;
+}
+⋮----
+export interface AddOrReduceMarginParamsV5 {
+  category: 'linear' | 'inverse';
+  symbol: string;
+  margin: string;
+  positionIDex?: PositionIdx;
+}
+⋮----
+export interface GetExecutionListParamsV5 {
+  category: CategoryV5;
+  symbol?: string;
+  orderId?: string;
+  orderLinkId?: string;
+  baseCoin?: string;
+  startTime?: number;
+  endTime?: number;
+  execType?: ExecTypeV5;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface GetClosedPnLParamsV5 {
+  category: CategoryV5;
+  symbol?: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+⋮----
+export interface MovePositionParamsV5 {
+  fromUid: string;
+  toUid: string;
+  list: {
+    category: 'linear' | 'spot' | 'option' | 'inverse';
+    symbol: string;
+    price: string;
+    side: 'Buy' | 'Sell';
+    qty: string;
+  }[];
+}
+⋮----
+export interface GetMovePositionHistoryParamsV5 {
+  category?: 'linear' | 'spot' | 'option';
+  symbol?: string;
+  startTime?: number;
+  endTime?: number;
+  status?: 'Processing' | 'Filled' | 'Rejected';
+  blockTradeId?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface ConfirmNewRiskLimitParamsV5 {
+  category: 'linear' | 'inverse';
+  symbol: string;
+}
+⋮----
+export interface GetClosedOptionsPositionsParamsV5 {
+  category: 'option';
+  symbol?: string;
+  startTime?: number;
+  endTime?: number;
+  limit?: number;
+  cursor?: string;
+}
+
+================
 File: src/types/response/index.ts
 ================
 
@@ -9563,6 +9723,7 @@ export interface WalletBalanceV5Coin {
   bonus: string;
   marginCollateral: boolean;
   collateralSwitch: boolean;
+  spotBorrow: string;
 }
 ⋮----
 free: string; // spot only
@@ -10020,6 +10181,7 @@ export interface LinearInverseInstrumentInfoV5 {
   status: InstrumentStatusV5;
   baseCoin: string;
   quoteCoin: string;
+  symbolType: string; // The region to which the trading pair belongs
   launchTime: string;
   deliveryTime?: string;
   deliveryFeeRate?: string;
@@ -10069,6 +10231,8 @@ export interface LinearInverseInstrumentInfoV5 {
   displayName: string;
 }
 ⋮----
+symbolType: string; // The region to which the trading pair belongs
+⋮----
 export interface OptionInstrumentInfoV5 {
   symbol: string;
   optionsType: OptionTypeV5;
@@ -10076,6 +10240,7 @@ export interface OptionInstrumentInfoV5 {
   baseCoin: string;
   quoteCoin: string;
   settleCoin: string;
+  symbolType: string; // The region to which the trading pair belongs
   launchTime: string;
   deliveryTime: string;
   deliveryFeeRate: string;
@@ -10092,11 +10257,14 @@ export interface OptionInstrumentInfoV5 {
   displayName: string;
 }
 ⋮----
+symbolType: string; // The region to which the trading pair belongs
+⋮----
 export interface SpotInstrumentInfoV5 {
   symbol: string;
   baseCoin: string;
   quoteCoin: string;
-  innovation: '0' | '1';
+  symbolType: string; // The region to which the trading pair belongs
+  innovation: '0' | '1'; // Deprecated, always 0
   status: InstrumentStatusV5;
   marginTrading: MarginTradingV5;
   stTag: '0' | '1';
@@ -10116,6 +10284,9 @@ export interface SpotInstrumentInfoV5 {
     priceLimitRatioY: string;
   };
 }
+⋮----
+symbolType: string; // The region to which the trading pair belongs
+innovation: '0' | '1'; // Deprecated, always 0
 ⋮----
 type InstrumentInfoV5Mapping = {
   linear: LinearInverseInstrumentInfoV5[];
@@ -10141,6 +10312,29 @@ export interface OrderbookResponseV5 {
   seq: number;
   cts: number;
 }
+⋮----
+/**
+ * RPI Orderbook level: [price, nonRpiSize, rpiSize]
+ */
+export type RPIOrderbookLevelV5 = [string, string, string];
+⋮----
+export interface RPIOrderbookResponseV5 {
+  s: string; // Symbol name
+  b: RPIOrderbookLevelV5[]; // Bids. Sorted by price in descending order
+  a: RPIOrderbookLevelV5[]; // Asks. Sorted by price in ascending order
+  ts: number; // The timestamp (ms) that the system generates the data
+  u: number; // Update ID, is always in sequence corresponds to u in the 50-level WebSocket RPI orderbook stream
+  seq: number; // Cross sequence
+  cts: number; // The timestamp from the matching engine when this orderbook data is produced
+}
+⋮----
+s: string; // Symbol name
+b: RPIOrderbookLevelV5[]; // Bids. Sorted by price in descending order
+a: RPIOrderbookLevelV5[]; // Asks. Sorted by price in ascending order
+ts: number; // The timestamp (ms) that the system generates the data
+u: number; // Update ID, is always in sequence corresponds to u in the 50-level WebSocket RPI orderbook stream
+seq: number; // Cross sequence
+cts: number; // The timestamp from the matching engine when this orderbook data is produced
 ⋮----
 export interface TickerLinearInverseV5 {
   symbol: string;
@@ -10315,6 +10509,104 @@ export interface OrderPriceLimitV5 {
   sellLmt: string;
   ts: string;
 }
+⋮----
+export interface IndexPriceComponentV5 {
+  exchange: string; // Name of the exchange
+  spotPair: string; // Spot trading pair on the exchange (e.g., BTCUSDT)
+  equivalentPrice: string; // Equivalent price
+  multiplier: string; // Multiplier used for the component price
+  price: string; // Actual price
+  weight: string; // Weight in the index calculation
+}
+⋮----
+exchange: string; // Name of the exchange
+spotPair: string; // Spot trading pair on the exchange (e.g., BTCUSDT)
+equivalentPrice: string; // Equivalent price
+multiplier: string; // Multiplier used for the component price
+price: string; // Actual price
+weight: string; // Weight in the index calculation
+⋮----
+export interface IndexPriceComponentsResponseV5 {
+  indexName: string; // Name of the index (e.g., BTCUSDT)
+  lastPrice: string; // Last price of the index
+  updateTime: string; // Timestamp of the last update in milliseconds
+  components: IndexPriceComponentV5[]; // List of components contributing to the index price
+}
+⋮----
+indexName: string; // Name of the index (e.g., BTCUSDT)
+lastPrice: string; // Last price of the index
+updateTime: string; // Timestamp of the last update in milliseconds
+components: IndexPriceComponentV5[]; // List of components contributing to the index price
+⋮----
+export interface ADLAlertItemV5 {
+  coin: string; // Token of the insurance pool
+  symbol: string; // Trading pair name
+  balance: string; // Balance of the insurance fund. Used to determine if ADL is triggered
+  maxBalance: string; // Maximum balance of the insurance pool in the last 8 hours
+  insurancePnlRatio: string; // PnL ratio threshold for triggering contract PnL drawdown ADL
+  pnlRatio: string; // Symbol's PnL drawdown ratio in the last 8 hours. Used to determine whether ADL is triggered or stopped
+  adlTriggerThreshold: string; // Trigger threshold for contract PnL drawdown ADL
+  adlStopRatio: string; // Stop ratio threshold for contract PnL drawdown ADL
+}
+⋮----
+coin: string; // Token of the insurance pool
+symbol: string; // Trading pair name
+balance: string; // Balance of the insurance fund. Used to determine if ADL is triggered
+maxBalance: string; // Maximum balance of the insurance pool in the last 8 hours
+insurancePnlRatio: string; // PnL ratio threshold for triggering contract PnL drawdown ADL
+pnlRatio: string; // Symbol's PnL drawdown ratio in the last 8 hours. Used to determine whether ADL is triggered or stopped
+adlTriggerThreshold: string; // Trigger threshold for contract PnL drawdown ADL
+adlStopRatio: string; // Stop ratio threshold for contract PnL drawdown ADL
+⋮----
+export interface ADLAlertResponseV5 {
+  updateTime: string; // Latest data update timestamp (ms)
+  list: ADLAlertItemV5[]; // List of ADL alert items
+}
+⋮----
+updateTime: string; // Latest data update timestamp (ms)
+list: ADLAlertItemV5[]; // List of ADL alert items
+⋮----
+export interface FeeGroupLevelV5 {
+  level: string; // Pro level name or Market Maker level name
+  takerFeeRate: string; // Taker fee rate
+  makerFeeRate: string; // Maker fee rate
+  makerRebate: string; // Maker rebate fee rate
+}
+⋮----
+level: string; // Pro level name or Market Maker level name
+takerFeeRate: string; // Taker fee rate
+makerFeeRate: string; // Maker fee rate
+makerRebate: string; // Maker rebate fee rate
+⋮----
+export interface FeeGroupRatesV5 {
+  pro: FeeGroupLevelV5[]; // Pro-level fee structures
+  marketMaker: FeeGroupLevelV5[]; // Market Maker-level fee structures
+}
+⋮----
+pro: FeeGroupLevelV5[]; // Pro-level fee structures
+marketMaker: FeeGroupLevelV5[]; // Market Maker-level fee structures
+⋮----
+export interface FeeGroupItemV5 {
+  groupName: string; // Fee group name
+  weightingFactor: number; // Group weighting factor
+  symbolsNumbers: number; // Symbols number
+  symbols: string[]; // Symbol names
+  feeRates: FeeGroupRatesV5; // Fee rate details for different categories
+  updateTime: string; // Latest data update timestamp (ms)
+}
+⋮----
+groupName: string; // Fee group name
+weightingFactor: number; // Group weighting factor
+symbolsNumbers: number; // Symbols number
+symbols: string[]; // Symbol names
+feeRates: FeeGroupRatesV5; // Fee rate details for different categories
+updateTime: string; // Latest data update timestamp (ms)
+⋮----
+export interface FeeGroupStructureResponseV5 {
+  list: FeeGroupItemV5[]; // List of fee group objects
+}
+⋮----
+list: FeeGroupItemV5[]; // List of fee group objects
 
 ================
 File: src/types/response/v5-rfq.ts
@@ -10770,7 +11062,10 @@ export interface SpreadOrderHistoryV5 {
   leg2Symbol: string;
   leg2Side: string;
   cxlRejReason: string;
+  cumFeeDetail?: Record<string, string>; // Cumulative trading fee details instead of cumExecFee
 }
+⋮----
+cumFeeDetail?: Record<string, string>; // Cumulative trading fee details instead of cumExecFee
 ⋮----
 export interface SpreadTradeLegV5 {
   symbol: string;
@@ -10782,8 +11077,11 @@ export interface SpreadTradeLegV5 {
   category: 'linear' | 'spot';
   execQty: string;
   execFee: string;
+  feeCurrency: string; // Trading fee currency
   execId: string;
 }
+⋮----
+feeCurrency: string; // Trading fee currency
 ⋮----
 export interface SpreadTradeV5 {
   symbol: string;
@@ -10873,7 +11171,10 @@ export interface AccountOrderV5 {
   createdTime: string;
   updatedTime: string;
   extraFees: string;
+  cumFeeDetail?: Record<string, string>; // Cumulative trading fee details instead of cumExecFee
 }
+⋮----
+cumFeeDetail?: Record<string, string>; // Cumulative trading fee details instead of cumExecFee
 ⋮----
 export interface BatchCreateOrderResultV5 {
   category: CategoryV5;
@@ -11336,6 +11637,7 @@ export interface ExecutionV5 {
   stopOrderType?: StopOrderTypeV5;
   execFee: string;
   execFeeV2: string;
+  feeCurrency: string; // Trading fee currency
   execId: string;
   execPrice: string;
   execQty: string;
@@ -11354,6 +11656,8 @@ export interface ExecutionV5 {
   seq: number;
   extraFees: string;
 }
+⋮----
+feeCurrency: string; // Trading fee currency
 ⋮----
 export interface ClosedPnLV5 {
   symbol: string;
@@ -11792,218 +12096,6 @@ logger, // Optional: inject a custom logger
 // await wsClient.getWSClient().connectWSAPI();
 
 ================
-File: src/types/request/v5-crypto-loan.ts
-================
-export interface BorrowCryptoLoanParamsV5 {
-  loanCurrency: string;
-  loanAmount?: string;
-  loanTerm?: string;
-  collateralCurrency: string;
-  collateralAmount?: string;
-}
-⋮----
-export interface GetUnpaidLoanOrdersParamsV5 {
-  orderId?: string;
-  loanCurrency?: string;
-  collateralCurrency?: string;
-  loanTermType?: string;
-  loanTerm?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface GetRepaymentHistoryParamsV5 {
-  orderId?: string;
-  repayId?: string;
-  loanCurrency?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface GetCompletedLoanOrderHistoryParamsV5 {
-  orderId?: string;
-  loanCurrency?: string;
-  collateralCurrency?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface GetLoanLTVAdjustmentHistoryParamsV5 {
-  orderId?: string;
-  adjustId?: string;
-  collateralCurrency?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-// New Crypto Loan Request Types
-⋮----
-export interface GetBorrowableCoinsParamsV5 {
-  vipLevel?: string;
-  currency?: string;
-}
-⋮----
-export interface GetCollateralCoinsParamsV5 {
-  currency?: string;
-}
-⋮----
-export interface GetMaxCollateralAmountParamsV5 {
-  currency: string;
-}
-⋮----
-export interface AdjustCollateralAmountParamsV5 {
-  currency: string;
-  amount: string;
-  direction: '0' | '1';
-}
-⋮----
-export interface GetCollateralAdjustmentHistoryParamsV5 {
-  adjustId?: string;
-  collateralCurrency?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-// Flexible Loan Request Types
-⋮----
-export interface BorrowFlexibleParamsV5 {
-  loanCurrency: string;
-  loanAmount: string;
-  collateralList?: {
-    currency: string;
-    amount: string;
-  }[];
-}
-⋮----
-export interface RepayFlexibleParamsV5 {
-  loanCurrency: string;
-  amount: string;
-}
-⋮----
-export interface RepayCollateralFlexibleParamsV5 {
-  loanCurrency: string;
-  collateralCoin: string;
-  amount: string;
-}
-⋮----
-export interface GetOngoingFlexibleLoansParamsV5 {
-  loanCurrency?: string;
-}
-⋮----
-export interface GetBorrowHistoryFlexibleParamsV5 {
-  orderId?: string;
-  loanCurrency?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface GetRepaymentHistoryFlexibleParamsV5 {
-  repayId?: string;
-  loanCurrency?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-// Fixed Loan Request Types
-⋮----
-export interface GetSupplyOrderQuoteFixedParamsV5 {
-  orderCurrency: string;
-  term?: string;
-  orderBy: 'apy' | 'term' | 'quantity';
-  sort?: number;
-  limit?: number;
-}
-⋮----
-export interface GetBorrowOrderQuoteFixedParamsV5 {
-  orderCurrency: string;
-  term?: string;
-  orderBy: 'apy' | 'term' | 'quantity';
-  sort?: number;
-  limit?: number;
-}
-⋮----
-export interface CreateBorrowOrderFixedParamsV5 {
-  orderCurrency: string;
-  orderAmount: string;
-  annualRate: string;
-  term: string;
-  autoRepay?: string;
-  collateralList?: {
-    currency: string;
-    amount: string;
-  }[];
-}
-⋮----
-export interface CreateSupplyOrderFixedParamsV5 {
-  orderCurrency: string;
-  orderAmount: string;
-  annualRate: string;
-  term: string;
-}
-⋮----
-export interface CancelBorrowOrderFixedParamsV5 {
-  orderId: string;
-}
-⋮----
-export interface CancelSupplyOrderFixedParamsV5 {
-  orderId: string;
-}
-⋮----
-export interface GetBorrowContractInfoFixedParamsV5 {
-  orderId?: string;
-  loanId?: string;
-  orderCurrency?: string;
-  term?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface GetSupplyContractInfoFixedParamsV5 {
-  orderId?: string;
-  supplyId?: string;
-  supplyCurrency?: string;
-  term?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface GetBorrowOrderInfoFixedParamsV5 {
-  orderId?: string;
-  orderCurrency?: string;
-  state?: string;
-  term?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface GetSupplyOrderInfoFixedParamsV5 {
-  orderId?: string;
-  orderCurrency?: string;
-  state?: string;
-  term?: string;
-  limit?: string;
-  cursor?: string;
-}
-⋮----
-export interface RepayFixedParamsV5 {
-  loanId?: string;
-  loanCurrency?: string;
-}
-⋮----
-export interface RepayCollateralFixedParamsV5 {
-  loanCurrency: string;
-  collateralCoin: string;
-  amount: string;
-}
-⋮----
-export interface GetRepaymentHistoryFixedParamsV5 {
-  repayId?: string;
-  loanCurrency?: string;
-  limit?: string;
-  cursor?: string;
-}
-
-================
 File: src/types/response/v5-crypto-loan.ts
 ================
 export interface CollateralCoinV5 {
@@ -12247,18 +12339,23 @@ export interface CreateSupplyOrderFixedV5 {
 ⋮----
 export interface BorrowContractInfoFixedV5 {
   annualRate: string;
-  autoRepay: string;
+  autoRepay: string; // Deprecated
   borrowCurrency: string;
   borrowTime: string;
   interestPaid: string;
   loanId: string;
   orderId: string;
+  repayType: string; // 1: Auto Repayment; 2: Transfer to flexible loan; 0: No Automatic Repayment
   repaymentTime: string;
   residualPenaltyInterest: string;
   residualPrincipal: string;
   status: number;
   term: string;
 }
+⋮----
+autoRepay: string; // Deprecated
+⋮----
+repayType: string; // 1: Auto Repayment; 2: Transfer to flexible loan; 0: No Automatic Repayment
 ⋮----
 export interface SupplyContractInfoFixedV5 {
   annualRate: string;
@@ -12284,7 +12381,10 @@ export interface BorrowOrderInfoFixedV5 {
   orderCurrency: string;
   state: number;
   term: number;
+  repayType: string; // 1: Auto Repayment; 2: Transfer to flexible loan; 0: No Automatic Repayment
 }
+⋮----
+repayType: string; // 1: Auto Repayment; 2: Transfer to flexible loan; 0: No Automatic Repayment
 ⋮----
 export interface SupplyOrderInfoFixedV5 {
   annualRate: string;
@@ -12313,6 +12413,222 @@ export interface RepaymentHistoryFixedV5 {
   repayStatus: number;
   repayTime: number;
   repayType: number;
+}
+
+================
+File: src/types/request/v5-crypto-loan.ts
+================
+export interface BorrowCryptoLoanParamsV5 {
+  loanCurrency: string;
+  loanAmount?: string;
+  loanTerm?: string;
+  collateralCurrency: string;
+  collateralAmount?: string;
+}
+⋮----
+export interface GetUnpaidLoanOrdersParamsV5 {
+  orderId?: string;
+  loanCurrency?: string;
+  collateralCurrency?: string;
+  loanTermType?: string;
+  loanTerm?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetRepaymentHistoryParamsV5 {
+  orderId?: string;
+  repayId?: string;
+  loanCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetCompletedLoanOrderHistoryParamsV5 {
+  orderId?: string;
+  loanCurrency?: string;
+  collateralCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetLoanLTVAdjustmentHistoryParamsV5 {
+  orderId?: string;
+  adjustId?: string;
+  collateralCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+// New Crypto Loan Request Types
+⋮----
+export interface GetBorrowableCoinsParamsV5 {
+  vipLevel?: string;
+  currency?: string;
+}
+⋮----
+export interface GetCollateralCoinsParamsV5 {
+  currency?: string;
+}
+⋮----
+export interface GetMaxCollateralAmountParamsV5 {
+  currency: string;
+}
+⋮----
+export interface AdjustCollateralAmountParamsV5 {
+  currency: string;
+  amount: string;
+  direction: '0' | '1';
+}
+⋮----
+export interface GetCollateralAdjustmentHistoryParamsV5 {
+  adjustId?: string;
+  collateralCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+// Flexible Loan Request Types
+⋮----
+export interface BorrowFlexibleParamsV5 {
+  loanCurrency: string;
+  loanAmount: string;
+  collateralList?: {
+    currency: string;
+    amount: string;
+  }[];
+}
+⋮----
+export interface RepayFlexibleParamsV5 {
+  loanCurrency: string;
+  amount: string;
+}
+⋮----
+export interface RepayCollateralFlexibleParamsV5 {
+  loanCurrency: string;
+  collateralCoin: string;
+  amount: string;
+}
+⋮----
+export interface GetOngoingFlexibleLoansParamsV5 {
+  loanCurrency?: string;
+}
+⋮----
+export interface GetBorrowHistoryFlexibleParamsV5 {
+  orderId?: string;
+  loanCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetRepaymentHistoryFlexibleParamsV5 {
+  repayId?: string;
+  loanCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+// Fixed Loan Request Types
+⋮----
+export interface GetSupplyOrderQuoteFixedParamsV5 {
+  orderCurrency: string;
+  term?: string;
+  orderBy: 'apy' | 'term' | 'quantity';
+  sort?: number;
+  limit?: number;
+}
+⋮----
+export interface GetBorrowOrderQuoteFixedParamsV5 {
+  orderCurrency: string;
+  term?: string;
+  orderBy: 'apy' | 'term' | 'quantity';
+  sort?: number;
+  limit?: number;
+}
+⋮----
+export interface CreateBorrowOrderFixedParamsV5 {
+  orderCurrency: string;
+  orderAmount: string;
+  annualRate: string;
+  term: string;
+  autoRepay?: string; // Deprecated
+  repayType?: string; // 1: Auto Repayment (default); 2: Transfer to flexible loan
+  collateralList?: {
+    currency: string;
+    amount: string;
+  }[];
+}
+⋮----
+autoRepay?: string; // Deprecated
+repayType?: string; // 1: Auto Repayment (default); 2: Transfer to flexible loan
+⋮----
+export interface CreateSupplyOrderFixedParamsV5 {
+  orderCurrency: string;
+  orderAmount: string;
+  annualRate: string;
+  term: string;
+}
+⋮----
+export interface CancelBorrowOrderFixedParamsV5 {
+  orderId: string;
+}
+⋮----
+export interface CancelSupplyOrderFixedParamsV5 {
+  orderId: string;
+}
+⋮----
+export interface GetBorrowContractInfoFixedParamsV5 {
+  orderId?: string;
+  loanId?: string;
+  orderCurrency?: string;
+  term?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetSupplyContractInfoFixedParamsV5 {
+  orderId?: string;
+  supplyId?: string;
+  supplyCurrency?: string;
+  term?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetBorrowOrderInfoFixedParamsV5 {
+  orderId?: string;
+  orderCurrency?: string;
+  state?: string;
+  term?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface GetSupplyOrderInfoFixedParamsV5 {
+  orderId?: string;
+  orderCurrency?: string;
+  state?: string;
+  term?: string;
+  limit?: string;
+  cursor?: string;
+}
+⋮----
+export interface RepayFixedParamsV5 {
+  loanId?: string;
+  loanCurrency?: string;
+}
+⋮----
+export interface RepayCollateralFixedParamsV5 {
+  loanCurrency: string;
+  collateralCoin: string;
+  amount: string;
+}
+⋮----
+export interface GetRepaymentHistoryFixedParamsV5 {
+  repayId?: string;
+  loanCurrency?: string;
+  limit?: string;
+  cursor?: string;
 }
 
 ================
@@ -13021,7 +13337,10 @@ export interface WSAccountOrderV5 {
   smpOrderId: string;
   createdTime: string;
   updatedTime: string;
+  cumFeeDetail?: Record<string, string>; // Cumulative trading fee details instead of cumExecFee and feeCurrency
 }
+⋮----
+cumFeeDetail?: Record<string, string>; // Cumulative trading fee details instead of cumExecFee and feeCurrency
 ⋮----
 export type WSAccountOrderEventV5 = WSPrivateTopicEventV5<
   'order',
@@ -13042,6 +13361,7 @@ export interface WSExecutionV5 {
   orderType: OrderTypeV5;
   stopOrderType: StopOrderTypeV5;
   execFee: string;
+  feeCurrency: string; // Trading fee currency
   execId: string;
   execPrice: string;
   execQty: string;
@@ -13062,6 +13382,8 @@ export interface WSExecutionV5 {
   seq: number;
   marketUnit: string;
 }
+⋮----
+feeCurrency: string; // Trading fee currency
 ⋮----
 export type WSExecutionEventV5 = WSPrivateTopicEventV5<
   'execution',
@@ -13107,6 +13429,7 @@ export interface WSCoinV5 {
   bonus: string;
   collateralSwitch: boolean;
   marginCollateral: boolean;
+  spotBorrow: string;
 }
 ⋮----
 export interface WSWalletV5 {
@@ -13166,7 +13489,10 @@ export interface WSSpreadOrderV5 {
   feeCurrency: string;
   createType: OrderCreateTypeV5;
   closedPnl: string;
+  cumFeeDetail?: Record<string, string>; // Cumulative trading fee details instead of cumExecFee and feeCurrency
 }
+⋮----
+cumFeeDetail?: Record<string, string>; // Cumulative trading fee details instead of cumExecFee and feeCurrency
 ⋮----
 export type WSSpreadOrderEventV5 = WSPrivateTopicEventV5<
   'spread.order',
@@ -13187,7 +13513,7 @@ export interface WSSpreadExecutionV5 {
   orderType: OrderTypeV5;
   execFee: string;
   execFeeV2: string;
-  feeCurrency: string;
+  feeCurrency: string; // Trading fee currency
   parentExecId: string;
   execId: string;
   execPrice: string;
@@ -13202,6 +13528,8 @@ export interface WSSpreadExecutionV5 {
   closedSize: string;
   seq: number;
 }
+⋮----
+feeCurrency: string; // Trading fee currency
 ⋮----
 export type WSSpreadExecutionEventV5 = WSPrivateTopicEventV5<
   'spread.execution',
@@ -13231,6 +13559,32 @@ export type WSPriceLimitEventV5 = WSPublicTopicEventV5<
   string,
   'snapshot',
   WSPriceLimitV5
+>;
+⋮----
+export interface WSADLAlertV5 {
+  c: string; // Token of the insurance pool
+  s: string; // Trading pair name
+  b: string; // Balance of the insurance fund. Used to determine if ADL is triggered
+  mb: string; // Maximum balance of the insurance pool in the last 8 hours
+  i_pr: string; // PnL ratio threshold for triggering contract PnL drawdown ADL
+  pr: string; // Symbol's PnL drawdown ratio in the last 8 hours. Used to determine whether ADL is triggered or stopped
+  adl_tt: string; // Trigger threshold for contract PnL drawdown ADL
+  adl_sr: string; // Stop ratio threshold for contract PnL drawdown ADL
+}
+⋮----
+c: string; // Token of the insurance pool
+s: string; // Trading pair name
+b: string; // Balance of the insurance fund. Used to determine if ADL is triggered
+mb: string; // Maximum balance of the insurance pool in the last 8 hours
+i_pr: string; // PnL ratio threshold for triggering contract PnL drawdown ADL
+pr: string; // Symbol's PnL drawdown ratio in the last 8 hours. Used to determine whether ADL is triggered or stopped
+adl_tt: string; // Trigger threshold for contract PnL drawdown ADL
+adl_sr: string; // Stop ratio threshold for contract PnL drawdown ADL
+⋮----
+export type WSADLAlertEventV5 = WSPublicTopicEventV5<
+  'adlAlert.USDT' | 'adlAlert.USDC' | 'adlAlert.inverse',
+  'snapshot',
+  WSADLAlertV5[]
 >;
 ⋮----
 export type WSSystemStatusEventV5 = WSPublicTopicEventV5<
@@ -13958,6 +14312,7 @@ import {
   AddOrReduceMarginResultV5,
   AdjustCollateralAmountParamsV5,
   AdjustCollateralAmountV5,
+  ADLAlertResponseV5,
   AffiliateUserInfoV5,
   AffiliateUserListItemV5,
   AllCoinsBalanceV5,
@@ -14046,11 +14401,13 @@ import {
   ExecuteRFQQuoteParamsV5,
   ExecuteRFQQuoteResultV5,
   ExecutionV5,
+  FeeGroupStructureResponseV5,
   FeeRateV5,
   FundingRateHistoryResponseV5,
   GetAccountCoinBalanceParamsV5,
   GetAccountHistoricOrdersParamsV5,
   GetAccountOrdersParamsV5,
+  GetADLAlertParamsV5,
   GetAllCoinsBalanceParamsV5,
   GetAllowedDepositCoinInfoParamsV5,
   GetAssetInfoParamsV5,
@@ -14077,9 +14434,11 @@ import {
   GetEarnPositionParamsV5,
   GetExchangeBrokerEarningsParamsV5,
   GetExecutionListParamsV5,
+  GetFeeGroupStructureParamsV5,
   GetFeeRateParamsV5,
   GetFundingRateHistoryParamsV5,
   GetHistoricalVolatilityParamsV5,
+  GetIndexPriceComponentsParamsV5,
   GetIndexPriceKlineParamsV5,
   GetInstrumentsInfoParamsV5,
   GetInsuranceParamsV5,
@@ -14121,6 +14480,7 @@ import {
   GetRFQRealtimeResultV5,
   GetRFQTradeListParamsV5,
   GetRiskLimitParamsV5,
+  GetRPIOrderbookParamsV5,
   GetSettlementRecordParamsV5,
   GetSpreadInstrumentsInfoParamsV5,
   GetSpreadOpenOrdersParamsV5,
@@ -14140,6 +14500,7 @@ import {
   GetWalletBalanceParamsV5,
   GetWithdrawalRecordsParamsV5,
   HistoricalVolatilityV5,
+  IndexPriceComponentsResponseV5,
   InstrumentInfoResponseV5,
   InsuranceResponseV5,
   InternalDepositRecordV5,
@@ -14199,6 +14560,7 @@ import {
   RFQQuoteItemV5,
   RFQTradeV5,
   RiskLimitV5,
+  RPIOrderbookResponseV5,
   SendP2POrderMessageParamsV5,
   SetAutoAddMarginParamsV5,
   SetCollateralCoinParamsV5,
@@ -14543,6 +14905,18 @@ getOrderbook(
     params: GetOrderbookParamsV5,
 ): Promise<APIResponseV3WithTime<OrderbookResponseV5>>
 ⋮----
+/**
+   * Get RPI Orderbook
+   * Query for orderbook depth data with RPI (Retail Price Improvement) information.
+   *
+   * Covers: Spot / USDT contract / USDC contract / Inverse contract
+   * Contract: 50-level of RPI orderbook data
+   * Spot: 50-level of RPI orderbook data
+   */
+getRPIOrderbook(
+    params: GetRPIOrderbookParamsV5,
+): Promise<APIResponseV3WithTime<RPIOrderbookResponseV5>>
+⋮----
 getTickers(
 ⋮----
 getTickers(
@@ -14686,10 +15060,40 @@ getLongShortRatio(
     params: GetLongShortRatioParamsV5,
 ): Promise<APIResponseV3WithTime<CursorListV5<LongShortRatioV5[]>>>
 ⋮----
+/**
+   * Get Index Price Components
+   * Query for index price components that contribute to the calculation of an index price.
+   */
+getIndexPriceComponents(
+    params: GetIndexPriceComponentsParamsV5,
+): Promise<APIResponseV3WithTime<IndexPriceComponentsResponseV5>>
+⋮----
 getOrderPriceLimit(params: {
     symbol: string;
     category: 'spot' | 'linear' | 'inverse';
 }): Promise<APIResponseV3WithTime<OrderPriceLimitV5>>
+⋮----
+/**
+   * Get ADL Alert
+   * Query for ADL (auto-deleveraging mechanism) alerts and insurance pool information.
+   *
+   * Covers: USDT Perpetual / USDT Delivery / USDC Perpetual / USDC Delivery / Inverse Contracts
+   * Data update frequency: every 1 minute
+   */
+getADLAlert(
+    params?: GetADLAlertParamsV5,
+): Promise<APIResponseV3WithTime<ADLAlertResponseV5>>
+⋮----
+/**
+   * Get Fee Group Structure
+   * Query for the group fee structure and fee rates.
+   *
+   * The new grouped fee structure only applies to Pro-level and Market Maker clients.
+   * Covers: USDT Perpetual / USDT Delivery / USDC Perpetual / USDC Delivery / Inverse Contracts
+   */
+getFeeGroupStructure(
+    params: GetFeeGroupStructureParamsV5,
+): Promise<APIResponseV3WithTime<FeeGroupStructureResponseV5>>
 ⋮----
 /**
    *
@@ -17199,14 +17603,14 @@ setApiRateLimit(params: {
     list: {
       uids: string;
       bizType: string;
-      limit: number;
+      rate: number;
     }[];
   }): Promise<
     APIResponseV3WithTime<{
       result: {
         uids: string;
         bizType: string;
-        limit: number;
+        rate: number;
         success: boolean;
         msg: string;
       }[];
@@ -17228,18 +17632,59 @@ queryApiRateLimit(params: { uids: string }): Promise<
       list: {
         uids: string;
         bizType: string;
-        limit: number;
+        rate: number;
       }[];
     }>
   > {
     return this.getPrivate('/v5/apilimit/query', params);
+⋮----
+/**
+   * Get Rate Limit Cap
+   * Get your institution's total rate limit usage and cap, across the board.
+   *
+   * API rate limit: 50 req per second
+   * Main UIDs or sub UIDs can query this endpoint, but a main UID can only see the rate limits of subs below it.
+   */
+getRateLimitCap(): Promise<
+    APIResponseV3WithTime<{
+      list: {
+        bizType: string;
+        totalRate: number;
+        insCap: number;
+        uidCap: number;
+      }[];
+    }>
+  > {
+    return this.getPrivate('/v5/apilimit/query-cap');
+⋮----
+/**
+   * Get All Rate Limits
+   * Query for all your UID-level rate limits, including all master accounts and subaccounts.
+   *
+   * API rate limit: 50 req per second
+   */
+getAllRateLimits(params?: {
+    limit?: string;
+    cursor?: string;
+    uids?: string;
+  }): Promise<
+    APIResponseV3WithTime<{
+      list: {
+        uids: string;
+        bizType: string;
+        rate: number;
+      }[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/apilimit/query-all', params);
 
 ================
 File: package.json
 ================
 {
   "name": "bybit-api",
-  "version": "4.3.1",
+  "version": "4.3.2",
   "description": "Complete & robust Node.js SDK for Bybit's REST APIs and WebSockets, with TypeScript & strong end to end tests.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

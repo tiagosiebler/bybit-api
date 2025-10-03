@@ -97,6 +97,7 @@ export interface ExecutionV5 {
   stopOrderType?: StopOrderTypeV5;
   execFee: string;
   execFeeV2: string;
+  feeCurrency: string; // Trading fee currency
   execId: string;
   execPrice: string;
   execQty: string;

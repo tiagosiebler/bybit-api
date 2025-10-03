@@ -69,6 +69,7 @@ export interface AccountOrderV5 {
   createdTime: string;
   updatedTime: string;
   extraFees: string;
+  cumFeeDetail?: Record<string, string>; // Cumulative trading fee details instead of cumExecFee
 }
 
 export interface BatchCreateOrderResultV5 {

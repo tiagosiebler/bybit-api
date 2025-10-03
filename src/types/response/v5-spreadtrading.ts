@@ -96,6 +96,7 @@ export interface SpreadOrderHistoryV5 {
   leg2Symbol: string;
   leg2Side: string;
   cxlRejReason: string;
+  cumFeeDetail?: Record<string, string>; // Cumulative trading fee details instead of cumExecFee
 }
 
 export interface SpreadTradeLegV5 {
@@ -108,6 +109,7 @@ export interface SpreadTradeLegV5 {
   category: 'linear' | 'spot';
   execQty: string;
   execFee: string;
+  feeCurrency: string; // Trading fee currency
   execId: string;
 }
 
