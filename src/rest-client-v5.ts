@@ -3708,15 +3708,18 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Upload chat file for P2P order (Node.js only)
    *
-   * Supports:
-   * - Buffer: Raw file data (requires 'filename' parameter)
-   * - string: File path (auto-detects filename)
+   * Note: You must provide a Buffer. To upload from a file path, read it first:
+   * ```typescript
+   * import fs from 'fs';
+   * const buffer = fs.readFileSync('./path/to/file.png');
+   * await client.uploadP2PChatFile({ upload_file: buffer, filename: 'file.png' });
+   * ```
    *
    * Supported file types: jpg, png, jpeg, pdf, mp4
    */
   uploadP2PChatFile(params: {
-    upload_file: Buffer | string;
-    filename?: string; // Optional: override filename (required when using Buffer)
+    upload_file: Buffer;
+    filename: string; // Required: the filename (used for MIME type detection)
   }): Promise<
     APIResponseV3WithTime<{
       url: string;

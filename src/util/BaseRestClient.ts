@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 import crypto from 'crypto';
-import fs from 'fs';
 import https from 'https';
-import path from 'path';
 
 import {
   APIID,
@@ -504,10 +502,16 @@ export default abstract class BaseRestClient {
     contentType: string;
   }> {
     const uploadFile = params.upload_file;
-    const filename = params.filename || 'file';
+    const filename = params.filename;
 
     if (!uploadFile) {
       throw new Error('upload_file parameter is required for file uploads');
+    }
+
+    if (!filename) {
+      throw new Error(
+        'filename parameter is required for file uploads (used for MIME type detection)',
+      );
     }
 
     // Convert file to buffer
@@ -545,22 +549,9 @@ export default abstract class BaseRestClient {
       return { data: uploadFile, filename: defaultFilename };
     }
 
-    // File path string
-    if (typeof uploadFile === 'string') {
-      try {
-        const data = fs.readFileSync(uploadFile);
-        // Use override filename if provided (defaultFilename !== 'file'), otherwise use path basename
-        const filename =
-          defaultFilename !== 'file'
-            ? defaultFilename
-            : path.basename(uploadFile);
-        return { data, filename };
-      } catch (e) {
-        throw new Error(`Failed to read file from path "${uploadFile}": ${e}`);
-      }
-    }
-
-    throw new Error('upload_file must be a Buffer or file path string');
+    throw new Error(
+      'upload_file must be a Buffer. To upload from a file path, read the file yourself: fs.readFileSync(filePath)',
+    );
   }
 
   /**
