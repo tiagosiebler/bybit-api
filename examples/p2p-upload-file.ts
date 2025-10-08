@@ -9,8 +9,8 @@ import { RestClientV5 } from '../src';
 // NOTE: Node.js only (Buffer required)
 
 const client = new RestClientV5({
-  key: process.env.API_KEY,
-  secret: process.env.API_SECRET,
+  key: 'r0WhN6l7TZmTfvhwbf',
+  secret: 'fomvKX11gxTwjOdJOb66wzgAgkClE132agXC',
   testnet: true,
 });
 
