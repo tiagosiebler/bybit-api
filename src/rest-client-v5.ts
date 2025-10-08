@@ -3706,12 +3706,25 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
-   * Upload chat file for P2P order
+   * Upload chat file for P2P order (Node.js only)
+   *
+   * Supports:
+   * - Buffer: Raw file data (requires 'filename' parameter)
+   * - string: File path (auto-detects filename)
+   *
+   * Supported file types: jpg, png, jpeg, pdf, mp4
    */
   uploadP2PChatFile(params: {
-    upload_file: File; // Only supports: jpg, png, jpeg, pdf, mp4
-  }): Promise<APIResponseV3WithTime<null>> {
-    return this.postPrivate('/v5/p2p/oss/upload_file', params);
+    upload_file: Buffer | string;
+    filename?: string; // Optional: override filename (required when using Buffer)
+  }): Promise<
+    APIResponseV3WithTime<{
+      url: string;
+      type: string;
+      uploadId: string | null;
+    }>
+  > {
+    return this.postPrivateFile('/v5/p2p/oss/upload_file', params);
   }
 
   /**
