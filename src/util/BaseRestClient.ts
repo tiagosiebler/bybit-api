@@ -394,19 +394,16 @@ export default abstract class BaseRestClient {
     // Build multipart payload
     const { payload, contentType } = await this.buildMultipartPayload(params);
 
-    // Sign the binary payload (Node.js only - using crypto directly for binary data)
-    // Signature format: HMAC-SHA256(timestamp + api_key + recv_window + binary_payload)
+    // Sign the binary payload (Node.js only - supports both HMAC and RSA)
+    // Signature format: HMAC-SHA256 or RSA-SHA256(timestamp + api_key + recv_window + binary_payload)
     const signStringPrefix = `${timestamp}${this.key}${recvWindow}`;
     const signBuffer = Buffer.concat([
       Buffer.from(signStringPrefix, 'utf-8'),
       payload,
     ]);
 
-    // Use Node.js crypto.createHmac for binary data (avoids string encoding issues)
-    const sign = crypto
-      .createHmac('sha256', this.secret)
-      .update(signBuffer)
-      .digest('hex');
+    // Sign binary data with HMAC or RSA
+    const sign = this.signBinaryData(signBuffer, this.secret);
 
     // Sanity check to make sure it's only ever prefixed by one forward slash
     const requestUrl = [this.baseUrl, endpoint].join(
@@ -567,6 +564,26 @@ export default abstract class BaseRestClient {
       mp4: 'video/mp4',
     };
     return mimeTypes[ext || ''] || 'application/octet-stream';
+  }
+
+  /**
+   * @private Sign binary data (Buffer) using HMAC or RSA (Node.js only)
+   * Automatically detects key type based on secret format
+   */
+  private signBinaryData(data: Buffer, secret: string): string {
+    // Detect if secret is RSA key (contains "PRIVATE KEY")
+    const isRSA = secret.includes('PRIVATE KEY');
+
+    if (isRSA) {
+      // RSA signature: SHA256 hash + PKCS1 v1.5 signing + base64 encoding
+      const sign = crypto.createSign('SHA256');
+      sign.update(data);
+      sign.end();
+      return sign.sign(secret, 'base64');
+    } else {
+      // HMAC signature: HMAC-SHA256 + hex encoding
+      return crypto.createHmac('sha256', secret).update(data).digest('hex');
+    }
   }
 
   private async signMessage(
