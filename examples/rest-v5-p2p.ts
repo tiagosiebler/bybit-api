@@ -8,10 +8,12 @@ import { RestClientV5 } from '../src';
 // PUBLIC: NO
 // NOTE: Node.js only (Buffer required)
 
+const key = process.env.API_KEY_COM;
+const secret = process.env.API_SECRET_COM;
+
 const client = new RestClientV5({
-  key: 'r0WhN6l7TZmTfvhwbf',
-  secret: 'fomvKX11gxTwjOdJOb66wzgAgkClE132agXC',
-  testnet: true,
+  key: key,
+  secret: secret,
 });
 
 async function uploadP2PChatFile() {
@@ -23,10 +25,11 @@ async function uploadP2PChatFile() {
     });
     console.log('Get P2P orders result:', result0);
 
-    // Example 1: Upload from file path
     // You must read the file yourself and pass the Buffer + filename
-    const filePath = '../docs/images/logo1.png';
+    const filePath = './docs/images/logo1.png';
     const fileBuffer = fs.readFileSync(filePath);
+
+    // Example 1: Upload from file path
     const result1 = await client.uploadP2PChatFile({
       upload_file: fileBuffer,
       filename: path.basename(filePath), // Extract filename from path
