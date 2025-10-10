@@ -4,6 +4,7 @@ import https from 'https';
 
 import {
   APIID,
+  getMimeType,
   getRestBaseUrl,
   parseRateLimitHeaders,
   RestClientOptions,
@@ -74,6 +75,11 @@ interface UnsignedRequest<T> {
   sign?: string;
   timestamp?: number;
   recvWindow?: number;
+}
+
+interface FileUploadParams {
+  fileBuffer: Buffer;
+  fileName: string;
 }
 
 type SignMethod = 'v5auth';
@@ -197,7 +203,7 @@ export default abstract class BaseRestClient {
     return this._call('POST', endpoint, params, false);
   }
 
-  postPrivateFile(endpoint: string, params?: any) {
+  postPrivateFile(endpoint: string, params?: FileUploadParams) {
     return this._callFile('POST', endpoint, params);
   }
 
@@ -368,13 +374,16 @@ export default abstract class BaseRestClient {
   }
 
   /**
-   * @private Make a HTTP request to upload a file (Node.js only). Handles multipart/form-data encoding and binary signature.
+   * @private Make a HTTP request to upload a file (Node.js only). Handles multipart/form-data encoding and binary signature, but assumes file is provided as Buffer
    */
   private async _callFile(
     method: Method,
     endpoint: string,
-    params?: any,
+    params?: FileUploadParams,
   ): Promise<any> {
+    if (!params) {
+      throw new Error('No file provided in upload request');
+    }
     if (!this.key || !this.secret) {
       throw new Error('Private endpoints require api and private keys set');
     }
@@ -494,28 +503,33 @@ export default abstract class BaseRestClient {
   /**
    * @private Build multipart/form-data payload for file uploads (Node.js only)
    */
-  private async buildMultipartPayload(params: any): Promise<{
+  private async buildMultipartPayload(params: FileUploadParams): Promise<{
     payload: Buffer;
     contentType: string;
   }> {
-    const uploadFile = params.upload_file;
-    const filename = params.filename;
+    const fileBuffer = params.fileBuffer;
+    const fileName = params.fileName;
 
-    if (!uploadFile) {
+    if (!fileBuffer) {
       throw new Error('upload_file parameter is required for file uploads');
     }
 
-    if (!filename) {
+    if (!fileName) {
       throw new Error(
         'filename parameter is required for file uploads (used for MIME type detection)',
       );
     }
 
-    // Convert file to buffer
-    const fileData = await this.normalizeFileInput(uploadFile, filename);
+    if (!Buffer.isBuffer(fileBuffer)) {
+      throw new Error(
+        'uploadFile must be provided as a Buffer. To upload from a file path, read the file yourself: fs.readFileSync(filePath)',
+      );
+    }
+
+    const fileData = { data: fileBuffer, filename: fileName };
 
     // Determine MIME type from filename extension
-    const mimeType = this.getMimeType(fileData.filename);
+    const mimeType = getMimeType(fileData.filename);
 
     // Build multipart/form-data manually (following Bybit's format)
     const boundary = 'boundary-for-file';
@@ -532,38 +546,6 @@ export default abstract class BaseRestClient {
     ]);
 
     return { payload, contentType };
-  }
-
-  /**
-   * @private Normalize file input to buffer (Node.js only)
-   */
-  private async normalizeFileInput(
-    uploadFile: any,
-    defaultFilename: string,
-  ): Promise<{ data: Buffer; filename: string }> {
-    // Buffer
-    if (Buffer.isBuffer(uploadFile)) {
-      return { data: uploadFile, filename: defaultFilename };
-    }
-
-    throw new Error(
-      'upload_file must be a Buffer. To upload from a file path, read the file yourself: fs.readFileSync(filePath)',
-    );
-  }
-
-  /**
-   * @private Get MIME type from filename extension
-   */
-  private getMimeType(filename: string): string {
-    const ext = filename.split('.').pop()?.toLowerCase();
-    const mimeTypes: Record<string, string> = {
-      jpg: 'image/jpeg',
-      jpeg: 'image/jpeg',
-      png: 'image/png',
-      pdf: 'application/pdf',
-      mp4: 'video/mp4',
-    };
-    return mimeTypes[ext || ''] || 'application/octet-stream';
   }
 
   private async signMessage(
