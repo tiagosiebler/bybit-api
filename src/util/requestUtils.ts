@@ -252,18 +252,3 @@ export function parseRateLimitHeaders(
 
   return undefined;
 }
-
-/**
- * Assume MIME type from filename extension
- */
-export function getMimeType(filename: string): string {
-  const ext = filename.split('.').pop()?.toLowerCase();
-  const mimeTypes: Record<string, string> = {
-    jpg: 'image/jpeg',
-    jpeg: 'image/jpeg',
-    png: 'image/png',
-    pdf: 'application/pdf',
-    mp4: 'video/mp4',
-  };
-  return mimeTypes[ext || ''] || 'application/octet-stream';
-}

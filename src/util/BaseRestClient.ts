@@ -4,13 +4,16 @@ import https from 'https';
 
 import {
   APIID,
-  getMimeType,
   getRestBaseUrl,
   parseRateLimitHeaders,
   RestClientOptions,
   RestClientType,
   serializeParams,
 } from './requestUtils';
+import {
+  buildMultipartPayload,
+  FileUploadRequestParams,
+} from './rest/fileUploadUtil';
 import {
   checkWebCryptoAPISupported,
   SignAlgorithm,
@@ -75,11 +78,6 @@ interface UnsignedRequest<T> {
   sign?: string;
   timestamp?: number;
   recvWindow?: number;
-}
-
-interface FileUploadParams {
-  fileBuffer: Buffer;
-  fileName: string;
 }
 
 type SignMethod = 'v5auth';
@@ -203,7 +201,7 @@ export default abstract class BaseRestClient {
     return this._call('POST', endpoint, params, false);
   }
 
-  postPrivateFile(endpoint: string, params?: FileUploadParams) {
+  postPrivateFile(endpoint: string, params?: FileUploadRequestParams) {
     return this._callFile('POST', endpoint, params);
   }
 
@@ -379,7 +377,7 @@ export default abstract class BaseRestClient {
   private async _callFile(
     method: Method,
     endpoint: string,
-    params?: FileUploadParams,
+    params?: FileUploadRequestParams,
   ): Promise<any> {
     if (!params) {
       throw new Error('No file provided in upload request');
@@ -401,7 +399,7 @@ export default abstract class BaseRestClient {
     const recvWindow = this.options.recv_window || 5000;
 
     // Build multipart payload
-    const { payload, contentType } = await this.buildMultipartPayload(params);
+    const { payload, contentType } = await buildMultipartPayload(params);
 
     // Sign the binary payload (supports both HMAC and RSA)
     // Signature format: HMAC-SHA256 or RSA-SHA256(timestamp + api_key + recv_window + binary_payload)
@@ -498,54 +496,6 @@ export default abstract class BaseRestClient {
       headers: response.headers,
       requestOptions: this.options,
     };
-  }
-
-  /**
-   * @private Build multipart/form-data payload for file uploads (Node.js only)
-   */
-  private async buildMultipartPayload(params: FileUploadParams): Promise<{
-    payload: Buffer;
-    contentType: string;
-  }> {
-    const fileBuffer = params.fileBuffer;
-    const fileName = params.fileName;
-
-    if (!fileBuffer) {
-      throw new Error('upload_file parameter is required for file uploads');
-    }
-
-    if (!fileName) {
-      throw new Error(
-        'filename parameter is required for file uploads (used for MIME type detection)',
-      );
-    }
-
-    if (!Buffer.isBuffer(fileBuffer)) {
-      throw new Error(
-        'uploadFile must be provided as a Buffer. To upload from a file path, read the file yourself: fs.readFileSync(filePath)',
-      );
-    }
-
-    const fileData = { data: fileBuffer, filename: fileName };
-
-    // Determine MIME type from filename extension
-    const mimeType = getMimeType(fileData.filename);
-
-    // Build multipart/form-data manually (following Bybit's format)
-    const boundary = 'boundary-for-file';
-    const contentType = `multipart/form-data; boundary=${boundary}`;
-
-    const header = `--${boundary}\r\nContent-Disposition: form-data; name="upload_file"; filename="${fileData.filename}"\r\nContent-Type: ${mimeType}\r\n\r\n`;
-    const footer = `\r\n--${boundary}--\r\n`;
-
-    // Construct payload (Node.js only - simple Buffer concatenation)
-    const payload = Buffer.concat([
-      Buffer.from(header, 'utf-8'),
-      fileData.data,
-      Buffer.from(footer, 'utf-8'),
-    ]);
-
-    return { payload, contentType };
   }
 
   private async signMessage(
