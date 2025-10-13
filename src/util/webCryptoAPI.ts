@@ -200,7 +200,7 @@ export async function signBinaryData(
 }
 
 export function checkWebCryptoAPISupported() {
-  if (typeof globalThis.crypto === 'undefined') {
+  if (!globalThis.crypto) {
     throw new Error(
       `Web Crypto API unavailable. Authentication will not work.
 
