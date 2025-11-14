@@ -2447,10 +2447,18 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * @deprecated Use setSpotMarginLeverageV2 instead
+   */
+  setSpotMarginLeverage(leverage: string): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate('/v5/spot-margin-trade/set-leverage', { leverage });
+  }
+
+  /**
    * Set the user's maximum leverage in spot cross margin.
    * CAUTION: Your account needs to enable spot margin first; i.e., you must have finished the quiz on web / app.
+   * @deprecated Use setSpotMarginLeverageV2 instead
    */
-  setSpotMarginLeverage(
+  setSpotMarginLeverageV2(
     params: SetSpotMarginLeverageParamsV5,
   ): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate('/v5/spot-margin-trade/set-leverage', params);
