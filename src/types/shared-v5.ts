@@ -97,7 +97,9 @@ export type OrderCreateTypeV5 =
   /** Order created by arbitrage - web/app. */
   | 'CreateByArbitrage'
   /** Option dynamic delta hedge order - web/app */
-  | 'CreateByDdh';
+  | 'CreateByDdh'
+  /** BBO Order - Best Bid/Offer order */
+  | 'CreateByBboOrder';
 
 export type OrderCancelTypeV5 =
   | 'CancelByUser'

@@ -25,6 +25,10 @@ export interface GetTransactionLogParamsV5 {
   currency?: string;
   baseCoin?: string;
   type?: TransactionTypeV5;
+  /**
+   * Transaction sub type, "movePosition", used to filter trans logs of Move Position only
+   */
+  transSubType?: string;
   startTime?: number;
   endTime?: number;
   limit?: number;
@@ -61,4 +65,16 @@ export interface GetClassicTransactionLogsParamsV5 {
 export interface SetLimitPriceActionParamsV5 {
   category: CategoryV5;
   modifyEnable: boolean;
+}
+
+export interface GetAccountInstrumentsInfoParamsV5 {
+  category: 'spot' | 'linear' | 'inverse';
+  symbol?: string;
+  limit?: number;
+  cursor?: string;
+}
+
+export interface ManualRepayParamsV5 {
+  coin?: string;
+  amount?: string;
 }

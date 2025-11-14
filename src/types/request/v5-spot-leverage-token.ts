@@ -26,3 +26,35 @@ export interface GetVIPMarginDataParamsV5 {
   vipLevel?: string;
   currency?: string;
 }
+
+// Spot Margin Trade (UTA) endpoints
+export interface ManualBorrowParamsV5 {
+  coin: string;
+  amount: string;
+}
+
+export interface GetMaxBorrowableAmountParamsV5 {
+  currency: string;
+}
+
+export interface GetPositionTiersParamsV5 {
+  currency?: string;
+}
+
+export interface GetCoinStateParamsV5 {
+  currency?: string;
+}
+
+export interface GetAvailableAmountToRepayParamsV5 {
+  currency: string;
+}
+
+export interface SetSpotMarginLeverageParamsV5 {
+  leverage: string;
+  currency?: string;
+}
+
+export interface ManualRepayWithoutConversionParamsV5 {
+  coin: string;
+  amount?: string;
+}

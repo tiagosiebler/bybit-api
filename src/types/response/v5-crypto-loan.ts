@@ -194,6 +194,8 @@ export interface OngoingFlexibleLoanV5 {
   hourlyInterestRate: string;
   loanCurrency: string;
   totalDebt: string;
+  unpaidAmount: string;
+  unpaidInterest: string;
 }
 
 export interface BorrowHistoryFlexibleV5 {

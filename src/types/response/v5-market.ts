@@ -137,6 +137,9 @@ export interface SpotInstrumentInfoV5 {
     maxOrderQty: string;
     minOrderAmt: string;
     maxOrderAmt: string;
+    maxLimitOrderQty: string;
+    maxMarketOrderQty: string;
+    postOnlyMaxLimitOrderSize: string;
   };
   priceFilter: {
     tickSize: string;
@@ -145,6 +148,7 @@ export interface SpotInstrumentInfoV5 {
     priceLimitRatioX: string;
     priceLimitRatioY: string;
   };
+  forbidUplWithdrawal: boolean;
 }
 
 type InstrumentInfoV5Mapping = {
@@ -156,6 +160,28 @@ type InstrumentInfoV5Mapping = {
 
 export type InstrumentInfoResponseV5<C extends CategoryV5> =
   CategoryCursorListV5<InstrumentInfoV5Mapping[C], C>;
+
+// Account Instruments Info (includes RPI permissions)
+export interface AccountSpotInstrumentInfoV5 extends SpotInstrumentInfoV5 {
+  isPublicRpi: boolean;
+  myRpiPermission: boolean;
+}
+
+export interface AccountLinearInverseInstrumentInfoV5
+  extends LinearInverseInstrumentInfoV5 {
+  isPublicRpi: boolean;
+  myRpiPermission: boolean;
+}
+
+type AccountInstrumentInfoV5Mapping = {
+  linear: AccountLinearInverseInstrumentInfoV5[];
+  inverse: AccountLinearInverseInstrumentInfoV5[];
+  spot: AccountSpotInstrumentInfoV5[];
+};
+
+export type AccountInstrumentInfoResponseV5<
+  C extends 'spot' | 'linear' | 'inverse',
+> = CategoryCursorListV5<AccountInstrumentInfoV5Mapping[C], C>;
 
 /**
  * [price, size]
@@ -205,6 +231,9 @@ export interface TickerLinearInverseV5 {
   nextFundingTime: string;
   predictedDeliveryPrice: string;
   basisRate: string;
+  basisRateYear: string;
+  fundingIntervalHour: string;
+  fundingCap: string;
   deliveryFeeRate: string;
   deliveryTime: string;
   ask1Size: string;
