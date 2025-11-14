@@ -2456,7 +2456,6 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Set the user's maximum leverage in spot cross margin.
    * CAUTION: Your account needs to enable spot margin first; i.e., you must have finished the quiz on web / app.
-   * @deprecated Use setSpotMarginLeverageV2() instead
    */
   setSpotMarginLeverageV2(
     params: SetSpotMarginLeverageParamsV5,
