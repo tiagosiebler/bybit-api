@@ -2447,7 +2447,7 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
-   * @deprecated Use setSpotMarginLeverageV2 instead
+   * @deprecated Use setSpotMarginLeverageV2 instead, which uses an object parameter instead. This method will be replaced by setSpotMarginLeverageV2 in a future release.
    */
   setSpotMarginLeverage(leverage: string): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate('/v5/spot-margin-trade/set-leverage', { leverage });
