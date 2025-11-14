@@ -89,3 +89,47 @@ export interface SpotMarginStateV5 {
   spotMarginMode: '1' | '0';
   effectiveLeverage: string;
 }
+
+// Spot Margin Trade (UTA) response types
+export interface ManualBorrowResultV5 {
+  coin: string;
+  amount: string;
+}
+
+export interface MaxBorrowableAmountV5 {
+  currency: string;
+  maxLoan: string;
+}
+
+export interface PositionTierV5 {
+  tier: string;
+  borrowLimit: string;
+  positionMMR: string;
+  positionIMR: string;
+  maxLeverage: string;
+}
+
+export interface CurrencyPositionTiersV5 {
+  currency: string;
+  positionTiersRatioList: PositionTierV5[];
+}
+
+export interface CoinStateV5 {
+  currency: string;
+  spotLeverage: string;
+}
+
+export interface AvailableAmountToRepayV5 {
+  currency: string;
+  lossLessRepaymentAmount: string;
+}
+
+export interface ManualRepayWithoutConversionResultV5 {
+  /**
+   * Result status:
+   * - P: Processing
+   * - SU: Success
+   * - FA: Failed
+   */
+  resultStatus: 'P' | 'SU' | 'FA';
+}

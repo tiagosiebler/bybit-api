@@ -19,6 +19,9 @@ export interface EarnOrderHistoryV5 {
   createdAt: string;
   productId: string;
   updatedAt: string;
+  swapOrderValue: string;
+  estimateRedeemTime: string;
+  estimateStakeTime: string;
 }
 
 export interface EarnPositionV5 {
@@ -27,4 +30,28 @@ export interface EarnPositionV5 {
   amount: string;
   totalPnl: string;
   claimableYield: string;
+}
+
+export interface EarnYieldHistoryV5 {
+  productId: string;
+  coin: string;
+  id: string;
+  amount: string;
+  yieldType: string;
+  distributionMode: string;
+  effectiveStakingAmount: string;
+  orderId: string;
+  status: 'Pending' | 'Success' | 'Fail';
+  createdAt: string;
+}
+
+export interface EarnHourlyYieldHistoryV5 {
+  productId: string;
+  coin: string;
+  id: string;
+  amount: string;
+  effectiveStakingAmount: string;
+  status: 'Pending' | 'Success' | 'Fail';
+  hourlyDate: string;
+  createdAt: string;
 }

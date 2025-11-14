@@ -40,6 +40,7 @@ export interface GetPremiumIndexPriceKlineParamsV5 {
 export interface GetInstrumentsInfoParamsV5 {
   category: CategoryV5;
   symbol?: string;
+  symbolType?: string;
   status?: InstrumentStatusV5;
   baseCoin?: string;
   limit?: number;
