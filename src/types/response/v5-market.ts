@@ -94,6 +94,7 @@ export interface LinearInverseInstrumentInfoV5 {
       makerFeeRate: string;
     };
   } | null;
+  skipCallAuction?: boolean; // For USDT pre-market contract
   displayName: string;
 }
 
