@@ -143,6 +143,9 @@ export interface WSTickerV5 {
   preOpenPrice?: string;
   preQty?: string;
   curPreListingPhase?: string;
+  fundingIntervalHour?: string;
+  fundingCap?: string;
+  basisRateYear?: string;
 }
 
 export interface WSTickerOptionV5 {
