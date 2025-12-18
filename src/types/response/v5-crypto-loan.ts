@@ -310,3 +310,19 @@ export interface RepaymentHistoryFixedV5 {
   repayTime: number;
   repayType: number;
 }
+
+export interface RenewBorrowOrderFixedV5 {
+  orderId: string;
+}
+
+export interface RenewOrderInfoFixedV5 {
+  amount: string;
+  autoRepay: number;
+  borrowCurrency: string;
+  contractNo: string;
+  dueTime: string;
+  loanId: string;
+  orderId: number;
+  renewLoanNo: string;
+  time: string;
+}
