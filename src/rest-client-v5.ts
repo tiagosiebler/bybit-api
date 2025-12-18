@@ -4,6 +4,7 @@ import {
   AccountBorrowCollateralLimitV5,
   AccountCoinBalanceV5,
   AccountInfoV5,
+  AccountInstrumentInfoResponseV5,
   AccountMarginModeV5,
   AccountOrderV5,
   AccountTypeV5,
@@ -22,6 +23,7 @@ import {
   APIResponseV3,
   APIResponseV3WithTime,
   AssetInfoV5,
+  AvailableAmountToRepayV5,
   BatchAmendOrderParamsV5,
   BatchAmendOrderResultV5,
   BatchCancelOrderParamsV5,
@@ -59,6 +61,7 @@ import {
   CoinExchangeRecordV5,
   CoinGreeksV5,
   CoinInfoV5,
+  CoinStateV5,
   CollateralAdjustmentHistoryV5,
   CollateralDataV5,
   CollateralInfoV5,
@@ -83,6 +86,7 @@ import {
   CreateSupplyOrderFixedParamsV5,
   CreateSupplyOrderFixedV5,
   CryptoLoanPositionV5,
+  CurrencyPositionTiersV5,
   CursorListV5,
   CursorRowsV5,
   DCPInfoV5,
@@ -91,9 +95,11 @@ import {
   DeliveryRecordV5,
   DepositAddressChainV5,
   DepositRecordV5,
+  EarnHourlyYieldHistoryV5,
   EarnOrderHistoryV5,
   EarnPositionV5,
   EarnProductV5,
+  EarnYieldHistoryV5,
   ExchangeBrokerAccountInfoV5,
   ExchangeBrokerEarningResultV5,
   ExchangeBrokerSubAccountDepositRecordV5,
@@ -105,11 +111,14 @@ import {
   FundingRateHistoryResponseV5,
   GetAccountCoinBalanceParamsV5,
   GetAccountHistoricOrdersParamsV5,
+  GetAccountInstrumentsInfoParamsV5,
   GetAccountOrdersParamsV5,
   GetADLAlertParamsV5,
+  GetAffiliateUserListParamsV5,
   GetAllCoinsBalanceParamsV5,
   GetAllowedDepositCoinInfoParamsV5,
   GetAssetInfoParamsV5,
+  GetAvailableAmountToRepayParamsV5,
   GetBorrowableCoinsParamsV5,
   GetBorrowContractInfoFixedParamsV5,
   GetBorrowHistoryFlexibleParamsV5,
@@ -122,6 +131,7 @@ import {
   GetClosedOptionsPositionsParamsV5,
   GetClosedPnLParamsV5,
   GetCoinExchangeRecordParamsV5,
+  GetCoinStateParamsV5,
   GetCollateralAdjustmentHistoryParamsV5,
   GetCollateralCoinsParamsV5,
   GetCompletedLoanOrderHistoryParamsV5,
@@ -129,8 +139,10 @@ import {
   GetDeliveryPriceParamsV5,
   GetDeliveryRecordParamsV5,
   GetDepositRecordParamsV5,
+  GetEarnHourlyYieldHistoryParamsV5,
   GetEarnOrderHistoryParamsV5,
   GetEarnPositionParamsV5,
+  GetEarnYieldHistoryParamsV5,
   GetExchangeBrokerEarningsParamsV5,
   GetExecutionListParamsV5,
   GetFeeGroupStructureParamsV5,
@@ -147,6 +159,7 @@ import {
   GetLoanLTVAdjustmentHistoryParamsV5,
   GetLongShortRatioParamsV5,
   GetMarkPriceKlineParamsV5,
+  GetMaxBorrowableAmountParamsV5,
   GetMaxCollateralAmountParamsV5,
   GetMovePositionHistoryParamsV5,
   GetOngoingFlexibleLoansParamsV5,
@@ -160,6 +173,7 @@ import {
   GetP2POrdersParamsV5,
   GetP2PPendingOrdersParamsV5,
   GetP2PPersonalAdsParamsV5,
+  GetPositionTiersParamsV5,
   GetPremiumIndexPriceKlineParamsV5,
   GetPreUpgradeClosedPnlParamsV5,
   GetPreUpgradeOptionDeliveryRecordParamsV5,
@@ -168,6 +182,7 @@ import {
   GetPreUpgradeTransactionLogParamsV5,
   GetPreUpgradeUSDCSessionParamsV5,
   GetPublicTradingHistoryParamsV5,
+  GetRenewOrderInfoFixedParamsV5,
   GetRepaymentHistoryFixedParamsV5,
   GetRepaymentHistoryFlexibleParamsV5,
   GetRepaymentHistoryParamsV5,
@@ -197,6 +212,7 @@ import {
   GetUnpaidLoanOrdersParamsV5,
   GetVIPMarginDataParamsV5,
   GetWalletBalanceParamsV5,
+  GetWithdrawalAddressListParamsV5,
   GetWithdrawalRecordsParamsV5,
   HistoricalVolatilityV5,
   IndexPriceComponentsResponseV5,
@@ -207,7 +223,14 @@ import {
   IssueVoucherParamsV5,
   LoanLTVAdjustmentHistoryV5,
   LongShortRatioV5,
+  ManualBorrowParamsV5,
+  ManualBorrowResultV5,
+  ManualRepayParamsV5,
+  ManualRepayResultV5,
+  ManualRepayWithoutConversionParamsV5,
+  ManualRepayWithoutConversionResultV5,
   MarkP2POrderAsPaidParamsV5,
+  MaxBorrowableAmountV5,
   MMPModifyParamsV5,
   MMPStateV5,
   MovePositionHistoryV5,
@@ -241,6 +264,9 @@ import {
   PreUpgradeTransaction,
   PreUpgradeUSDCSessionSettlement,
   PublicTradeV5,
+  RenewBorrowOrderFixedParamsV5,
+  RenewBorrowOrderFixedV5,
+  RenewOrderInfoFixedV5,
   RepayCollateralFixedParamsV5,
   RepayCollateralFlexibleParamsV5,
   RepayFixedParamsV5,
@@ -267,6 +293,7 @@ import {
   SetLimitPriceActionParamsV5,
   SetRiskLimitParamsV5,
   SetRiskLimitResultV5,
+  SetSpotMarginLeverageParamsV5,
   SettlementRecordV5,
   SetTPSLModeParamsV5,
   SetTradingStopParamsV5,
@@ -306,6 +333,7 @@ import {
   VIPMarginDataV5,
   WalletBalanceV5,
   WithdrawableAmountV5,
+  WithdrawalAddressV5,
   WithdrawalRecordV5,
   WithdrawParamsV5,
 } from './types';
@@ -1445,6 +1473,20 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Get Account Instruments Info
+   * Query for the instrument specification of online trading pairs that available to users.
+   *
+   * Covers: SPOT / USDT contract / USDC contract / Inverse contract
+   *
+   * Includes RPI permission information (isPublicRpi, myRpiPermission)
+   */
+  getAccountInstrumentsInfo<C extends 'spot' | 'linear' | 'inverse'>(
+    params: GetAccountInstrumentsInfoParamsV5 & { category: C },
+  ): Promise<APIResponseV3WithTime<AccountInstrumentInfoResponseV5<C>>> {
+    return this.getPrivate('/v5/account/instruments-info', params);
+  }
+
+  /**
    * Upgrade to unified account.
    *
    * Banned/OTC loan/Net asset unsatisfying/Express path users cannot upgrade the account to Unified Account for now.
@@ -1478,6 +1520,23 @@ export class RestClientV5 extends BaseRestClient {
     params?: RepayLiabilityParamsV5,
   ): Promise<APIResponseV3WithTime<CursorListV5<RepayLiabilityResultV5[]>>> {
     return this.postPrivate('/v5/account/quick-repayment', params);
+  }
+
+  /**
+   * Manual Repay
+   *
+   * If neither coin nor amount is passed, then repay all the liabilities.
+   * If coin is passed and amount is not, the coin will be repaid in full.
+   *
+   * When repaying, the system will first use the spot available balance of the debt currency.
+   * If that's not enough, the remaining amount will be repaid by converting other assets.
+   *
+   * Repayment is prohibited between 04:00 and 05:30 per hour.
+   */
+  manualRepay(
+    params?: ManualRepayParamsV5,
+  ): Promise<APIResponseV3WithTime<ManualRepayResultV5>> {
+    return this.postPrivate('/v5/account/repay', params);
   }
 
   /**
@@ -2013,6 +2072,21 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Get Withdrawal Address List
+   * Query the withdrawal addresses in the address book.
+   *
+   * TIP: The API key for querying this endpoint must have withdrawal permissions.
+   */
+  getWithdrawalAddressList(params?: GetWithdrawalAddressListParamsV5): Promise<
+    APIResponseV3WithTime<{
+      rows: WithdrawalAddressV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/asset/withdraw/query-address', params);
+  }
+
+  /**
    * Get Exchange Entity List.
    *
    * This endpoint is particularly used for kyc=KOR users. When withdraw funds, you need to fill entity id.
@@ -2291,7 +2365,7 @@ export class RestClientV5 extends BaseRestClient {
    * - Use master UID only
    * - The api key can only have "Affiliate" permission
    */
-  getAffiliateUserList(params?: { size?: number; cursor?: string }): Promise<
+  getAffiliateUserList(params?: GetAffiliateUserListParamsV5): Promise<
     APIResponseV3WithTime<{
       list: AffiliateUserListItemV5[];
       nextPageCursor: string;
@@ -2377,11 +2451,20 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
-   * Set the user's maximum leverage in spot cross margin.
-   * CAUTION: Your account needs to enable spot margin first; i.e., you must have finished the quiz on web / app.
+   * @deprecated Use setSpotMarginLeverageV2 instead, which uses an object parameter instead. This method will be replaced by setSpotMarginLeverageV2 in a future release.
    */
   setSpotMarginLeverage(leverage: string): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate('/v5/spot-margin-trade/set-leverage', { leverage });
+  }
+
+  /**
+   * Set the user's maximum leverage in spot cross margin.
+   * CAUTION: Your account needs to enable spot margin first; i.e., you must have finished the quiz on web / app.
+   */
+  setSpotMarginLeverageV2(
+    params: SetSpotMarginLeverageParamsV5,
+  ): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate('/v5/spot-margin-trade/set-leverage', params);
   }
 
   /**
@@ -2391,6 +2474,70 @@ export class RestClientV5 extends BaseRestClient {
    */
   getSpotMarginState(): Promise<APIResponseV3WithTime<SpotMarginStateV5>> {
     return this.getPrivate('/v5/spot-margin-trade/state');
+  }
+
+  /**
+   * Manual borrow for UTA
+   */
+  manualBorrow(
+    params: ManualBorrowParamsV5,
+  ): Promise<APIResponseV3WithTime<ManualBorrowResultV5>> {
+    return this.postPrivate('/v5/account/borrow', params);
+  }
+
+  /**
+   * Get max borrowable amount
+   */
+  getMaxBorrowableAmount(
+    params: GetMaxBorrowableAmountParamsV5,
+  ): Promise<APIResponseV3WithTime<MaxBorrowableAmountV5>> {
+    return this.getPrivate('/v5/spot-margin-trade/max-borrowable', params);
+  }
+
+  /**
+   * Get loan position risk information (position tiers)
+   */
+  getPositionTiers(params?: GetPositionTiersParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: CurrencyPositionTiersV5[];
+    }>
+  > {
+    return this.getPrivate('/v5/spot-margin-trade/position-tiers', params);
+  }
+
+  /**
+   * Get currency leverage information (coin state)
+   */
+  getCoinState(params?: GetCoinStateParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: CoinStateV5[];
+    }>
+  > {
+    return this.getPrivate('/v5/spot-margin-trade/coinstate', params);
+  }
+
+  /**
+   * Get available amount to repay
+   */
+  getAvailableAmountToRepay(
+    params: GetAvailableAmountToRepayParamsV5,
+  ): Promise<APIResponseV3WithTime<AvailableAmountToRepayV5>> {
+    return this.getPrivate(
+      '/v5/spot-margin-trade/repayment-available-amount',
+      params,
+    );
+  }
+
+  /**
+   * Manual repay without asset conversion
+   *
+   * IMPORTANT: Repayment is prohibited between 04:00 and 05:30 per hour.
+   * When repaying, system will only use the spot available balance of the debt currency.
+   */
+  manualRepayWithoutConversion(
+    params: ManualRepayWithoutConversionParamsV5,
+  ): Promise<APIResponseV3WithTime<ManualRepayWithoutConversionResultV5>> {
+    return this.postPrivate('/v5/account/no-convert-repay', params);
   }
 
   /**
@@ -3132,6 +3279,36 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Renew Borrow Order
+   * This endpoint allows you to re-borrow the principal that was previously repaid.
+   * The renewal amount is the same as the amount previously repaid on this loan.
+   *
+   * Permission: "Spot trade"
+   * UID rate limit: 1 req / second
+   */
+  renewBorrowOrderFixed(
+    params: RenewBorrowOrderFixedParamsV5,
+  ): Promise<APIResponseV3WithTime<RenewBorrowOrderFixedV5>> {
+    return this.postPrivate('/v5/crypto-loan-fixed/renew', params);
+  }
+
+  /**
+   * Get Renew Order Info
+   * Query for renew order information
+   *
+   * Permission: "Spot trade"
+   * UID rate limit: 5 req / second
+   */
+  getRenewOrderInfoFixed(params?: GetRenewOrderInfoFixedParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: RenewOrderInfoFixedV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-fixed/renew-info', params);
+  }
+
+  /**
    *
    ****** Institutional Lending
    *
@@ -3357,12 +3534,15 @@ export class RestClientV5 extends BaseRestClient {
    *
    * INFO: API key needs "Earn" permission
    *
-   * Note: Either orderId or orderLinkId is required. If both are passed,
-   * make sure they're matched, otherwise returning empty result
+   * Note:
+   * - For category = OnChain, either orderId or orderLinkId is required
+   * - If both are passed, make sure they're matched, otherwise returning empty result
+   * - Supports batch query with productId, startTime, endTime, limit, cursor
    */
   getEarnOrderHistory(params: GetEarnOrderHistoryParamsV5): Promise<
     APIResponseV3WithTime<{
       list: EarnOrderHistoryV5[];
+      nextPageCursor: string;
     }>
   > {
     return this.getPrivate('/v5/earn/order', params);
@@ -3381,6 +3561,34 @@ export class RestClientV5 extends BaseRestClient {
     }>
   > {
     return this.getPrivate('/v5/earn/position', params);
+  }
+
+  /**
+   * Get Yield History
+   *
+   * INFO: API key needs "Earn" permission
+   */
+  getEarnYieldHistory(params: GetEarnYieldHistoryParamsV5): Promise<
+    APIResponseV3WithTime<{
+      yield: EarnYieldHistoryV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/earn/yield', params);
+  }
+
+  /**
+   * Get Hourly Yield History
+   *
+   * INFO: API key needs "Earn" permission
+   */
+  getEarnHourlyYieldHistory(params: GetEarnHourlyYieldHistoryParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: EarnHourlyYieldHistoryV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/earn/hourly-yield', params);
   }
 
   /**
@@ -3706,12 +3914,28 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
-   * Upload chat file for P2P order
+   * Upload chat file for P2P order (Node.js only)
+   *
+   * Note: You must provide a Buffer. To upload from a file path, read it into a Buffer first:
+   * ```typescript
+   * import fs from 'fs';
+   * const buffer = fs.readFileSync('./path/to/file.png');
+   * await client.uploadP2PChatFile({ fileBuffer: buffer, fileName: 'file.png' });
+   * ```
+   *
+   * Supported file types: jpg, png, jpeg, pdf, mp4
    */
   uploadP2PChatFile(params: {
-    upload_file: File; // Only supports: jpg, png, jpeg, pdf, mp4
-  }): Promise<APIResponseV3WithTime<null>> {
-    return this.postPrivate('/v5/p2p/oss/upload_file', params);
+    fileBuffer: Buffer;
+    fileName: string; // Required: the filename (used for MIME type detection)
+  }): Promise<
+    APIResponseV3WithTime<{
+      url: string;
+      type: string;
+      uploadId: string | null;
+    }>
+  > {
+    return this.postPrivateFile('/v5/p2p/oss/upload_file', params);
   }
 
   /**

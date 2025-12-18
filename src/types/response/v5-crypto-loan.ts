@@ -194,6 +194,8 @@ export interface OngoingFlexibleLoanV5 {
   hourlyInterestRate: string;
   loanCurrency: string;
   totalDebt: string;
+  unpaidAmount: string;
+  unpaidInterest: string;
 }
 
 export interface BorrowHistoryFlexibleV5 {
@@ -307,4 +309,20 @@ export interface RepaymentHistoryFixedV5 {
   repayStatus: number;
   repayTime: number;
   repayType: number;
+}
+
+export interface RenewBorrowOrderFixedV5 {
+  orderId: string;
+}
+
+export interface RenewOrderInfoFixedV5 {
+  amount: string;
+  autoRepay: number;
+  borrowCurrency: string;
+  contractNo: string;
+  dueTime: string;
+  loanId: string;
+  orderId: number;
+  renewLoanNo: string;
+  time: string;
 }

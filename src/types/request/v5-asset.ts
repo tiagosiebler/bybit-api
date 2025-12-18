@@ -127,6 +127,14 @@ export interface GetWithdrawalRecordsParamsV5 {
   cursor?: string;
 }
 
+export interface GetWithdrawalAddressListParamsV5 {
+  coin?: string;
+  chain?: string;
+  addressType?: 0 | 1 | 2;
+  limit?: number;
+  cursor?: string;
+}
+
 export interface WithdrawParamsV5 {
   coin: string;
   chain: string;

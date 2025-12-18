@@ -146,6 +146,59 @@ export async function signMessage(
   }
 }
 
+/**
+ * Sign binary data (Buffer/Uint8Array) with a secret, using the Web Crypto API
+ * Automatically detects key type (HMAC vs RSA) and uses appropriate signing method
+ * RSA keys use base64 encoding, HMAC keys use hex encoding (for backwards compatibility)
+ *
+ * Note: This function works in both Node.js and browser environments.
+ * In Node.js, you can pass a Buffer. In browsers, pass Uint8Array.
+ */
+export async function signBinaryData(
+  data: Buffer | Uint8Array,
+  secret: string,
+  method?: SignEncodeMethod,
+  algorithm: SignAlgorithm = 'SHA-256',
+): Promise<string> {
+  const encoder = new TextEncoder();
+
+  const signKeyType = getSignKeyType(secret);
+
+  // Automatically determine encoding method based on key type if not specified
+  const encodeMethod =
+    method || (signKeyType === 'RSASSA-PKCS1-v1_5' ? 'base64' : 'hex');
+
+  const key = await importKey(secret, signKeyType, algorithm, encoder);
+
+  // Convert to Uint8Array for Web Crypto API compatibility
+  // Buffer is a subclass of Uint8Array in Node.js, but we need a proper Uint8Array
+  // with ArrayBuffer (not ArrayBufferLike) to satisfy the BufferSource type constraint
+  const dataArray = Uint8Array.from(data);
+
+  const buffer = await globalThis.crypto.subtle.sign(
+    { name: signKeyType },
+    key,
+    dataArray,
+  );
+
+  switch (encodeMethod) {
+    case 'hex': {
+      return Array.from(new Uint8Array(buffer))
+        .map((byte) => byte.toString(16).padStart(2, '0'))
+        .join('');
+    }
+    case 'base64': {
+      return bufferToB64(buffer);
+    }
+    default: {
+      throw neverGuard(
+        encodeMethod,
+        `Unhandled sign method: "${encodeMethod}"`,
+      );
+    }
+  }
+}
+
 export function checkWebCryptoAPISupported() {
   if (!globalThis.crypto) {
     throw new Error(

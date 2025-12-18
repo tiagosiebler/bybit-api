@@ -182,6 +182,18 @@ export interface WithdrawalRecordV5 {
   updateTime: string;
 }
 
+export interface WithdrawalAddressV5 {
+  coin: string;
+  chain: string;
+  address: string;
+  tag: string;
+  remark: string;
+  status: number;
+  addressType: number;
+  verified: number;
+  createdAt: string;
+}
+
 export interface WithdrawableAmountV5 {
   limitAmountUsd: string;
   withdrawableAmount: {

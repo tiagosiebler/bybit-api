@@ -45,3 +45,13 @@ export interface GetSubAccountAllApiKeysParamsV5 {
   limit?: number;
   cursor?: string;
 }
+
+export interface GetAffiliateUserListParamsV5 {
+  size?: number;
+  cursor?: string;
+  needDeposit?: boolean;
+  need30?: boolean;
+  need365?: boolean;
+  startDate?: string;
+  endDate?: string;
+}

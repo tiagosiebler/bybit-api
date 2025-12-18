@@ -102,6 +102,19 @@ export interface AffiliateUserListItemV5 {
   source: string;
   remarks: string;
   isKyc: boolean;
+  takerVol30Day: string;
+  makerVol30Day: string;
+  tradeVol30Day: string;
+  depositAmount30Day: string;
+  takerVol365Day: string;
+  makerVol365Day: string;
+  tradeVol365Day: string;
+  depositAmount365Day: string;
+  takerVol: string;
+  makerVol: string;
+  tradeVol: string;
+  startDate: string;
+  endDate: string;
 }
 
 export interface AffiliateUserInfoV5 {

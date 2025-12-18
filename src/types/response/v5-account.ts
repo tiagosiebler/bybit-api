@@ -149,3 +149,7 @@ export interface DCPInfoV5 {
   dcpStatus: 'ON';
   timeWindow: string;
 }
+
+export interface ManualRepayResultV5 {
+  resultStatus: 'P' | 'SU' | 'FA';
+}

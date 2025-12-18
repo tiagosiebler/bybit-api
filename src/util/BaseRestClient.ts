@@ -11,8 +11,13 @@ import {
   serializeParams,
 } from './requestUtils';
 import {
+  buildMultipartPayload,
+  FileUploadRequestParams,
+} from './rest/fileUploadUtil';
+import {
   checkWebCryptoAPISupported,
   SignAlgorithm,
+  signBinaryData,
   SignEncodeMethod,
   signMessage,
 } from './webCryptoAPI';
@@ -64,6 +69,7 @@ interface SignedRequest<T> {
   sign: string;
   timestamp: number;
   recvWindow: number;
+  contentType?: string;
 }
 
 interface UnsignedRequest<T> {
@@ -73,9 +79,10 @@ interface UnsignedRequest<T> {
   sign?: string;
   timestamp?: number;
   recvWindow?: number;
+  contentType?: string;
 }
 
-type SignMethod = 'v5auth';
+type SignMethod = 'v5auth' | 'v5authWithFile';
 
 export default abstract class BaseRestClient {
   private timeOffset: number | null = null;
@@ -181,23 +188,35 @@ export default abstract class BaseRestClient {
   }
 
   get(endpoint: string, params?: any) {
-    return this._call('GET', endpoint, params, true);
+    const isPublicAPI = true;
+    return this._call('GET', endpoint, params, isPublicAPI);
   }
 
   getPrivate(endpoint: string, params?: any) {
-    return this._call('GET', endpoint, params, false);
+    const isPublicAPI = false;
+    return this._call('GET', endpoint, params, isPublicAPI);
   }
 
   post(endpoint: string, params?: any) {
-    return this._call('POST', endpoint, params, true);
+    const isPublicAPI = true;
+    return this._call('POST', endpoint, params, isPublicAPI);
   }
 
   postPrivate(endpoint: string, params?: any) {
-    return this._call('POST', endpoint, params, false);
+    const isPublicAPI = false;
+    return this._call('POST', endpoint, params, isPublicAPI);
+  }
+
+  postPrivateFile(endpoint: string, params?: FileUploadRequestParams) {
+    const isPublicAPI = false;
+    const isFileUpload = true;
+
+    return this._call('POST', endpoint, params, isPublicAPI, isFileUpload);
   }
 
   deletePrivate(endpoint: string, params?: any) {
-    return this._call('DELETE', endpoint, params, false);
+    const isPublicAPI = false;
+    return this._call('DELETE', endpoint, params, isPublicAPI);
   }
 
   private async prepareSignParams<TParams = any>(
@@ -255,6 +274,7 @@ export default abstract class BaseRestClient {
     url: string,
     params?: any,
     isPublicApi?: boolean,
+    isFileUpload?: boolean,
   ): Promise<AxiosRequestConfig> {
     const options: AxiosRequestConfig = {
       ...this.globalRequestOptions,
@@ -277,7 +297,7 @@ export default abstract class BaseRestClient {
 
     const signResult = await this.prepareSignParams(
       method,
-      'v5auth',
+      isFileUpload ? 'v5authWithFile' : 'v5auth',
       params,
       isPublicApi,
     );
@@ -301,6 +321,10 @@ export default abstract class BaseRestClient {
       };
     }
 
+    if (isFileUpload && signResult.contentType) {
+      headers['Content-Type'] = signResult.contentType;
+    }
+
     return {
       ...options,
       headers,
@@ -316,6 +340,7 @@ export default abstract class BaseRestClient {
     endpoint: string,
     params?: any,
     isPublicApi?: boolean,
+    isFileUpload?: boolean,
   ): Promise<any> {
     // Sanity check to make sure it's only ever prefixed by one forward slash
     const requestUrl = [this.baseUrl, endpoint].join(
@@ -328,10 +353,19 @@ export default abstract class BaseRestClient {
       requestUrl,
       params,
       isPublicApi,
+      isFileUpload,
     );
 
     if (ENABLE_HTTP_TRACE) {
-      console.log('full request: ', options);
+      console.log(
+        'full request: ',
+        isFileUpload
+          ? {
+              ...options,
+              data: `<binary data, ${options.data?.length} bytes>`,
+            }
+          : options,
+      );
     }
 
     // Dispatch request
@@ -436,7 +470,30 @@ export default abstract class BaseRestClient {
     // In case the parent function needs it (e.g. USDC uses a header)
     res.recvWindow = recvWindow;
 
-    // usdc is different for some reason
+    if (signMethod === 'v5authWithFile') {
+      const { payload, contentType } = await buildMultipartPayload(
+        data as FileUploadRequestParams,
+      );
+
+      // Sign the binary payload (supports both HMAC and RSA)
+      // Signature format: HMAC-SHA256 or RSA-SHA256(timestamp + api_key + recv_window + binary_payload)
+      const signStringPrefix = `${timestamp}${this.key}${recvWindow}`;
+      const signBuffer = Buffer.concat([
+        Buffer.from(signStringPrefix, 'utf-8'),
+        payload,
+      ]);
+
+      // Sign binary data with HMAC or RSA using Web Crypto API
+      res.sign = await signBinaryData(signBuffer, this.secret);
+
+      // To ensure this goes in the request body
+      res.originalParams = payload as any;
+
+      res.contentType = contentType;
+
+      return res;
+    }
+
     if (signMethod === 'v5auth') {
       const sortProperties = false;
       const signRequestParams =
