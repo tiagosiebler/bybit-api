@@ -207,3 +207,18 @@ export interface GetRepaymentHistoryFixedParamsV5 {
   limit?: string;
   cursor?: string;
 }
+
+export interface RenewBorrowOrderFixedParamsV5 {
+  loanId: string;
+  collateralList?: {
+    currency?: string;
+    amount?: string;
+  }[];
+}
+
+export interface GetRenewOrderInfoFixedParamsV5 {
+  orderId?: string;
+  orderCurrency?: string;
+  limit?: string;
+  cursor?: string;
+}
