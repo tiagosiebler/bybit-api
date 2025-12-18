@@ -182,6 +182,7 @@ import {
   GetPreUpgradeTransactionLogParamsV5,
   GetPreUpgradeUSDCSessionParamsV5,
   GetPublicTradingHistoryParamsV5,
+  GetRenewOrderInfoFixedParamsV5,
   GetRepaymentHistoryFixedParamsV5,
   GetRepaymentHistoryFlexibleParamsV5,
   GetRepaymentHistoryParamsV5,
@@ -263,6 +264,9 @@ import {
   PreUpgradeTransaction,
   PreUpgradeUSDCSessionSettlement,
   PublicTradeV5,
+  RenewBorrowOrderFixedParamsV5,
+  RenewBorrowOrderFixedV5,
+  RenewOrderInfoFixedV5,
   RepayCollateralFixedParamsV5,
   RepayCollateralFlexibleParamsV5,
   RepayFixedParamsV5,
@@ -3272,6 +3276,36 @@ export class RestClientV5 extends BaseRestClient {
     }>
   > {
     return this.getPrivate('/v5/crypto-loan-fixed/repayment-history', params);
+  }
+
+  /**
+   * Renew Borrow Order
+   * This endpoint allows you to re-borrow the principal that was previously repaid.
+   * The renewal amount is the same as the amount previously repaid on this loan.
+   *
+   * Permission: "Spot trade"
+   * UID rate limit: 1 req / second
+   */
+  renewBorrowOrderFixed(
+    params: RenewBorrowOrderFixedParamsV5,
+  ): Promise<APIResponseV3WithTime<RenewBorrowOrderFixedV5>> {
+    return this.postPrivate('/v5/crypto-loan-fixed/renew', params);
+  }
+
+  /**
+   * Get Renew Order Info
+   * Query for renew order information
+   *
+   * Permission: "Spot trade"
+   * UID rate limit: 5 req / second
+   */
+  getRenewOrderInfoFixed(params?: GetRenewOrderInfoFixedParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: RenewOrderInfoFixedV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/crypto-loan-fixed/renew-info', params);
   }
 
   /**
