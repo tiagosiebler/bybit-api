@@ -60,6 +60,7 @@ export interface AccountOrderV5 {
   triggerDirection: 1 | 2;
   triggerBy: OrderTriggerByV5;
   lastPriceOnCreated: string;
+  basePrice: string;
   reduceOnly: boolean;
   closeOnTrigger: boolean;
   placeType: 'iv' | 'price' | '';
