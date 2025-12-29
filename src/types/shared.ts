@@ -68,6 +68,23 @@ export type APIResponseV3WithTime<TResult, TExtInfo = {}> = APIResponseV3<
   TResult,
   TExtInfo
 > & { time: number };
+
+export interface APIP2PResponse<TResult, TExtInfo = {}> {
+  ret_code: number;
+  ret_msg: string;
+  result: {
+    result: TResult;
+    totalRows: string;
+    totalPages: string;
+    currentPage: string;
+    dayLimit: string;
+    showDayLimit: boolean;
+  };
+  ext_code: string;
+  ext_info: TExtInfo;
+  time_now: string;
+}
+
 /**
  * Request Parameter Types
  */

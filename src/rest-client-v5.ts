@@ -20,6 +20,7 @@ import {
   AmendOrderParamsV5,
   AmendSpreadOrderParamsV5,
   ApiKeyInfoV5,
+  APIP2PResponse,
   APIResponseV3,
   APIResponseV3WithTime,
   AssetInfoV5,
@@ -3943,7 +3944,7 @@ export class RestClientV5 extends BaseRestClient {
    */
   getP2POrderMessages(
     params: GetP2POrderMessagesParamsV5,
-  ): Promise<APIResponseV3WithTime<P2POrderMessageV5[]>> {
+  ): Promise<APIP2PResponse<P2POrderMessageV5[]>> {
     return this.postPrivate('/v5/p2p/order/message/listpage', params);
   }
 
