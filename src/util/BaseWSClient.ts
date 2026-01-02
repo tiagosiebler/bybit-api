@@ -599,8 +599,19 @@ export abstract class BaseWebsocketClient<
       wsKey,
     });
 
-    const agent = this.options.requestOptions?.agent;
-    const ws = new WebSocket(url, undefined, agent ? { agent } : undefined);
+    // Support both wsOptions (new) and requestOptions (legacy, for backwards compatibility)
+    const wsOptionsConfig = this.options.wsOptions || {};
+    const legacyAgent = this.options.requestOptions?.agent;
+
+    const { protocols = [], ...wsOptions } = wsOptionsConfig;
+
+    // Merge legacy agent if wsOptions doesn't have one
+    const finalWsOptions =
+      !wsOptions.agent && legacyAgent
+        ? { ...wsOptions, agent: legacyAgent }
+        : wsOptions;
+
+    const ws = new WebSocket(url, protocols, finalWsOptions);
 
     ws.onopen = (event: any) => this.onWsOpen(event, wsKey);
     ws.onmessage = (event: any) => this.onWsMessage(event, wsKey, ws);
