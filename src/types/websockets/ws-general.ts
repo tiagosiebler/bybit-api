@@ -1,3 +1,6 @@
+import { ClientRequestArgs } from 'http';
+import WebSocket from 'isomorphic-ws';
+
 import { RestClientOptions, WS_KEY_MAP } from '../../util';
 
 /** For spot markets, spotV3 is recommended */
@@ -120,6 +123,11 @@ export interface WSClientConfigurableOptions {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   requestOptions?: any;
+
+  wsOptions?: {
+    protocols?: string[];
+    agent?: any;
+  } & Partial<WebSocket.ClientOptions | ClientRequestArgs>;
 
   wsUrl?: string;
 
