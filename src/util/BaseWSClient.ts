@@ -228,7 +228,10 @@ export abstract class BaseWebsocketClient<
 
   protected abstract authPrivateConnectionsOnConnect(_wsKey: TWSKey): boolean;
 
-  protected abstract getWsAuthRequestEvent(wsKey: TWSKey): Promise<object>;
+  protected abstract getWsAuthRequestEvent(
+    wsKey: TWSKey,
+    eventToAuth?: object,
+  ): Promise<object | string | 'waitForEvent' | void>;
 
   protected abstract isPrivateTopicRequest(
     request: WsTopicRequest<string>,
@@ -696,24 +699,40 @@ export abstract class BaseWebsocketClient<
   }
 
   /** Get a signature, build the auth request and send it */
-  private async sendAuthRequest(wsKey: TWSKey): Promise<unknown> {
+  private async sendAuthRequest(
+    wsKey: TWSKey,
+    eventToAuth?: object,
+  ): Promise<unknown> {
     try {
       this.logger.trace('Sending auth request...', {
         ...WS_LOGGER_CATEGORY,
         wsKey,
+        eventToAuth,
       });
 
       await this.assertIsConnected(wsKey);
+      const request = await this.getWsAuthRequestEvent(wsKey, eventToAuth);
+      if (!request) {
+        // Short-circuit this for the next time it's called
+        const wsState = this.wsStore.get(wsKey, true);
+        wsState.isAuthenticated = true;
+        return;
+      }
 
       if (!this.wsStore.getAuthenticationInProgressPromise(wsKey)) {
         this.wsStore.createAuthenticationInProgressPromise(wsKey, false);
       }
 
-      const request = await this.getWsAuthRequestEvent(wsKey);
+      if (request === 'waitForEvent') {
+        return this.wsStore.getAuthenticationInProgressPromise(wsKey)?.promise;
+      }
 
       // console.log('ws auth req', request);
 
-      this.tryWsSend(wsKey, JSON.stringify(request));
+      this.tryWsSend(
+        wsKey,
+        typeof request === 'string' ? request : JSON.stringify(request),
+      );
 
       return this.wsStore.getAuthenticationInProgressPromise(wsKey)?.promise;
     } catch (e) {
@@ -1324,6 +1343,19 @@ export abstract class BaseWebsocketClient<
 
             this.emit('response', emittableFinalEvent);
             this.onWsReadyForEvents(wsKey);
+            continue;
+          }
+
+          // Not used for bybit
+          if (emittable.eventType === 'connectionReadyForAuth') {
+            this.logger.trace(
+              'Ready for auth - requesting auth submission...',
+              {
+                ...WS_LOGGER_CATEGORY,
+                wsKey,
+              },
+            );
+            this.sendAuthRequest(wsKey, emittable.event);
             continue;
           }
 
