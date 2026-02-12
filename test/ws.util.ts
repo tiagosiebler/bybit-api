@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { DefaultLogger, WebsocketClient } from '../src';
 
-export function getSilentLogger(_logHint?: string): typeof DefaultLogger {
+export function getSilentLogger(_logHint?: string): DefaultLogger {
   return {
     trace: () => {},
     info: () => {},
@@ -11,7 +11,7 @@ export function getSilentLogger(_logHint?: string): typeof DefaultLogger {
   };
 }
 
-export const fullLogger: typeof DefaultLogger = {
+export const fullLogger: DefaultLogger = {
   trace: (...params) => console.log('trace', ...params),
   info: (...params) => console.info('info', ...params),
   error: (...params) => console.error('error', ...params),

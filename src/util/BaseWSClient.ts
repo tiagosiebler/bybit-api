@@ -9,6 +9,7 @@ import {
   WebsocketClientOptions,
   WSClientConfigurableOptions,
   WsMarket,
+  WsTopic,
 } from '../types';
 import { WsOperation } from '../types/websockets/ws-api';
 import { DefaultLogger } from './logger';
@@ -16,7 +17,6 @@ import { checkWebCryptoAPISupported } from './webCryptoAPI';
 import {
   getNormalisedTopicRequests,
   safeTerminateWs,
-  WS_LOGGER_CATEGORY,
   WSConnectedResult,
   WsConnectionStateEnum,
   WsTopicRequest,
@@ -196,9 +196,9 @@ export abstract class BaseWebsocketClient<
   /**
    * State store to track a list of topics (topic requests) we are expected to be subscribed to if reconnected
    */
-  private wsStore: WsStore<TWSKey, WsTopicRequest<string>>;
+  private wsStore: WsStore<TWSKey, WsTopicRequest<WsTopic>>;
 
-  public logger: typeof DefaultLogger;
+  public logger: DefaultLogger;
 
   protected options: WebsocketClientOptions;
 
@@ -215,13 +215,20 @@ export abstract class BaseWebsocketClient<
     Record<string, undefined | WsKeyPendingTopicSubscriptions<TWSRequestEvent>>
   > = {};
 
+  private WS_LOGGER_CATEGORY: object;
+
   constructor(
-    options?: WSClientConfigurableOptions,
-    logger?: typeof DefaultLogger,
+    options?: WSClientConfigurableOptions & { wsLoggerCategory: string },
+    logger?: DefaultLogger,
   ) {
     super();
 
     this.logger = logger || DefaultLogger;
+
+    this.WS_LOGGER_CATEGORY = {
+      category: options?.wsLoggerCategory || 'WsClient',
+    };
+
     this.wsStore = new WsStore(this.logger);
 
     this.options = {
@@ -280,7 +287,7 @@ export abstract class BaseWebsocketClient<
   ): Promise<object | string | 'waitForEvent' | void>;
 
   protected abstract isPrivateTopicRequest(
-    request: WsTopicRequest<string>,
+    request: WsTopicRequest<WsTopic>,
     wsKey: TWSKey,
   ): boolean;
 
@@ -298,7 +305,7 @@ export abstract class BaseWebsocketClient<
   protected abstract getWsRequestEvents(
     market: WsMarket,
     operation: WsOperation,
-    requests: WsTopicRequest<string>[],
+    requests: WsTopicRequest<WsTopic>[],
     wsKey: TWSKey,
   ): Promise<MidflightWsRequestEvent<TWSRequestEvent>[]>;
 
@@ -496,7 +503,7 @@ export abstract class BaseWebsocketClient<
       this.logger.trace(
         'WS not connected - requests queued for retry once connected.',
         {
-          ...WS_LOGGER_CATEGORY,
+          ...this.WS_LOGGER_CATEGORY,
           wsKey,
           wsTopicRequests,
         },
@@ -561,14 +568,14 @@ export abstract class BaseWebsocketClient<
    * Splits topic requests into two groups, public & private topic requests
    */
   private sortTopicRequestsIntoPublicPrivate(
-    wsTopicRequests: WsTopicRequest<string>[],
+    wsTopicRequests: WsTopicRequest<WsTopic>[],
     wsKey: TWSKey,
   ): {
-    publicReqs: WsTopicRequest<string>[];
-    privateReqs: WsTopicRequest<string>[];
+    publicReqs: WsTopicRequest<WsTopic>[];
+    privateReqs: WsTopicRequest<WsTopic>[];
   } {
-    const publicTopicRequests: WsTopicRequest<string>[] = [];
-    const privateTopicRequests: WsTopicRequest<string>[] = [];
+    const publicTopicRequests: WsTopicRequest<WsTopic>[] = [];
+    const privateTopicRequests: WsTopicRequest<WsTopic>[] = [];
 
     for (const topic of wsTopicRequests) {
       if (this.isPrivateTopicRequest(topic, wsKey)) {
@@ -585,12 +592,15 @@ export abstract class BaseWebsocketClient<
   }
 
   /** Get the WsStore that tracks websockets & topics */
-  public getWsStore(): WsStore<TWSKey, WsTopicRequest<string>> {
+  public getWsStore(): WsStore<TWSKey, WsTopicRequest<WsTopic>> {
     return this.wsStore;
   }
 
   public close(wsKey: TWSKey, force?: boolean) {
-    this.logger.info('Closing connection', { ...WS_LOGGER_CATEGORY, wsKey });
+    this.logger.info('Closing connection', {
+      ...this.WS_LOGGER_CATEGORY,
+      wsKey,
+    });
     this.setWsState(wsKey, WsConnectionStateEnum.CLOSING);
     this.clearTimers(wsKey);
 
@@ -629,7 +639,7 @@ export abstract class BaseWebsocketClient<
       if (this.wsStore.isWsOpen(wsKey)) {
         this.logger.error(
           'Refused to connect to ws with existing active connection',
-          { ...WS_LOGGER_CATEGORY, wsKey },
+          { ...this.WS_LOGGER_CATEGORY, wsKey },
         );
         return { wsKey, ws: this.wsStore.getWs(wsKey)! };
       }
@@ -639,7 +649,7 @@ export abstract class BaseWebsocketClient<
       ) {
         this.logger.error(
           'Refused to connect to ws, connection attempt already active',
-          { ...WS_LOGGER_CATEGORY, wsKey },
+          { ...this.WS_LOGGER_CATEGORY, wsKey },
         );
         return this.wsStore.getConnectionInProgressPromise(wsKey)?.promise;
       }
@@ -673,7 +683,7 @@ export abstract class BaseWebsocketClient<
 
   private connectToWsUrl(url: string, wsKey: TWSKey): WebSocket {
     this.logger.trace(`Opening WS connection to URL: ${url}`, {
-      ...WS_LOGGER_CATEGORY,
+      ...this.WS_LOGGER_CATEGORY,
       wsKey,
     });
 
@@ -713,7 +723,7 @@ export abstract class BaseWebsocketClient<
     switch (error.message) {
       case 'Unexpected server response: 401':
         this.logger.error(`${context} due to 401 authorization failure.`, {
-          ...WS_LOGGER_CATEGORY,
+          ...this.WS_LOGGER_CATEGORY,
           wsKey,
         });
         break;
@@ -727,7 +737,7 @@ export abstract class BaseWebsocketClient<
             `${context} due to unexpected response error: "${
               error?.msg || error?.message || error
             }"`,
-            { ...WS_LOGGER_CATEGORY, wsKey, error },
+            { ...this.WS_LOGGER_CATEGORY, wsKey, error },
           );
           this.executeReconnectableClose(wsKey, 'unhandled onWsError');
         } else {
@@ -751,7 +761,7 @@ export abstract class BaseWebsocketClient<
   ): Promise<unknown> {
     try {
       this.logger.trace('Sending auth request...', {
-        ...WS_LOGGER_CATEGORY,
+        ...this.WS_LOGGER_CATEGORY,
         wsKey,
         eventToAuth,
       });
@@ -782,7 +792,7 @@ export abstract class BaseWebsocketClient<
 
       return this.wsStore.getAuthenticationInProgressPromise(wsKey)?.promise;
     } catch (e) {
-      this.logger.trace(e, { ...WS_LOGGER_CATEGORY, wsKey });
+      this.logger.trace(e, { ...this.WS_LOGGER_CATEGORY, wsKey });
     }
   }
 
@@ -794,7 +804,7 @@ export abstract class BaseWebsocketClient<
     }
 
     this.logger.info('Reconnecting to websocket with delay...', {
-      ...WS_LOGGER_CATEGORY,
+      ...this.WS_LOGGER_CATEGORY,
       wsKey,
       connectionDelayMs,
     });
@@ -805,7 +815,7 @@ export abstract class BaseWebsocketClient<
 
     this.wsStore.get(wsKey, true).activeReconnectTimer = setTimeout(() => {
       this.logger.info('Reconnecting to websocket now', {
-        ...WS_LOGGER_CATEGORY,
+        ...this.WS_LOGGER_CATEGORY,
         wsKey,
       });
       this.clearReconnectTimer(wsKey);
@@ -820,7 +830,7 @@ export abstract class BaseWebsocketClient<
 
     this.clearPongTimer(wsKey);
 
-    this.logger.trace('Sending ping', { ...WS_LOGGER_CATEGORY, wsKey });
+    this.logger.trace('Sending ping', { ...this.WS_LOGGER_CATEGORY, wsKey });
     const ws = this.wsStore.get(wsKey, true).ws;
 
     if (!ws) {
@@ -843,7 +853,7 @@ export abstract class BaseWebsocketClient<
    */
   private executeReconnectableClose(wsKey: TWSKey, reason: string) {
     this.logger.info(`${reason} - closing socket to reconnect`, {
-      ...WS_LOGGER_CATEGORY,
+      ...this.WS_LOGGER_CATEGORY,
       wsKey,
       reason,
     });
@@ -864,7 +874,7 @@ export abstract class BaseWebsocketClient<
       this.logger.info(
         `${reason} - socket already closed - trigger immediate reconnect`,
         {
-          ...WS_LOGGER_CATEGORY,
+          ...this.WS_LOGGER_CATEGORY,
           wsKey,
           reason,
         },
@@ -917,7 +927,7 @@ export abstract class BaseWebsocketClient<
    * Events are automatically split into smaller batches, by this method, if needed.
    */
   protected async getWsOperationEventsForTopics(
-    topics: WsTopicRequest<string>[],
+    topics: WsTopicRequest<WsTopic>[],
     wsKey: TWSKey,
     operation: WsOperation,
   ): Promise<MidflightWsRequestEvent<TWSRequestEvent>[]> {
@@ -967,7 +977,7 @@ export abstract class BaseWebsocketClient<
    */
   private async requestSubscribeTopics(
     wsKey: TWSKey,
-    wsTopicRequests: WsTopicRequest<string>[],
+    wsTopicRequests: WsTopicRequest<WsTopic>[],
   ) {
     if (!wsTopicRequests.length) {
       return;
@@ -1017,7 +1027,7 @@ export abstract class BaseWebsocketClient<
    */
   private async requestUnsubscribeTopics(
     wsKey: TWSKey,
-    wsTopicRequests: WsTopicRequest<string>[],
+    wsTopicRequests: WsTopicRequest<WsTopic>[],
   ) {
     if (!wsTopicRequests.length) {
       return;
@@ -1065,7 +1075,7 @@ export abstract class BaseWebsocketClient<
   ) {
     try {
       this.logger.trace('Sending upstream ws message: ', {
-        ...WS_LOGGER_CATEGORY,
+        ...this.WS_LOGGER_CATEGORY,
         wsMessage,
         wsKey,
       });
@@ -1083,7 +1093,7 @@ export abstract class BaseWebsocketClient<
       ws.send(wsMessage);
     } catch (e) {
       this.logger.error('Failed to send WS message', {
-        ...WS_LOGGER_CATEGORY,
+        ...this.WS_LOGGER_CATEGORY,
         wsMessage,
         wsKey,
         exception: e,
@@ -1112,7 +1122,7 @@ export abstract class BaseWebsocketClient<
 
     if (isFreshConnectionAttempt) {
       this.logger.info('Websocket connected', {
-        ...WS_LOGGER_CATEGORY,
+        ...this.WS_LOGGER_CATEGORY,
         wsKey,
         testnet: this.options.testnet === true,
         market: this.options.market,
@@ -1121,7 +1131,7 @@ export abstract class BaseWebsocketClient<
       this.emit('open', { wsKey, event, wsUrl: url, ws });
     } else if (isReconnectionAttempt) {
       this.logger.info('Websocket reconnected', {
-        ...WS_LOGGER_CATEGORY,
+        ...this.WS_LOGGER_CATEGORY,
         wsKey,
         testnet: this.options.testnet === true,
         market: this.options.market,
@@ -1132,7 +1142,10 @@ export abstract class BaseWebsocketClient<
 
     this.setWsState(wsKey, WsConnectionStateEnum.CONNECTED);
 
-    this.logger.trace('Enabled ping timer', { ...WS_LOGGER_CATEGORY, wsKey });
+    this.logger.trace('Enabled ping timer', {
+      ...this.WS_LOGGER_CATEGORY,
+      wsKey,
+    });
     this.wsStore.get(wsKey, true)!.activePingTimer = setInterval(
       () => this.ping(wsKey),
       this.options.pingInterval,
@@ -1316,7 +1329,7 @@ export abstract class BaseWebsocketClient<
 
       if (this.isWsPong(event)) {
         this.logger.trace('Received pong', {
-          ...WS_LOGGER_CATEGORY,
+          ...this.WS_LOGGER_CATEGORY,
           wsKey,
           event: (event as any)?.data,
         });
@@ -1325,7 +1338,7 @@ export abstract class BaseWebsocketClient<
 
       if (this.isWsPing(event)) {
         this.logger.trace('Received ping', {
-          ...WS_LOGGER_CATEGORY,
+          ...this.WS_LOGGER_CATEGORY,
           wsKey,
           event,
         });
@@ -1344,7 +1357,7 @@ export abstract class BaseWebsocketClient<
           this.logger.error(
             'Unhandled/unrecognised ws event message - returned no emittable data',
             {
-              ...WS_LOGGER_CATEGORY,
+              ...this.WS_LOGGER_CATEGORY,
               message: data || 'no message',
               dataType,
               event,
@@ -1358,7 +1371,7 @@ export abstract class BaseWebsocketClient<
         for (const emittable of emittableEvents) {
           if (this.isWsPong(emittable) || emittable.eventType === 'pong') {
             this.logger.trace('Received pong2', {
-              ...WS_LOGGER_CATEGORY,
+              ...this.WS_LOGGER_CATEGORY,
               wsKey,
               data,
             });
@@ -1375,7 +1388,7 @@ export abstract class BaseWebsocketClient<
             this.logger.trace(
               'Successfully connected - connection ready for events',
               {
-                ...WS_LOGGER_CATEGORY, // TODO: move ws logger cat to "this" scope
+                ...this.WS_LOGGER_CATEGORY, // TODO: move ws logger cat to "this" scope
                 wsKey,
                 emittable,
               },
@@ -1396,7 +1409,7 @@ export abstract class BaseWebsocketClient<
             this.logger.trace(
               'Ready for auth - requesting auth submission...',
               {
-                ...WS_LOGGER_CATEGORY,
+                ...this.WS_LOGGER_CATEGORY,
                 wsKey,
               },
             );
@@ -1406,7 +1419,7 @@ export abstract class BaseWebsocketClient<
 
           if (emittable.eventType === 'authenticated') {
             this.logger.trace('Successfully authenticated', {
-              ...WS_LOGGER_CATEGORY,
+              ...this.WS_LOGGER_CATEGORY,
               wsKey,
               emittable,
             });
@@ -1439,7 +1452,7 @@ export abstract class BaseWebsocketClient<
       this.logger.error(
         'Unhandled/unrecognised ws event message - unexpected message format',
         {
-          ...WS_LOGGER_CATEGORY,
+          ...this.WS_LOGGER_CATEGORY,
           message: event || 'no message',
           event,
           wsKey,
@@ -1447,7 +1460,7 @@ export abstract class BaseWebsocketClient<
       );
     } catch (e) {
       this.logger.error('Failed to parse ws event message', {
-        ...WS_LOGGER_CATEGORY,
+        ...this.WS_LOGGER_CATEGORY,
         error: e,
         event,
         wsKey,
@@ -1457,7 +1470,7 @@ export abstract class BaseWebsocketClient<
 
   private onWsClose(event: unknown, wsKey: TWSKey) {
     this.logger.info('Websocket connection closed', {
-      ...WS_LOGGER_CATEGORY,
+      ...this.WS_LOGGER_CATEGORY,
       wsKey,
     });
 
