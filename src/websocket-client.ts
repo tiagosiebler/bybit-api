@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import WebSocket from 'isomorphic-ws';
 
 import {
@@ -571,6 +572,10 @@ export class WebsocketClient extends BaseWebsocketClient<
     return getMaxTopicsPerSubscribeEvent(this.options.market, wsKey);
   }
 
+  protected authPrivateConnectionsOnConnect(_wsKey: WsKey): boolean {
+    return false; // TODO: this is new, does bybit need it
+  }
+
   /**
    * @returns one or more correctly structured request events for performing a operations over WS. This can vary per exchange spec.
    */
@@ -579,7 +584,7 @@ export class WebsocketClient extends BaseWebsocketClient<
     operation: WsOperation,
     requests: WsTopicRequest<string>[],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-    wsKey: WsKey,
+    _wsKey: WsKey,
   ): Promise<MidflightWsRequestEvent<WsRequestOperationBybit<WsTopic>>[]> {
     const wsRequestEvents: MidflightWsRequestEvent<
       WsRequestOperationBybit<WsTopic>
