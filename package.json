@@ -24,7 +24,7 @@
   "author": "Tiago Siebler (https://siebly.io)",
   "contributors": [],
   "dependencies": {
-    "axios": "^1.13.2",
+    "axios": "^1.13.5",
     "isomorphic-ws": "^4.0.1",
     "ws": "^7.4.0"
   },
