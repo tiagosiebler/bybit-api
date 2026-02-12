@@ -1,3 +1,4 @@
+import { AxiosRequestConfig } from 'axios';
 import type { ClientRequestArgs } from 'http';
 import WebSocket from 'isomorphic-ws';
 
@@ -120,9 +121,7 @@ export interface WSClientConfigurableOptions {
   reconnectTimeout?: number;
 
   restOptions?: RestClientOptions;
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  requestOptions?: any;
+  requestOptions?: AxiosRequestConfig;
 
   wsOptions?: {
     protocols?: string[];
@@ -158,6 +157,17 @@ export interface WebsocketClientOptions extends WSClientConfigurableOptions {
   pingInterval: number;
   reconnectTimeout: number;
   recvWindow: number;
+
+  /**
+   * If true, require a "receipt" that the connection is ready for use (e.g. a specific event type)
+   */
+  requireConnectionReadyConfirmation: boolean;
   authPrivateConnectionsOnConnect: boolean;
   authPrivateRequests: boolean;
+  reauthWSAPIOnReconnect: boolean;
+
+  /**
+   * Whether to use native WebSocket ping/pong frames for heartbeats
+   */
+  useNativeHeartbeats: boolean;
 }

@@ -206,6 +206,8 @@ export abstract class BaseWebsocketClient<
 
   private timeOffsetMs: number = 0;
 
+  private WS_LOGGER_CATEGORY: object;
+
   /**
    * A nested wsKey->request key store.
    * pendingTopicSubscriptionRequests[wsKey][requestKey] = WsKeyPendingTopicSubscriptions<TWSRequestEvent>
@@ -214,8 +216,6 @@ export abstract class BaseWebsocketClient<
     string,
     Record<string, undefined | WsKeyPendingTopicSubscriptions<TWSRequestEvent>>
   > = {};
-
-  private WS_LOGGER_CATEGORY: object;
 
   constructor(
     options?: WSClientConfigurableOptions & { wsLoggerCategory: string },
@@ -248,10 +248,21 @@ export abstract class BaseWebsocketClient<
       // Note: due to internal complexity, it's only recommended if you connect before subscribing.
       promiseSubscribeRequests: false,
 
+      // Requires a confirmation "response" from the ws connection before assuming it is ready
+      requireConnectionReadyConfirmation: false, // TODO:
+
       // Automatically send an authentication op/request after a connection opens, for private connections.
       authPrivateConnectionsOnConnect: true,
-      // Individual requests do not require a signature, so this is disabled.
+
+      // Automatically include auth/sign/token with every WS request.
+      // Automatically handled during getWsRequestEvents.
       authPrivateRequests: false,
+
+      // Automatically re-auth WS API, if we were auth'd before and get reconnected
+      reauthWSAPIOnReconnect: true, // TODO:
+
+      // Whether to use native heartbeats (depends on the exchange)
+      useNativeHeartbeats: true, // TODO:
 
       ...options,
     };
@@ -689,7 +700,7 @@ export abstract class BaseWebsocketClient<
 
     // Support both wsOptions (new) and requestOptions (legacy, for backwards compatibility)
     const wsOptionsConfig = this.options.wsOptions || {};
-    const legacyAgent = this.options.requestOptions?.agent;
+    const legacyAgent = (this.options.requestOptions as any)?.agent;
 
     const { protocols = [], ...wsOptions } = wsOptionsConfig;
 
