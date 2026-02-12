@@ -28,30 +28,48 @@ type UseTheExceptionEventInstead = never;
 
 interface WSClientEventMap<WsKey extends string> {
   /** Connection opened. If this connection was previously opened and reconnected, expect the reconnected event instead */
-  open: (evt: { wsKey: WsKey; event: any }) => void;
+  open: (evt: {
+    wsKey: WsKey;
+    event: any;
+    wsUrl: string;
+    ws: WebSocket;
+  }) => void;
+
   /** Reconnecting a dropped connection */
   reconnect: (evt: { wsKey: WsKey; event: any }) => void;
+
   /** Successfully reconnected a connection that dropped */
-  reconnected: (evt: { wsKey: WsKey; event: any }) => void;
+  reconnected: (evt: {
+    wsKey: WsKey;
+    event: any;
+    wsUrl: string;
+    ws: WebSocket;
+  }) => void;
+
   /** Connection closed */
   close: (evt: { wsKey: WsKey; event: any }) => void;
+
   /** Received reply to websocket command (e.g. after subscribing to topics) */
   response: (
     response: any & { wsKey: WsKey; isWSAPIResponse?: boolean },
   ) => void;
+
   /** Received data for topic */
   update: (response: any & { wsKey: WsKey }) => void;
+
   /**
    * See for more information: https://github.com/tiagosiebler/bybit-api/issues/413
    * @deprecated Use the 'exception' event instead. The 'error' event had the unintended consequence of throwing an unhandled promise rejection.
    */
   error: UseTheExceptionEventInstead;
+
   /**
    * Exception from ws client OR custom listeners (e.g. if you throw inside your event handler)
    */
   exception: (
     response: any & { wsKey: WsKey; isWSAPIResponse?: boolean },
   ) => void;
+
   /** Confirmation that a connection successfully authenticated */
   authenticated: (event: {
     wsKey: WsKey;
@@ -613,7 +631,7 @@ export abstract class BaseWebsocketClient<
 
     const ws = new WebSocket(url, protocols, finalWsOptions);
 
-    ws.onopen = (event: any) => this.onWsOpen(event, wsKey);
+    ws.onopen = (event: any) => this.onWsOpen(event, wsKey, url, ws);
     ws.onmessage = (event: any) => this.onWsMessage(event, wsKey, ws);
     ws.onerror = (event: any) =>
       this.parseWsError('Websocket onWsError', event, wsKey);
@@ -1000,7 +1018,12 @@ export abstract class BaseWebsocketClient<
     }
   }
 
-  private async onWsOpen(event: any, wsKey: TWSKey) {
+  private async onWsOpen(
+    event: WebSocket.Event,
+    wsKey: TWSKey,
+    url: string,
+    ws: WebSocket,
+  ) {
     const isFreshConnectionAttempt = this.wsStore.isConnectionState(
       wsKey,
       WsConnectionStateEnum.CONNECTING,
@@ -1019,7 +1042,7 @@ export abstract class BaseWebsocketClient<
         market: this.options.market,
       });
 
-      this.emit('open', { wsKey, event });
+      this.emit('open', { wsKey, event, wsUrl: url, ws });
     } else if (isReconnectionAttempt) {
       this.logger.info('Websocket reconnected', {
         ...WS_LOGGER_CATEGORY,
@@ -1028,7 +1051,7 @@ export abstract class BaseWebsocketClient<
         market: this.options.market,
       });
 
-      this.emit('reconnected', { wsKey, event });
+      this.emit('reconnected', { wsKey, event, wsUrl: url, ws });
     }
 
     this.setWsState(wsKey, WsConnectionStateEnum.CONNECTED);
