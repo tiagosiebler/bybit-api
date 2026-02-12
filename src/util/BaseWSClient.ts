@@ -137,6 +137,52 @@ interface WsKeyPendingTopicSubscriptions<TWSRequestEvent extends object> {
 }
 
 /**
+ * Appends wsKey and isWSAPIResponse to all events.
+ * Some events are arrays, this handles that nested scenario too.
+ */
+function getFinalEmittable(
+  emittable: EmittableEvent | EmittableEvent[],
+  wsKey: any,
+  isWSAPIResponse?: boolean,
+): any {
+  if (Array.isArray(emittable)) {
+    return emittable.map((subEvent) =>
+      getFinalEmittable(subEvent, wsKey, isWSAPIResponse),
+    );
+  }
+
+  if (Array.isArray(emittable.event)) {
+    // Some topics just emit an array.
+    // This is consistent with how it was before the WS API upgrade:
+    return emittable.event.map((subEvent) =>
+      getFinalEmittable(subEvent, wsKey, isWSAPIResponse),
+    );
+
+    // const { event, ...others } = emittable;
+    // return {
+    //   ...others,
+    //   event: event.map((subEvent) =>
+    //     getFinalEmittable(subEvent, wsKey, isWSAPIResponse),
+    //   ),
+    // };
+  }
+
+  if (emittable.event) {
+    return {
+      ...emittable.event,
+      wsKey: wsKey,
+      isWSAPIResponse: !!isWSAPIResponse,
+    };
+  }
+
+  return {
+    ...emittable,
+    wsKey: wsKey,
+    isWSAPIResponse: !!isWSAPIResponse,
+  };
+}
+
+/**
  * Base WebSocket abstraction layer. Handles connections, tracking each connection as a unique "WS Key"
  */
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
@@ -1319,12 +1365,11 @@ export abstract class BaseWebsocketClient<
             continue;
           }
 
-          // TODO: check getFinalEmittable fn from kraken
-          const emittableFinalEvent = {
-            ...emittable.event,
+          const emittableFinalEvent = getFinalEmittable(
+            emittable,
             wsKey,
-            isWSAPIResponse: emittable.isWSAPIResponse,
-          };
+            emittable.isWSAPIResponse,
+          );
 
           if (emittable.eventType === 'connectionReady') {
             this.logger.trace(
