@@ -171,3 +171,5 @@ export interface WebsocketClientOptions extends WSClientConfigurableOptions {
    */
   useNativeHeartbeats: boolean;
 }
+
+export type WsEventInternalSrc = 'event' | 'function' | 'frame';

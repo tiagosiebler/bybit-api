@@ -8,6 +8,7 @@ import {
   MessageEventLike,
   WebsocketClientOptions,
   WSClientConfigurableOptions,
+  WsEventInternalSrc,
   WsMarket,
   WsTopic,
 } from '../types';
@@ -249,7 +250,7 @@ export abstract class BaseWebsocketClient<
       promiseSubscribeRequests: false,
 
       // Requires a confirmation "response" from the ws connection before assuming it is ready
-      requireConnectionReadyConfirmation: false, // TODO:
+      requireConnectionReadyConfirmation: false,
 
       // Automatically send an authentication op/request after a connection opens, for private connections.
       authPrivateConnectionsOnConnect: true,
@@ -259,10 +260,10 @@ export abstract class BaseWebsocketClient<
       authPrivateRequests: false,
 
       // Automatically re-auth WS API, if we were auth'd before and get reconnected
-      reauthWSAPIOnReconnect: true, // TODO:
+      reauthWSAPIOnReconnect: true, // TODO: not in use?
 
       // Whether to use native heartbeats (depends on the exchange)
-      useNativeHeartbeats: true, // TODO:
+      useNativeHeartbeats: false,
 
       ...options,
     };
@@ -710,7 +711,11 @@ export abstract class BaseWebsocketClient<
         ? { ...wsOptions, agent: legacyAgent }
         : wsOptions;
 
-    const ws = new WebSocket(url, protocols, finalWsOptions);
+    const ws: WebSocket & { wsKey?: string } = new WebSocket(
+      url,
+      protocols,
+      finalWsOptions,
+    );
 
     ws.onopen = (event: any) => this.onWsOpen(event, wsKey, url, ws);
     ws.onmessage = (event: any) => this.onWsMessage(event, wsKey, ws);
@@ -719,6 +724,13 @@ export abstract class BaseWebsocketClient<
     ws.onclose = (event: any) => this.onWsClose(event, wsKey);
 
     ws.wsKey = wsKey;
+
+    if (this.options.useNativeHeartbeats) {
+      if (typeof ws.on === 'function') {
+        ws.on('ping', (event: any) => this.onWsPing(event, wsKey, ws, 'frame'));
+        ws.on('pong', (event: any) => this.onWsPong(event, wsKey, 'frame'));
+      }
+    }
 
     return ws;
   }
@@ -1121,14 +1133,15 @@ export abstract class BaseWebsocketClient<
     url: string,
     ws: WebSocket,
   ) {
+    const isReconnectionAttempt =
+      this.wsStore.isConnectionState(
+        wsKey,
+        WsConnectionStateEnum.RECONNECTING,
+      ) || this.wsStore.isConnectionState(wsKey, WsConnectionStateEnum.ERROR);
+
     const isFreshConnectionAttempt = this.wsStore.isConnectionState(
       wsKey,
       WsConnectionStateEnum.CONNECTING,
-    );
-
-    const isReconnectionAttempt = this.wsStore.isConnectionState(
-      wsKey,
-      WsConnectionStateEnum.RECONNECTING,
     );
 
     if (isFreshConnectionAttempt) {
@@ -1157,69 +1170,20 @@ export abstract class BaseWebsocketClient<
       ...this.WS_LOGGER_CATEGORY,
       wsKey,
     });
+
     this.wsStore.get(wsKey, true)!.activePingTimer = setInterval(
       () => this.ping(wsKey),
       this.options.pingInterval,
     );
 
-    // Resolve & cleanup deferred "connection attempt in progress" promise
-    try {
-      const connectionInProgressPromise =
-        this.wsStore.getConnectionInProgressPromise(wsKey);
-      if (connectionInProgressPromise?.resolve) {
-        connectionInProgressPromise.resolve({
-          wsKey,
-          ws,
-        });
-      }
-    } catch (e) {
-      this.logger.error(
-        'Exception trying to resolve "connectionInProgress" promise',
-        e,
-      );
+    if (!this.options.requireConnectionReadyConfirmation) {
+      return await this.onWsReadyForEvents(wsKey);
+    } else {
+      this.resolveConnectionInProgressPromise(wsKey);
     }
 
     // Remove before continuing, in case there's more requests queued
     this.wsStore.removeConnectingInProgressPromise(wsKey);
-
-    // Reconnect to topics known before it connected
-    const { privateReqs, publicReqs } = this.sortTopicRequestsIntoPublicPrivate(
-      [...this.wsStore.getTopics(wsKey)],
-      wsKey,
-    );
-
-    // Request sub to public topics, if any
-    try {
-      await this.requestSubscribeTopics(wsKey, publicReqs);
-    } catch (e) {
-      this.logger.error(
-        `onWsOpen(): exception in public requestSubscribeTopics(${wsKey}): `,
-        publicReqs,
-        e,
-      );
-    }
-
-    // Request sub to private topics, if auth on connect isn't needed
-    // Else, this is automatic after authentication is successfully confirmed
-    if (!this.options.authPrivateConnectionsOnConnect) {
-      try {
-        this.requestSubscribeTopics(wsKey, privateReqs);
-      } catch (e) {
-        this.logger.error(
-          `onWsOpen(): exception in private requestSubscribeTopics(${wsKey}: `,
-          privateReqs,
-          e,
-        );
-      }
-    }
-
-    // Some websockets require an auth packet to be sent after opening the connection
-    if (
-      this.isAuthOnConnectWsKey(wsKey) &&
-      this.options.authPrivateConnectionsOnConnect
-    ) {
-      await this.sendAuthRequest(wsKey);
-    }
   }
 
   private resolveConnectionInProgressPromise(wsKey: TWSKey) {
@@ -1287,6 +1251,15 @@ export abstract class BaseWebsocketClient<
         );
       }
     }
+
+    // TODO: kraken doesn't have this? why? for bybit we always did this on open
+    // Some websockets require an auth packet to be sent after opening the connection
+    if (
+      this.isAuthOnConnectWsKey(wsKey) &&
+      this.options.authPrivateConnectionsOnConnect
+    ) {
+      await this.sendAuthRequest(wsKey);
+    }
   }
 
   /**
@@ -1330,6 +1303,33 @@ export abstract class BaseWebsocketClient<
         this.subscribeTopicsForWsKey(privateTopics, wsKey);
       }
     }
+  }
+
+  private onWsPing(
+    event: any,
+    wsKey: TWSKey,
+    ws: WebSocket,
+    source: WsEventInternalSrc,
+  ) {
+    this.logger.trace(`Received PING ${source}`, {
+      ...this.WS_LOGGER_CATEGORY,
+      wsKey,
+      event,
+      source,
+    });
+    this.sendPongEvent(wsKey, ws);
+  }
+
+  private onWsPong(event: any, wsKey: TWSKey, source: WsEventInternalSrc) {
+    this.logger.trace(`Received PONG ${source}`, {
+      ...this.WS_LOGGER_CATEGORY,
+      wsKey,
+      event: (event as any)?.data,
+      source,
+    });
+    // Necessary when native heartbeats are used
+    this.clearPongTimer(wsKey);
+    return;
   }
 
   private onWsMessage(event: unknown, wsKey: TWSKey, ws: WebSocket) {
@@ -1399,7 +1399,7 @@ export abstract class BaseWebsocketClient<
             this.logger.trace(
               'Successfully connected - connection ready for events',
               {
-                ...this.WS_LOGGER_CATEGORY, // TODO: move ws logger cat to "this" scope
+                ...this.WS_LOGGER_CATEGORY,
                 wsKey,
                 emittable,
               },

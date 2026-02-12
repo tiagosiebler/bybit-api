@@ -601,7 +601,7 @@ export class WebsocketClient extends BaseWebsocketClient<
   }
 
   protected authPrivateConnectionsOnConnect(_wsKey: WsKey): boolean {
-    return false; // TODO: this is new, does bybit need it
+    return this.options.authPrivateConnectionsOnConnect;
   }
 
   /**
