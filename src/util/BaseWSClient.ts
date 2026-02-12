@@ -78,6 +78,22 @@ interface WSClientEventMap<WsKey extends string> {
   }) => void;
 }
 
+/**
+ * Internally normalised structure for incoming WS events sorted into eventType categories
+ */
+export interface EmittableEvent<
+  TEventType extends
+    keyof WSClientEventMap<string> = keyof WSClientEventMap<string>,
+> {
+  eventType:
+    | TEventType // dynamically resolved from event map
+    | 'pong'
+    | 'connectionReady' // tied to "requireConnectionReadyConfirmation";
+    | 'connectionReadyForAuth'; // tied to specific events we need to wait for, before we can begin post-connect auth
+  event: Parameters<WSClientEventMap<string>[TEventType]>[0];
+  isWSAPIResponse?: boolean;
+}
+
 // Type safety for on and emit handlers: https://stackoverflow.com/a/61609010/880837
 export interface BaseWebsocketClient<
   TWSKey extends string,
@@ -94,13 +110,6 @@ export interface BaseWebsocketClient<
     ...args: Parameters<WSClientEventMap<TWSKey>[U]>
   ): boolean;
 }
-
-export interface EmittableEvent<TEvent = any> {
-  eventType: 'response' | 'update' | 'exception' | 'authenticated';
-  event: TEvent;
-  isWSAPIResponse?: boolean;
-}
-
 /**
  * A midflight WS request event (e.g. subscribe to these topics).
  *
@@ -216,6 +225,8 @@ export abstract class BaseWebsocketClient<
   protected abstract isWsPing(data: any): boolean;
 
   protected abstract isWsPong(data: any): boolean;
+
+  protected abstract authPrivateConnectionsOnConnect(_wsKey: TWSKey): boolean;
 
   protected abstract getWsAuthRequestEvent(wsKey: TWSKey): Promise<object>;
 
@@ -571,7 +582,7 @@ export abstract class BaseWebsocketClient<
           'Refused to connect to ws with existing active connection',
           { ...WS_LOGGER_CATEGORY, wsKey },
         );
-        return { wsKey };
+        return { wsKey, ws: this.wsStore.getWs(wsKey)! };
       }
 
       if (
@@ -1069,6 +1080,7 @@ export abstract class BaseWebsocketClient<
       if (connectionInProgressPromise?.resolve) {
         connectionInProgressPromise.resolve({
           wsKey,
+          ws,
         });
       }
     } catch (e) {
@@ -1121,6 +1133,73 @@ export abstract class BaseWebsocketClient<
     }
   }
 
+  private resolveConnectionInProgressPromise(wsKey: TWSKey) {
+    try {
+      // Resolve & cleanup deferred "connection attempt in progress" promise
+      const connectionInProgressPromise =
+        this.wsStore.getConnectionInProgressPromise(wsKey);
+
+      if (connectionInProgressPromise?.resolve) {
+        connectionInProgressPromise.resolve({
+          wsKey,
+          ws: this.wsStore.getWs(wsKey)!,
+        });
+      }
+    } catch (e) {
+      this.logger.error(
+        'Exception trying to resolve "connectionInProgress" promise',
+        e,
+      );
+    }
+  }
+
+  /**
+   * Called automatically once a connection is ready.
+   * - Some exchanges are ready immediately after the connections open.
+   * - Some exchanges send an event to confirm the connection is ready for us.
+   *
+   * This method is called to act when the connection is ready. Use `requireConnectionReadyConfirmation` to control how this is called.
+   */
+  private async onWsReadyForEvents(wsKey: TWSKey) {
+    this.resolveConnectionInProgressPromise(wsKey);
+    this.wsStore.removeConnectingInProgressPromise(wsKey);
+
+    // Some websockets require an auth packet to be sent after opening the connection
+    if (this.authPrivateConnectionsOnConnect(wsKey)) {
+      await this.assertIsAuthenticated(wsKey);
+    }
+
+    // Reconnect to topics known before it connected
+    const { privateReqs, publicReqs } = this.sortTopicRequestsIntoPublicPrivate(
+      [...this.wsStore.getTopics(wsKey)],
+      wsKey,
+    );
+
+    // Request sub to public topics, if any
+    try {
+      await this.requestSubscribeTopics(wsKey, publicReqs);
+    } catch (e) {
+      this.logger.error(
+        `onWsOpen(): exception in public requestSubscribeTopics(${wsKey}): `,
+        publicReqs,
+        e,
+      );
+    }
+
+    // Request sub to private topics, if auth on connect isn't needed
+    if (!this.authPrivateConnectionsOnConnect(wsKey)) {
+      try {
+        this.requestSubscribeTopics(wsKey, privateReqs);
+      } catch (e) {
+        this.logger.error(
+          `onWsOpen(): exception in private requestSubscribeTopics(${wsKey}: `,
+          privateReqs,
+          e,
+        );
+      }
+    }
+  }
+
   /**
    * Handle subscription to private topics _after_ authentication successfully completes asynchronously.
    *
@@ -1139,6 +1218,7 @@ export abstract class BaseWebsocketClient<
         inProgressPromise.resolve({
           wsKey,
           event,
+          ws: wsState.ws!,
         });
       }
     } catch (e) {
@@ -1211,7 +1291,7 @@ export abstract class BaseWebsocketClient<
         }
 
         for (const emittable of emittableEvents) {
-          if (this.isWsPong(emittable)) {
+          if (this.isWsPong(emittable) || emittable.eventType === 'pong') {
             this.logger.trace('Received pong2', {
               ...WS_LOGGER_CATEGORY,
               wsKey,
@@ -1219,11 +1299,33 @@ export abstract class BaseWebsocketClient<
             });
             continue;
           }
+
+          // TODO: check getFinalEmittable fn from kraken
           const emittableFinalEvent = {
             ...emittable.event,
             wsKey,
             isWSAPIResponse: emittable.isWSAPIResponse,
           };
+
+          if (emittable.eventType === 'connectionReady') {
+            this.logger.trace(
+              'Successfully connected - connection ready for events',
+              {
+                ...WS_LOGGER_CATEGORY, // TODO: move ws logger cat to "this" scope
+                wsKey,
+                emittable,
+              },
+            );
+
+            const wsState = this.wsStore.get(wsKey);
+            if (wsState && !this.authPrivateConnectionsOnConnect(wsKey)) {
+              wsState.isAuthenticated = true;
+            }
+
+            this.emit('response', emittableFinalEvent);
+            this.onWsReadyForEvents(wsKey);
+            continue;
+          }
 
           if (emittable.eventType === 'authenticated') {
             this.logger.trace('Successfully authenticated', {
