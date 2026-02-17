@@ -539,6 +539,9 @@ export abstract class BaseWebsocketClient<
        *
        * Auth should already automatically be in progress, so no action needed from here. Topics will automatically subscribe post-auth success.
        */
+      this.logger.trace(
+        'WS connected but not authenticated yet - awaiting auth before subscribing',
+      );
       return false;
     }
 
