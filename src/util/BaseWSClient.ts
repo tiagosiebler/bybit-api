@@ -1219,7 +1219,10 @@ export abstract class BaseWebsocketClient<
     this.wsStore.removeConnectingInProgressPromise(wsKey);
 
     // Some websockets require an auth packet to be sent after opening the connection
-    if (this.authPrivateConnectionsOnConnect(wsKey)) {
+    if (
+      this.isAuthOnConnectWsKey(wsKey) &&
+      this.authPrivateConnectionsOnConnect(wsKey)
+    ) {
       await this.assertIsAuthenticated(wsKey);
     }
 
@@ -1241,7 +1244,10 @@ export abstract class BaseWebsocketClient<
     }
 
     // Request sub to private topics, if auth on connect isn't needed
-    if (!this.authPrivateConnectionsOnConnect(wsKey)) {
+    if (
+      !this.authPrivateConnectionsOnConnect(wsKey) ||
+      !this.isAuthOnConnectWsKey(wsKey)
+    ) {
       try {
         this.requestSubscribeTopics(wsKey, privateReqs);
       } catch (e) {
@@ -1251,15 +1257,6 @@ export abstract class BaseWebsocketClient<
           e,
         );
       }
-    }
-
-    // TODO: kraken doesn't have this? why? for bybit we always did this on open
-    // Some websockets require an auth packet to be sent after opening the connection
-    if (
-      this.isAuthOnConnectWsKey(wsKey) &&
-      this.authPrivateConnectionsOnConnect(wsKey)
-    ) {
-      await this.sendAuthRequest(wsKey);
     }
   }
 
