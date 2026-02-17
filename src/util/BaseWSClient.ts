@@ -284,6 +284,12 @@ export abstract class BaseWebsocketClient<
    */
   protected abstract isAuthOnConnectWsKey(wsKey: TWSKey): boolean;
 
+  protected abstract isCustomReconnectionNeeded(wsKey: TWSKey): boolean;
+
+  protected abstract triggerCustomReconnectionWorkflow(
+    wsKey: TWSKey,
+  ): Promise<void>;
+
   protected abstract sendPingEvent(wsKey: TWSKey, ws: WebSocket): void;
 
   protected abstract sendPongEvent(wsKey: TWSKey, ws: WebSocket): void;
@@ -838,11 +844,20 @@ export abstract class BaseWebsocketClient<
     }
 
     this.wsStore.get(wsKey, true).activeReconnectTimer = setTimeout(() => {
+      this.clearReconnectTimer(wsKey);
+
+      // Some streams need a specialist reconnection workflow.
+      // E.g. the user data stream can't just be reconnected as is.
+      if (this.isCustomReconnectionNeeded(wsKey)) {
+        this.wsStore.delete(wsKey);
+
+        return this.triggerCustomReconnectionWorkflow(wsKey);
+      }
+
       this.logger.info('Reconnecting to websocket now', {
         ...this.WS_LOGGER_CATEGORY,
         wsKey,
       });
-      this.clearReconnectTimer(wsKey);
       this.connect(wsKey);
     }, connectionDelayMs);
   }

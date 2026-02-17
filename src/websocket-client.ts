@@ -493,6 +493,17 @@ export class WebsocketClient extends BaseWebsocketClient<
    */
 
   /**
+   * Note: implementing this method will wipe the WsStore state for this WsKey, once this method returns
+   */
+  protected isCustomReconnectionNeeded(): boolean {
+    return false;
+  }
+
+  protected async triggerCustomReconnectionWorkflow(): Promise<void> {
+    return;
+  }
+
+  /**
    * @returns The WS URL to connect to for this WS key
    */
   protected async getWsUrl(wsKey: WsKey): Promise<string> {
