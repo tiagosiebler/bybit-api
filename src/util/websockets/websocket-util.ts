@@ -11,8 +11,6 @@ import { WSAPIRequest } from '../../types/websockets/ws-api';
 import { DefaultLogger } from '../logger';
 import { neverGuard } from '../typeGuards';
 
-export const WS_LOGGER_CATEGORY = { category: 'bybit-ws' };
-
 export const WS_KEY_MAP = {
   v5SpotPublic: 'v5SpotPublic',
   v5LinearPublic: 'v5LinearPublic',
@@ -238,7 +236,7 @@ export function getWsKeyForTopic(
 export function getWsUrl(
   wsKey: WsKey,
   wsClientOptions: WebsocketClientOptions,
-  logger: typeof DefaultLogger,
+  logger: DefaultLogger,
 ): string {
   const wsUrl = wsClientOptions.wsUrl;
   if (wsUrl) {
@@ -353,13 +351,13 @@ export function getPromiseRefForWSAPIRequest(
  */
 export function getNormalisedTopicRequests(
   wsTopicRequests: WsTopicRequestOrStringTopic<string>[],
-): WsTopicRequest<string>[] {
-  const normalisedTopicRequests: WsTopicRequest<string>[] = [];
+): WsTopicRequest<WsTopic>[] {
+  const normalisedTopicRequests: WsTopicRequest<WsTopic>[] = [];
 
   for (const wsTopicRequest of wsTopicRequests) {
     // passed as string, convert to object
     if (typeof wsTopicRequest === 'string') {
-      const topicRequest: WsTopicRequest<string> = {
+      const topicRequest: WsTopicRequest<WsTopic> = {
         topic: wsTopicRequest,
         payload: undefined,
       };

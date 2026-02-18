@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import WebSocket from 'isomorphic-ws';
 
 import {
   CategoryV5,
   MessageEventLike,
+  WSClientConfigurableOptions,
   WsKey,
   WsMarket,
   WsTopic,
@@ -19,6 +21,7 @@ import {
 } from './types/websockets/ws-api';
 import {
   APIID,
+  DefaultLogger,
   getMaxTopicsPerSubscribeEvent,
   getNormalisedTopicRequests,
   getPromiseRefForWSAPIRequest,
@@ -33,7 +36,6 @@ import {
   neverGuard,
   WS_AUTH_ON_CONNECT_KEYS,
   WS_KEY_MAP,
-  WS_LOGGER_CATEGORY,
   WSConnectedResult,
   WsTopicRequest,
 } from './util';
@@ -44,10 +46,24 @@ import {
 } from './util/BaseWSClient';
 import { SignAlgorithm, signMessage } from './util/webCryptoAPI';
 
+const WS_LOGGER_CATEGORY_ID = 'bybit-ws';
+const WS_LOGGER_CATEGORY = {
+  category: WS_LOGGER_CATEGORY_ID,
+};
+
+export interface WSAPIRequestFlags {
+  /** If true, will skip auth requirement for WS API connection */
+  authIsOptional?: boolean | undefined;
+}
+
 export class WebsocketClient extends BaseWebsocketClient<
   WsKey,
   WsRequestOperationBybit<WsTopic>
 > {
+  constructor(options?: WSClientConfigurableOptions, logger?: DefaultLogger) {
+    super({ ...options, wsLoggerCategory: WS_LOGGER_CATEGORY_ID }, logger);
+  }
+
   /**
    * Request connection of all dependent (public & private) websockets, instead of waiting
    * for automatic connection by SDK.
@@ -342,7 +358,8 @@ export class WebsocketClient extends BaseWebsocketClient<
   >(
     wsKey: TWSKey,
     operation: TWSOperation,
-    ...params: TWSParams extends undefined ? [] : [TWSParams]
+    params?: TWSParams extends void | never ? undefined : TWSParams,
+    requestFlags?: WSAPIRequestFlags,
   ): Promise<WsAPIOperationResponseMap[TWSOperation]>;
 
   // These overloads give stricter types than mapped generics, since generic constraints
@@ -353,18 +370,21 @@ export class WebsocketClient extends BaseWebsocketClient<
     wsKey: typeof WS_KEY_MAP.v5PrivateTrade,
     operation: TWSOperation,
     params: WsAPITopicRequestParamMap[TWSOperation],
+    requestFlags?: WSAPIRequestFlags,
   ): Promise<WsAPIOperationResponseMap[TWSOperation]>;
 
   sendWSAPIRequest<TWSOperation extends WSAPIOperation = 'order.amend'>(
     wsKey: typeof WS_KEY_MAP.v5PrivateTrade,
     operation: TWSOperation,
     params: WsAPITopicRequestParamMap[TWSOperation],
+    requestFlags?: WSAPIRequestFlags,
   ): Promise<WsAPIOperationResponseMap[TWSOperation]>;
 
   sendWSAPIRequest<TWSOperation extends WSAPIOperation = 'order.cancel'>(
     wsKey: typeof WS_KEY_MAP.v5PrivateTrade,
     operation: TWSOperation,
     params: WsAPITopicRequestParamMap[TWSOperation],
+    requestFlags?: WSAPIRequestFlags,
   ): Promise<WsAPIOperationResponseMap[TWSOperation]>;
 
   async sendWSAPIRequest<
@@ -377,13 +397,22 @@ export class WebsocketClient extends BaseWebsocketClient<
     wsKey: WsKey = WS_KEY_MAP.v5PrivateTrade,
     operation: TWSOperation,
     params: TWSParams,
+    requestFlags?: WSAPIRequestFlags,
   ): Promise<WsAPIOperationResponseMap[TWSOperation]> {
     this.logger.trace(`sendWSAPIRequest(): assert "${wsKey}" is connected`);
     await this.assertIsConnected(wsKey);
     this.logger.trace('sendWSAPIRequest()->assertIsConnected() ok');
 
-    await this.assertIsAuthenticated(wsKey);
-    this.logger.trace('sendWSAPIRequest()->assertIsAuthenticated() ok');
+    // Some commands don't require authentication.
+    if (requestFlags?.authIsOptional !== true) {
+      this.logger.trace(
+        'sendWSAPIRequest(): assertIsAuthenticated(${wsKey})...',
+      );
+      await this.assertIsAuthenticated(wsKey);
+      this.logger.trace(
+        'sendWSAPIRequest(): assertIsAuthenticated(${wsKey}) ok',
+      );
+    }
 
     const timestampMs = Date.now() + (this.getTimeOffsetMs() || 0);
 
@@ -462,6 +491,17 @@ export class WebsocketClient extends BaseWebsocketClient<
    *
    *
    */
+
+  /**
+   * Note: implementing this method will wipe the WsStore state for this WsKey, once this method returns
+   */
+  protected isCustomReconnectionNeeded(): boolean {
+    return false;
+  }
+
+  protected async triggerCustomReconnectionWorkflow(): Promise<void> {
+    return;
+  }
 
   /**
    * @returns The WS URL to connect to for this WS key
@@ -571,15 +611,19 @@ export class WebsocketClient extends BaseWebsocketClient<
     return getMaxTopicsPerSubscribeEvent(this.options.market, wsKey);
   }
 
+  protected authPrivateConnectionsOnConnect(_wsKey: WsKey): boolean {
+    return this.options.authPrivateConnectionsOnConnect;
+  }
+
   /**
    * @returns one or more correctly structured request events for performing a operations over WS. This can vary per exchange spec.
    */
   protected async getWsRequestEvents(
     market: WsMarket,
     operation: WsOperation,
-    requests: WsTopicRequest<string>[],
+    requests: WsTopicRequest<WsTopic>[],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-    wsKey: WsKey,
+    _wsKey: WsKey,
   ): Promise<MidflightWsRequestEvent<WsRequestOperationBybit<WsTopic>>[]> {
     const wsRequestEvents: MidflightWsRequestEvent<
       WsRequestOperationBybit<WsTopic>
@@ -651,7 +695,7 @@ export class WebsocketClient extends BaseWebsocketClient<
   /**
    * Determines if a topic is for a private channel, using a hardcoded list of strings
    */
-  protected isPrivateTopicRequest(request: WsTopicRequest<string>): boolean {
+  protected isPrivateTopicRequest(request: WsTopicRequest<WsTopic>): boolean {
     const topicName = request?.topic?.toLowerCase();
     if (!topicName) {
       return false;
