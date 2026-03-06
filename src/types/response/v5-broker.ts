@@ -85,3 +85,24 @@ export interface BrokerIssuedVoucherV5 {
   ineffectiveAt: string;
   usedAmount: string;
 }
+
+export interface BrokerRateLimitSetResultItemV5 {
+  uids: string;
+  bizType: string;
+  rate: number;
+  success: boolean;
+  msg: string;
+}
+
+export interface BrokerRateLimitCapItemV5 {
+  bizType: string;
+  totalRate: string;
+  ebCap: string;
+  uidCap: string;
+}
+
+export interface BrokerRateLimitAllItemV5 {
+  uids: string;
+  bizType: string;
+  rate: number;
+}

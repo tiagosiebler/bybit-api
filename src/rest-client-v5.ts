@@ -26,6 +26,7 @@ import {
   APIResponseV3,
   APIResponseV3WithTime,
   AssetInfoV5,
+  AssetOverviewResultV5,
   AutoRepayModeResultV5,
   AvailableAmountToRepayV5,
   BatchAmendOrderParamsV5,
@@ -45,6 +46,9 @@ import {
   BorrowOrderInfoFixedV5,
   BorrowOrderQuoteFixedV5,
   BrokerIssuedVoucherV5,
+  BrokerRateLimitAllItemV5,
+  BrokerRateLimitCapItemV5,
+  BrokerRateLimitSetResultItemV5,
   BrokerVoucherSpecV5,
   CancelAllOrdersParamsV5,
   CancelAllRFQResultV5,
@@ -113,6 +117,8 @@ import {
   FeeGroupStructureResponseV5,
   FeeRateV5,
   FiatTradingPairListV5,
+  FriendReferralRecordV5,
+  FundingAccountTransactionRecordV5,
   FundingRateHistoryResponseV5,
   GetAccountCoinBalanceParamsV5,
   GetAccountHistoricOrdersParamsV5,
@@ -120,9 +126,11 @@ import {
   GetAccountOrdersParamsV5,
   GetADLAlertParamsV5,
   GetAffiliateUserListParamsV5,
+  GetAllBrokerRateLimitsParamsV5,
   GetAllCoinsBalanceParamsV5,
   GetAllowedDepositCoinInfoParamsV5,
   GetAssetInfoParamsV5,
+  GetAssetOverviewParamsV5,
   GetAutoRepayModeParamsV5,
   GetAvailableAmountToRepayParamsV5,
   GetBorrowableCoinsParamsV5,
@@ -154,6 +162,8 @@ import {
   GetFeeGroupStructureParamsV5,
   GetFeeRateParamsV5,
   GetFiatTradingPairListParamsV5,
+  GetFriendReferralsParamsV5,
+  GetFundingAccountTransactionHistoryParamsV5,
   GetFundingRateHistoryParamsV5,
   GetHistoricalVolatilityParamsV5,
   GetIndexPriceComponentsParamsV5,
@@ -302,6 +312,7 @@ import {
   SendP2POrderMessageParamsV5,
   SetAutoAddMarginParamsV5,
   SetAutoRepayModeParamsV5,
+  SetBrokerRateLimitParamsV5,
   SetCollateralCoinParamsV5,
   SetLeverageParamsV5,
   SetLimitPriceActionParamsV5,
@@ -311,6 +322,7 @@ import {
   SettlementRecordV5,
   SetTPSLModeParamsV5,
   SetTradingStopParamsV5,
+  SignAgreementParamsV5,
   SmallBalanceListV5,
   SpotBorrowCheckResultV5,
   SpotMarginStateV5,
@@ -1738,6 +1750,35 @@ export class RestClientV5 extends BaseRestClient {
    */
 
   /**
+   * Asset Overview
+   * Query master account or subaccount's total assets and detailed asset holdings across different accounts and product categories.
+   *
+   * INFO: For accountType=Alpha, on-chain assets are not included in the returned data in current version.
+   */
+  getAssetOverview(
+    params?: GetAssetOverviewParamsV5,
+  ): Promise<APIResponseV3WithTime<AssetOverviewResultV5>> {
+    return this.getPrivate('/v5/asset/asset-overview', params);
+  }
+
+  /**
+   * Funding Account Transaction History
+   * Transaction log in Funding Account. Supports filtering by transaction type and time range.
+   *
+   * INFO: createTimeFrom and createTimeTo must be used together. Interval cannot exceed 7 days. If neither provided, defaults to last 7 days.
+   */
+  getFundingAccountTransactionHistory(
+    params?: GetFundingAccountTransactionHistoryParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      nextPageCursor: string;
+      list: FundingAccountTransactionRecordV5[];
+    }>
+  > {
+    return this.getPrivate('/v5/asset/fundinghistory', params);
+  }
+
+  /**
    * Query option delivery records, sorted by deliveryTime in descending order.
    *
    * Covers: Option
@@ -2432,6 +2473,38 @@ export class RestClientV5 extends BaseRestClient {
     uid: string;
   }): Promise<APIResponseV3WithTime<AffiliateUserInfoV5>> {
     return this.getPrivate('/v5/user/aff-customer-info', params);
+  }
+
+  /**
+   * Get Friend Referrals
+   * Query the friend's invitee data.
+   *
+   * TIP: Any permission can access this endpoint.
+   */
+  getFriendReferrals(params?: GetFriendReferralsParamsV5): Promise<
+    APIResponseV3WithTime<{
+      nextCursor: string;
+      records: FriendReferralRecordV5[];
+    }>
+  > {
+    return this.getPrivate('/v5/user/invitation/referrals', params);
+  }
+
+  /**
+   * Sign Agreement
+   * To trade metals commodity contracts (e.g. XAUUSDT, XAGUSDT Perpetuals), complete the agreement signing first.
+   * Recommended to sign in advance via API so you can trade immediately when contracts go live.
+   *
+   * INFO
+   * - Only the master account can sign. Subaccounts are not supported.
+   * - Once the master has signed, all subaccounts will be eligible to trade.
+   * - API key must have: Account Transfer, Subaccount Transfer, or Withdrawal.
+   * - Trading without signing returns code=110123, msg=You must agree to the Trading Terms.
+   */
+  signAgreement(
+    params: SignAgreementParamsV5,
+  ): Promise<APIResponseV3WithTime<{}>> {
+    return this.postPrivate('/v5/user/agreement', params);
   }
 
   /**
@@ -3596,6 +3669,63 @@ export class RestClientV5 extends BaseRestClient {
     params: GetBrokerIssuedVoucherParamsV5,
   ): Promise<APIResponseV3<BrokerIssuedVoucherV5>> {
     return this.postPrivate('/v5/broker/award/distribution-record', params);
+  }
+
+  /**
+   * Set Rate Limit
+   * Exchange broker only. Set the rate limit for sub accounts.
+   *
+   * API rate limit: 1 req per second
+   *
+   * INFO
+   * - If the UID calling this endpoint is a master account, the UIDs specified in the uids parameter must belong to its subaccounts. The master account itself cannot set a custom rate limit.
+   * - If the UID requesting this endpoint is a subaccount, the UID can only be itself in uids.
+   * - Only exchange broker account can call this endpoint
+   */
+  setBrokerRateLimit(params: SetBrokerRateLimitParamsV5): Promise<
+    APIResponseV3WithTime<{
+      result: BrokerRateLimitSetResultItemV5[];
+    }>
+  > {
+    return this.postPrivate('/v5/broker/apilimit/set', params);
+  }
+
+  /**
+   * Get Rate Limit Cap
+   * Get your exchange broker account entity total rate limit usage and cap, across the board.
+   *
+   * API rate limit: 5 req per second
+   *
+   * INFO
+   * - Only Main UIDs can query this endpoint
+   * - Only exchange broker account can call this endpoint
+   * - If you never apply for a specific config via account manager, it gives empty response.
+   */
+  getBrokerRateLimitCap(): Promise<
+    APIResponseV3WithTime<{
+      list: BrokerRateLimitCapItemV5[];
+    }>
+  > {
+    return this.getPrivate('/v5/broker/apilimit/query-cap');
+  }
+
+  /**
+   * Get All Rate Limits
+   * Use the master account to query for all your UID-level rate limits, including all master accounts and subaccounts.
+   *
+   * API rate limit: 1 req per second
+   *
+   * INFO
+   * - Only exchange broker account can call this endpoint
+   * - The accounts that have never had a rate limit configured via Set Rate Limit will not appear in the response and will use the default rate limit.
+   */
+  getAllBrokerRateLimits(params?: GetAllBrokerRateLimitsParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: BrokerRateLimitAllItemV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/broker/apilimit/query-all', params);
   }
 
   /**

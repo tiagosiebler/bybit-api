@@ -115,6 +115,18 @@ export interface AffiliateUserListItemV5 {
   tradeVol: string;
   startDate: string;
   endDate: string;
+  /** tradfi trade volume in [startDate, endDate] when startDate/endDate in params */
+  tradfiTradeVol?: string;
+  /** tradfi trade volume in last 30 days. 0 when startDate/endDate in params */
+  tradfiTradeVol30Day?: string;
+  /** tradfi trade volume in past year. 0 when startDate/endDate in params */
+  tradfiTradeVol365Day?: string;
+  /** Commission between startDate and endDate when startDate/endDate in params. Coin -> amount */
+  commissionsVol?: Record<string, string>;
+  /** Commission in last 30 days. Coin -> amount */
+  commissions30Day?: Record<string, string>;
+  /** Commission in past year. Coin -> amount */
+  commissions365Day?: Record<string, string>;
 }
 
 export interface AffiliateUserInfoV5 {
@@ -132,4 +144,20 @@ export interface AffiliateUserInfoV5 {
   depositUpdateTime: string;
   volUpdateTime: string;
   KycLevel: 0 | 1 | 2;
+  /** tradfi trade volume in last 30 days (USDT) */
+  tradfiTradeVol30Day?: string;
+  /** tradfi trade volume in past year (USDT) */
+  tradfiTradeVol365Day?: string;
+  /** tradfi commissions in last 30 days. Coin -> amount */
+  commissions30Day?: Record<string, string>;
+  /** tradfi commissions in past year. Coin -> amount */
+  commissions365Day?: Record<string, string>;
+}
+
+export interface FriendReferralRecordV5 {
+  id: string;
+  inviteeUid: string;
+  status: number;
+  createdAt: string;
+  updatedAt: string;
 }

@@ -325,3 +325,41 @@ export interface FiatTradingPairListV5 {
   fiats: FiatCoinInfoV5[]; // Fiat coin list
   cryptos: CryptoCoinInfoV5[]; // Crypto coin list
 }
+
+export interface FundingAccountTransactionRecordV5 {
+  memberId: string;
+  currency: string;
+  ioDirection: string;
+  txnAmt: string;
+  afterAmt: string;
+  createTime: string;
+  showBusiType: string;
+  showBusiTypeEn: string;
+  description: string;
+  descriptionEn: string;
+}
+
+export interface AssetOverviewCoinDetailV5 {
+  coin: string;
+  equity: string;
+}
+
+export interface AssetOverviewCategoryV5 {
+  category: string;
+  equity: string;
+  coinDetail: AssetOverviewCoinDetailV5[];
+}
+
+export interface AssetOverviewAccountItemV5 {
+  accountType: string;
+  totalEquity: string;
+  valuationCurrency: string;
+  snapshotTime: string;
+  coinDetail?: AssetOverviewCoinDetailV5[];
+  categories?: AssetOverviewCategoryV5[];
+}
+
+export interface AssetOverviewResultV5 {
+  totalEquity: string;
+  list: AssetOverviewAccountItemV5[];
+}
