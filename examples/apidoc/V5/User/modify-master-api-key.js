@@ -8,7 +8,6 @@ const client = new RestClientV5({
 
 client
   .updateMasterApiKey({
-    ips: ['*'],
     permissions: {
       ContractTrade: ['Order', 'Position'],
       Spot: ['SpotTrade'],

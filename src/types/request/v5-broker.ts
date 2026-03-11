@@ -32,3 +32,19 @@ export interface GetBrokerIssuedVoucherParamsV5 {
   specCode: string;
   withUsedAmount?: boolean;
 }
+
+/** Set Rate Limit - exchange broker only. API rate limit: 1 req per second. */
+export interface SetBrokerRateLimitParamsV5 {
+  list: {
+    uids: string;
+    bizType: string;
+    rate: number;
+  }[];
+}
+
+/** Get All Rate Limits - exchange broker only. API rate limit: 1 req per second. */
+export interface GetAllBrokerRateLimitsParamsV5 {
+  limit?: string;
+  cursor?: string;
+  uids?: string;
+}

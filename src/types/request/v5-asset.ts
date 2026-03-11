@@ -200,3 +200,16 @@ export interface GetSmallBalanceListParamsV5 {
 export interface GetFiatTradingPairListParamsV5 {
   side?: 0 | 1; // 0: buy (buy crypto, sell fiat), 1: sell (sell crypto, buy fiat)
 }
+
+/** Funding Account Transaction History. Interval createTimeFrom-createTimeTo max 7 days. */
+export interface GetFundingAccountTransactionHistoryParamsV5 {
+  createTimeFrom?: string;
+  createTimeTo?: string;
+  limit?: string;
+  cursor?: string;
+}
+
+/** Asset Overview. memberId required when querying sub account via master API key. */
+export interface GetAssetOverviewParamsV5 {
+  memberId?: string;
+}

@@ -26,7 +26,6 @@ export interface CreateSubApiKeyParamsV5 {
 export interface UpdateApiKeyParamsV5 {
   apikey?: string;
   readOnly?: 0 | 1;
-  ips?: string[];
   permissions: PermissionsV5;
 }
 
@@ -54,4 +53,17 @@ export interface GetAffiliateUserListParamsV5 {
   need365?: boolean;
   startDate?: string;
   endDate?: string;
+}
+
+/** Get Friend Referrals - invitation relationship status. 0: alive; 1: invalid */
+export interface GetFriendReferralsParamsV5 {
+  status?: string;
+  size?: string;
+  cursor?: string;
+}
+
+/** Sign Agreement - 2: Metals commodity contracts (XAUUSDT, XAGUSDT Perpetuals). Only master account. */
+export interface SignAgreementParamsV5 {
+  category: 2;
+  agree: true;
 }
