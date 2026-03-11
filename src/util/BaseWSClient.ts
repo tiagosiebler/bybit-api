@@ -111,6 +111,7 @@ export interface BaseWebsocketClient<
     ...args: Parameters<WSClientEventMap<TWSKey>[U]>
   ): boolean;
 }
+
 /**
  * A midflight WS request event (e.g. subscribe to these topics).
  *
@@ -1003,6 +1004,8 @@ export abstract class BaseWebsocketClient<
 
     // Events that are ready to send (usually stringified JSON)
     const requestEvents: MidflightWsRequestEvent<TWSRequestEvent>[] = [];
+
+    // Can be dynamic via this.getWsMarketForWsKey(wsKey) in other SDKs
     const market: WsMarket = 'all';
 
     const maxTopicsPerEvent = this.getMaxTopicsPerSubscribeEvent(wsKey);
