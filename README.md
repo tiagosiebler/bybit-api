@@ -20,7 +20,7 @@
 [1]: https://www.npmjs.com/package/bybit-api
 
 > [!TIP]
-> Upcoming change: As part of the [Siebly.io](https://siebly.io/?ref=ghbybit) brand, this SDK will soon be hosted under the [Siebly.io GitHub organisation](https://github.com/sieblyio). The migration is seamless and requires no user changes.
+> Upcoming change: As part of the [Siebly.io](https://siebly.io/) brand, this SDK will soon be hosted under the [Siebly.io GitHub organisation](https://github.com/sieblyio). The migration is seamless and requires no user changes.
 
 Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSocket APIs & WebSocket Events:
 
@@ -60,6 +60,7 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSo
      - Responses to commands will arrive via the `response` and `error` events emitted by the client.
      - See example for more details: [examples/ws-api-raw-events.ts](./examples/ws-api-raw-events.ts)
 - Active community support & collaboration in telegram: [Node.js Algo Traders](https://t.me/nodetraders).
+- QuickStart Guide: https://siebly.io/sdk/bybit/javascript
 
 # Table of Contents
 
@@ -120,7 +121,7 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSo
 
 Check out our JavaScript/TypeScript/Node.js SDKs & Projects:
 
-- Visit our website: [https://Siebly.io](https://siebly.io/?ref=gh)
+- Visit our website: [https://Siebly.io](https://siebly.io/)
 - Try our REST API & WebSocket SDKs published on npmjs:
   - [Bybit Node.js SDK: bybit-api](https://www.npmjs.com/package/bybit-api)
   - [Kraken Node.js SDK: @siebly/kraken-api](https://www.npmjs.com/package/@siebly/kraken-api)
