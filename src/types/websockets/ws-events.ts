@@ -269,6 +269,10 @@ export interface WSPositionV5 {
   leverageSysUpdatedTime: string;
   createdTime: string;
   updatedTime: string;
+  /**
+   * Position open timestamp (ms), default 0. Documented as testnet-only in some API versions.
+   */
+  openTime?: number;
   seq: number;
 }
 

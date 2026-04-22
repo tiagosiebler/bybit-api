@@ -194,19 +194,23 @@ export interface WithdrawalAddressV5 {
   createdAt: string;
 }
 
+export interface WithdrawableAccountSliceV5 {
+  coin: string;
+  withdrawableAmount: string;
+  availableBalance: string;
+}
+
+/**
+ * GET /v5/asset/withdraw/withdrawable-amount. Only keys with data are returned
+ * (e.g. UTA, FUND, EARN; EARN when the coin can be withdrawn from Earn; SPOT if present).
+ */
 export interface WithdrawableAmountV5 {
   limitAmountUsd: string;
   withdrawableAmount: {
-    SPOT: {
-      coin: string;
-      withdrawableAmount: string;
-      availableBalance: string;
-    };
-    FUND: {
-      coin: string;
-      withdrawableAmount: string;
-      availableBalance: string;
-    };
+    SPOT?: WithdrawableAccountSliceV5;
+    FUND?: WithdrawableAccountSliceV5;
+    UTA?: WithdrawableAccountSliceV5;
+    EARN?: WithdrawableAccountSliceV5;
   };
 }
 
@@ -339,9 +343,17 @@ export interface FundingAccountTransactionRecordV5 {
   descriptionEn: string;
 }
 
+/** When accountType=Alpha and category is farm, under `coinDetail` in sub-categories. */
+export interface AssetOverviewCoinExtMapV5 {
+  priceUpper?: string;
+  priceLower?: string;
+  equityUnit?: string;
+}
+
 export interface AssetOverviewCoinDetailV5 {
   coin: string;
   equity: string;
+  extMap?: AssetOverviewCoinExtMapV5;
 }
 
 export interface AssetOverviewCategoryV5 {
@@ -362,4 +374,128 @@ export interface AssetOverviewAccountItemV5 {
 export interface AssetOverviewResultV5 {
   totalEquity: string;
   list: AssetOverviewAccountItemV5[];
+}
+
+// --- GET /v5/asset/portfolio-margin (portfolio margin P&L ranges) ---
+
+export interface PortfolioMarginWalletV5 {
+  equity: string;
+  cashBalance: string;
+  marginBalance: string;
+  availableBalance: string;
+  accountIM: string;
+  accountMM: string;
+  accountMMRate: string;
+  accountIMRate: string;
+}
+
+export interface PortfolioMarginPnlRangePointV5 {
+  priceScale: string;
+  pnls: string[];
+}
+
+export interface PortfolioMarginContractBucketPnlV5 {
+  pnlRanges: PortfolioMarginPnlRangePointV5[];
+}
+
+export interface PortfolioMarginTotalPnlRangesV5 {
+  ALL?: PortfolioMarginContractBucketPnlV5;
+  PERPETUAL?: PortfolioMarginContractBucketPnlV5;
+  OPTION?: PortfolioMarginContractBucketPnlV5;
+}
+
+export interface PortfolioMarginPerpPositionPnlV5 {
+  symbolName: string;
+  position: string;
+  pnlRanges: PortfolioMarginPnlRangePointV5[];
+  sessionAvgPrice: string;
+  markPrice: string;
+  orderSize: string;
+  contractType: number;
+  settleCoin: string;
+  symbolAlias?: string;
+}
+
+export interface PortfolioMarginOptionPositionPnlV5 {
+  symbolName: string;
+  position: string;
+  pnlRanges: PortfolioMarginPnlRangePointV5[];
+  sessionAvgPrice: string;
+  markPrice: string;
+  orderSize: string;
+  contractType: number;
+  settleCoin: string;
+}
+
+export interface PortfolioMarginOptionExpiryPnlV5 {
+  expiryDateRepresentation: string;
+  pnlRanges: PortfolioMarginPnlRangePointV5[];
+  optionPositionPnlRanges: PortfolioMarginOptionPositionPnlV5[];
+}
+
+export interface PortfolioMarginContingencyV5 {
+  optionContingency: string;
+  futureDeltaContingency: string;
+  optionVegaContingency: string;
+  contingencyComponents: string;
+  usdtUsdcContingency: string;
+  futureContingency: string;
+}
+
+export interface PortfolioMarginAssetBlockV5 {
+  coin: string;
+  assetIM: string;
+  assetMM: string;
+}
+
+export interface PortfolioMarginSpotHedgeInfoV5 {
+  hedgeSpotSize: string;
+  walletBalance: string;
+  usdIndexPrice: string;
+  pnlRanges: PortfolioMarginPnlRangePointV5[];
+}
+
+export interface PortfolioMarginByBaseCoinV5 {
+  baseCoin: string;
+  totalPnlRanges: PortfolioMarginTotalPnlRangesV5;
+  perpPositionPnlRanges: PortfolioMarginPerpPositionPnlV5[];
+  optionExpiryDatePnlRanges: PortfolioMarginOptionExpiryPnlV5[];
+  contingency: PortfolioMarginContingencyV5;
+  asset: PortfolioMarginAssetBlockV5;
+  maxLossPriceMove: string;
+  maxLossIvShock: string;
+  totalClosePzFee: string;
+  spotHedgeInfo: PortfolioMarginSpotHedgeInfoV5;
+  maxLossIvShockList: string[];
+}
+
+export interface PortfolioMarginInfoResultV5 {
+  wallet: PortfolioMarginWalletV5;
+  assetPnlRange: PortfolioMarginByBaseCoinV5[];
+}
+
+// --- GET /v5/asset/total-members-assets ---
+
+export interface TotalMembersAccountBreakdownItemV5 {
+  type: string;
+  origb: string;
+  quoteb: string;
+  stat: number;
+}
+
+export interface TotalMembersMemberEntryV5 {
+  uid: number;
+  isM?: boolean;
+  type?: number;
+  stat: number;
+  origb: string;
+  quoteb?: string;
+  items: TotalMembersAccountBreakdownItemV5[];
+}
+
+export interface TotalMembersAssetsResultV5 {
+  total: string;
+  quoteTotal: string;
+  stat: number;
+  list: TotalMembersMemberEntryV5[];
 }

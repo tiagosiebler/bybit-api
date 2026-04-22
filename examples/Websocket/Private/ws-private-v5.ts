@@ -67,6 +67,8 @@ wsClient.subscribeV5(['order', 'wallet', 'greeks'], 'linear');
 wsClient.subscribeV5('execution', 'linear');
 // wsClient.subscribeV5('execution.fast', 'linear');
 // wsClient.subscribeV5('execution.fast.linear', 'linear');
+// wsClient.subscribeV5('execution.fast.spot', 'spot');
+// wsClient.subscribeV5('execution.fast.option', 'option');
 
 /**
  * The following has the same effect as above, since there's only one private endpoint for V5 account topics:

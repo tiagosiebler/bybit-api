@@ -104,6 +104,20 @@ export interface AccountInfoV5 {
   updatedTime: string;
 }
 
+/**
+ * Get Trade Behaviour Config / `getLimitPriceAction()` — `/v5/account/user-setting-config`
+ */
+export interface UserSettingConfigV5 {
+  lpaSpot: boolean;
+  lpaPerp: boolean;
+  /** Spot MNT fee deduction enabled. */
+  smsef?: boolean;
+  /** Futures MNT fee deduction enabled. */
+  fmsef?: boolean;
+  /** Delta Neutral mode; may be absent on older API responses. */
+  deltaEnable?: boolean;
+}
+
 export interface TransactionLogV5 {
   symbol: string;
   category: CategoryV5;
@@ -152,4 +166,74 @@ export interface DCPInfoV5 {
 
 export interface ManualRepayResultV5 {
   resultStatus: 'P' | 'SU' | 'FA';
+}
+
+/** GET /v5/account/option-asset-info — response `result` wraps a nested `result` array. */
+export interface OptionAssetInfoRowV5 {
+  coin: string;
+  totalDelta: string;
+  totalRPL: string;
+  totalUPL: string;
+  assetIM: string;
+  assetMM: string;
+  sendTime: number;
+}
+
+export interface OptionAssetInfoNestedResultV5 {
+  result: OptionAssetInfoRowV5[];
+}
+
+/** GET /v5/account/pay-info */
+export interface PayInfoCollateralItemV5 {
+  coin: string;
+  availableSize: string;
+  availableValue: string;
+  coinScale: number;
+  borrowSize: string;
+  spotHedgeAmount: string;
+  assetFrozen: string;
+}
+
+export interface PayInfoBorrowBlockV5 {
+  coin?: string;
+  borrowSize: string;
+  borrowValue?: string;
+  assetFrozen: string;
+  availableBalance: string;
+}
+
+export interface PayInfoResultV5 {
+  collateralInfo: {
+    collateralList: PayInfoCollateralItemV5[];
+  };
+  borrowInfo: PayInfoBorrowBlockV5;
+}
+
+/** GET /v5/account/trade-info-for-analysis */
+export interface TradeInfoAnalysisDailyV5 {
+  day: string;
+  sumBuyExecValue: string;
+  sumSellExecValue: string;
+  sumExecValue: string;
+}
+
+export interface TradeInfoForAnalysisResultV5 {
+  symbolRnl: string;
+  netExecQty: string;
+  sumExecValue: string;
+  sumExecQty: string;
+  avgBuyExecPrice: string;
+  sumBuyExecValue: string;
+  sumBuyExecQty: string;
+  sumBuyExecFee: string;
+  sumBuyOrderQty: string;
+  avgSellExecPrice: string;
+  sumSellExecValue: string;
+  sumSellExecQty: string;
+  sumSellExecFee: string;
+  sumSellOrderQty: string;
+  maxMarginVersion: number;
+  baseCoin: string;
+  settleCoin: string;
+  sumPriceList?: TradeInfoAnalysisDailyV5[];
 }

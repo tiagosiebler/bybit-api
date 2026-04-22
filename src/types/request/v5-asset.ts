@@ -137,15 +137,26 @@ export interface GetWithdrawalAddressListParamsV5 {
 
 export interface WithdrawParamsV5 {
   coin: string;
-  chain: string;
+  /**
+   * When forceChain is 0 or 1, required. When forceChain is 2 (Bybit UID withdraw), may be null/omitted.
+   */
+  chain?: string;
   address: string;
   tag?: string;
   amount: string;
   timestamp: number;
   forceChain?: number;
-  accountType: 'SPOT' | 'FUND';
+  /**
+   * FUND, UTA, or EARN; or comma combo e.g. FUND,UTA,EARN (funding first, then UTA and Earn for remainder).
+   * SPOT is legacy if still supported for older integrations.
+   */
+  accountType: string;
   feeType?: 0 | 1;
   requestId?: string;
+  /**
+   * Required for Bybit Turkey (TR) site users when creating a withdrawal. Omitted for other regions unless the API requires it.
+   */
+  transactionPurpose?: string;
   beneficiary?: {
     vaspEntityId?: string;
     beneficiaryName?: string;
@@ -212,4 +223,19 @@ export interface GetFundingAccountTransactionHistoryParamsV5 {
 /** Asset Overview. memberId required when querying sub account via master API key. */
 export interface GetAssetOverviewParamsV5 {
   memberId?: string;
+  /** Fiat currency for valuation; defaults to USD if omitted. */
+  valuationCurrency?: string;
+  /** Account type filter; returns all if omitted. */
+  accountType?: string;
+}
+
+/** GET /v5/asset/portfolio-margin */
+export interface GetPortfolioMarginInfoParamsV5 {
+  baseCoin?: string;
+}
+
+/** GET /v5/asset/total-members-assets */
+export interface GetTotalMembersAssetsParamsV5 {
+  /** If omitted, defaults to BTC. Total is quoted in this coin. */
+  coin?: string;
 }

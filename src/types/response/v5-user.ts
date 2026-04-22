@@ -38,6 +38,16 @@ export interface ApiKeyPermissionsV5 {
   Exchange: string[];
   NFT: string[];
   Affiliate: string[];
+  Earn?: string[];
+  FiatP2P?: string[];
+  /** @deprecated use FiatBitPay */
+  FiatBybitPay?: string[];
+  FiatBitPay?: string[];
+  FiatConvertBroker?: string[];
+  /** @deprecated */
+  FiatGlobalPay?: string[];
+  BitCard?: string[];
+  ByXPost?: string[];
 }
 
 export interface ApiKeyInfoV5 {
@@ -152,6 +162,12 @@ export interface AffiliateUserInfoV5 {
   commissions30Day?: Record<string, string>;
   /** tradfi commissions in past year. Coin -> amount */
   commissions365Day?: Record<string, string>;
+  /** Payment amount in the last 30 days */
+  paySendAmount30Day?: string;
+  /** Pay first transaction amount */
+  payFtt?: string;
+  /** Card first-time transaction amount */
+  cardFtt?: string;
 }
 
 export interface FriendReferralRecordV5 {

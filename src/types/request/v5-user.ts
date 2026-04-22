@@ -62,8 +62,12 @@ export interface GetFriendReferralsParamsV5 {
   cursor?: string;
 }
 
-/** Sign Agreement - 2: Metals commodity contracts (XAUUSDT, XAGUSDT Perpetuals). Only master account. */
+/** Sign Agreement. Only master account.
+ * - `category` (legacy): 2 = metals (XAU/XAG perps; stock perps share this); 3 = crude oil. New enum values are not added here; prefer `categoryV2`.
+ * - `categoryV2` (recommended): 1 = metals; 2 = crude oil. Additional values may be added by the API; use a numeric literal or variable.
+ * - Either `category` or `categoryV2` must be sent. */
 export interface SignAgreementParamsV5 {
-  category: 2;
-  agree: true;
+  agree: boolean;
+  category?: 2 | 3;
+  categoryV2?: number;
 }

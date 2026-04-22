@@ -84,6 +84,19 @@ export interface VIPMarginDataV5 {
   }[];
 }
 
+export interface SpotMarginCurrencyDataV5 {
+  currency: string;
+  flexibleManualBorrowable: boolean;
+  minFlexibleManualBorrowQty: string;
+  flexibleManualBorrowAccuracy: string;
+  fixedManualBorrowable: boolean;
+  minFixedManualBorrowQty: string;
+  fixedManualBorrowAccuracy: string;
+  fixedInterestRateAccuracy: string;
+  minFixedInterestRate: string;
+  maxFixedInterestRate: string;
+}
+
 export interface SpotMarginStateV5 {
   spotLeverage: string;
   spotMarginMode: '1' | '0';
@@ -141,4 +154,53 @@ export interface AutoRepayModeItemV5 {
 
 export interface AutoRepayModeResultV5 {
   data: AutoRepayModeItemV5[];
+}
+
+export interface SpotMarginLiabilityInfoV5 {
+  currency: string;
+  totalBorrowAmount: string;
+  fixedBorrowAmount: string;
+  flexibleBorrowAmount: string;
+  spotTotalBorrow: string;
+  derivativesBorrow: string;
+}
+
+export interface FixedRateBorrowResultV5 {
+  orderId: string;
+}
+
+export interface FixedRateBorrowOrderInfoV5 {
+  annualRate: string;
+  orderId: string;
+  orderTime: string;
+  filledQty: string;
+  orderQty: string;
+  orderCurrency: string;
+  state: number;
+  term: number;
+  repayType: string;
+  strategyType: 'PARTIAL' | 'FULL';
+}
+
+export interface FixedRateBorrowContractInfoV5 {
+  annualRate: string;
+  borrowCurrency: string;
+  borrowTime: string;
+  interestPaid: string;
+  loanId: string;
+  orderId: string;
+  repaymentTime: string;
+  residualPenaltyInterest: string;
+  residualPrincipal: string;
+  status: number;
+  term: string;
+  repayType: string;
+  strategyType: 'PARTIAL' | 'FULL';
+}
+
+export interface FixedRateBorrowQuoteV5 {
+  orderCurrency: string;
+  term: number;
+  annualRate: string;
+  qty: string;
 }
