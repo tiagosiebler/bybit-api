@@ -15,10 +15,23 @@ import {
   AdjustCollateralAmountParamsV5,
   AdjustCollateralAmountV5,
   ADLAlertResponseV5,
+  AdvanceEarnAdvanceProductInfoV5,
+  AdvanceEarnOrderListV5,
+  AdvanceEarnPlaceOrderResultV5,
+  AdvanceEarnPositionListV5,
+  AdvanceEarnProductExtraInfoV5,
   AffiliateUserInfoV5,
   AffiliateUserListItemV5,
   AllCoinsBalanceV5,
   AllowedDepositCoinInfoV5,
+  AlphaAssetDetailResultV5,
+  AlphaAssetListResultV5,
+  AlphaBizTokenDetailsV5,
+  AlphaBizTokenPriceListResultV5,
+  AlphaBizTokenV5,
+  AlphaPayTokenV5,
+  AlphaTradeOrderListResultV5,
+  AlphaTradeQuoteResultV5,
   AmendOrderParamsV5,
   AmendSpreadOrderParamsV5,
   ApiKeyInfoV5,
@@ -60,6 +73,12 @@ import {
   CancelRFQQuoteResultV5,
   CancelRFQResultV5,
   CancelSupplyOrderFixedParamsV5,
+  CardAssetRecordsResultV5,
+  CardMallItemListResultV5,
+  CardPointBalanceV5,
+  CardPointCashbackDetailV5,
+  CardPointRecordsResultV5,
+  CardPointTierInfoV5,
   CategoryCursorListV5,
   CategoryListV5,
   CategorySymbolListV5,
@@ -103,20 +122,38 @@ import {
   DeliveryRecordV5,
   DepositAddressChainV5,
   DepositRecordV5,
+  EarnAprHistoryPointV5,
   EarnHourlyYieldHistoryV5,
   EarnOrderHistoryV5,
   EarnPositionV5,
   EarnProductV5,
+  EarnTokenDailyYieldRecordV5,
+  EarnTokenHistoryAprPointV5,
+  EarnTokenHourlyYieldRecordV5,
+  EarnTokenOrderV5,
+  EarnTokenPositionV5,
+  EarnTokenProductV5,
   EarnYieldHistoryV5,
   ExchangeBrokerAccountInfoV5,
   ExchangeBrokerEarningResultV5,
   ExchangeBrokerSubAccountDepositRecordV5,
+  ExecuteAlphaTradeParamsV5,
+  ExecuteAlphaTradeResultV5,
   ExecuteRFQQuoteParamsV5,
   ExecuteRFQQuoteResultV5,
   ExecutionV5,
   FeeGroupStructureResponseV5,
   FeeRateV5,
   FiatTradingPairListV5,
+  FixedRateBorrowContractInfoV5,
+  FixedRateBorrowOrderInfoV5,
+  FixedRateBorrowParamsV5,
+  FixedRateBorrowQuoteV5,
+  FixedRateBorrowResultV5,
+  FixedTermEarnOrderListV5,
+  FixedTermEarnPlaceOrderResultV5,
+  FixedTermEarnPositionListV5,
+  FixedTermEarnProductListV5,
   FriendReferralRecordV5,
   FundingAccountTransactionRecordV5,
   FundingRateHistoryResponseV5,
@@ -125,10 +162,21 @@ import {
   GetAccountInstrumentsInfoParamsV5,
   GetAccountOrdersParamsV5,
   GetADLAlertParamsV5,
+  GetAdvanceEarnOrderListParamsV5,
+  GetAdvanceEarnPositionListParamsV5,
+  GetAdvanceEarnProductExtraInfoParamsV5,
+  GetAdvanceEarnProductParamsV5,
   GetAffiliateUserListParamsV5,
   GetAllBrokerRateLimitsParamsV5,
   GetAllCoinsBalanceParamsV5,
   GetAllowedDepositCoinInfoParamsV5,
+  GetAlphaAssetDetailParamsV5,
+  GetAlphaBizTokenDetailsParamsV5,
+  GetAlphaBizTokenListParamsV5,
+  GetAlphaBizTokenPriceListParamsV5,
+  GetAlphaPayTokenListParamsV5,
+  GetAlphaTradeOrderListParamsV5,
+  GetAlphaTradeQuoteParamsV5,
   GetAssetInfoParamsV5,
   GetAssetOverviewParamsV5,
   GetAutoRepayModeParamsV5,
@@ -153,15 +201,28 @@ import {
   GetDeliveryPriceParamsV5,
   GetDeliveryRecordParamsV5,
   GetDepositRecordParamsV5,
+  GetEarnAprHistoryParamsV5,
   GetEarnHourlyYieldHistoryParamsV5,
   GetEarnOrderHistoryParamsV5,
   GetEarnPositionParamsV5,
+  GetEarnTokenDailyYieldParamsV5,
+  GetEarnTokenHistoryAprParamsV5,
+  GetEarnTokenHourlyYieldParamsV5,
+  GetEarnTokenOrderListParamsV5,
+  GetEarnTokenPositionParamsV5,
+  GetEarnTokenProductParamsV5,
   GetEarnYieldHistoryParamsV5,
   GetExchangeBrokerEarningsParamsV5,
   GetExecutionListParamsV5,
   GetFeeGroupStructureParamsV5,
   GetFeeRateParamsV5,
   GetFiatTradingPairListParamsV5,
+  GetFixedRateBorrowContractInfoParamsV5,
+  GetFixedRateBorrowOrderInfoParamsV5,
+  GetFixedRateBorrowOrderQuoteParamsV5,
+  GetFixedTermEarnOrderListParamsV5,
+  GetFixedTermEarnPositionParamsV5,
+  GetFixedTermEarnProductParamsV5,
   GetFriendReferralsParamsV5,
   GetFundingAccountTransactionHistoryParamsV5,
   GetFundingRateHistoryParamsV5,
@@ -173,6 +234,7 @@ import {
   GetInternalDepositRecordParamsV5,
   GetInternalTransferParamsV5,
   GetKlineParamsV5,
+  GetLiquidityMiningProductParamsV5,
   GetLoanLTVAdjustmentHistoryParamsV5,
   GetLongShortRatioParamsV5,
   GetMarkPriceKlineParamsV5,
@@ -191,6 +253,8 @@ import {
   GetP2POrdersParamsV5,
   GetP2PPendingOrdersParamsV5,
   GetP2PPersonalAdsParamsV5,
+  GetPayInfoParamsV5,
+  GetPortfolioMarginInfoParamsV5,
   GetPositionTiersParamsV5,
   GetPremiumIndexPriceKlineParamsV5,
   GetPreUpgradeClosedPnlParamsV5,
@@ -215,7 +279,10 @@ import {
   GetRPIOrderbookParamsV5,
   GetSettlementRecordParamsV5,
   GetSmallBalanceListParamsV5,
+  GetSpotMarginCurrencyDataParamsV5,
+  GetSpotMarginLiabilityInfoParamsV5,
   GetSpreadInstrumentsInfoParamsV5,
+  GetSpreadMaxQtyParamsV5,
   GetSpreadOpenOrdersParamsV5,
   GetSpreadOrderHistoryParamsV5,
   GetSpreadTradeHistoryParamsV5,
@@ -226,6 +293,8 @@ import {
   GetSupplyOrderQuoteFixedParamsV5,
   GetSystemStatusParamsV5,
   GetTickersParamsV5,
+  GetTotalMembersAssetsParamsV5,
+  GetTradeInfoForAnalysisParamsV5,
   GetTransactionLogParamsV5,
   GetUniversalTransferRecordsParamsV5,
   GetUnpaidLoanOrdersParamsV5,
@@ -241,6 +310,7 @@ import {
   InternalDepositRecordV5,
   InternalTransferRecordV5,
   IssueVoucherParamsV5,
+  LiquidityMiningProductResultV5,
   LoanLTVAdjustmentHistoryV5,
   LongShortRatioV5,
   ManualBorrowParamsV5,
@@ -254,6 +324,7 @@ import {
   MaxLoanAmountV5,
   MMPModifyParamsV5,
   MMPStateV5,
+  ModifyEarnPositionParamsV5,
   MovePositionHistoryV5,
   MovePositionParamsV5,
   MovePositionResultV5,
@@ -261,6 +332,7 @@ import {
   OHLCVKlineV5,
   OngoingFlexibleLoanV5,
   OpenInterestResponseV5,
+  OptionAssetInfoNestedResultV5,
   OptionDeliveryPriceV5,
   OrderbookResponseV5,
   OrderParamsV5,
@@ -278,6 +350,10 @@ import {
   P2PPersonalAdsResponseV5,
   P2PUserInfoV5,
   P2PUserPaymentV5,
+  PayInfoResultV5,
+  PlaceEarnTokenOrderParamsV5,
+  PlaceEarnTokenOrderResultV5,
+  PortfolioMarginInfoResultV5,
   PositionInfoParamsV5,
   PositionV5,
   PreCheckOrderResultV5,
@@ -285,8 +361,15 @@ import {
   PreUpgradeTransaction,
   PreUpgradeUSDCSessionSettlement,
   PublicTradeV5,
+  QueryCardAssetRecordsParamsV5,
+  QueryCardMallItemListParamsV5,
+  QueryCardPointCashbackDetailParamsV5,
+  QueryCardPointRecordsParamsV5,
+  RedeemFixedTermEarnParamsV5,
+  RedeemFixedTermEarnResultV5,
   RenewBorrowOrderFixedParamsV5,
   RenewBorrowOrderFixedV5,
+  RenewFixedRateBorrowParamsV5,
   RenewOrderInfoFixedV5,
   RepayCollateralFixedParamsV5,
   RepayCollateralFlexibleParamsV5,
@@ -314,6 +397,8 @@ import {
   SetAutoRepayModeParamsV5,
   SetBrokerRateLimitParamsV5,
   SetCollateralCoinParamsV5,
+  SetDeltaNeutralModeParamsV5,
+  SetFixedTermEarnAutoInvestParamsV5,
   SetLeverageParamsV5,
   SetLimitPriceActionParamsV5,
   SetRiskLimitParamsV5,
@@ -325,8 +410,11 @@ import {
   SignAgreementParamsV5,
   SmallBalanceListV5,
   SpotBorrowCheckResultV5,
+  SpotMarginCurrencyDataV5,
+  SpotMarginLiabilityInfoV5,
   SpotMarginStateV5,
   SpreadInstrumentInfoV5,
+  SpreadMaxQtyResultV5,
   SpreadOpenOrderV5,
   SpreadOrderbookResponseV5,
   SpreadOrderHistoryV5,
@@ -334,6 +422,8 @@ import {
   SpreadTickerV5,
   SpreadTradeV5,
   SubMemberV5,
+  SubmitAdvanceEarnPlaceOrderParamsV5,
+  SubmitFixedTermEarnOrderParamsV5,
   SubmitSpreadOrderParamsV5,
   SubmitStakeRedeemParamsV5,
   SupplyContractInfoFixedV5,
@@ -345,7 +435,9 @@ import {
   TickerLinearInverseV5,
   TickerOptionV5,
   TickerSpotV5,
+  TotalMembersAssetsResultV5,
   TPSLModeV5,
+  TradeInfoForAnalysisResultV5,
   TransactionLogV5,
   UnifiedAccountUpgradeResultV5,
   UniversalTransferParamsV5,
@@ -354,6 +446,7 @@ import {
   UpdateApiKeyParamsV5,
   UpdateApiKeyResultV5,
   UpdateP2PAdParamsV5,
+  UserSettingConfigV5,
   VaspEntityV5,
   VipBorrowableCoinsV5,
   VipCollateralCoinsV5,
@@ -538,6 +631,16 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Get Spread Max Qty
+   * Max order quantity (available balance) for a spread order at a given side and price.
+   */
+  getSpreadMaxQty(
+    params: GetSpreadMaxQtyParamsV5,
+  ): Promise<APIResponseV3WithTime<SpreadMaxQtyResultV5>> {
+    return this.getPrivate('/v5/spread/max-qty', params);
+  }
+
+  /**
    * Create Spread Order
    */
   submitSpreadOrder(params: SubmitSpreadOrderParamsV5): Promise<
@@ -668,13 +771,15 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Query the mark price kline data. Charts are returned in groups based on the requested interval.
    *
-   * Covers: Linear contract / Inverse contract
+   * Covers: USDT contract / USDC contract / Inverse contract / Options
+   *
+   * `category` defaults to linear if omitted. For options, `limit` max is 500; futures max is 1000.
    */
   getMarkPriceKline(
     params: GetMarkPriceKlineParamsV5,
   ): Promise<
     APIResponseV3WithTime<
-      CategorySymbolListV5<OHLCKlineV5[], 'linear' | 'inverse'>
+      CategorySymbolListV5<OHLCKlineV5[], 'linear' | 'inverse' | 'option'>
     >
   > {
     return this.get('/v5/market/mark-price-kline', params);
@@ -714,6 +819,7 @@ export class RestClientV5 extends BaseRestClient {
    * Covers: Spot / Linear contract / Inverse contract / Option
    *
    * Note: Spot does not support pagination, so limit & cursor are invalid.
+   * Note: e.g. `symbolType: 'commodity'`, and for linear also `stock`, `forex` (see Bybit Get Instruments Info).
    */
   getInstrumentsInfo<C extends CategoryV5>(
     params: GetInstrumentsInfoParamsV5 & { category: C },
@@ -1506,6 +1612,7 @@ export class RestClientV5 extends BaseRestClient {
    * Covers: SPOT / USDT contract / USDC contract / Inverse contract
    *
    * Includes RPI permission information (isPublicRpi, myRpiPermission)
+   * Note: e.g. `symbolType: 'commodity'`, and for linear also `stock`, `forex`.
    */
   getAccountInstrumentsInfo<C extends 'spot' | 'linear' | 'inverse'>(
     params: GetAccountInstrumentsInfoParamsV5 & { category: C },
@@ -1542,10 +1649,17 @@ export class RestClientV5 extends BaseRestClient {
    *
    * - Input the specific coin: repay the liability of this coin in particular
    * - No coin specified: repay the liability of all coins
+   *
+   * Does not repay manual-borrow (spot margin manual borrow) liabilities — use `manualRepay` or
+   * `manualRepayWithoutConversion` instead (API error 182120 otherwise).
+   * From 2026-03-17 (full 2026-03-24), BYUSDT can be used for repayment. MNT is temporarily not used for
+   * this flow; MNT convert-repay is not supported (use `manualRepayWithoutConversion` with existing balance).
+   * From 2026-02-10 08:00 UTC, coin-conversion fees use the higher of collateral or debt fee rate, with a
+   * per-transaction coin-conversion cap of 300,000 USD equivalent.
    */
   repayLiability(
     params?: RepayLiabilityParamsV5,
-  ): Promise<APIResponseV3WithTime<CursorListV5<RepayLiabilityResultV5[]>>> {
+  ): Promise<APIResponseV3WithTime<{ list: RepayLiabilityResultV5[] }>> {
     return this.postPrivate('/v5/account/quick-repayment', params);
   }
 
@@ -1559,6 +1673,14 @@ export class RestClientV5 extends BaseRestClient {
    * If that's not enough, the remaining amount will be repaid by converting other assets.
    *
    * Repayment is prohibited between 04:00 and 05:30 per hour.
+   *
+   * When `coin` and `amount` are both set, validation depends on `repaymentType` (e.g. amount must not
+   * exceed the matching liability pool). If neither `coin` nor `amount` is set, `repaymentType` must be
+   * ALL. Response timing: ALL and FIXED are asynchronous; FLEXIBLE is synchronous.
+   * For repay-without-convert (spot balance only), use `manualRepayWithoutConversion`.
+   * From 2026-03-17 (full 2026-03-24), BYUSDT can be used for repayment. MNT: not via convert-repay;
+   * use `manualRepayWithoutConversion` for MNT with existing balance. From 2026-02-10 08:00 UTC,
+   * coin-conversion cap 300,000 USD equivalent per transaction applies.
    */
   manualRepay(
     params?: ManualRepayParamsV5,
@@ -1708,16 +1830,22 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
-   * Get Limit Price Behaviour
+   * Get Trade Behaviour Config / Get Limit Price Behaviour
    * You can get configuration how the system behaves when your limit order price exceeds the highest bid or lowest ask price.
+   * Response includes `deltaEnable` for Delta Neutral mode, and `smsef` / `fmsef` for Spot and Futures MNT fee deduction.
    */
-  getLimitPriceAction(): Promise<
-    APIResponseV3WithTime<{
-      lpaSpot: boolean;
-      lpaPerp: boolean;
-    }>
-  > {
+  getLimitPriceAction(): Promise<APIResponseV3WithTime<UserSettingConfigV5>> {
     return this.getPrivate('/v5/account/user-setting-config');
+  }
+
+  /**
+   * Set Delta Neutral Mode
+   * 1: enable, 0: disable. Query current status via `getLimitPriceAction()`.
+   */
+  setDeltaNeutralMode(
+    params: SetDeltaNeutralModeParamsV5,
+  ): Promise<APIResponseV3WithTime<Record<string, never>>> {
+    return this.postPrivate('/v5/account/set-delta-mode', params);
   }
 
   /**
@@ -1744,6 +1872,36 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Get Option Asset Info
+   * P&L per coin for options: delta, RPL, UPL, margin. Result uses a nested `result` list.
+   */
+  getOptionAssetInfo(): Promise<
+    APIResponseV3WithTime<OptionAssetInfoNestedResultV5>
+  > {
+    return this.getPrivate('/v5/account/option-asset-info');
+  }
+
+  /**
+   * Get Pay Info
+   * Repayment collateral snapshot before `manualRepay` or `repayLiability`. Optional `coin` for one liability; omit for total.
+   */
+  getPayInfo(
+    params?: GetPayInfoParamsV5,
+  ): Promise<APIResponseV3WithTime<PayInfoResultV5>> {
+    return this.getPrivate('/v5/account/pay-info', params);
+  }
+
+  /**
+   * Get Trade Info For Analysis
+   * Aggregated spot trade stats for a symbol, including daily breakdown when returned.
+   */
+  getTradeInfoForAnalysis(
+    params: GetTradeInfoForAnalysisParamsV5,
+  ): Promise<APIResponseV3WithTime<TradeInfoForAnalysisResultV5>> {
+    return this.getPrivate('/v5/account/trade-info-for-analysis', params);
+  }
+
+  /**
    *
    ****** Asset APIs
    *
@@ -1754,11 +1912,33 @@ export class RestClientV5 extends BaseRestClient {
    * Query master account or subaccount's total assets and detailed asset holdings across different accounts and product categories.
    *
    * INFO: For accountType=Alpha, on-chain assets are not included in the returned data in current version.
+   * `valuationCurrency` sets fiat for totals; `accountType` filters which account to return. For Alpha + farm, `extMap` may
+   * appear on `coinDetail` (price range and equity unit).
    */
   getAssetOverview(
     params?: GetAssetOverviewParamsV5,
   ): Promise<APIResponseV3WithTime<AssetOverviewResultV5>> {
     return this.getPrivate('/v5/asset/asset-overview', params);
+  }
+
+  /**
+   * Get Portfolio Margin Info
+   * Wallet and per-base-coin P&L range (aligned with the portfolio margin page).
+   */
+  getPortfolioMarginInfo(
+    params?: GetPortfolioMarginInfoParamsV5,
+  ): Promise<APIResponseV3WithTime<PortfolioMarginInfoResultV5>> {
+    return this.getPrivate('/v5/asset/portfolio-margin', params);
+  }
+
+  /**
+   * Get Total Members Assets
+   * Master + sub-accounts; optional `coin` for valuation (default BTC).
+   */
+  getTotalMembersAssets(
+    params?: GetTotalMembersAssetsParamsV5,
+  ): Promise<APIResponseV3WithTime<TotalMembersAssetsResultV5>> {
+    return this.getPrivate('/v5/asset/total-members-assets', params);
   }
 
   /**
@@ -1883,11 +2063,13 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
-   * Query withdrawable amount.
+   * Query withdrawable amount (incl. risk-frozen `limitAmountUsd` and per-wallet slices).
+   * May include FUND, UTA, EARN, SPOT keys depending on the coin. EARN is present when the coin
+   * supports withdrawal from the Earn account.
    */
   getWithdrawableAmount(params: {
     coin: string;
-  }): Promise<APIResponseV3<{ rows: WithdrawableAmountV5[] }>> {
+  }): Promise<APIResponseV3WithTime<WithdrawableAmountV5>> {
     return this.getPrivate('/v5/asset/withdraw/withdrawable-amount', params);
   }
 
@@ -1998,6 +2180,7 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * Set auto transfer account after deposit. The same function as the setting for Deposit on web GUI
+   * (UNIFIED, FUND, or EARN; if a coin is not in flexible saving, EARN may route to funding as per Bybit).
    */
   setDepositAccount(params: { accountType: AccountTypeV5 }): Promise<
     APIResponseV3WithTime<{
@@ -2154,11 +2337,13 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
-   * Withdraw assets from the SPOT account.
+   * Withdraw from Funding, Unified, and/or Earn (and combos such as FUND,UTA,EARN per API).
    *
    * CAUTION: Make sure you have whitelisted your wallet address before calling this endpoint.
    *
    * You can make an off-chain transfer if the target wallet address is from Bybit. This means that no blockchain fee will be charged.
+   *
+   * Bybit Turkey (TR) site: `transactionPurpose` is required on the request (see `WithdrawParamsV5`).
    */
   submitWithdrawal(
     params: WithdrawParamsV5,
@@ -2340,6 +2525,8 @@ export class RestClientV5 extends BaseRestClient {
    * Both master and sub user's api key are applicable.
    *
    * TIP: Any permission can access this endpoint.
+   *
+   * Response `permissions` may include `FiatBitPay`; `FiatBybitPay` is deprecated for the same scope.
    */
   getQueryApiKey(): Promise<APIResponseV3WithTime<ApiKeyInfoV5>> {
     return this.getPrivate('/v5/user/query-api');
@@ -2373,6 +2560,8 @@ export class RestClientV5 extends BaseRestClient {
    *
    * TIP: The API key must have one of the permissions to be allowed to call the following API endpoint.
    * - master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+   *
+   * `permissions` may include `FiatBitPay`; `FiatBybitPay` remains during transition for the same scope.
    */
   updateMasterApiKey(
     params: UpdateApiKeyParamsV5,
@@ -2492,8 +2681,9 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * Sign Agreement
-   * To trade metals commodity contracts (e.g. XAUUSDT, XAGUSDT Perpetuals), complete the agreement signing first.
+   * To trade commodity contracts (e.g. metals XAU/XAG perps, crude oil perps), complete the agreement signing first.
    * Recommended to sign in advance via API so you can trade immediately when contracts go live.
+   * Send either `category` (legacy) or `categoryV2` (preferred; new agreement types are added to `categoryV2` only).
    *
    * INFO
    * - Only the master account can sign. Subaccounts are not supported.
@@ -2505,6 +2695,113 @@ export class RestClientV5 extends BaseRestClient {
     params: SignAgreementParamsV5,
   ): Promise<APIResponseV3WithTime<{}>> {
     return this.postPrivate('/v5/user/agreement', params);
+  }
+
+  /**
+   *
+   ****** Alpha / Web3 (on-chain) trade APIs
+   *
+   */
+
+  /**
+   * Get Trade Quote
+   * Get a price quote before a purchase or redeem. Required before `executeAlphaTradePurchase` or `executeAlphaTradeRedeem`.
+   * Pass `quoteData` and `correctingCode` from the response unchanged to the execute endpoints.
+   */
+  getAlphaTradeQuote(
+    params: GetAlphaTradeQuoteParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaTradeQuoteResultV5>> {
+    return this.postPrivate('/v5/alpha/trade/quote', params);
+  }
+
+  /**
+   * Execute Purchase
+   * Buy on-chain tokens with a payment token (e.g. USDT). Requires a valid quote; obtain user confirmation first.
+   * HTTP 200 is only an acknowledgment — poll `getAlphaTradeOrderList` for final status. Idempotent by `quoteDataId` in the quote.
+   */
+  executeAlphaTradePurchase(
+    params: ExecuteAlphaTradeParamsV5,
+  ): Promise<APIResponseV3WithTime<ExecuteAlphaTradeResultV5>> {
+    return this.postPrivate('/v5/alpha/trade/purchase', params);
+  }
+
+  /**
+   * Execute Redeem
+   * Sell on-chain tokens for a payment token. Requires a valid quote; obtain user confirmation first.
+   * HTTP 200 is only an acknowledgment — poll `getAlphaTradeOrderList` for final status. Idempotent by `quoteDataId` in the quote.
+   */
+  executeAlphaTradeRedeem(
+    params: ExecuteAlphaTradeParamsV5,
+  ): Promise<APIResponseV3WithTime<ExecuteAlphaTradeResultV5>> {
+    return this.postPrivate('/v5/alpha/trade/redeem', params);
+  }
+
+  /**
+   * Get Payment Token List
+   * List payment tokens (e.g. USDT) and CEX token codes (e.g. CEX_1) for quote and execution. Each entry includes `supportChains`.
+   */
+  getAlphaPayTokenList(
+    params: GetAlphaPayTokenListParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaPayTokenV5[]>> {
+    return this.postPrivate('/v5/alpha/trade/pay-token-list', params);
+  }
+
+  /**
+   * Get Order List
+   * On-chain trade order history; filters for trade type, status, token, and time. Max 90 days.
+   */
+  getAlphaTradeOrderList(
+    params: GetAlphaTradeOrderListParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaTradeOrderListResultV5>> {
+    return this.postPrivate('/v5/alpha/trade/order-list', params);
+  }
+
+  /**
+   * Get Biz Token List
+   * Tradable on-chain tokens (DEX_ prefix ids), risk flags, limits, and supported payment token codes.
+   */
+  getAlphaBizTokenList(
+    params?: GetAlphaBizTokenListParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaBizTokenV5[]>> {
+    return this.postPrivate('/v5/alpha/trade/biz-token-list', params || {});
+  }
+
+  /**
+   * Get Token Price List
+   * Batch market data (up to 20 `chainCode` + `tokenAddress` pairs). Prices, 24h change, volume, market cap, etc.
+   */
+  getAlphaBizTokenPriceList(
+    params: GetAlphaBizTokenPriceListParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaBizTokenPriceListResultV5>> {
+    return this.postPrivate('/v5/alpha/trade/biz-token-price-list', params);
+  }
+
+  /**
+   * Get Token Details
+   * One token: description, links, `riskFlag`, and listing status. Use `chainCode` + `tokenAddress` from biz list or assets.
+   */
+  getAlphaBizTokenDetails(
+    params: GetAlphaBizTokenDetailsParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaBizTokenDetailsV5>> {
+    return this.postPrivate('/v5/alpha/trade/biz-token-details', params);
+  }
+
+  /**
+   * Get Asset List
+   * Portfolio of on-chain token holdings (non-zero only), sorted by USD value.
+   */
+  getAlphaAssetList(): Promise<APIResponseV3WithTime<AlphaAssetListResultV5>> {
+    return this.postPrivate('/v5/alpha/trade/asset-list', {});
+  }
+
+  /**
+   * Get Asset Detail
+   * Single-asset view; `result.assetList` has 0 or 1 item.
+   */
+  getAlphaAssetDetail(
+    params: GetAlphaAssetDetailParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaAssetDetailResultV5>> {
+    return this.postPrivate('/v5/alpha/trade/asset-detail', params);
   }
 
   /**
@@ -2551,6 +2848,16 @@ export class RestClientV5 extends BaseRestClient {
       '/v5/spot-margin-trade/interest-rate-history',
       params,
     );
+  }
+
+  /**
+   * Get Currency Data
+   * Borrowing currency data: flexible/fixed manual borrow, min qty, precision, interest rate range.
+   */
+  getSpotMarginCurrencyData(
+    params?: GetSpotMarginCurrencyDataParamsV5,
+  ): Promise<APIResponseV3WithTime<{ list: SpotMarginCurrencyDataV5[] }>> {
+    return this.getPrivate('/v5/spot-margin-trade/currency-data', params);
   }
 
   /**
@@ -2650,6 +2957,10 @@ export class RestClientV5 extends BaseRestClient {
    *
    * IMPORTANT: Repayment is prohibited between 04:00 and 05:30 per hour.
    * When repaying, system will only use the spot available balance of the debt currency.
+   *
+   * Use `getAvailableAmountToRepay` to check spot available amount. Response timing: ALL and FIXED
+   * asynchronous; FLEXIBLE synchronous. From 2026-03-17 (full 2026-03-24), BYUSDT can be used for
+   * repayment, including MNT using existing spot balance.
    */
   manualRepayWithoutConversion(
     params: ManualRepayWithoutConversionParamsV5,
@@ -2687,6 +2998,79 @@ export class RestClientV5 extends BaseRestClient {
       '/v5/spot-margin-trade/set-auto-repay-mode',
       params,
     );
+  }
+
+  /**
+   * Get Liability Info (spot margin UTA): fixed vs floating, spot vs derivatives borrow split.
+   */
+  getSpotMarginLiability(
+    params: GetSpotMarginLiabilityInfoParamsV5,
+  ): Promise<APIResponseV3WithTime<SpotMarginLiabilityInfoV5>> {
+    return this.getPrivate('/v5/spot-margin-trade/liability', params);
+  }
+
+  /**
+   * Fixed-rate borrow (place order).
+   */
+  submitFixedRateBorrow(
+    params: FixedRateBorrowParamsV5,
+  ): Promise<APIResponseV3WithTime<FixedRateBorrowResultV5>> {
+    return this.postPrivate('/v5/spot-margin-trade/fixedborrow', params);
+  }
+
+  /**
+   * Fixed-rate borrow order history (descending by order time).
+   */
+  getFixedRateBorrowOrderInfo(
+    params?: GetFixedRateBorrowOrderInfoParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      list: FixedRateBorrowOrderInfoV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate(
+      '/v5/spot-margin-trade/fixedborrow-order-info',
+      params,
+    );
+  }
+
+  /**
+   * Fixed-rate borrow contract list (descending by borrow time).
+   */
+  getFixedRateBorrowContractInfo(
+    params?: GetFixedRateBorrowContractInfoParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<{
+      list: FixedRateBorrowContractInfoV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate(
+      '/v5/spot-margin-trade/fixedborrow-contract-info',
+      params,
+    );
+  }
+
+  /**
+   * Fixed-rate borrow order book quotes (sort by apy, term, or quantity).
+   */
+  getFixedRateBorrowOrderQuote(
+    params: GetFixedRateBorrowOrderQuoteParamsV5,
+  ): Promise<APIResponseV3WithTime<{ list: FixedRateBorrowQuoteV5[] }>> {
+    return this.getPrivate(
+      '/v5/spot-margin-trade/fixedborrow-order-quote',
+      params,
+    );
+  }
+
+  /**
+   * Renew a fixed-rate loan contract (full remaining amount if `qty` omitted).
+   */
+  renewFixedRateBorrow(
+    params: RenewFixedRateBorrowParamsV5,
+  ): Promise<APIResponseV3WithTime<string>> {
+    return this.postPrivate('/v5/spot-margin-trade/fixedborrow-renew', params);
   }
 
   /**
@@ -3748,6 +4132,139 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Get Advanced Earn product info (Dual Asset, Double Win, Smart Leverage, etc. via `category`).
+   *
+   * INFO: No authentication. Up to 50 requests/second per IP.
+   */
+  getAdvanceEarnProduct(
+    params: GetAdvanceEarnProductParamsV5,
+  ): Promise<APIResponseV3WithTime<AdvanceEarnAdvanceProductInfoV5>> {
+    return this.get('/v5/earn/advance/product', params);
+  }
+
+  /**
+   * Liquidity mining — product list (Advanced Earn).
+   *
+   * INFO: No authentication. Up to 50 requests/second per IP.
+   */
+  getLiquidityMiningProduct(
+    params?: GetLiquidityMiningProductParamsV5,
+  ): Promise<APIResponseV3WithTime<LiquidityMiningProductResultV5>> {
+    return this.get('/v5/earn/liquidity-mining/product', params);
+  }
+
+  /**
+   * Fixed-term / fixed saving — product list (Earn).
+   *
+   * INFO: No authentication. Up to 50 requests/second per IP.
+   */
+  getFixedTermEarnProduct(
+    params?: GetFixedTermEarnProductParamsV5,
+  ): Promise<APIResponseV3WithTime<FixedTermEarnProductListV5>> {
+    return this.get('/v5/earn/fixed-term/product', params);
+  }
+
+  /**
+   * Advanced Earn — quote / extra info (Discount Buy, Dual Assets, …). Call before place order where required.
+   *
+   * INFO: No authentication. Up to 50 requests/second per IP.
+   * Dual Assets: `productId` is required. Response uses `list` with `buyLowPrice` / `sellHighPrice`.
+   */
+  getAdvanceEarnProductExtraInfo(
+    params: GetAdvanceEarnProductExtraInfoParamsV5,
+  ): Promise<APIResponseV3WithTime<AdvanceEarnProductExtraInfoV5>> {
+    return this.get('/v5/earn/advance/product-extra-info', params);
+  }
+
+  /**
+   * Advanced Earn — place order (Dual Assets, Discount Buy, …). Async; use getAdvanceEarnOrder to track.
+   *
+   * INFO: API key needs "Earn" permission. Rate limit e.g. 5 req/s (Dual Assets per docs).
+   */
+  submitAdvanceEarnPlaceOrder(
+    params: SubmitAdvanceEarnPlaceOrderParamsV5,
+  ): Promise<APIResponseV3WithTime<AdvanceEarnPlaceOrderResultV5>> {
+    return this.postPrivate('/v5/earn/advance/place-order', params);
+  }
+
+  /**
+   * Advanced Earn — active positions (Dual Assets, Discount Buy, …).
+   *
+   * INFO: API key needs "Earn" permission. E.g. 10 req/s (Dual Assets per docs).
+   */
+  getAdvanceEarnPosition(
+    params: GetAdvanceEarnPositionListParamsV5,
+  ): Promise<APIResponseV3WithTime<AdvanceEarnPositionListV5>> {
+    return this.getPrivate('/v5/earn/advance/position', params);
+  }
+
+  /**
+   * Advanced Earn — order list (Dual Assets, Discount Buy, …). Distinct from getEarnOrderHistory (/v5/earn/order).
+   *
+   * INFO: API key needs "Earn" permission. E.g. 10 req/s (Dual Assets per docs).
+   */
+  getAdvanceEarnOrder(
+    params: GetAdvanceEarnOrderListParamsV5,
+  ): Promise<APIResponseV3WithTime<AdvanceEarnOrderListV5>> {
+    return this.getPrivate('/v5/earn/advance/order', params);
+  }
+
+  /**
+   * Fixed-term earn — place order (stake). Async; use getFixedTermEarnOrder to track.
+   *
+   * INFO: API key needs "Earn" permission. Rate limit: 5 req/s.
+   */
+  submitFixedTermEarnOrder(
+    params: SubmitFixedTermEarnOrderParamsV5,
+  ): Promise<APIResponseV3WithTime<FixedTermEarnPlaceOrderResultV5>> {
+    return this.postPrivate('/v5/earn/fixed-term/place-order', params);
+  }
+
+  /**
+   * Fixed-term earn — early redeem (FundPool only, when product allows).
+   *
+   * INFO: API key needs "Earn" permission. Rate limit: 5 req/s.
+   */
+  redeemFixedTermEarn(
+    params: RedeemFixedTermEarnParamsV5,
+  ): Promise<APIResponseV3WithTime<RedeemFixedTermEarnResultV5>> {
+    return this.postPrivate('/v5/earn/fixed-term/redeem', params);
+  }
+
+  /**
+   * Fixed-term earn — active positions.
+   *
+   * INFO: API key needs "Earn" permission. Rate limit: 10 req/s.
+   */
+  getFixedTermEarnPosition(
+    params?: GetFixedTermEarnPositionParamsV5,
+  ): Promise<APIResponseV3WithTime<FixedTermEarnPositionListV5>> {
+    return this.getPrivate('/v5/earn/fixed-term/position', params);
+  }
+
+  /**
+   * Fixed-term earn — order list.
+   *
+   * INFO: API key needs "Earn" permission. Rate limit: 10 req/s.
+   */
+  getFixedTermEarnOrder(
+    params?: GetFixedTermEarnOrderListParamsV5,
+  ): Promise<APIResponseV3WithTime<FixedTermEarnOrderListV5>> {
+    return this.getPrivate('/v5/earn/fixed-term/order', params);
+  }
+
+  /**
+   * Fixed-term earn — enable or disable auto-invest on a position.
+   *
+   * INFO: API key needs "Earn" permission. Rate limit: 5 req/s.
+   */
+  setFixedTermEarnAutoInvest(
+    params: SetFixedTermEarnAutoInvestParamsV5,
+  ): Promise<APIResponseV3WithTime<Record<string, never>>> {
+    return this.postPrivate('/v5/earn/fixed-term/position/auto-invest', params);
+  }
+
+  /**
    * Stake or Redeem Earn products
    *
    * INFO: API key needs "Earn" permission
@@ -3791,6 +4308,7 @@ export class RestClientV5 extends BaseRestClient {
    * INFO: API key needs "Earn" permission
    *
    * Note: Fully redeemed position is also returned in the response
+   * Note: Response includes `autoReinvest` where applicable; use `modifyEarnPosition` to change it (OnChain fixed).
    */
   getEarnPosition(params: GetEarnPositionParamsV5): Promise<
     APIResponseV3WithTime<{
@@ -3801,9 +4319,22 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Modify OnChain Earn position (e.g. auto-reinvest for fixed duration products).
+   *
+   * INFO: API key needs "Earn" permission. Only `category=OnChain` and fixed positions (see product).
+   */
+  modifyEarnPosition(
+    params: ModifyEarnPositionParamsV5,
+  ): Promise<APIResponseV3WithTime<Record<string, never>>> {
+    return this.postPrivate('/v5/earn/position/modify', params);
+  }
+
+  /**
    * Get Yield History
    *
    * INFO: API key needs "Earn" permission
+   *
+   * Note: `category` includes `OnChain`. For `OnChain`, do not pass `productId` (error).
    */
   getEarnYieldHistory(params: GetEarnYieldHistoryParamsV5): Promise<
     APIResponseV3WithTime<{
@@ -3826,6 +4357,146 @@ export class RestClientV5 extends BaseRestClient {
     }>
   > {
     return this.getPrivate('/v5/earn/hourly-yield', params);
+  }
+
+  /**
+   * Get historical APR (FlexibleSaving / OnChain), up to ~6 months.
+   *
+   * INFO: Does not need authentication
+   */
+  getEarnAprHistory(
+    params: GetEarnAprHistoryParamsV5,
+  ): Promise<APIResponseV3WithTime<{ list: EarnAprHistoryPointV5[] }>> {
+    return this.get('/v5/earn/apr-history', params);
+  }
+
+  /**
+   * Earn token product (e.g. BYUSDT) — Get Product Info
+   * Without auth, user-specific fields are empty or defaulted.
+   */
+  getEarnTokenProduct(
+    params: GetEarnTokenProductParamsV5,
+  ): Promise<APIResponseV3WithTime<EarnTokenProductV5>> {
+    return this.get('/v5/earn/token/product', params);
+  }
+
+  /**
+   * Earn token — Place Order (Mint / Redeem). Accepted response is not final settlement; use `getEarnTokenOrders`.
+   */
+  submitEarnTokenOrder(
+    params: PlaceEarnTokenOrderParamsV5,
+  ): Promise<APIResponseV3WithTime<PlaceEarnTokenOrderResultV5>> {
+    return this.postPrivate('/v5/earn/token/place-order', params);
+  }
+
+  /**
+   * Earn token — Get Order List
+   */
+  getEarnTokenOrders(params: GetEarnTokenOrderListParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: EarnTokenOrderV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/earn/token/order', params);
+  }
+
+  /**
+   * Earn token — Get Position Info
+   */
+  getEarnTokenPosition(
+    params: GetEarnTokenPositionParamsV5,
+  ): Promise<APIResponseV3WithTime<EarnTokenPositionV5>> {
+    return this.getPrivate('/v5/earn/token/position', params);
+  }
+
+  /**
+   * Earn token — Get Daily Yield Records
+   */
+  getEarnTokenDailyYield(params: GetEarnTokenDailyYieldParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: EarnTokenDailyYieldRecordV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/earn/token/yield', params);
+  }
+
+  /**
+   * Earn token — Get Hourly Yield Records
+   */
+  getEarnTokenHourlyYield(params: GetEarnTokenHourlyYieldParamsV5): Promise<
+    APIResponseV3WithTime<{
+      list: EarnTokenHourlyYieldRecordV5[];
+      nextPageCursor: string;
+    }>
+  > {
+    return this.getPrivate('/v5/earn/token/hourly-yield', params);
+  }
+
+  /**
+   * Earn token — Get History APR (7/30/180 days). No authentication required.
+   */
+  getEarnTokenHistoryApr(
+    params: GetEarnTokenHistoryAprParamsV5,
+  ): Promise<APIResponseV3WithTime<{ list: EarnTokenHistoryAprPointV5[] }>> {
+    return this.get('/v5/earn/token/history-apr', params);
+  }
+
+  /**
+   *
+   ****** Bybit Card APIs
+   *
+   */
+
+  /**
+   * Bybit Card — query card transaction / asset history (filter by status, card digits, merchant, time, type, …).
+   */
+  queryCardAssetRecords(
+    params?: QueryCardAssetRecordsParamsV5,
+  ): Promise<APIResponseV3WithTime<CardAssetRecordsResultV5>> {
+    return this.postPrivate('/v5/card/transaction/query-asset-records', params);
+  }
+
+  /**
+   * Bybit Card — point balance (available, pending, account status, …).
+   */
+  queryCardPointsBalance(): Promise<APIResponseV3WithTime<CardPointBalanceV5>> {
+    return this.postPrivate('/v5/card/reward/points/balance');
+  }
+
+  /**
+   * Bybit Card — point transaction records.
+   */
+  queryCardPointsRecords(
+    params?: QueryCardPointRecordsParamsV5,
+  ): Promise<APIResponseV3WithTime<CardPointRecordsResultV5>> {
+    return this.postPrivate('/v5/card/reward/points/records', params);
+  }
+
+  /**
+   * Bybit Card — reward tier, spending limit, auto cashback.
+   */
+  queryCardPointsTier(): Promise<APIResponseV3WithTime<CardPointTierInfoV5>> {
+    return this.postPrivate('/v5/card/reward/points/tier');
+  }
+
+  /**
+   * Bybit Card — reward mall item list.
+   */
+  queryCardMallItemList(
+    params?: QueryCardMallItemListParamsV5,
+  ): Promise<APIResponseV3WithTime<CardMallItemListResultV5>> {
+    return this.postPrivate('/v5/card/reward/mall/item/list', params);
+  }
+
+  /**
+   * Bybit Card — cashback detail for a reward order.
+   */
+  queryCardPointCashbackDetail(
+    params: QueryCardPointCashbackDetailParamsV5,
+  ): Promise<APIResponseV3WithTime<CardPointCashbackDetailV5>> {
+    return this.postPrivate('/v5/card/reward/point/cashback/detail', params);
   }
 
   /**

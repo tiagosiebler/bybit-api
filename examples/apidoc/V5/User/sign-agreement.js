@@ -1,5 +1,3 @@
-// https://api.bybit.com/v5/user/agreement
-
 const { RestClientV5 } = require('bybit-api');
 
 const client = new RestClientV5({
@@ -10,8 +8,8 @@ const client = new RestClientV5({
 
 client
   .signAgreement({
-    category: 2,
     agree: true,
+    categoryV2: 2,
   })
   .then((response) => {
     console.log(response);

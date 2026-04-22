@@ -47,7 +47,10 @@ export interface LinearInverseInstrumentInfoV5 {
   status: InstrumentStatusV5;
   baseCoin: string;
   quoteCoin: string;
-  symbolType: string; // The region to which the trading pair belongs
+  /**
+   * Region / product class for the pair. For `category=linear`, includes e.g. `stock`, `forex`, `commodity`, `xstocks` (per Bybit; new values may be added).
+   */
+  symbolType: string;
   launchTime: string;
   deliveryTime?: string;
   deliveryFeeRate?: string;
@@ -105,7 +108,10 @@ export interface OptionInstrumentInfoV5 {
   baseCoin: string;
   quoteCoin: string;
   settleCoin: string;
-  symbolType: string; // The region to which the trading pair belongs
+  /**
+   * Region / product class for the pair (see Bybit instruments docs; new values may be added).
+   */
+  symbolType: string;
   launchTime: string;
   deliveryTime: string;
   deliveryFeeRate: string;
@@ -126,7 +132,15 @@ export interface SpotInstrumentInfoV5 {
   symbol: string;
   baseCoin: string;
   quoteCoin: string;
-  symbolType: string; // The region to which the trading pair belongs
+  /**
+   * Xstock multiplier for `symbolType` = xstocks pairs. `stock_price = token_price / multiplier`,
+   * `stock_qty = token_qty * multiplier`. Default `"1"`.
+   */
+  xstockMultiplier?: string;
+  /**
+   * Region / product class (see Bybit instruments docs; linear category also uses values such as `stock`, `forex`).
+   */
+  symbolType: string;
   innovation: '0' | '1'; // Deprecated, always 0
   status: InstrumentStatusV5;
   marginTrading: MarginTradingV5;

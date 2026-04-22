@@ -5,6 +5,14 @@ export interface GetSpreadInstrumentsInfoParamsV5 {
   cursor?: string;
 }
 
+/** GET /v5/spread/max-qty */
+export interface GetSpreadMaxQtyParamsV5 {
+  symbol: string;
+  /** 1: Buy, 2: Sell */
+  side: '1' | '2';
+  orderPrice: string;
+}
+
 export interface SubmitSpreadOrderParamsV5 {
   symbol: string;
   side: 'Buy' | 'Sell';

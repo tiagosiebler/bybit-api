@@ -81,6 +81,7 @@ const PRIVATE_TOPICS = [
   'execution.fast.linear',
   'execution.fast.inverse',
   'execution.fast.spot',
+  'execution.fast.option',
 ];
 
 /**

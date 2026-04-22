@@ -11,11 +11,17 @@ export interface GetKlineParamsV5 {
 }
 
 export interface GetMarkPriceKlineParamsV5 {
-  category: 'linear' | 'inverse';
+  /**
+   * linear (default if omitted), inverse, or option.
+   */
+  category?: 'linear' | 'inverse' | 'option';
   symbol: string;
   interval: KlineIntervalV3;
   start?: number;
   end?: number;
+  /**
+   * Futures: [1, 1000], default 200. Options: [1, 500], default 200.
+   */
   limit?: number;
 }
 
@@ -40,6 +46,9 @@ export interface GetPremiumIndexPriceKlineParamsV5 {
 export interface GetInstrumentsInfoParamsV5 {
   category: CategoryV5;
   symbol?: string;
+  /**
+   * Filter by instrument `symbolType` (linear / inverse / spot as applicable), e.g. `commodity`, `stock`, `forex` (linear per Bybit).
+   */
   symbolType?: string;
   status?: InstrumentStatusV5;
   baseCoin?: string;

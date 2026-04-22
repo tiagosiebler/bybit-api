@@ -126,3 +126,9 @@ export interface SpreadTradeV5 {
   legs: SpreadTradeLegV5[];
   extraFees: string;
 }
+
+/** GET /v5/spread/max-qty */
+export interface SpreadMaxQtyResultV5 {
+  /** Maximum order quantity (available balance for the spread order). */
+  ab: string;
+}

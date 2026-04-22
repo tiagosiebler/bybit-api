@@ -4,7 +4,6 @@ const client = new RestClientV5({
   testnet: true,
 });
 
-// linear
 client
   .getInstrumentsInfo({
     category: 'linear',
@@ -17,7 +16,6 @@ client
     console.error(error);
   });
 
-// option
 client
   .getInstrumentsInfo({
     category: 'option',
@@ -30,11 +28,22 @@ client
     console.error(error);
   });
 
-// spot
 client
   .getInstrumentsInfo({
     category: 'spot',
     symbol: 'BTCUSDT',
+  })
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+
+client
+  .getInstrumentsInfo({
+    category: 'linear',
+    symbolType: 'commodity',
   })
   .then((response) => {
     console.log(response);

@@ -67,14 +67,43 @@ export interface SetLimitPriceActionParamsV5 {
   modifyEnable: boolean;
 }
 
+/**
+ * Set Delta Neutral Mode. POST /v5/account/set-delta-mode
+ * 1: enable, 0: disable.
+ */
+export interface SetDeltaNeutralModeParamsV5 {
+  deltaEnable: '1' | '0';
+}
+
 export interface GetAccountInstrumentsInfoParamsV5 {
   category: 'spot' | 'linear' | 'inverse';
   symbol?: string;
+  /**
+   * Filter by `symbolType`, e.g. `commodity`, `stock`, `forex` for linear (see Bybit Get Account Instruments Info).
+   */
+  symbolType?: string;
   limit?: number;
   cursor?: string;
+}
+
+/** GET /v5/account/pay-info */
+export interface GetPayInfoParamsV5 {
+  coin?: string;
+}
+
+/** GET /v5/account/trade-info-for-analysis */
+export interface GetTradeInfoForAnalysisParamsV5 {
+  symbol: string;
+  startTime?: number;
+  endTime?: number;
 }
 
 export interface ManualRepayParamsV5 {
   coin?: string;
   amount?: string;
+  /**
+   * ALL: fixed + floating (floating first); FIXED: fixed only; FLEXIBLE: floating only. Default: FLEXIBLE.
+   * If neither `coin` nor `amount` is set, this must be ALL (repay all liabilities) or the request is rejected.
+   */
+  repaymentType?: 'ALL' | 'FIXED' | 'FLEXIBLE';
 }

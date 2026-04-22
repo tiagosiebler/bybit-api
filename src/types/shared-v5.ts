@@ -191,7 +191,8 @@ export type AccountTypeV5 =
   | 'INVESTMENT'
   | 'OPTION'
   | 'UNIFIED'
-  | 'FUND';
+  | 'FUND'
+  | 'EARN';
 
 export type TransactionTypeV5 =
   | 'TRANSFER_IN'
@@ -349,6 +350,16 @@ export interface PermissionsV5 {
   Exchange?: string[];
   /** @deprecated , always returns []*/
   NFT?: string[];
+  Earn?: string[];
+  Affiliate?: string[];
+  FiatP2P?: string[];
+  /** @deprecated use FiatBitPay */
+  FiatBybitPay?: string[];
+  /** Bybit Pay (FaitPayOrder) */
+  FiatBitPay?: string[];
+  FiatConvertBroker?: string[];
+  BitCard?: string[];
+  ByXPost?: string[];
 }
 
 export interface CategoryCursorListV5<
