@@ -20,8 +20,8 @@ type KeyType = 'HMAC' | 'RSASSA-PKCS1-v1_5';
  * RSA keys contain "-----BEGIN PRIVATE KEY-----" or "-----BEGIN RSA PRIVATE KEY-----"
  * HMAC keys are plain strings
  */
-export function getSignKeyType(secret: string): KeyType {
-  if (secret.includes('PRIVATE KEY')) {
+export function getSignKeyType(secret?: string): KeyType {
+  if (secret?.includes('PRIVATE KEY')) {
     return 'RSASSA-PKCS1-v1_5';
   }
   return 'HMAC';

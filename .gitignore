@@ -35,3 +35,4 @@ examples/ignored
 examples/ts-testnet-private.ts
 examples/ts-testnet-trade.ts
 examples/ts-testnet.ts
+*.pem
