@@ -14,6 +14,14 @@ describe('RSA Authentication', () => {
   // Test message used across multiple test suites
   const testMessage = 'test-message-to-sign';
 
+  test('should have RSA private key available for testing', () => {
+    expect(rsaPrivateKey).toBeDefined();
+  });
+
+  test('should have HMAC secret available for testing', () => {
+    expect(hmacSecret).toBeDefined();
+  });
+
   describe('Key Type Detection', () => {
     test('should detect RSA key type correctly', () => {
       const keyType = getSignKeyType(rsaPrivateKey);

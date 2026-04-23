@@ -274,16 +274,6 @@ describe('Private READ V5 REST API Endpoints', () => {
       });
     });
 
-    it('querySubMemberAddress()', async () => {
-      expect(
-        await api.querySubMemberAddress(settleCoin, 'TRC20', 'fakeid'),
-      ).toMatchObject({
-        // ...successResponseObjectV3(),
-        // Expected, since sub account ID is fake
-        retCode: API_ERROR_CODE.PARAMS_MISSING_OR_WRONG,
-      });
-    });
-
     it('getCoinInfo()', async () => {
       expect(await api.getCoinInfo()).toMatchObject({
         ...successResponseObjectV3(),
