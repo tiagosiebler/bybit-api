@@ -1,5 +1,5 @@
 import { RestClientV5 } from 'bybit-api';
-// or:
+// or, if require is preferred:
 // const { RestClientV5 } = require('bybit-api');
 
 const client = new RestClientV5({
