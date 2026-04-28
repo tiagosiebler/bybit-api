@@ -1,5 +1,5 @@
 import { RestClientV5 } from 'bybit-api';
-// or:
+// or, if require is preferred:
 // const { RestClientV5 } = require('bybit-api');
 
 const client = new RestClientV5({
@@ -8,12 +8,13 @@ const client = new RestClientV5({
   secret: 'YOUR_API_SECRET',
 });
 
-client.getMaxCollateralAmount({
-  currency: 'BTC',
-})
-  .then(response => {
+client
+  .getMaxCollateralAmount({
+    currency: 'BTC',
+  })
+  .then((response) => {
     console.log(response);
   })
-  .catch(error => {
+  .catch((error) => {
     console.error('Error:', error);
   });
