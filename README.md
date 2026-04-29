@@ -61,6 +61,7 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSo
      - See example for more details: [examples/ws-api-raw-events.ts](./examples/ws-api-raw-events.ts)
 - Active community support & collaboration in telegram: [Node.js Algo Traders](https://t.me/nodetraders).
 - QuickStart Guide: https://siebly.io/sdk/bybit/javascript
+- Bybit JavaScript Tutorial: [Bybit JavaScript REST API & WebSocket Tutorial](https://siebly.io/sdk/bybit/javascript/tutorial)
 
 # Table of Contents
 
