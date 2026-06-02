@@ -1,5 +1,10 @@
 import { KlineIntervalV3 } from '../shared';
-import { CategoryV5, InstrumentStatusV5, OptionTypeV5 } from '../shared-v5';
+import {
+  CategoryV5,
+  InstrumentStatusV5,
+  InstrumentSymbolTypeV5,
+  OptionTypeV5,
+} from '../shared-v5';
 
 export interface GetKlineParamsV5 {
   category: 'spot' | 'linear' | 'inverse';
@@ -46,10 +51,8 @@ export interface GetPremiumIndexPriceKlineParamsV5 {
 export interface GetInstrumentsInfoParamsV5 {
   category: CategoryV5;
   symbol?: string;
-  /**
-   * Filter by instrument `symbolType` (linear / inverse / spot as applicable), e.g. `commodity`, `stock`, `forex` (linear per Bybit).
-   */
-  symbolType?: string;
+  /** Filter by instrument `symbolType` (e.g. `commodity`, `stock`, `forex` for linear). */
+  symbolType?: InstrumentSymbolTypeV5;
   status?: InstrumentStatusV5;
   baseCoin?: string;
   limit?: number;

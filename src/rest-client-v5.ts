@@ -20,6 +20,7 @@ import {
   AdvanceEarnPlaceOrderResultV5,
   AdvanceEarnPositionListV5,
   AdvanceEarnProductExtraInfoV5,
+  AffiliateSubAffiliateListResultV5,
   AffiliateUserInfoV5,
   AffiliateUserListItemV5,
   AllCoinsBalanceV5,
@@ -83,6 +84,8 @@ import {
   CategoryListV5,
   CategorySymbolListV5,
   CategoryV5,
+  ClaimPwmWithdrawableFundsParamsV5,
+  ClaimPwmWithdrawableFundsResultV5,
   ClosedOptionsPositionV5,
   ClosedPnLV5,
   CoinExchangeRecordV5,
@@ -102,10 +105,20 @@ import {
   CreateBorrowOrderFixedParamsV5,
   CreateBorrowOrderFixedV5,
   CreateP2PAdParamsV5,
+  CreatePwmAssetManagerInvestmentPlanParamsV5,
+  CreatePwmAssetManagerInvestmentPlanResultV5,
+  CreatePwmCustomizeInvestmentPlanParamsV5,
+  CreatePwmCustomizeInvestmentPlanResultV5,
+  CreatePwmFundParamsV5,
+  CreatePwmFundResultV5,
+  CreatePwmFundSubAccountParamsV5,
+  CreatePwmFundSubAccountResultV5,
   CreateRFQParamsV5,
   CreateRFQQuoteParamsV5,
   CreateRFQQuoteResultV5,
   CreateRFQResultV5,
+  CreateStrategyOrderParamsV5,
+  CreateStrategyOrderResultV5,
   CreateSubApiKeyParamsV5,
   CreateSubApiKeyResultV5,
   CreateSubMemberParamsV5,
@@ -166,6 +179,8 @@ import {
   GetAdvanceEarnPositionListParamsV5,
   GetAdvanceEarnProductExtraInfoParamsV5,
   GetAdvanceEarnProductParamsV5,
+  GetAffiliateSubAffiliateListParamsV5,
+  GetAffiliateUserInfoParamsV5,
   GetAffiliateUserListParamsV5,
   GetAllBrokerRateLimitsParamsV5,
   GetAllCoinsBalanceParamsV5,
@@ -227,6 +242,7 @@ import {
   GetFundingAccountTransactionHistoryParamsV5,
   GetFundingRateHistoryParamsV5,
   GetHistoricalVolatilityParamsV5,
+  GetHoldToEarnAirdropYieldHistoryParamsV5,
   GetIndexPriceComponentsParamsV5,
   GetIndexPriceKlineParamsV5,
   GetInstrumentsInfoParamsV5,
@@ -264,6 +280,15 @@ import {
   GetPreUpgradeTransactionLogParamsV5,
   GetPreUpgradeUSDCSessionParamsV5,
   GetPublicTradingHistoryParamsV5,
+  GetPwmAllFundOrdersParamsV5,
+  GetPwmAllFundsParamsV5,
+  GetPwmAssetManagerInvestmentPlansParamsV5,
+  GetPwmFundHistoricalNavParamsV5,
+  GetPwmFundTransferRecordsParamsV5,
+  GetPwmInvestmentPlanAssetTrendParamsV5,
+  GetPwmInvestmentPlanDetailParamsV5,
+  GetPwmInvestmentPlanOrdersParamsV5,
+  GetPwmPendingInvestmentPlanDetailParamsV5,
   GetRenewOrderInfoFixedParamsV5,
   GetRepaymentHistoryFixedParamsV5,
   GetRepaymentHistoryFlexibleParamsV5,
@@ -286,6 +311,8 @@ import {
   GetSpreadOpenOrdersParamsV5,
   GetSpreadOrderHistoryParamsV5,
   GetSpreadTradeHistoryParamsV5,
+  GetStrategyListParamsV5,
+  GetStrategyOrderListParamsV5,
   GetSubAccountAllApiKeysParamsV5,
   GetSubAccountDepositRecordParamsV5,
   GetSupplyContractInfoFixedParamsV5,
@@ -303,16 +330,24 @@ import {
   GetWithdrawalAddressListParamsV5,
   GetWithdrawalRecordsParamsV5,
   HistoricalVolatilityV5,
+  HoldToEarnAirdropProductsResultV5,
+  HoldToEarnAirdropYieldHistoryResultV5,
   IndexPriceComponentsResponseV5,
   InstitutionalLoanLTVV5,
   InstrumentInfoResponseV5,
   InsuranceResponseV5,
   InternalDepositRecordV5,
   InternalTransferRecordV5,
+  InvestMorePwmInvestmentPlanParamsV5,
+  InvestMorePwmInvestmentPlanResultV5,
   IssueVoucherParamsV5,
   LiquidityMiningProductResultV5,
   LoanLTVAdjustmentHistoryV5,
   LongShortRatioV5,
+  ManagePwmAssetManagerInvestmentPlanParamsV5,
+  ManagePwmAssetManagerInvestmentPlanResultV5,
+  ManagePwmFundOrderParamsV5,
+  ManagePwmFundOrderResultV5,
   ManualBorrowParamsV5,
   ManualBorrowResultV5,
   ManualRepayParamsV5,
@@ -361,12 +396,27 @@ import {
   PreUpgradeTransaction,
   PreUpgradeUSDCSessionSettlement,
   PublicTradeV5,
+  PwmAllFundOrdersResultV5,
+  PwmAllFundsResultV5,
+  PwmAssetManagerInvestmentPlansResultV5,
+  PwmFundHistoricalNavResultV5,
+  PwmFundTransferParamsV5,
+  PwmFundTransferRecordV5,
+  PwmFundTransferResultV5,
+  PwmInvestmentPlanAssetTrendResultV5,
+  PwmInvestmentPlanDetailV5,
+  PwmInvestmentPlanListResultV5,
+  PwmInvestmentPlanOrdersResultV5,
+  PwmPendingInvestmentPlanDetailV5,
+  PwmSubscribableProductInfoResultV5,
   QueryCardAssetRecordsParamsV5,
   QueryCardMallItemListParamsV5,
   QueryCardPointCashbackDetailParamsV5,
   QueryCardPointRecordsParamsV5,
   RedeemFixedTermEarnParamsV5,
   RedeemFixedTermEarnResultV5,
+  RedeemPwmInvestmentPlanParamsV5,
+  RedeemPwmInvestmentPlanResultV5,
   RenewBorrowOrderFixedParamsV5,
   RenewBorrowOrderFixedV5,
   RenewFixedRateBorrowParamsV5,
@@ -405,6 +455,8 @@ import {
   SetRiskLimitResultV5,
   SetSpotMarginLeverageParamsV5,
   SettlementRecordV5,
+  SettlePwmFundProfitParamsV5,
+  SettlePwmFundProfitResultV5,
   SetTPSLModeParamsV5,
   SetTradingStopParamsV5,
   SignAgreementParamsV5,
@@ -421,11 +473,17 @@ import {
   SpreadRecentTradeV5,
   SpreadTickerV5,
   SpreadTradeV5,
+  StopStrategyParamsV5,
+  StopStrategyResultV5,
+  StrategyListResultV5,
+  StrategyOrderListResultV5,
   SubMemberV5,
   SubmitAdvanceEarnPlaceOrderParamsV5,
   SubmitFixedTermEarnOrderParamsV5,
   SubmitSpreadOrderParamsV5,
   SubmitStakeRedeemParamsV5,
+  SubscribePwmInvestmentPlanParamsV5,
+  SubscribePwmInvestmentPlanResultV5,
   SupplyContractInfoFixedV5,
   SupplyOrderInfoFixedV5,
   SupplyOrderQuoteFixedV5,
@@ -1269,6 +1327,56 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    *
+   ****** Strategy APIs
+   *
+   */
+
+  /**
+   * Create Strategy Order
+   *
+   * Supported strategy types: `twap`, `chaseOrder`, `iceberg`, `pov`.
+   */
+  createStrategyOrder(
+    params: CreateStrategyOrderParamsV5,
+  ): Promise<APIResponseV3WithTime<CreateStrategyOrderResultV5>> {
+    return this.postPrivate('/v5/strategy/create', params);
+  }
+
+  /**
+   * Get Strategy List
+   *
+   * Query the strategy list. Supports filtering by strategy ID, symbol, status, category, and strategy type.
+   */
+  getStrategyList(
+    params?: GetStrategyListParamsV5,
+  ): Promise<APIResponseV3WithTime<StrategyListResultV5>> {
+    return this.getPrivate('/v5/strategy/list', params);
+  }
+
+  /**
+   * Get Strategy Order List
+   *
+   * Query the individual orders generated by a specific strategy.
+   */
+  getStrategyOrderList(
+    params: GetStrategyOrderListParamsV5,
+  ): Promise<APIResponseV3WithTime<StrategyOrderListResultV5>> {
+    return this.getPrivate('/v5/strategy/order-list', params);
+  }
+
+  /**
+   * Stop Strategy
+   *
+   * Stop a running strategy. Once stopped, the strategy cannot be resumed.
+   */
+  stopStrategy(
+    params: StopStrategyParamsV5,
+  ): Promise<APIResponseV3WithTime<StopStrategyResultV5>> {
+    return this.postPrivate('/v5/strategy/stop', params);
+  }
+
+  /**
+   *
    ****** Position APIs
    *
    */
@@ -1283,6 +1391,8 @@ export class RestClientV5 extends BaseRestClient {
    * Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures
    *
    * Note: this will give a 404 error if you query the `option` category if your account is not unified
+   *
+   * Response list items include `openTime` (position open timestamp in ms, default `0`).
    */
   getPositionInfo(
     params: PositionInfoParamsV5,
@@ -1998,6 +2108,9 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * Query coin information, including chain information, withdraw and deposit status.
+   *
+   * Per-chain `withdrawMax` is the max amount per withdrawal on that chain (`-1` = no limit).
+   * `remainAmount` is deprecated.
    */
   getCoinInfo(
     coin?: string,
@@ -2526,7 +2639,7 @@ export class RestClientV5 extends BaseRestClient {
    *
    * TIP: Any permission can access this endpoint.
    *
-   * Response `permissions` may include `FiatBitPay`; `FiatBybitPay` is deprecated for the same scope.
+   * Response `permissions` may include `FiatBitPay` (not `FiatBybitPay`).
    */
   getQueryApiKey(): Promise<APIResponseV3WithTime<ApiKeyInfoV5>> {
     return this.getPrivate('/v5/user/query-api');
@@ -2561,7 +2674,7 @@ export class RestClientV5 extends BaseRestClient {
    * TIP: The API key must have one of the permissions to be allowed to call the following API endpoint.
    * - master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
    *
-   * `permissions` may include `FiatBitPay`; `FiatBybitPay` remains during transition for the same scope.
+   * `permissions` may include `FiatBitPay` (not `FiatBybitPay`).
    */
   updateMasterApiKey(
     params: UpdateApiKeyParamsV5,
@@ -2649,6 +2762,21 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Get Affiliate Sub-Affiliate List.
+   *
+   * To use this endpoint, you should have an affiliate account and only tick "affiliate" permission while creating the API key.
+   *
+   * TIP:
+   * - Use master UID only
+   * - The api key can only have "Affiliate" permission
+   */
+  getAffiliateSubAffiliateList(
+    params?: GetAffiliateSubAffiliateListParamsV5,
+  ): Promise<APIResponseV3WithTime<AffiliateSubAffiliateListResultV5>> {
+    return this.getPrivate('/v5/affiliate/affiliate-sub-list', params);
+  }
+
+  /**
    * Get Affiliate User Info.
    *
    * This API is used for affiliate to get their users information.
@@ -2658,9 +2786,9 @@ export class RestClientV5 extends BaseRestClient {
    * The api key can only have "Affiliate" permission
    * The transaction volume and deposit amount are the total amount of the user done on Bybit, and have nothing to do with commission settlement. Any transaction volume data related to commission settlement is subject to the Affiliate Portal.
    */
-  getAffiliateUserInfo(params: {
-    uid: string;
-  }): Promise<APIResponseV3WithTime<AffiliateUserInfoV5>> {
+  getAffiliateUserInfo(
+    params: GetAffiliateUserInfoParamsV5,
+  ): Promise<APIResponseV3WithTime<AffiliateUserInfoV5>> {
     return this.getPrivate('/v5/user/aff-customer-info', params);
   }
 
@@ -3693,6 +3821,8 @@ export class RestClientV5 extends BaseRestClient {
    * Create Supply Order
    *
    * Permission: "Spot trade"
+   *
+   * Optional `availableSource`: 0 Funding, 1 Earn Flexible, 2 ALL (default 0).
    */
   createSupplyOrderFixed(
     params: CreateSupplyOrderFixedParamsV5,
@@ -3715,6 +3845,8 @@ export class RestClientV5 extends BaseRestClient {
 
   /**
    * Cancel Supply Order
+   *
+   * Optional `refundedAccount`: 0 Funding, 1 EasyEarn (default 0).
    */
   cancelSupplyOrderFixed(
     params: CancelSupplyOrderFixedParamsV5,
@@ -4132,6 +4264,17 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Get Hold to Earn airdrop products (ByFi).
+   *
+   * No authentication required; guest access supported. Authenticated users get eligibility-filtered products.
+   */
+  getHoldToEarnAirdropProducts(): Promise<
+    APIResponseV3WithTime<HoldToEarnAirdropProductsResultV5>
+  > {
+    return this.get('/v5/earn/hold-to-earn/product');
+  }
+
+  /**
    * Get Advanced Earn product info (Dual Asset, Double Win, Smart Leverage, etc. via `category`).
    *
    * INFO: No authentication. Up to 50 requests/second per IP.
@@ -4309,6 +4452,7 @@ export class RestClientV5 extends BaseRestClient {
    *
    * Note: Fully redeemed position is also returned in the response
    * Note: Response includes `autoReinvest` where applicable; use `modifyEarnPosition` to change it (OnChain fixed).
+   * List items include `availableAmount` (redeemable) and `freezeDetails` (frozen amount + reason).
    */
   getEarnPosition(params: GetEarnPositionParamsV5): Promise<
     APIResponseV3WithTime<{
@@ -4343,6 +4487,17 @@ export class RestClientV5 extends BaseRestClient {
     }>
   > {
     return this.getPrivate('/v5/earn/yield', params);
+  }
+
+  /**
+   * Get Hold to Earn airdrop daily PnL records (ByFi). Up to 3 months of completed yield history.
+   *
+   * INFO: API key needs "Earn" permission
+   */
+  getHoldToEarnAirdropYieldHistory(
+    params: GetHoldToEarnAirdropYieldHistoryParamsV5,
+  ): Promise<APIResponseV3WithTime<HoldToEarnAirdropYieldHistoryResultV5>> {
+    return this.getPrivate('/v5/earn/hold-to-earn/yield-history', params);
   }
 
   /**
@@ -4441,6 +4596,241 @@ export class RestClientV5 extends BaseRestClient {
     params: GetEarnTokenHistoryAprParamsV5,
   ): Promise<APIResponseV3WithTime<{ list: EarnTokenHistoryAprPointV5[] }>> {
     return this.get('/v5/earn/token/history-apr', params);
+  }
+
+  /**
+   *
+   ****** PWM (Private Wealth Management) — Investment Plan
+   *
+   */
+
+  /**
+   * Get all PWM investment plans.
+   */
+  getPwmInvestmentPlanList(): Promise<
+    APIResponseV3WithTime<PwmInvestmentPlanListResultV5>
+  > {
+    return this.getPrivate('/v5/earn/pwm/investment-plan/list');
+  }
+
+  /**
+   * Get PWM investment plan detail (Active or Closed).
+   */
+  getPwmInvestmentPlanDetail(
+    params: GetPwmInvestmentPlanDetailParamsV5,
+  ): Promise<APIResponseV3WithTime<PwmInvestmentPlanDetailV5>> {
+    return this.getPrivate('/v5/earn/pwm/investment-plan/detail', params);
+  }
+
+  /**
+   * Get pending PWM investment plan detail (PendingSubscription).
+   */
+  getPwmPendingInvestmentPlanDetail(
+    params: GetPwmPendingInvestmentPlanDetailParamsV5,
+  ): Promise<APIResponseV3WithTime<PwmPendingInvestmentPlanDetailV5>> {
+    return this.getPrivate('/v5/earn/pwm/investment-plan/new-plan', params);
+  }
+
+  /**
+   * Claim withdrawable funds from a PWM investment plan (Active).
+   */
+  claimPwmWithdrawableFunds(
+    params: ClaimPwmWithdrawableFundsParamsV5,
+  ): Promise<APIResponseV3WithTime<ClaimPwmWithdrawableFundsResultV5>> {
+    return this.postPrivate('/v5/earn/pwm/investment-plan/claim', params);
+  }
+
+  /**
+   * Get PWM investment plan asset trend (default last 7 days).
+   */
+  getPwmInvestmentPlanAssetTrend(
+    params: GetPwmInvestmentPlanAssetTrendParamsV5,
+  ): Promise<APIResponseV3WithTime<PwmInvestmentPlanAssetTrendResultV5>> {
+    return this.getPrivate('/v5/earn/pwm/investment-plan/asset-trend', params);
+  }
+
+  /**
+   * Get PWM fund historical NAV (max 180 days between startTime and endTime).
+   */
+  getPwmFundHistoricalNav(
+    params: GetPwmFundHistoricalNavParamsV5,
+  ): Promise<APIResponseV3WithTime<PwmFundHistoricalNavResultV5>> {
+    return this.getPrivate('/v5/earn/pwm/investment-plan/fund-nav', params);
+  }
+
+  /**
+   * Subscribe to a PWM investment plan (PendingSubscription).
+   */
+  subscribePwmInvestmentPlan(
+    params: SubscribePwmInvestmentPlanParamsV5,
+  ): Promise<APIResponseV3WithTime<SubscribePwmInvestmentPlanResultV5>> {
+    return this.postPrivate('/v5/earn/pwm/investment-plan/subscribe', params);
+  }
+
+  /**
+   * Invest more into a PWM investment plan product (Active).
+   */
+  investMorePwmInvestmentPlan(
+    params: InvestMorePwmInvestmentPlanParamsV5,
+  ): Promise<APIResponseV3WithTime<InvestMorePwmInvestmentPlanResultV5>> {
+    return this.postPrivate('/v5/earn/pwm/investment-plan/invest-more', params);
+  }
+
+  /**
+   * Redeem from a PWM investment plan product.
+   */
+  redeemPwmInvestmentPlan(
+    params: RedeemPwmInvestmentPlanParamsV5,
+  ): Promise<APIResponseV3WithTime<RedeemPwmInvestmentPlanResultV5>> {
+    return this.postPrivate('/v5/earn/pwm/investment-plan/redeem', params);
+  }
+
+  /**
+   * Get PWM investment plan orders (subscribe / redeem / auto-reinvest).
+   */
+  getPwmInvestmentPlanOrders(
+    params?: GetPwmInvestmentPlanOrdersParamsV5,
+  ): Promise<APIResponseV3WithTime<PwmInvestmentPlanOrdersResultV5>> {
+    return this.getPrivate('/v5/earn/pwm/investment-plan/order', params);
+  }
+
+  /**
+   * Get PWM subscribable product info for customize plan. No authentication required.
+   */
+  getPwmSubscribableProductInfo(): Promise<
+    APIResponseV3WithTime<PwmSubscribableProductInfoResultV5>
+  > {
+    return this.get('/v5/earn/pwm/customize-plan/product');
+  }
+
+  /**
+   * Create a customized PWM investment plan (max 20 Active + Pending plans per user).
+   */
+  createPwmCustomizeInvestmentPlan(
+    params: CreatePwmCustomizeInvestmentPlanParamsV5,
+  ): Promise<APIResponseV3WithTime<CreatePwmCustomizeInvestmentPlanResultV5>> {
+    return this.postPrivate('/v5/earn/pwm/customize-plan/create', params);
+  }
+
+  /**
+   *
+   ****** PWM — Asset Manager
+   *
+   */
+
+  /**
+   * Get all PWM funds managed by the institution (newest first).
+   */
+  getPwmAllFunds(
+    params?: GetPwmAllFundsParamsV5,
+  ): Promise<APIResponseV3WithTime<PwmAllFundsResultV5>> {
+    return this.getPrivate('/v5/earn/pwm/asset-manager/all-funds', params);
+  }
+
+  /**
+   * Settle fund profit sharing (Active funds only).
+   */
+  settlePwmFundProfit(
+    params: SettlePwmFundProfitParamsV5,
+  ): Promise<APIResponseV3WithTime<SettlePwmFundProfitResultV5>> {
+    return this.postPrivate('/v5/earn/pwm/asset-manager/settle-profit', params);
+  }
+
+  /**
+   * Create a PWM fund (PendingSubscribe). Max 10 funds per institution.
+   */
+  createPwmFund(
+    params: CreatePwmFundParamsV5,
+  ): Promise<APIResponseV3WithTime<CreatePwmFundResultV5>> {
+    return this.postPrivate('/v5/earn/pwm/asset-manager/create-fund', params);
+  }
+
+  /**
+   * Create a PWM investment plan for a user (PendingSubscription). Max 10 plans per institution.
+   */
+  createPwmAssetManagerInvestmentPlan(
+    params: CreatePwmAssetManagerInvestmentPlanParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<CreatePwmAssetManagerInvestmentPlanResultV5>
+  > {
+    return this.postPrivate(
+      '/v5/earn/pwm/asset-manager/create-investment-plan',
+      params,
+    );
+  }
+
+  /**
+   * Get PWM investment plans created by the institution (asset manager).
+   */
+  getPwmAssetManagerInvestmentPlans(
+    params?: GetPwmAssetManagerInvestmentPlansParamsV5,
+  ): Promise<APIResponseV3WithTime<PwmAssetManagerInvestmentPlansResultV5>> {
+    return this.getPrivate(
+      '/v5/earn/pwm/asset-manager/get-investment-plan',
+      params,
+    );
+  }
+
+  /**
+   * Manage a PWM investment plan (status and/or fund allocation).
+   */
+  managePwmAssetManagerInvestmentPlan(
+    params: ManagePwmAssetManagerInvestmentPlanParamsV5,
+  ): Promise<
+    APIResponseV3WithTime<ManagePwmAssetManagerInvestmentPlanResultV5>
+  > {
+    return this.postPrivate(
+      '/v5/earn/pwm/asset-manager/manage-investment-plan',
+      params,
+    );
+  }
+
+  /**
+   * Get all PWM fund orders (asset manager). Default time window: last 7 days.
+   */
+  getPwmAllFundOrders(
+    params?: GetPwmAllFundOrdersParamsV5,
+  ): Promise<APIResponseV3WithTime<PwmAllFundOrdersResultV5>> {
+    return this.getPrivate('/v5/earn/pwm/asset-manager/all-order', params);
+  }
+
+  /**
+   * Manage a PWM fund order (approve / reject Pending Review orders).
+   */
+  managePwmFundOrder(
+    params: ManagePwmFundOrderParamsV5,
+  ): Promise<APIResponseV3WithTime<ManagePwmFundOrderResultV5>> {
+    return this.postPrivate('/v5/earn/pwm/asset-manager/manage-order', params);
+  }
+
+  /**
+   * Create a PWM fund sub-account (async; max 30 per fund, fund must be Active).
+   */
+  createPwmFundSubAccount(
+    params: CreatePwmFundSubAccountParamsV5,
+  ): Promise<APIResponseV3WithTime<CreatePwmFundSubAccountResultV5>> {
+    return this.postPrivate(
+      '/v5/earn/pwm/asset-manager/create-sub-account',
+      params,
+    );
+  }
+
+  /**
+   * Transfer funds between custodian sub-accounts (fund custodian API key required).
+   */
+  pwmFundTransfer(
+    params: PwmFundTransferParamsV5,
+  ): Promise<APIResponseV3WithTime<PwmFundTransferResultV5>> {
+    return this.postPrivate('/v5/earn/pwm/fund-transfer', params);
+  }
+
+  /**
+   * Query PWM fund transfer result (fund custodian API key required).
+   */
+  getPwmFundTransferRecords(
+    params?: GetPwmFundTransferRecordsParamsV5,
+  ): Promise<APIResponseV3WithTime<PwmFundTransferRecordV5>> {
+    return this.getPrivate('/v5/earn/pwm/query-fund-transfer-result', params);
   }
 
   /**

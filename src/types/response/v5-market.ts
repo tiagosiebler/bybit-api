@@ -4,6 +4,7 @@ import {
   ContractTypeV5,
   CopyTradingV5,
   InstrumentStatusV5,
+  InstrumentSymbolTypeV5,
   MarginTradingV5,
   OptionTypeV5,
   OrderSideV5,
@@ -42,15 +43,15 @@ export type OHLCVKlineV5 = [
 export type OHLCKlineV5 = [string, string, string, string, string];
 
 export interface LinearInverseInstrumentInfoV5 {
+  /** The ID of the symbol name. */
+  symbolId: number;
   symbol: string;
   contractType: ContractTypeV5;
   status: InstrumentStatusV5;
   baseCoin: string;
   quoteCoin: string;
-  /**
-   * Region / product class for the pair. For `category=linear`, includes e.g. `stock`, `forex`, `commodity`, `xstocks` (per Bybit; new values may be added).
-   */
-  symbolType: string;
+  /** Region / product class for the pair (`stock`, `forex`, `commodity`, `xstocks`, etc.). */
+  symbolType: InstrumentSymbolTypeV5;
   launchTime: string;
   deliveryTime?: string;
   deliveryFeeRate?: string;
@@ -102,16 +103,15 @@ export interface LinearInverseInstrumentInfoV5 {
 }
 
 export interface OptionInstrumentInfoV5 {
+  /** The ID of the symbol name. */
+  symbolId: number;
   symbol: string;
   optionsType: OptionTypeV5;
   status: InstrumentStatusV5;
   baseCoin: string;
   quoteCoin: string;
   settleCoin: string;
-  /**
-   * Region / product class for the pair (see Bybit instruments docs; new values may be added).
-   */
-  symbolType: string;
+  symbolType: InstrumentSymbolTypeV5;
   launchTime: string;
   deliveryTime: string;
   deliveryFeeRate: string;
@@ -129,6 +129,8 @@ export interface OptionInstrumentInfoV5 {
 }
 
 export interface SpotInstrumentInfoV5 {
+  /** The ID of the symbol name. */
+  symbolId: number;
   symbol: string;
   baseCoin: string;
   quoteCoin: string;
@@ -137,10 +139,7 @@ export interface SpotInstrumentInfoV5 {
    * `stock_qty = token_qty * multiplier`. Default `"1"`.
    */
   xstockMultiplier?: string;
-  /**
-   * Region / product class (see Bybit instruments docs; linear category also uses values such as `stock`, `forex`).
-   */
-  symbolType: string;
+  symbolType: InstrumentSymbolTypeV5;
   innovation: '0' | '1'; // Deprecated, always 0
   status: InstrumentStatusV5;
   marginTrading: MarginTradingV5;

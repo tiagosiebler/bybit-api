@@ -12,7 +12,42 @@ export type InstrumentStatusV5 =
   | 'Delivering'
   | 'Closed';
 
+/**
+ * Region / product class returned as `symbolType` on instruments-info (and account instruments-info).
+ * For `category=linear`, includes e.g. `stock`, `forex`, `commodity`, `xstocks`. Spot may return `''`.
+ */
+export type InstrumentSymbolTypeV5 =
+  | ''
+  | 'stock'
+  | 'forex'
+  | 'commodity'
+  | 'xstocks';
+
 export type MarginTradingV5 = 'none' | 'both' | 'utaOnly' | 'normalSpotOnly';
+
+/** Product type for strategy APIs (create / list). */
+export type StrategyCategoryV5 =
+  | 'UTA_USDT'
+  | 'UTA_USDC'
+  | 'UTA_USDC_FUTURE'
+  | 'UTA_SPOT'
+  | 'UTA_INVERSE'
+  | 'UTA_INVERSE_FUTURE'
+  | 'UTA_USDT_FUTURE';
+
+export type StrategyTypeV5 = 'twap' | 'chaseOrder' | 'iceberg' | 'pov';
+
+export type StrategyPreferV5 =
+  | 'limit'
+  | 'priceSpeedBalance'
+  | 'fastestExecution'
+  | 'quickExecution';
+
+/** POV strategy execution mode */
+export type PovModeV5 =
+  | 'TradedVolume'
+  | 'OppositeSideLiquidity'
+  | 'SameSideLiquidity';
 
 export type OrderFilterV5 = 'Order' | 'tpslOrder' | 'StopOrder';
 export type OrderSideV5 = 'Buy' | 'Sell';
@@ -353,8 +388,6 @@ export interface PermissionsV5 {
   Earn?: string[];
   Affiliate?: string[];
   FiatP2P?: string[];
-  /** @deprecated use FiatBitPay */
-  FiatBybitPay?: string[];
   /** Bybit Pay (FaitPayOrder) */
   FiatBitPay?: string[];
   FiatConvertBroker?: string[];

@@ -70,3 +70,15 @@ export interface GetAdvanceEarnProductParamsV5 {
    */
   duration?: string;
 }
+
+/** GET /v5/earn/hold-to-earn/yield-history — Hold to Earn airdrop daily PnL (Earn permission) */
+export interface GetHoldToEarnAirdropYieldHistoryParamsV5 {
+  /** Unix seconds. Cannot be earlier than now minus 3 months */
+  timeStart?: number;
+  /** Unix seconds. Requires timeStart ≤ timeEnd */
+  timeEnd?: number;
+  /** Page size [1, 49] */
+  limit: number;
+  /** Pagination cursor from previous `nextCursor` */
+  cursor?: string;
+}

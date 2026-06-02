@@ -150,6 +150,7 @@ export interface DepositAddressResultV5 {
 export interface CoinInfoV5 {
   name: string;
   coin: string;
+  /** @deprecated Use `chains[].withdrawMax` instead */
   remainAmount: string;
   chains: {
     chain: string;
@@ -164,6 +165,8 @@ export interface CoinInfoV5 {
     withdrawPercentageFee: string;
     contractAddress: string;
     safeConfirmNumber: string;
+    /** Max withdraw amount per transaction per chain. `-1` means no limit */
+    withdrawMax: string;
   }[];
 }
 
