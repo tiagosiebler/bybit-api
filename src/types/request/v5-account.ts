@@ -1,4 +1,9 @@
-import { AccountTypeV5, CategoryV5, TransactionTypeV5 } from '../shared-v5';
+import {
+  AccountTypeV5,
+  CategoryV5,
+  InstrumentSymbolTypeV5,
+  TransactionTypeV5,
+} from '../shared-v5';
 
 export interface GetWalletBalanceParamsV5 {
   accountType: AccountTypeV5;
@@ -78,10 +83,8 @@ export interface SetDeltaNeutralModeParamsV5 {
 export interface GetAccountInstrumentsInfoParamsV5 {
   category: 'spot' | 'linear' | 'inverse';
   symbol?: string;
-  /**
-   * Filter by `symbolType`, e.g. `commodity`, `stock`, `forex` for linear (see Bybit Get Account Instruments Info).
-   */
-  symbolType?: string;
+  /** Filter by `symbolType` (e.g. `commodity`, `stock`, `forex` for linear). */
+  symbolType?: InstrumentSymbolTypeV5;
   limit?: number;
   cursor?: string;
 }

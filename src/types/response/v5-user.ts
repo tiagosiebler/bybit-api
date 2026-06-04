@@ -40,8 +40,6 @@ export interface ApiKeyPermissionsV5 {
   Affiliate: string[];
   Earn?: string[];
   FiatP2P?: string[];
-  /** @deprecated use FiatBitPay */
-  FiatBybitPay?: string[];
   FiatBitPay?: string[];
   FiatConvertBroker?: string[];
   /** @deprecated */
@@ -163,11 +161,29 @@ export interface AffiliateUserInfoV5 {
   /** tradfi commissions in past year. Coin -> amount */
   commissions365Day?: Record<string, string>;
   /** Payment amount in the last 30 days */
-  paySendAmount30Day?: string;
+  paySendAmount30Day: string;
   /** Pay first transaction amount */
-  payFtt?: string;
+  payFtt: string;
   /** Card first-time transaction amount */
-  cardFtt?: string;
+  cardFtt: string;
+}
+
+export interface AffiliateSubAffiliateListItemV5 {
+  subAffId: string;
+  userId: string;
+  name: string;
+  email: string;
+  /** Commission per currency (BTC, ETH, MNT, USDC, USDT) for the queried date range */
+  commissionsVol: Record<string, string>;
+  commissionsForUsdt: string;
+  becameAffTime: string;
+  startDate: string;
+  endDate: string;
+}
+
+export interface AffiliateSubAffiliateListResultV5 {
+  list: AffiliateSubAffiliateListItemV5[];
+  nextPageCursor: string;
 }
 
 export interface FriendReferralRecordV5 {

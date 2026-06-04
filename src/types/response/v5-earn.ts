@@ -24,6 +24,11 @@ export interface EarnOrderHistoryV5 {
   estimateStakeTime: string;
 }
 
+export interface EarnPositionFreezeDetailV5 {
+  amount: string;
+  description: string;
+}
+
 export interface EarnPositionV5 {
   coin: string;
   productId: string;
@@ -38,6 +43,9 @@ export interface EarnPositionV5 {
   estimateInterestCalculationTime?: string;
   settlementTime?: string;
   autoReinvest?: string;
+  /** Redeemable amount */
+  availableAmount: string;
+  freezeDetails: EarnPositionFreezeDetailV5[];
 }
 
 export interface EarnYieldHistoryV5 {
@@ -169,4 +177,44 @@ export type AdvanceEarnAdvanceProductListItemV5 =
 export interface AdvanceEarnAdvanceProductInfoV5 {
   category: string;
   list: AdvanceEarnAdvanceProductListItemV5[];
+}
+
+/** GET /v5/earn/hold-to-earn/product — Hold to Earn airdrop products */
+export type HoldToEarnAirdropProductStatusV5 =
+  | 'NotStarted'
+  | 'Online'
+  | 'Ended';
+
+export interface HoldToEarnAirdropProductYieldV5 {
+  coinName: string;
+  /** Yesterday's APR for display, e.g. "10%", "0%" */
+  apy: string;
+}
+
+export interface HoldToEarnAirdropProductV5 {
+  coinName: string;
+  yields: HoldToEarnAirdropProductYieldV5[];
+  status: HoldToEarnAirdropProductStatusV5;
+  announcementUrl: string;
+  /** Yesterday's avg APR across yield coins */
+  apy: string;
+}
+
+export interface HoldToEarnAirdropProductsResultV5 {
+  products: HoldToEarnAirdropProductV5[];
+}
+
+/** GET /v5/earn/hold-to-earn/yield-history */
+export interface HoldToEarnAirdropDailyPnlV5 {
+  coinName: string;
+  yieldCoinName: string;
+  effectiveAmount: string;
+  pnl: string;
+  apy: string;
+  createdAt: number;
+}
+
+export interface HoldToEarnAirdropYieldHistoryResultV5 {
+  nextCursor: string;
+  airdropDailyPnls: HoldToEarnAirdropDailyPnlV5[];
 }

@@ -144,6 +144,10 @@ export interface CreateSupplyOrderFixedParamsV5 {
   orderAmount: string;
   annualRate: string;
   term: string;
+  /**
+   * Source account for supply. 0: Funding Account; 1: Earn Flexible Account; 2: ALL. Default: 0
+   */
+  availableSource?: '0' | '1' | '2';
 }
 
 export interface CancelBorrowOrderFixedParamsV5 {
@@ -152,6 +156,10 @@ export interface CancelBorrowOrderFixedParamsV5 {
 
 export interface CancelSupplyOrderFixedParamsV5 {
   orderId: string;
+  /**
+   * Account to receive the refund. 0: Funding Account; 1: EasyEarn. Default: 0
+   */
+  refundedAccount?: '0' | '1';
 }
 
 export interface GetBorrowContractInfoFixedParamsV5 {

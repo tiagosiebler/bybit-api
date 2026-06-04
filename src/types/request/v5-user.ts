@@ -55,6 +55,30 @@ export interface GetAffiliateUserListParamsV5 {
   endDate?: string;
 }
 
+/** GET /v5/affiliate/affiliate-sub-list */
+export interface GetAffiliateSubAffiliateListParamsV5 {
+  cursor?: string;
+  /** [0, 100]. Default: 0 */
+  size?: number;
+  /** YYYY-MM-DD. Range with endDate max 3 months */
+  startDate?: string;
+  /** YYYY-MM-DD. Must be provided with startDate or both omitted (T-1 default) */
+  endDate?: string;
+  /** Exact sub-affiliate ID. 0 or omit for all */
+  subAffId?: number;
+}
+
+export interface GetAffiliateUserInfoParamsV5 {
+  /** The master account UID of affiliate's client */
+  uid: string;
+  /** Coin type for filtering, e.g. USDT */
+  coin?: string;
+  /**
+   * Business line filter. 1: Derivatives, 2: Spot, 3: ByFi, 4: USDC, 5: Options
+   */
+  business?: '1' | '2' | '3' | '4' | '5';
+}
+
 /** Get Friend Referrals - invitation relationship status. 0: alive; 1: invalid */
 export interface GetFriendReferralsParamsV5 {
   status?: string;
