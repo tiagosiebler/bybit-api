@@ -15,6 +15,7 @@ The SDK handles the repetitive parts: HMAC and RSA request signing, Bybit API en
 - REST API examples: [Bybit SDK REST API examples](../examples/Rest)
 - WebSocket examples: [Bybit SDK WebSocket examples](../examples/Websocket)
 - Bybit API docs: [Bybit API Documentation](https://bybit-exchange.github.io/docs/v5/intro)
+- Position Management with Bybit APIs & WebSockets: [Siebly Position Management with Bybit APIs & WebSockets](https://siebly.io/ai/exchange-state/bybit)
 - More SDKs: [Siebly.io](https://siebly.io)
 
 ---
@@ -24,7 +25,7 @@ The SDK handles the repetitive parts: HMAC and RSA request signing, Bybit API en
 The Bybit API is unified, but a real integration still has several moving parts:
 
 - The API spans Spot, Linear contracts, Inverse contracts, Options, account, asset, user, broker, Earn, P2P, RFQ, spread trading, spot margin, and loan workflows.
-	- Within the Bybit JavaScript SDK by Siebly.io, all product groups are available in one unified REST API client.
+  - Within the Bybit JavaScript SDK by Siebly.io, all product groups are available in one unified REST API client.
 - Many market and trade calls use a `category` parameter such as `spot`, `linear`, `inverse`, or `option`.
 - Public WebSocket streams are split across category-specific endpoints.
 - Private WebSocket streams use a separate private endpoint.
@@ -280,6 +281,7 @@ const client = new RestClientV5({
   key: process.env.BYBIT_API_KEY!,
   secret: process.env.BYBIT_API_SECRET!,
   demoTrading: true,
+  throwExceptions: true,
 });
 
 async function placeDemoOrder() {
@@ -304,6 +306,8 @@ placeDemoOrder().catch(console.error);
 ```
 
 This submits to Bybit demo trading because `demoTrading: true` is set. Do not remove that option or switch to live keys until you are ready to place real orders.
+
+For order workflows, prefer `throwExceptions: true` so non-zero Bybit API responses throw and can be handled in one structured catch path. If you intentionally set `throwExceptions: false`, a resolved REST promise can still be an exchange business rejection. Treat `retCode === 0` as acceptance and any non-zero `retCode` as a rejected or unknown submission state.
 
 See also: [Demo trading example](../examples/Rest/demo-trading.ts)
 
@@ -387,7 +391,7 @@ const client = new RestClientV5({
 });
 ```
 
-Private REST API methods are signed automatically. You do not need to add timestamps, signatures, `X-BAPI-API-KEY`, `X-BAPI-SIGN`, or SDK referer headers yourself.
+Private REST API methods are signed automatically. You do not need to add timestamps, signatures, `X-BAPI-API-KEY` or `X-BAPI-SIGN` headers yourself.
 
 ### Common public market data calls
 
@@ -712,7 +716,7 @@ Use `exception`, not the deprecated `error` event.
 
 ### Understanding `WS_KEY_MAP`
 
-`WS_KEY_MAP` tells the SDK which Bybit WebSocket endpoint family a connection belongs to:
+[`WS_KEY_MAP`](/reference/glossary#ws-key) tells the SDK which Bybit WebSocket endpoint family a connection belongs to:
 
 | Key               | Use                        |
 | ----------------- | -------------------------- |
@@ -1031,39 +1035,87 @@ When the SDK emits `reconnect`, pause risky actions if your strategy depends on 
 ws.on('reconnected', async ({ wsKey }) => {
   console.log('reconnected', wsKey);
 
-  const [wallet, positions, openOrders] = await Promise.all([
+  const [wallet, positions, regularOpenOrders, stopOpenOrders] = await Promise.all([
     client.getWalletBalance({ accountType: 'UNIFIED' }),
     client.getPositionInfo({ category: 'linear', settleCoin: 'USDT' }),
-    client.getActiveOrders({ category: 'linear', settleCoin: 'USDT' }),
+    client.getActiveOrders({
+      category: 'linear',
+      settleCoin: 'USDT',
+      openOnly: 0,
+      orderFilter: 'Order',
+    }),
+    client.getActiveOrders({
+      category: 'linear',
+      settleCoin: 'USDT',
+      openOnly: 0,
+      orderFilter: 'StopOrder',
+    }),
   ]);
+
+  const openOrders = [
+    ...(regularOpenOrders.result?.list ?? []),
+    ...(stopOpenOrders.result?.list ?? []),
+  ];
 
   // Reconcile these with your local state before resuming risky actions.
   console.log({ wallet, positions, openOrders });
 });
 ```
 
-### 3. Use `orderLinkId` deliberately
+For linear position managers that depend on conditional stop orders, do not assume the no-`orderFilter` active-order response covers both regular orders and `StopOrder` rows unless you have captured and verified that response shape for the account mode.
 
-For order workflows, generate and store your own `orderLinkId` when you need idempotency, retries, or reconciliation.
+### 3. Check Bybit business acceptance
+
+TypeScript validates the request fields you pass to the SDK. It does not prove that Bybit accepted a live request, private stream payload, or hydrated order state. For order-management services, prefer `throwExceptions: true` on `RestClientV5` so non-zero Bybit `retCode` responses throw and flow through your normal SDK/API error classifier. Preserve `retCode`, `retMsg`, `result`, request context, and product/symbol scope from the thrown error where available.
+
+If you intentionally use `throwExceptions: false`, business rejections resolve as response objects and must be classified manually:
 
 ```typescript
-const orderLinkId = `entry-btc-${Date.now()}`;
+type BybitResponse<T> = {
+  retCode: number;
+  retMsg: string;
+  result: T;
+};
 
+function classifyBybitResponse<T>(response: BybitResponse<T>) {
+  if (response.retCode === 0) return { ok: true as const, response };
+
+  return {
+    ok: false as const,
+    code: response.retCode,
+    message: response.retMsg,
+    response,
+  };
+}
+```
+
+For order-management services, stop later non-sent intents on any Bybit business rejection, log the sanitized error or response, block or surface deterministic request failures, and reconcile before submitting later exposure.
+
+### 4. Include `triggerDirection` for conditional stops
+
+For Bybit V5 triggered stop-loss orders, verify the current request type and include `triggerDirection`. For a long position, the stop-loss exit usually sells when price falls to the trigger, so `triggerDirection` is `2`. For a short position, the stop-loss exit usually buys when price rises to the trigger, so `triggerDirection` is `1`.
+
+```typescript
 await client.submitOrder({
   category: 'linear',
   symbol: 'BTCUSDT',
-  side: 'Buy',
-  orderType: 'Limit',
+  side: 'Sell',
+  orderType: 'Market',
   qty: '0.001',
-  price: '10000',
-  timeInForce: 'PostOnly',
-  orderLinkId,
+  triggerPrice: '60000',
+  triggerDirection: 2,
+  triggerBy: 'MarkPrice',
+  orderFilter: 'StopOrder',
+  positionIdx: 0,
+  reduceOnly: true,
+  closeOnTrigger: true,
+  orderLinkId: `long-sl-${Date.now()}`,
 });
 ```
 
-Persist the ID before sending the request. Then match it against REST API order history and private WebSocket order/execution events. That gives your system a stable way to connect local intent with exchange-side order state.
+Hydrated active orders may include explicit defaults such as `closeOnTrigger: false`, `reduceOnly: false`, empty trigger fields, or stop-order defaults that were omitted from your original request. Compare desired and hydrated orders by order kind and normalize irrelevant defaults before deciding to cancel and replace an app-owned order.
 
-### 4. Watch clocks and receive windows
+### 5. Watch clocks and receive windows
 
 Private requests are timestamp-sensitive. Keep your system clock synced first. If you still see receive-window errors, set the receive window intentionally.
 
@@ -1093,7 +1145,7 @@ ws.setTimeOffsetMs(-500);
 
 Use time offsets as a last resort. Fix host clock sync first. Refer to the timestamp guidance if you're having persistent issues with it: https://github.com/sieblyio/awesome-crypto-examples/wiki/Timestamp-for-this-request-is-outside-of-the-recvWindow
 
-### 5. Keep credentials scoped
+### 6. Keep credentials scoped
 
 Live, testnet, and demo credentials are different. Keep them separate in your secrets manager and deployment configuration.
 
@@ -1105,7 +1157,7 @@ Use separate keys for separate risk levels:
 
 Do not put private keys in frontend code. Use IP whitelisting.
 
-### 6. Monitor rate limits
+### 7. Monitor rate limits
 
 The SDK can parse Bybit REST API rate-limit headers into responses when `parseAPIRateLimits: true` is enabled:
 
@@ -1126,7 +1178,7 @@ console.log(response.rateLimitApi);
 
 Bybit also returns rate-limit information in WebSocket API response headers. Use that data to reduce polling, back off safely, and prefer streaming updates where possible.
 
-### 7. Inject your own logger if needed
+### 8. Inject your own logger if needed
 
 If you want SDK logs in your own monitoring stack, pass a logger:
 
