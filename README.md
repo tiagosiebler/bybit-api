@@ -7,6 +7,7 @@
 [![last commit](https://img.shields.io/github/last-commit/tiagosiebler/bybit-api)][1]
 [![CodeFactor](https://www.codefactor.io/repository/github/tiagosiebler/bybit-api/badge)](https://www.codefactor.io/repository/github/tiagosiebler/bybit-api)
 [![Telegram](https://img.shields.io/badge/chat-on%20telegram-blue.svg)](https://t.me/nodetraders)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/tiagosiebler/bybit-api)
 
 <p align="center">
   <a href="https://www.npmjs.com/package/bybit-api">
