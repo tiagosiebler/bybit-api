@@ -1,3 +1,7 @@
+export interface GetEarnCouponListParamsV5 {
+  category: 'FlexibleSaving' | 'DualAssets';
+}
+
 export interface SubmitStakeRedeemParamsV5 {
   category: string;
   orderType: 'Stake' | 'Redeem';

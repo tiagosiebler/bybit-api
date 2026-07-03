@@ -11,6 +11,18 @@ import {
   TradeModeV5,
 } from '../shared-v5';
 
+export interface FuturesLeverageItemV5 {
+  symbol: string;
+  leverage: string;
+  side: OrderSideV5 | '';
+  positionIdx: PositionIdx;
+}
+
+export interface FuturesLeverageResultV5 {
+  category: 'linear' | 'inverse';
+  list: FuturesLeverageItemV5[];
+}
+
 export interface PositionV5 {
   positionIdx: PositionIdx;
   riskId: number;

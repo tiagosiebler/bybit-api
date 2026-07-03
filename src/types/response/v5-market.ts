@@ -239,6 +239,8 @@ export interface TickerLinearInverseV5 {
   prevPrice1h: string;
   openInterest: string;
   openInterestValue: string;
+  singleOpenInterest?: string;
+  singleOpenInterestValue?: string;
   turnover24h: string;
   volume24h: string;
   fundingRate: string;
@@ -333,6 +335,7 @@ export interface PublicTradeV5 {
  */
 export type OpenInterestV5 = {
   openInterest: string;
+  singleOpenInterest?: string;
   timestamp: string;
 };
 

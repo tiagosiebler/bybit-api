@@ -135,6 +135,13 @@ export interface GetWithdrawalAddressListParamsV5 {
   cursor?: string;
 }
 
+export interface SubmitDepositOriginatorInfoParamsV5 {
+  depositId: number;
+  subAccountId?: number;
+  /** Travel Rule questionnaire JSON string. See Questionnaire docs. */
+  questionnaire: string;
+}
+
 export interface WithdrawParamsV5 {
   coin: string;
   /**
@@ -157,6 +164,10 @@ export interface WithdrawParamsV5 {
    * Required for Bybit Turkey (TR) site users when creating a withdrawal. Omitted for other regions unless the API requires it.
    */
   transactionPurpose?: string;
+  /**
+   * Travel Rule questionnaire JSON string (max 16384 bytes). Takes precedence over `beneficiary` / `transactionPurpose` when both are set.
+   */
+  questionnaire?: string;
   beneficiary?: {
     vaspEntityId?: string;
     beneficiaryName?: string;

@@ -46,6 +46,7 @@ export interface MMPModifyParamsV5 {
   frozenPeriod: string;
   qtyLimit: string;
   deltaLimit: string;
+  vegaLimit?: string;
 }
 
 export interface RepayLiabilityParamsV5 {
