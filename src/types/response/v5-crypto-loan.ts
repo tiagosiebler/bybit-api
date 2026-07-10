@@ -178,6 +178,7 @@ export interface CryptoLoanPositionV5 {
   totalCollateral: string;
   totalDebt: string;
   totalSupply: string;
+  colRes?: string;
 }
 
 // Flexible Loan Types
@@ -328,6 +329,53 @@ export interface RenewOrderInfoFixedV5 {
 }
 
 // Institutional Loan Types
+
+export interface InstitutionalLendingProductInfoV5 {
+  productId: string;
+  leverage: string;
+  supportSpot: number;
+  supportContract: number;
+  supportMarginTrading: number;
+  withdrawLine: string;
+  transferLine: string;
+  spotBuyLine: string;
+  spotSellLine: string;
+  contractOpenLine: string;
+  liquidationLine: string;
+  stopLiquidationLine: string;
+  contractLeverage: string;
+  transferRatio: string;
+  spotSymbols: unknown[];
+  contractSymbols: unknown[];
+  supportUSDCContract: number;
+  supportUSDCOptions: number;
+  USDTPerpetualOpenLine?: string;
+  USDCContractOpenLine?: string;
+  USDCOptionsOpenLine?: string;
+  USDTPerpetualCloseLine?: string;
+  USDCContractCloseLine?: string;
+  USDCOptionsCloseLine?: string;
+  USDTPerpetualLeverage?: { symbol: string; leverage: string }[];
+  USDCContractLeverage?: { symbol: string; leverage: string }[];
+  deferredLiquidationLine?: string;
+  deferredLiquidationTime?: string;
+  marginLeverage?: string;
+  /** `0`: Default, `1`: CTA, `2`: Hedge */
+  productType?: '0' | '1' | '2' | string;
+}
+
+export interface InstitutionalLendingCoinDeltaItemV5 {
+  coin: string;
+  coinDeltaSize: string;
+  coinDeltaAvailableAmount: string;
+  coinDeltaAmount: string;
+}
+
+export interface InstitutionalLendingCoinDeltaAmountV5 {
+  riskUnitDeltaAmount: string;
+  riskUnitDeltaAvailableAmount: string;
+  list: InstitutionalLendingCoinDeltaItemV5[];
+}
 
 export interface UnpaidInfoV5 {
   token: string; // Coin

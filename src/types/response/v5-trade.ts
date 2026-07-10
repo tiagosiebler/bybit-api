@@ -72,6 +72,11 @@ export interface AccountOrderV5 {
   updatedTime: string;
   extraFees: string;
   cumFeeDetail?: Record<string, string>; // Cumulative trading fee details instead of cumExecFee
+  rpiTakerAccess?: boolean;
+  rpiMatchedQty?: string;
+  fromAccount?: string;
+  toAccount?: string;
+  externalEventType?: string;
 }
 
 export interface BatchCreateOrderResultV5 {

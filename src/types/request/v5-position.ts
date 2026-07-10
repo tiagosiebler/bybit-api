@@ -7,6 +7,11 @@ import {
   TPSLModeV5,
 } from '../shared-v5';
 
+export interface GetFuturesLeverageParamsV5 {
+  category: 'linear' | 'inverse';
+  symbol?: string;
+}
+
 export interface PositionInfoParamsV5 {
   category: CategoryV5;
   symbol?: string;

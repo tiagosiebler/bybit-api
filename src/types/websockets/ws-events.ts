@@ -128,6 +128,8 @@ export interface WSTickerV5 {
   indexPrice: string;
   openInterest: string;
   openInterestValue: string;
+  singleOpenInterest?: string;
+  singleOpenInterestValue?: string;
   turnover24h: string;
   volume24h: string;
   nextFundingTime: string;
@@ -329,6 +331,8 @@ export interface WSAccountOrderV5 {
   createdTime: string;
   updatedTime: string;
   cumFeeDetail?: Record<string, string>; // Cumulative trading fee details instead of cumExecFee and feeCurrency
+  rpiTakerAccess?: boolean;
+  rpiMatchedQty?: string;
 }
 
 export type WSAccountOrderEventV5 = WSPrivateTopicEventV5<
@@ -389,6 +393,7 @@ export interface WSExecutionFastV5 {
   side: OrderSideV5;
   execTime: string;
   seq: number;
+  liquidity?: string;
 }
 
 export type WSExecutionFastEventV5 = WSPrivateTopicEventV5<
@@ -417,6 +422,7 @@ export interface WSCoinV5 {
   collateralSwitch: boolean;
   marginCollateral: boolean;
   spotBorrow: string;
+  colRes?: string;
 }
 
 export interface WSWalletV5 {

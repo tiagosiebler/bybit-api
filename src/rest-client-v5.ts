@@ -30,7 +30,28 @@ import {
   AlphaBizTokenDetailsV5,
   AlphaBizTokenPriceListResultV5,
   AlphaBizTokenV5,
+  AlphaLPOrderListResultV5,
+  AlphaLPPayTokenListResultV5,
+  AlphaLPPayTokenPriceResultV5,
+  AlphaLPPoolInfoV5,
+  AlphaLPPoolListResultV5,
+  AlphaLPPositionListResultV5,
   AlphaPayTokenV5,
+  AlphaPredictionEngineStatusV5,
+  AlphaPredictionEventDetailV5,
+  AlphaPredictionOrderBookV5,
+  AlphaPredictionOrderEstimateV5,
+  AlphaPredictionOrderListResultV5,
+  AlphaPredictionPayTokenV5,
+  AlphaPredictionPortfolioSummaryV5,
+  AlphaPredictionPositionHistoryResultV5,
+  AlphaPredictionPositionListResultV5,
+  AlphaPredictionPriceHistoryV5,
+  AlphaPredictionSideMarketListResultV5,
+  AlphaPredictionSportsGroupStageDetailV5,
+  AlphaPredictionSportsMatchListResultV5,
+  AlphaPredictionSportsTimelineStagesV5,
+  AlphaPredictionTokenPriceV5,
   AlphaTradeOrderListResultV5,
   AlphaTradeQuoteResultV5,
   AmendOrderParamsV5,
@@ -136,6 +157,7 @@ import {
   DepositAddressChainV5,
   DepositRecordV5,
   EarnAprHistoryPointV5,
+  EarnCouponListResultV5,
   EarnHourlyYieldHistoryV5,
   EarnOrderHistoryV5,
   EarnPositionV5,
@@ -150,6 +172,13 @@ import {
   ExchangeBrokerAccountInfoV5,
   ExchangeBrokerEarningResultV5,
   ExchangeBrokerSubAccountDepositRecordV5,
+  ExecuteAlphaLPRedeemParamsV5,
+  ExecuteAlphaLPRedeemResultV5,
+  ExecuteAlphaLPStakeParamsV5,
+  ExecuteAlphaLPStakeResultV5,
+  ExecuteAlphaPredictionBuyParamsV5,
+  ExecuteAlphaPredictionOrderResultV5,
+  ExecuteAlphaPredictionSellParamsV5,
   ExecuteAlphaTradeParamsV5,
   ExecuteAlphaTradeResultV5,
   ExecuteRFQQuoteParamsV5,
@@ -170,6 +199,7 @@ import {
   FriendReferralRecordV5,
   FundingAccountTransactionRecordV5,
   FundingRateHistoryResponseV5,
+  FuturesLeverageResultV5,
   GetAccountCoinBalanceParamsV5,
   GetAccountHistoricOrdersParamsV5,
   GetAccountInstrumentsInfoParamsV5,
@@ -189,7 +219,25 @@ import {
   GetAlphaBizTokenDetailsParamsV5,
   GetAlphaBizTokenListParamsV5,
   GetAlphaBizTokenPriceListParamsV5,
+  GetAlphaLPOrderListParamsV5,
+  GetAlphaLPPayTokenListParamsV5,
+  GetAlphaLPPayTokenPriceParamsV5,
+  GetAlphaLPPoolInfoParamsV5,
+  GetAlphaLPPoolListParamsV5,
   GetAlphaPayTokenListParamsV5,
+  GetAlphaPredictionEventDetailParamsV5,
+  GetAlphaPredictionOrderBookParamsV5,
+  GetAlphaPredictionOrderEstimateParamsV5,
+  GetAlphaPredictionOrderListParamsV5,
+  GetAlphaPredictionPortfolioSummaryParamsV5,
+  GetAlphaPredictionPositionHistoryParamsV5,
+  GetAlphaPredictionPositionListParamsV5,
+  GetAlphaPredictionPriceHistoryParamsV5,
+  GetAlphaPredictionSideMarketListParamsV5,
+  GetAlphaPredictionSportsGroupStageDetailParamsV5,
+  GetAlphaPredictionSportsMatchListParamsV5,
+  GetAlphaPredictionSportsTimelineStagesParamsV5,
+  GetAlphaPredictionTokenPriceParamsV5,
   GetAlphaTradeOrderListParamsV5,
   GetAlphaTradeQuoteParamsV5,
   GetAssetInfoParamsV5,
@@ -207,6 +255,7 @@ import {
   GetClassicTransactionLogsParamsV5,
   GetClosedOptionsPositionsParamsV5,
   GetClosedPnLParamsV5,
+  GetCoinDeltaAmountParamsV5,
   GetCoinExchangeRecordParamsV5,
   GetCoinStateParamsV5,
   GetCollateralAdjustmentHistoryParamsV5,
@@ -217,6 +266,7 @@ import {
   GetDeliveryRecordParamsV5,
   GetDepositRecordParamsV5,
   GetEarnAprHistoryParamsV5,
+  GetEarnCouponListParamsV5,
   GetEarnHourlyYieldHistoryParamsV5,
   GetEarnOrderHistoryParamsV5,
   GetEarnPositionParamsV5,
@@ -241,6 +291,7 @@ import {
   GetFriendReferralsParamsV5,
   GetFundingAccountTransactionHistoryParamsV5,
   GetFundingRateHistoryParamsV5,
+  GetFuturesLeverageParamsV5,
   GetHistoricalVolatilityParamsV5,
   GetHoldToEarnAirdropYieldHistoryParamsV5,
   GetIndexPriceComponentsParamsV5,
@@ -302,6 +353,9 @@ import {
   GetRFQTradeListParamsV5,
   GetRiskLimitParamsV5,
   GetRPIOrderbookParamsV5,
+  GetRWANavChartParamsV5,
+  GetRWAOrderListParamsV5,
+  GetRWAProductListParamsV5,
   GetSettlementRecordParamsV5,
   GetSmallBalanceListParamsV5,
   GetSpotMarginCurrencyDataParamsV5,
@@ -333,6 +387,8 @@ import {
   HoldToEarnAirdropProductsResultV5,
   HoldToEarnAirdropYieldHistoryResultV5,
   IndexPriceComponentsResponseV5,
+  InstitutionalLendingCoinDeltaAmountV5,
+  InstitutionalLendingProductInfoV5,
   InstitutionalLoanLTVV5,
   InstrumentInfoResponseV5,
   InsuranceResponseV5,
@@ -388,6 +444,8 @@ import {
   PayInfoResultV5,
   PlaceEarnTokenOrderParamsV5,
   PlaceEarnTokenOrderResultV5,
+  PlaceRWAOrderParamsV5,
+  PlaceRWAOrderResultV5,
   PortfolioMarginInfoResultV5,
   PositionInfoParamsV5,
   PositionV5,
@@ -442,6 +500,10 @@ import {
   RFQTradeV5,
   RiskLimitV5,
   RPIOrderbookResponseV5,
+  RWANavChartResultV5,
+  RWAOrderListResultV5,
+  RWAPositionListResultV5,
+  RWAProductListResultV5,
   SendP2POrderMessageParamsV5,
   SetAutoAddMarginParamsV5,
   SetAutoRepayModeParamsV5,
@@ -479,6 +541,8 @@ import {
   StrategyOrderListResultV5,
   SubMemberV5,
   SubmitAdvanceEarnPlaceOrderParamsV5,
+  SubmitDepositOriginatorInfoParamsV5,
+  SubmitDepositOriginatorInfoResultV5,
   SubmitFixedTermEarnOrderParamsV5,
   SubmitSpreadOrderParamsV5,
   SubmitStakeRedeemParamsV5,
@@ -1398,6 +1462,18 @@ export class RestClientV5 extends BaseRestClient {
     params: PositionInfoParamsV5,
   ): Promise<APIResponseV3WithTime<CategoryCursorListV5<PositionV5[]>>> {
     return this.getPrivate('/v5/position/list', params);
+  }
+
+  /**
+   * Get Futures Leverage
+   * Query isolated leverage settings without requiring an open position.
+   *
+   * Returns an error under Portfolio Margin mode.
+   */
+  getFuturesLeverage(
+    params: GetFuturesLeverageParamsV5,
+  ): Promise<APIResponseV3WithTime<FuturesLeverageResultV5>> {
+    return this.getPrivate('/v5/position/symbol-info', params);
   }
 
   /**
@@ -2450,6 +2526,16 @@ export class RestClientV5 extends BaseRestClient {
   }
 
   /**
+   * Submit Deposit Originator Info
+   * Submit Travel Rule originator questionnaire when deposit `travel_rule_status` is pending (1).
+   */
+  submitDepositOriginatorInfo(
+    params: SubmitDepositOriginatorInfoParamsV5,
+  ): Promise<APIResponseV3WithTime<SubmitDepositOriginatorInfoResultV5>> {
+    return this.postPrivate('/v5/asset/travel-rule/deposit/submit', params);
+  }
+
+  /**
    * Withdraw from Funding, Unified, and/or Earn (and combos such as FUND,UTA,EARN per API).
    *
    * CAUTION: Make sure you have whitelisted your wallet address before calling this endpoint.
@@ -2930,6 +3016,274 @@ export class RestClientV5 extends BaseRestClient {
     params: GetAlphaAssetDetailParamsV5,
   ): Promise<APIResponseV3WithTime<AlphaAssetDetailResultV5>> {
     return this.postPrivate('/v5/alpha/trade/asset-detail', params);
+  }
+
+  /**
+   *
+   ****** Alpha / Web3 prediction market APIs
+   *
+   */
+
+  /**
+   * Get Engine Status
+   * Query prediction market matching engine availability before placing buy/sell orders.
+   */
+  getAlphaPredictionEngineStatus(): Promise<
+    APIResponseV3WithTime<AlphaPredictionEngineStatusV5>
+  > {
+    return this.getPrivate('/v5/alpha/prediction/engine-status');
+  }
+
+  /**
+   * Get Payment Token List
+   * Available payment tokens for prediction market trading (Phase 1: USDC).
+   */
+  getAlphaPredictionPayTokenList(): Promise<
+    APIResponseV3WithTime<AlphaPredictionPayTokenV5[]>
+  > {
+    return this.getPrivate('/v5/alpha/prediction/pay-token-list');
+  }
+
+  /**
+   * Get Event Detail
+   * Event metadata, outcome markets, and current prices. Obtain tokenId before trading.
+   */
+  getAlphaPredictionEventDetail(
+    params: GetAlphaPredictionEventDetailParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaPredictionEventDetailV5>> {
+    return this.postPrivate('/v5/alpha/prediction/event-detail', params);
+  }
+
+  /**
+   * Get Order Estimate
+   * Preview buy/sell outcome before execution. Show estimate to user and confirm before Buy/Sell.
+   */
+  getAlphaPredictionOrderEstimate(
+    params: GetAlphaPredictionOrderEstimateParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaPredictionOrderEstimateV5>> {
+    return this.postPrivate('/v5/alpha/prediction/order-estimate', params);
+  }
+
+  /**
+   * Execute Buy
+   * Buy prediction outcome tokens with USDC. HTTP 200 is acknowledgment only — poll order list.
+   */
+  executeAlphaPredictionBuy(
+    params: ExecuteAlphaPredictionBuyParamsV5,
+  ): Promise<APIResponseV3WithTime<ExecuteAlphaPredictionOrderResultV5>> {
+    return this.postPrivate('/v5/alpha/prediction/buy', params);
+  }
+
+  /**
+   * Execute Sell
+   * Sell prediction outcome token shares for USDC. HTTP 200 is acknowledgment only — poll order list.
+   */
+  executeAlphaPredictionSell(
+    params: ExecuteAlphaPredictionSellParamsV5,
+  ): Promise<APIResponseV3WithTime<ExecuteAlphaPredictionOrderResultV5>> {
+    return this.postPrivate('/v5/alpha/prediction/sell', params);
+  }
+
+  /**
+   * Get Order List
+   * Prediction market order history for the authenticated user.
+   */
+  getAlphaPredictionOrderList(
+    params: GetAlphaPredictionOrderListParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaPredictionOrderListResultV5>> {
+    return this.postPrivate('/v5/alpha/prediction/order-list', params);
+  }
+
+  /**
+   * Get Order Book
+   * Full bid/ask depth snapshot for up to 20 outcome tokens.
+   */
+  getAlphaPredictionOrderBook(
+    params: GetAlphaPredictionOrderBookParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaPredictionOrderBookV5[]>> {
+    return this.postPrivate('/v5/alpha/prediction/order-book', params);
+  }
+
+  /**
+   * Get Token Price
+   * Best bid/ask and last price for up to 20 outcome tokens.
+   */
+  getAlphaPredictionTokenPrice(
+    params: GetAlphaPredictionTokenPriceParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaPredictionTokenPriceV5[]>> {
+    return this.postPrivate('/v5/alpha/prediction/token-price', params);
+  }
+
+  /**
+   * Get Price History
+   * OHLC candlestick history for an outcome token.
+   */
+  getAlphaPredictionPriceHistory(
+    params: GetAlphaPredictionPriceHistoryParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaPredictionPriceHistoryV5>> {
+    return this.postPrivate('/v5/alpha/prediction/price-history', params);
+  }
+
+  /**
+   * Get Position List
+   * Active prediction market positions. Confirm before placing sell orders.
+   */
+  getAlphaPredictionPositionList(
+    params?: GetAlphaPredictionPositionListParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaPredictionPositionListResultV5>> {
+    return this.postPrivate('/v5/alpha/prediction/position-list', params);
+  }
+
+  /**
+   * Get Position History
+   * Closed prediction market positions including settlement results.
+   */
+  getAlphaPredictionPositionHistory(
+    params?: GetAlphaPredictionPositionHistoryParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaPredictionPositionHistoryResultV5>> {
+    return this.postPrivate('/v5/alpha/prediction/position-history', params);
+  }
+
+  /**
+   * Get Portfolio Summary
+   * Overall prediction market portfolio P&L and win rate.
+   */
+  getAlphaPredictionPortfolioSummary(
+    params?: GetAlphaPredictionPortfolioSummaryParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaPredictionPortfolioSummaryV5>> {
+    return this.postPrivate('/v5/alpha/prediction/portfolio-summary', params);
+  }
+
+  /**
+   * Get Side Market List
+   * Outcome markets for an event with prices, liquidity, and status.
+   */
+  getAlphaPredictionSideMarketList(
+    params: GetAlphaPredictionSideMarketListParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaPredictionSideMarketListResultV5>> {
+    return this.postPrivate('/v5/alpha/prediction/side-market-list', params);
+  }
+
+  /**
+   * Get Sports Match List
+   * Sports matches available in prediction markets (Phase 1: FIFA 2026).
+   */
+  getAlphaPredictionSportsMatchList(
+    params: GetAlphaPredictionSportsMatchListParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaPredictionSportsMatchListResultV5>> {
+    return this.postPrivate('/v5/alpha/prediction/sports/match-list', params);
+  }
+
+  /**
+   * Get Sports Timeline Stages
+   * Tournament stage timeline with status and match counts.
+   */
+  getAlphaPredictionSportsTimelineStages(
+    params: GetAlphaPredictionSportsTimelineStagesParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaPredictionSportsTimelineStagesV5>> {
+    return this.getPrivate(
+      '/v5/alpha/prediction/sports/timeline-stages',
+      params,
+    );
+  }
+
+  /**
+   * Get Sports Group Stage Detail
+   * Group stage standings and match schedule for a sports prediction event.
+   */
+  getAlphaPredictionSportsGroupStageDetail(
+    params: GetAlphaPredictionSportsGroupStageDetailParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaPredictionSportsGroupStageDetailV5>> {
+    return this.postPrivate(
+      '/v5/alpha/prediction/sports/group-stage-detail',
+      params,
+    );
+  }
+
+  /**
+   *
+   ****** Alpha / Web3 LP APIs
+   *
+   */
+
+  /**
+   * Get LP Pool List
+   * Available liquidity pools, optionally filtered by token symbol.
+   */
+  getAlphaLPPoolList(
+    params?: GetAlphaLPPoolListParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaLPPoolListResultV5>> {
+    return this.postPrivate('/v5/alpha/lp/pool-list', params);
+  }
+
+  /**
+   * Get LP Pool Info
+   * Detailed pool data including APY, reserves, and price range.
+   */
+  getAlphaLPPoolInfo(
+    params: GetAlphaLPPoolInfoParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaLPPoolInfoV5>> {
+    return this.postPrivate('/v5/alpha/lp/pool-info', params);
+  }
+
+  /**
+   * Execute LP Stake
+   * Stake tokens into a liquidity pool. HTTP 200 is ACK only — poll order list for status.
+   */
+  executeAlphaLPStake(
+    params: ExecuteAlphaLPStakeParamsV5,
+  ): Promise<APIResponseV3WithTime<ExecuteAlphaLPStakeResultV5>> {
+    return this.postPrivate('/v5/alpha/lp/stake', params);
+  }
+
+  /**
+   * Execute LP Redeem
+   * Redeem liquidity from a pool position. HTTP 200 is ACK only — poll order list for status.
+   */
+  executeAlphaLPRedeem(
+    params: ExecuteAlphaLPRedeemParamsV5,
+  ): Promise<APIResponseV3WithTime<ExecuteAlphaLPRedeemResultV5>> {
+    return this.postPrivate('/v5/alpha/lp/redeem', params);
+  }
+
+  /**
+   * Get LP Order List
+   * LP stake/redeem order history.
+   */
+  getAlphaLPOrderList(
+    params?: GetAlphaLPOrderListParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaLPOrderListResultV5>> {
+    return this.postPrivate('/v5/alpha/lp/order-list', params);
+  }
+
+  /**
+   * Get LP Pay Token List
+   * Supported payment tokens and available balances for LP staking.
+   */
+  getAlphaLPPayTokenList(
+    params?: GetAlphaLPPayTokenListParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaLPPayTokenListResultV5>> {
+    return this.postPrivate('/v5/alpha/lp/pay-token-list', params);
+  }
+
+  /**
+   * Get LP Pay Token Price
+   * Batch USD prices for up to 50 payment token codes.
+   */
+  getAlphaLPPayTokenPrice(
+    params: GetAlphaLPPayTokenPriceParamsV5,
+  ): Promise<APIResponseV3WithTime<AlphaLPPayTokenPriceResultV5>> {
+    return this.postPrivate('/v5/alpha/lp/pay-token-price', params);
+  }
+
+  /**
+   * Get LP Position List
+   * User LP positions with valuation, rewards, and APY.
+   */
+  getAlphaLPPositionList(): Promise<
+    APIResponseV3WithTime<AlphaLPPositionListResultV5>
+  > {
+    return this.postPrivate('/v5/alpha/lp/position-list', {});
   }
 
   /**
@@ -3996,10 +4350,22 @@ export class RestClientV5 extends BaseRestClient {
   /**
    * Get Product Info
    */
-  getInstitutionalLendingProductInfo(
-    productId?: string,
-  ): Promise<APIResponseV3WithTime<{ marginProductInfo: any[] }>> {
+  getInstitutionalLendingProductInfo(productId?: string): Promise<
+    APIResponseV3WithTime<{
+      marginProductInfo: InstitutionalLendingProductInfoV5[];
+    }>
+  > {
     return this.get('/v5/ins-loan/product-infos', { productId });
+  }
+
+  /**
+   * Get Coin Delta Amount
+   * Coin delta amount details for institutional loan hedge product (unified account only).
+   */
+  getInstitutionalLendingCoinDeltaAmount(
+    params?: GetCoinDeltaAmountParamsV5,
+  ): Promise<APIResponseV3WithTime<InstitutionalLendingCoinDeltaAmountV5>> {
+    return this.getPrivate('/v5/ins-loan/coin-delta-amount', params);
   }
 
   /**
@@ -4261,6 +4627,64 @@ export class RestClientV5 extends BaseRestClient {
     }>
   > {
     return this.get('/v5/earn/product', params);
+  }
+
+  /**
+   * Get Coupon List
+   * Interest-rate coupons and Dual Assets reward cards for FlexibleSaving or DualAssets.
+   */
+  getEarnCouponList(
+    params: GetEarnCouponListParamsV5,
+  ): Promise<APIResponseV3WithTime<EarnCouponListResultV5>> {
+    return this.getPrivate('/v5/earn/coupons', params);
+  }
+
+  /**
+   * Get RWA Product List
+   * Real World Assets earn products. Auth optional; `userQuota` populated when authenticated.
+   */
+  getRWAProductList(
+    params?: GetRWAProductListParamsV5,
+  ): Promise<APIResponseV3WithTime<RWAProductListResultV5>> {
+    return this.get('/v5/earn/rwa/product', params);
+  }
+
+  /**
+   * Place RWA Order
+   * Stake or redeem RWA product. Async — use getRWAOrderList to track status.
+   */
+  placeRWAOrder(
+    params: PlaceRWAOrderParamsV5,
+  ): Promise<APIResponseV3WithTime<PlaceRWAOrderResultV5>> {
+    return this.postPrivate('/v5/earn/rwa/place-order', params);
+  }
+
+  /**
+   * Get RWA Position List
+   */
+  getRWAPositionList(): Promise<
+    APIResponseV3WithTime<RWAPositionListResultV5>
+  > {
+    return this.getPrivate('/v5/earn/rwa/position');
+  }
+
+  /**
+   * Get RWA Order List
+   */
+  getRWAOrderList(
+    params?: GetRWAOrderListParamsV5,
+  ): Promise<APIResponseV3WithTime<RWAOrderListResultV5>> {
+    return this.getPrivate('/v5/earn/rwa/order', params);
+  }
+
+  /**
+   * Get RWA NAV Chart
+   * NAV history for an RWA product (public; max 180-day span).
+   */
+  getRWANavChart(
+    params: GetRWANavChartParamsV5,
+  ): Promise<APIResponseV3WithTime<RWANavChartResultV5>> {
+    return this.get('/v5/earn/rwa/nav-chart', params);
   }
 
   /**

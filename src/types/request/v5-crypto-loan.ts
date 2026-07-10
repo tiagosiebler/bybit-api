@@ -243,6 +243,10 @@ export interface GetMaxLoanAmountParamsV5 {
 
 // Institutional Loan Request Types
 
+export interface GetCoinDeltaAmountParamsV5 {
+  coin?: string;
+}
+
 export interface RepayInstitutionalLoanParamsV5 {
   token: string; // Coin name
   quantity: string; // The qty to be repaid

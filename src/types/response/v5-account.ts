@@ -26,6 +26,7 @@ export interface WalletBalanceV5Coin {
   marginCollateral: boolean;
   collateralSwitch: boolean;
   spotBorrow: string;
+  colRes?: string;
 }
 
 export interface WalletBalanceV5 {
@@ -149,6 +150,7 @@ export interface MMPStateV5 {
   frozenPeriod: string;
   qtyLimit: string;
   deltaLimit: string;
+  vegaLimit?: string;
   mmpFrozenUntil: string;
   mmpFrozen: boolean;
 }

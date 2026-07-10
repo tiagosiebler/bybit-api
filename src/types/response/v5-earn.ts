@@ -1,3 +1,40 @@
+export interface EarnInterestCardV5 {
+  awardId: number;
+  specCode: string;
+  coin: string;
+  apy: string;
+  duration: number;
+  claimedAt: number;
+  expireAt: number;
+  usedAt: number;
+  status: 'InUse' | 'NotUse' | 'Expired' | 'AlreadyUsed' | string;
+  currentPnl: string;
+  limitPnl: string;
+  positionEffectiveAmount: string;
+  productId: number;
+  category: 'FlexibleSaving' | 'DualAssets' | string;
+}
+
+export interface EarnAwardCardV5 {
+  awardId: number;
+  specCode: string;
+  claimedAt: number;
+  usedAt: number;
+  expireAt: number;
+  status: 'InUse' | 'NotUse' | 'Expired' | 'AlreadyUsed' | string;
+  amount: string;
+  limitPnlPercentage: string;
+  baseCoin: string;
+  quoteCoin: string;
+  direction: 1 | 2;
+  category: 'FlexibleSaving' | 'DualAssets' | string;
+}
+
+export interface EarnCouponListResultV5 {
+  interestCards: EarnInterestCardV5[];
+  awardCards: EarnAwardCardV5[];
+}
+
 export interface EarnProductV5 {
   category: string;
   estimateApr: string;

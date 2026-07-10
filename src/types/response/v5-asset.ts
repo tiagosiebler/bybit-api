@@ -122,6 +122,10 @@ export interface DepositRecordV5 {
   fromAddress: string;
 }
 
+export interface SubmitDepositOriginatorInfoResultV5 {
+  travelRuleStatus: number;
+}
+
 export interface InternalDepositRecordV5 {
   id: string;
   type: 1;
