@@ -32,7 +32,8 @@ jobs:
           cache: 'npm'
 
       - name: Assert latest npm
-        run: npm i -g npm@latest
+        # run: npm i -g npm@latest # pin to v11 until npm v12 bug is fixed: https://github.com/npm/cli/issues/9722
+        run: npm i -g npm@11
 
       - name: Guard - block registry overrides and shady files
         run: |
