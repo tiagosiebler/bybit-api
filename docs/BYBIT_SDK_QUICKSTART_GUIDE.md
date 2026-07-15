@@ -1,7 +1,221 @@
+<!-- siebly:metadata
+siebly:
+  version: 1
+  hero:
+    headline: Bybit API JavaScript Tutorial for Node.js and TypeScript
+    badges:
+      - Bybit API
+      - Spot
+      - Linear
+      - Inverse
+      - Options
+      - WebSocket API
+    summary: Build Bybit API integrations without writing your own request signing, category endpoint routing, WebSocket authentication, reconnect loops, resubscribe logic, or WebSocket API response matching.
+    codeFilename: first-bybit-api-call.ts
+    codeStatus: public REST API
+    startSectionId: start-building-first-calls
+  software:
+    description: Node.js and JavaScript SDK for the Bybit REST API, public and private WebSockets, demo trading, regional routing, and WebSocket API command workflows.
+    topics:
+      - Bybit REST API
+      - Spot REST API
+      - Linear contract REST API
+      - Inverse contract REST API
+      - Options REST API
+      - Public WebSockets
+      - Private WebSockets
+      - WebSocket API
+      - Demo trading
+      - Regional routing
+  machineCatalog:
+    label: Bybit API JavaScript Tutorial
+    topics:
+      - REST API
+      - category-based product routing
+      - demo trading
+      - testnet
+      - regional REST API routing
+      - public WebSockets
+      - private WebSockets
+      - WebSocket API commands
+      - production reconnect handling
+  sdkPagePromo:
+    descriptionBeforePackage: 'A practical JavaScript guide to using '
+    descriptionAfterPackage: ' across the Bybit REST API, category-based Spot and derivatives routing, public and private streams, demo trading, testnet, regional routing, WebSocket streams and WebSocket API commands.'
+    highlights:
+      - Complete REST API coverage
+      - Public and private WebSocket streams
+      - Demo trading, testnet, and regional routing
+      - WebSocket API command flow
+    exampleHref: /examples/Bybit/Websocket/WS-API/ws-api-client
+    exampleLabel: WebSocket API example
+    architectureClientSummary: RestClientV5, WebsocketClient, WebsocketAPIClient
+    architectureApiTitle: Bybit API
+    architectureApiSummary: REST API, market data streams, account streams, WebSocket API
+  surfaceMap:
+    heading: One Bybit SDK, complete API coverage
+    summary: The Bybit API includes REST API calls, public streams, private streams, and WebSocket API command paths. Use the SDK surface that matches each workflow.
+    appLabel: Bot, dashboard, worker, tool
+    appSummary: Any Node.js or JavaScript-compatible service that needs Bybit market data, account state, order management, or reconciliation.
+    apiLabel: Bybit API
+    apiItems:
+      - REST API calls across market, trade, position, account, and asset APIs
+      - Public streams by product category
+      - Private account streams
+      - WebSocket API commands
+    packageNodes:
+      - label: RestClientV5
+        summary: Current REST API client
+      - label: WebsocketClient
+        summary: Public and private streams
+      - label: WebsocketAPIClient
+        summary: Awaitable WebSocket API commands
+      - label: SpotClientV3
+        summary: Legacy compatibility only
+  routing:
+    id: category-router
+    eyebrow: API Categories
+    heading: The Bybit API often routes by category
+    summary: The same SDK method can cover more than one product family. Make the category value a first-class part of your request builder, logs, tests, and reconciliation keys.
+    rows:
+      - code: "category: 'spot'"
+        heading: Spot
+        summary: Spot market data and spot order workflows where the endpoint supports category-based routing.
+      - code: "category: 'linear'"
+        heading: Linear
+        summary: USDT and USDC linear contracts, including common perpetual and futures workflows.
+      - code: "category: 'inverse'"
+        heading: Inverse
+        summary: Inverse perpetual and inverse futures contracts with inverse symbols and account state.
+      - code: "category: 'option'"
+        heading: Options
+        summary: Options market data, orders, positions, greeks, and WebSocket topics where supported.
+  coverage:
+    heading: What to get right in a Bybit integration
+    summary: Start with a working public request, then build through credentials, category-based routing, private streams, demo and testnet behavior, WebSocket API commands, reconnect recovery, and production rollout checks.
+    cards:
+      - heading: REST API, categories, and products
+        summary: Use one current REST API client while keeping category, symbol, account mode, and product behavior explicit.
+      - heading: Auth and environments
+        summary: Separate live, testnet, demo trading, HMAC, RSA, and regional routing decisions before trading.
+      - heading: Public and private streams
+        summary: Subscribe to market and account topics with reconnect-aware state handling and REST API reconciliation.
+      - heading: WebSocket API commands
+        summary: Use promise-wrapped WebSocket API commands, then confirm state changes through streams or the REST API.
+  snippets:
+    heading: First REST API calls, streams, demo trading, and WebSocket API commands, with just a few lines of code.
+    summary: Run one focused example first, then add the surrounding account-state and recovery workflow once the client, credentials, and category are correct.
+    labels:
+      rest-api: REST API
+      public-websocket: Public stream
+      private-websocket: Private stream
+      demo-order: Demo order
+      ws-api: WebSocket API
+  workflows:
+    heading: REST API, WebSocket Stream & WebSocket API workflows
+    summary: A REST API response, a stream update, and a WebSocket API acknowledgement each tell you something different. The diagrams below show where routing, subscription state, reconnect recovery, and command acknowledgement fit.
+    diagrams:
+      - heading: REST API category routing
+        summary: Most current Bybit workflows start with RestClientV5 and a product category rather than a separate product client.
+        steps:
+          - label: Choose category
+            owner: app
+          - label: Build typed request
+            owner: app
+          - label: Call RestClientV5 method
+            owner: app
+          - label: Sign and route request
+            owner: sdk
+          - label: Return Bybit response
+            owner: exchange
+          - label: Normalize result
+            owner: app
+      - heading: Private stream recovery
+        summary: After a private connection drops, stream resubscription is only part of recovery. Rebuild account state before risky actions resume.
+        steps:
+          - label: on(reconnect)
+            owner: event
+          - label: Pause order logic
+            owner: app
+          - label: Reconnect and authenticate
+            owner: sdk
+          - label: Resubscribe cached topics
+            owner: sdk
+          - label: on(reconnected)
+            owner: event
+          - label: Backfill wallet, positions, orders
+            owner: app
+          - label: Resume from known state
+            owner: app
+      - heading: WebSocket API command flow
+        summary: The WebSocket API acknowledgement is not a fill. Treat it as command acceptance, then watch order and execution state.
+        steps:
+          - label: connectWSAPI()
+            owner: app
+          - label: Authenticate v5PrivateTrade
+            owner: sdk
+          - label: await submitNewOrder()
+            owner: app
+          - label: Send signed order.create
+            owner: sdk
+          - label: Receive acknowledgement
+            owner: event
+          - label: Track order/execution stream
+            owner: app
+          - label: Reconcile with REST API when needed
+            owner: app
+  production:
+    heading: Before a Bybit integration trades unattended
+    summary: "The important work starts after the first request succeeds: credentials, account mode, category routing, reconnect behavior, final order state, and exchange-region availability all need to be predictable and observable."
+    items:
+      - Keep live, testnet, and demo trading credentials separate.
+      - Make category, symbol, account type, and position mode explicit in order code.
+      - Use private order and execution streams to confirm final order state.
+      - Backfill wallet, positions, open orders, and executions after private stream reconnects.
+      - "Prefer throwExceptions: true for RestClientV5 order workflows; if disabled, treat retCode === 0 as REST business acceptance."
+      - Include triggerDirection for triggered stop-loss orders and normalize hydrated defaults before deciding keep, amend, cancel_place, cancel, or place.
+      - Check regional API routing and exchange-side availability before production rollout.
+  journeys:
+    eyebrow: Choose your path
+    heading: Jump to the Bybit workflow you are building
+    actionLabel: Open section
+    cards:
+      - heading: Route by category
+        summary: Keep spot, linear, inverse, and option category values explicit in shared workflow code.
+        href: "#products-and-clients"
+      - heading: Stream live data
+        summary: Use subscribeV5 with the right category for public topics such as order books, trades, tickers, and klines.
+        href: "#websocket-streams"
+      - heading: Track private state
+        summary: Subscribe to order, execution, position, and wallet topics, then reconcile with the REST API after reconnects.
+        href: "#websocket-streams"
+      - heading: Send commands
+        summary: Use the REST API for broad coverage and demo trading, or WebsocketAPIClient for awaitable WebSocket API commands.
+        href: "#websocket-api"
+  article:
+    heading: Build around Bybit API categories and account state
+    summary: "This tutorial focuses on the Bybit API pieces developers usually need first: REST API calls, category-specific public streams, private account topics, WebSocket API commands, demo trading, testnet, regional routing, reconnects, and rollout checks."
+  related:
+    cards:
+      - heading: Bybit SDK page
+        summary: Return to install snippets, direct examples, endpoint maps, and package links.
+        href: /sdk/bybit/javascript
+      - heading: WebSocket API example
+        summary: Open the runnable Bybit WebSocket API client example referenced in the tutorial.
+        href: /examples/Bybit/Websocket/WS-API/ws-api-client
+      - heading: Position manager guide
+        summary: Use the Bybit guide for orderLinkId context lookup, retCode gates, triggerDirection stops, private streams, and demo execution boundaries.
+        href: /ai/exchange-state/bybit
+      - heading: Source repository
+        summary: Browse SDK source, releases, issues, and endpoint coverage from GitHub.
+        href: https://github.com/tiagosiebler/bybit-api
+-->
 # Bybit API JavaScript Tutorial for Node.js and TypeScript
 
+<!-- siebly:website-omit:start -->
 > [!TIP]
 > This guide can be read in tutorial format on the Siebly Website: [Bybit JavaScript REST API & WebSocket Tutorial](https://siebly.io/sdk/bybit/javascript/tutorial)
+<!-- siebly:website-omit:end -->
 
 This tutorial walks through a practical Bybit REST API, WebSocket stream, and WebSocket API integration using [`bybit-api`](https://www.npmjs.com/package/bybit-api), the Bybit JavaScript and TypeScript SDK by Siebly.io.
 
@@ -12,14 +226,15 @@ The SDK handles the repetitive parts: HMAC and RSA request signing, Bybit API en
 - Bybit JavaScript SDK by Siebly: [`bybit-api`](https://www.npmjs.com/package/bybit-api)
 - GitHub Repository: [`tiagosiebler/bybit-api`](https://github.com/tiagosiebler/bybit-api)
 - SDK function-endpoint map: [Bybit JavaScript Endpoint Reference](./endpointFunctionList.md)
-- REST API examples: [Bybit SDK REST API examples](../examples/Rest)
-- WebSocket examples: [Bybit SDK WebSocket examples](../examples/Websocket)
+- REST API examples: [Bybit SDK REST API examples](../examples/Rest/rest-v5-public.ts)
+- WebSocket examples: [Bybit SDK WebSocket examples](../examples/Websocket/Public/ws-public-v5.ts)
 - Bybit API docs: [Bybit API Documentation](https://bybit-exchange.github.io/docs/v5/intro)
 - Position Management with Bybit APIs & WebSockets: [Siebly Position Management with Bybit APIs & WebSockets](https://siebly.io/ai/exchange-state/bybit)
 - More SDKs: [Siebly.io](https://siebly.io)
 
 ---
 
+<!-- siebly:section id="why-use-the-sdk" -->
 ## Why use the SDK
 
 The Bybit API is unified, but a real integration still has several moving parts:
@@ -45,6 +260,7 @@ The method names stay close to Bybit's endpoint names, while the SDK handles bas
 
 ---
 
+<!-- siebly:section id="install-and-api-keys" -->
 ## Install and API keys
 
 If you do not have Node.js installed yet, install it first. The SDK is published to both [GitHub](https://github.com/tiagosiebler/bybit-api) and [npm](https://www.npmjs.com/package/bybit-api).
@@ -113,6 +329,7 @@ For RSA setup details, see [examples/Auth/RSA-sign.md](../examples/Auth/RSA-sign
 
 ---
 
+<!-- siebly:section id="products-and-clients" -->
 ## Products and clients
 
 For new Bybit integrations, start with the current API. Older Bybit SDK surfaces were split into many product-specific clients; this SDK now centers the current API around one REST API client plus WebSocket clients.
@@ -142,6 +359,7 @@ As a rule of thumb:
 
 For a complete method map, see [docs/endpointFunctionList.md](./endpointFunctionList.md).
 
+<!-- siebly:section id="rest-api-streams-and-websocket-api" -->
 ### REST API, streams, and WebSocket API
 
 Bybit exposes several different integration flows. Keep them separate in your architecture:
@@ -157,12 +375,14 @@ Use the REST API when you want maximum endpoint coverage or a simple one-off req
 
 ---
 
+<!-- siebly:section id="start-building-first-calls" -->
 ## Start building: first calls
 
 If you only want the fastest path to a working integration, start here.
 
 ### 1. First public REST API request
 
+<!-- siebly:snippet id="rest-api" -->
 ```typescript
 import { RestClientV5 } from 'bybit-api';
 
@@ -208,6 +428,7 @@ See also: [public REST API example](../examples/Rest/rest-v5-public.ts)
 
 ### 2. First public WebSocket stream
 
+<!-- siebly:snippet id="public-websocket" -->
 ```typescript
 import { WebsocketClient, isWsOrderbookEventV5 } from 'bybit-api';
 
@@ -236,6 +457,7 @@ See also: [public WebSocket example](../examples/Websocket/Public/ws-public-v5.t
 
 ### 3. First private account WebSocket stream
 
+<!-- siebly:snippet id="private-websocket" -->
 ```typescript
 import { WebsocketClient } from 'bybit-api';
 
@@ -274,6 +496,7 @@ See also: [private WebSocket example](../examples/Websocket/Private/ws-private-v
 
 Use demo trading before placing live orders. Demo trading uses a separate Bybit demo account and separate API keys.
 
+<!-- siebly:snippet id="demo-order" -->
 ```typescript
 import { RestClientV5 } from 'bybit-api';
 
@@ -307,7 +530,7 @@ placeDemoOrder().catch(console.error);
 
 This submits to Bybit demo trading because `demoTrading: true` is set. Do not remove that option or switch to live keys until you are ready to place real orders.
 
-For order workflows, prefer `throwExceptions: true` so non-zero Bybit API responses throw and can be handled in one structured catch path. If you intentionally set `throwExceptions: false`, a resolved REST promise can still be an exchange business rejection. Treat `retCode === 0` as acceptance and any non-zero `retCode` as a rejected or unknown submission state.
+For order workflows, prefer `throwExceptions: true` so non-zero Bybit business responses throw and can be handled in one structured catch path. If you intentionally set `throwExceptions: false`, a resolved REST promise can still be an exchange business rejection. Treat `retCode === 0` as acceptance and any non-zero `retCode` as a rejected or unknown submission state.
 
 See also: [Demo trading example](../examples/Rest/demo-trading.ts)
 
@@ -315,6 +538,7 @@ See also: [Demo trading example](../examples/Rest/demo-trading.ts)
 
 The WebSocket API lets you submit order commands over a persistent WebSocket connection and await responses. Bybit supports WebSocket API order commands in live and testnet environments, but not demo trading.
 
+<!-- siebly:snippet id="ws-api" -->
 ```typescript
 import { WebsocketAPIClient } from 'bybit-api';
 
@@ -364,6 +588,7 @@ See also: [WebSocket API client example](../examples/Websocket/WS-API/ws-api-cli
 
 ---
 
+<!-- siebly:section id="rest-api" -->
 ## REST API
 
 Most Bybit integrations start with `RestClientV5`. It covers the current REST API surface and uses Bybit's `category` parameter to distinguish product groups where the endpoint requires it.
@@ -693,6 +918,7 @@ If an endpoint exists in Bybit's API docs, search for the endpoint path or metho
 
 ---
 
+<!-- siebly:section id="websocket-streams" -->
 ## WebSocket Streams
 
 Use `WebsocketClient` when you want event-driven updates instead of REST API polling. The same client handles public streams, private account streams, and raw WebSocket API commands.
@@ -814,6 +1040,7 @@ Do not subscribe to the same topic in multiple clients unless you intentionally 
 
 ---
 
+<!-- siebly:section id="websocket-api" -->
 ## WebSocket API
 
 Bybit's WebSocket API is a request/response API over a persistent WebSocket connection. In this SDK, you can use it in two ways:
@@ -917,6 +1144,7 @@ See also:
 
 ---
 
+<!-- siebly:section id="environments-and-regions" -->
 ## Environments and regions
 
 ### Live
@@ -1008,6 +1236,7 @@ See also: [custom REST API URL example](../examples/Rest/rest-v5-custom-url.ts)
 
 ---
 
+<!-- siebly:section id="production-notes" -->
 ## Production notes
 
 Before a Bybit integration trades unattended, make these decisions explicit.
@@ -1205,6 +1434,7 @@ For raw HTTP request/response tracing during local debugging, the repo also supp
 
 ---
 
+<!-- siebly:section id="faq" -->
 ## FAQ
 
 **Do I need API keys for public market data?**
@@ -1246,10 +1476,11 @@ No. This guide covers the common first steps and production concerns. For full m
 
 - [Bybit JavaScript endpoint reference](./endpointFunctionList.md)
 - [Bybit SDK examples](../examples)
-- [TSDoc documentation](https://tsdocs.dev/docs/bybit-api)
+- [Bybit SDK source on GitHub](https://github.com/tiagosiebler/bybit-api)
 
 ---
 
+<!-- siebly:section id="next-steps" -->
 ## Next steps
 
 If you want to learn more about integrating with the Bybit API and WebSockets:
