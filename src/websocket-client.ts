@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import WebSocket from 'isomorphic-ws';
 
 import {
   CategoryV5,
@@ -104,7 +103,7 @@ export class WebsocketClient extends BaseWebsocketClient<
     }
   }
 
-  public connectPrivate(): Promise<WebSocket | undefined> {
+  public connectPrivate(): Promise<WSConnectedResult | undefined> {
     switch (this.options.market) {
       case 'v5':
       default: {
