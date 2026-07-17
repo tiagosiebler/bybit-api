@@ -18,18 +18,18 @@ jobs:
       IS_PRERELEASE: ${{ github.event.release.prerelease }}
     steps:
       - name: Checkout (no repo token persisted)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           persist-credentials: false
           ref: ${{ github.event.release.tag_name }}
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
           registry-url: https://registry.npmjs.org/
-          cache: 'npm'
+          package-manager-cache: false
 
       - name: Assert latest npm
         # run: npm i -g npm@latest # pin to v11 until npm v12 bug is fixed: https://github.com/npm/cli/issues/9722
