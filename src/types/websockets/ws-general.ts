@@ -126,7 +126,10 @@ export interface WSClientConfigurableOptions {
   wsOptions?: {
     protocols?: string[];
     agent?: any;
-  } & Partial<WebSocket.ClientOptions | ClientRequestArgs>;
+  } & (
+    | Omit<Partial<WebSocket.ClientOptions>, 'agent'>
+    | Omit<Partial<ClientRequestArgs>, 'agent'>
+  );
 
   wsUrl?: string;
 
