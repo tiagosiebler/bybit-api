@@ -15,7 +15,7 @@ siebly:
     codeStatus: public REST API
     startSectionId: start-building-first-calls
   software:
-    description: Node.js and JavaScript SDK for the Bybit REST API, public and private WebSockets, demo trading, regional routing, and WebSocket API command workflows.
+    description: Node.js and JavaScript SDK for the Bybit REST API, public and private WebSockets, demo trading, regional routing, proxy support, and WebSocket API command workflows.
     topics:
       - Bybit REST API
       - Spot REST API
@@ -27,6 +27,7 @@ siebly:
       - WebSocket API
       - Demo trading
       - Regional routing
+      - REST API and WebSocket proxies
   machineCatalog:
     label: Bybit API JavaScript Tutorial
     topics:
@@ -38,15 +39,16 @@ siebly:
       - public WebSockets
       - private WebSockets
       - WebSocket API commands
+      - HTTP and SOCKS proxies
       - production reconnect handling
   sdkPagePromo:
     descriptionBeforePackage: 'A practical JavaScript guide to using '
-    descriptionAfterPackage: ' across the Bybit REST API, category-based Spot and derivatives routing, public and private streams, demo trading, testnet, regional routing, WebSocket streams and WebSocket API commands.'
+    descriptionAfterPackage: ' across the Bybit REST API, category-based Spot and derivatives routing, public and private streams, demo trading, testnet, regional routing, proxies, and WebSocket API commands.'
     highlights:
       - Complete REST API coverage
       - Public and private WebSocket streams
       - Demo trading, testnet, and regional routing
-      - WebSocket API command flow
+      - REST API and WebSocket proxy examples
     exampleHref: /examples/Bybit/Websocket/WS-API/ws-api-client
     exampleLabel: WebSocket API example
     architectureClientSummary: RestClientV5, WebsocketClient, WebsocketAPIClient
@@ -92,12 +94,12 @@ siebly:
         summary: Options market data, orders, positions, greeks, and WebSocket topics where supported.
   coverage:
     heading: What to get right in a Bybit integration
-    summary: Start with a working public request, then build through credentials, category-based routing, private streams, demo and testnet behavior, WebSocket API commands, reconnect recovery, and production rollout checks.
+    summary: Start with a working public request, then build through credentials, category-based routing, private streams, demo and testnet behavior, WebSocket API commands, proxy configuration, reconnect recovery, and production rollout checks.
     cards:
       - heading: REST API, categories, and products
         summary: Use one current REST API client while keeping category, symbol, account mode, and product behavior explicit.
       - heading: Auth and environments
-        summary: Separate live, testnet, demo trading, HMAC, RSA, and regional routing decisions before trading.
+        summary: Separate live, testnet, demo trading, HMAC, RSA, regional routing, and proxy network-path decisions before trading.
       - heading: Public and private streams
         summary: Subscribe to market and account topics with reconnect-aware state handling and REST API reconciliation.
       - heading: WebSocket API commands
@@ -175,6 +177,7 @@ siebly:
       - "Prefer throwExceptions: true for RestClientV5 order workflows; if disabled, treat retCode === 0 as REST business acceptance."
       - Include triggerDirection for triggered stop-loss orders and normalize hydrated defaults before deciding keep, amend, cancel_place, cancel, or place.
       - Check regional API routing and exchange-side availability before production rollout.
+      - Monitor proxy reachability, latency, and egress IP when a proxy is enabled.
   journeys:
     eyebrow: Choose your path
     heading: Jump to the Bybit workflow you are building
@@ -194,7 +197,7 @@ siebly:
         href: "#websocket-api"
   article:
     heading: Build around Bybit API categories and account state
-    summary: "This tutorial focuses on the Bybit API pieces developers usually need first: REST API calls, category-specific public streams, private account topics, WebSocket API commands, demo trading, testnet, regional routing, reconnects, and rollout checks."
+    summary: "This tutorial focuses on the Bybit API pieces developers usually need first: REST API calls, category-specific public streams, private account topics, WebSocket API commands, demo trading, testnet, regional routing, proxies, reconnects, and rollout checks."
   related:
     cards:
       - heading: Bybit SDK page
@@ -217,7 +220,7 @@ siebly:
 > This guide can be read in tutorial format on the Siebly Website: [Bybit JavaScript REST API & WebSocket Tutorial](https://siebly.io/sdk/bybit/javascript/tutorial)
 <!-- siebly:website-omit:end -->
 
-This tutorial walks through a practical Bybit REST API, WebSocket stream, and WebSocket API integration using [`bybit-api`](https://www.npmjs.com/package/bybit-api), the Bybit JavaScript and TypeScript SDK by Siebly.io.
+This tutorial walks through a practical Bybit REST API, WebSocket stream, and WebSocket API integration using [`bybit-api`](https://www.npmjs.com/package/bybit-api), the Bybit JavaScript and TypeScript SDK by Siebly.io. It also covers HTTP, HTTPS, and SOCKS proxy configuration for REST API calls, streams, and WebSocket API connections.
 
 The SDK handles the repetitive parts: HMAC and RSA request signing, Bybit API endpoint routing, testnet and demo trading differences, WebSocket authentication, heartbeats, reconnects, resubscribe behavior, WebSocket API request/response matching, and TypeScript request and response definitions. The sections below move from installation and client choice to public calls, private auth, trading flows, WebSocket API commands, environments, and production checks.
 
@@ -1233,6 +1236,226 @@ New API regions will be supported as they become available. If you're looking fo
 You can also pass `baseUrl` for a custom REST API domain, or `wsUrl` for a custom WebSocket URL when needed.
 
 See also: [custom REST API URL example](../examples/Rest/rest-v5-custom-url.ts)
+
+---
+
+<!-- siebly:section id="proxies" -->
+## Proxies for REST API and WebSocket
+
+Use a proxy when a deployment needs a fixed egress IP, must cross an approved corporate network, or has a controlled network failover path. A proxy does not change Bybit account eligibility, product categories, account mode, or the selected live, testnet, or demo environment.
+
+For REST API requests, `apiRegion` selects the Bybit domain associated with the account. A proxy only changes the network path used to reach that domain. Keep those settings separate.
+
+The broader [Using proxy with Siebly SDKs](https://siebly.io/blog/using-proxy-with-siebly-sdks) article covers the shared constructor pattern. The examples below use the current `bybit-api` options directly.
+
+Proxy agents are a Node.js networking feature. Browser applications cannot select a raw socket agent.
+
+### HTTP or HTTPS proxy
+
+Install the agent:
+
+```bash
+npm install bybit-api https-proxy-agent
+```
+
+Set `BYBIT_PROXY_URL` to the full proxy URL, including URL-encoded credentials when required.
+
+This public check sends one REST API call and one linear WebSocket subscription through the same proxy:
+
+<!-- siebly:snippet id="http-proxy" -->
+
+```typescript
+import { HttpsProxyAgent } from 'https-proxy-agent';
+import { RestClientV5, WebsocketClient } from 'bybit-api';
+
+const proxyUrl = process.env.BYBIT_PROXY_URL;
+
+if (!proxyUrl) {
+  throw new Error('Set BYBIT_PROXY_URL before running this example.');
+}
+
+const proxyAgent = new HttpsProxyAgent(proxyUrl);
+
+const rest = new RestClientV5(
+  {},
+  {
+    httpsAgent: proxyAgent,
+    proxy: false,
+  },
+);
+
+const ws = new WebsocketClient({
+  wsOptions: {
+    agent: proxyAgent,
+  },
+});
+
+ws.on('open', ({ wsKey }) => {
+  console.log('WebSocket connected through proxy:', wsKey);
+});
+ws.on('update', (event) => {
+  console.log('stream update', event);
+});
+ws.on('exception', console.error);
+
+async function main() {
+  const serverTime = await rest.getServerTime();
+  console.log('REST API connected through proxy:', serverTime);
+
+  ws.subscribeV5(['tickers.BTCUSDT'], 'linear');
+}
+
+process.once('SIGINT', () => {
+  ws.closeAll();
+});
+
+main().catch(console.error);
+```
+
+REST API networking options belong in the second `RestClientV5` constructor argument:
+
+- `httpsAgent` sends the HTTPS request through the agent.
+- `proxy: false` prevents Axios from applying another proxy configuration on top of that agent.
+
+WebSocket networking options belong in `wsOptions.agent`. The same setting applies to public streams, private streams, and `WebsocketAPIClient`. Bybit authenticates these connections over the socket and does not fetch a separate WebSocket token through REST API.
+
+Do not use `requestOptions.agent` in new code. It remains a legacy alias for the WebSocket agent, but `wsOptions.agent` is the current option.
+
+### Private streams and WebSocket API through a proxy
+
+This example authenticates a private stream and a WebSocket API connection without placing an order:
+
+<!-- siebly:snippet id="private-proxy" -->
+
+```typescript
+import { HttpsProxyAgent } from 'https-proxy-agent';
+import { WebsocketAPIClient, WebsocketClient } from 'bybit-api';
+
+const proxyUrl = process.env.BYBIT_PROXY_URL;
+
+if (!proxyUrl) {
+  throw new Error('Set BYBIT_PROXY_URL before running this example.');
+}
+
+const key = process.env.BYBIT_API_KEY;
+const secret = process.env.BYBIT_API_SECRET;
+
+if (!key || !secret) {
+  throw new Error('Set BYBIT_API_KEY and BYBIT_API_SECRET before running this example.');
+}
+
+const proxyAgent = new HttpsProxyAgent(proxyUrl);
+const credentials = { key, secret };
+
+const streams = new WebsocketClient({
+  ...credentials,
+  wsOptions: {
+    agent: proxyAgent,
+  },
+});
+
+const wsApi = new WebsocketAPIClient({
+  ...credentials,
+  attachEventListeners: false,
+  wsOptions: {
+    agent: proxyAgent,
+  },
+});
+const wsApiConnection = wsApi.getWSClient();
+
+streams.on('authenticated', ({ wsKey }) => {
+  console.log('Private stream authenticated:', wsKey);
+});
+streams.on('exception', console.error);
+wsApiConnection.on('authenticated', ({ wsKey }) => {
+  console.log('WebSocket API authenticated:', wsKey);
+});
+wsApiConnection.on('exception', console.error);
+
+async function main() {
+  streams.subscribeV5(['order', 'execution'], 'linear');
+  await wsApiConnection.connectWSAPI();
+  console.log('Private connections are ready');
+}
+
+process.once('SIGINT', () => {
+  streams.closeAll();
+  wsApiConnection.closeAll();
+});
+
+main().catch(console.error);
+```
+
+Use matching testnet keys with `testnet: true` on both clients when testing against Bybit testnet. WebSocket API commands are not available in demo trading.
+
+### SOCKS5 proxy
+
+Install the SOCKS agent:
+
+```bash
+npm install bybit-api socks-proxy-agent
+```
+
+Use `SocksProxyAgent` in the same REST API and WebSocket positions:
+
+<!-- siebly:snippet id="socks-proxy" -->
+
+```typescript
+import { RestClientV5, WebsocketClient } from 'bybit-api';
+import { SocksProxyAgent } from 'socks-proxy-agent';
+
+const proxyUrl = process.env.BYBIT_SOCKS_PROXY_URL;
+
+if (!proxyUrl) {
+  throw new Error('Set BYBIT_SOCKS_PROXY_URL before running this example.');
+}
+
+const proxyAgent = new SocksProxyAgent(proxyUrl);
+
+const rest = new RestClientV5(
+  {},
+  {
+    httpsAgent: proxyAgent,
+    proxy: false,
+  },
+);
+
+const ws = new WebsocketClient({
+  wsOptions: {
+    agent: proxyAgent,
+  },
+});
+
+async function main() {
+  const serverTime = await rest.getServerTime();
+  console.log('REST API connected through SOCKS5:', serverTime);
+
+  ws.subscribeV5(['publicTrade.BTCUSDT'], 'linear');
+}
+
+process.once('SIGINT', () => {
+  ws.closeAll();
+});
+
+main().catch(console.error);
+```
+
+See also:
+
+- [Axios proxy configuration example](../examples/Rest/rest-v5-proxies.ts)
+- [HTTPS proxy agent example](../examples/Rest/rest-v5-proxies2.ts)
+
+### Proxy checks
+
+- Keep proxy URLs and credentials in environment variables or a secret manager.
+- URL-encode usernames and passwords when constructing a proxy URL from separate values.
+- Make sure the proxy egress IP matches the Bybit API key's IP whitelist.
+- Test a public REST API call and public WebSocket subscription before private authentication.
+- Keep `apiRegion`, `baseUrl`, and `wsUrl` decisions separate from proxy configuration.
+- Measure request, connection, and reconnect latency through the proxy.
+- Treat repeated HTTP 407 responses, TLS errors, and WebSocket reconnect loops as network failures.
+- Keep the host clock synchronized. Change `recv_window` only after measuring timestamp failures and proxy latency.
+- The SDK does not rotate proxy endpoints. Handle endpoint selection outside the client when rotation is required.
 
 ---
 
