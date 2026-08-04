@@ -1,19 +1,19 @@
 # Node.js & JavaScript SDK for Bybit REST API, WebSocket API & WebSocket Events
 
-[![Build & Test](https://github.com/tiagosiebler/bybit-api/actions/workflows/e2etest.yml/badge.svg?branch=master)](https://github.com/tiagosiebler/bybit-api/actions/workflows/e2etest.yml)
+[![Build & Test](https://github.com/sieblyio/bybit-api/actions/workflows/e2etest.yml/badge.svg?branch=master)](https://github.com/sieblyio/bybit-api/actions/workflows/e2etest.yml)
 [![npm version](https://img.shields.io/npm/v/bybit-api)][1]
 [![npm size](https://img.shields.io/bundlephobia/min/bybit-api/latest)][1]
 [![npm downloads](https://img.shields.io/npm/dt/bybit-api)][1]
-[![last commit](https://img.shields.io/github/last-commit/tiagosiebler/bybit-api)][1]
-[![CodeFactor](https://www.codefactor.io/repository/github/tiagosiebler/bybit-api/badge)](https://www.codefactor.io/repository/github/tiagosiebler/bybit-api)
+[![last commit](https://img.shields.io/github/last-commit/sieblyio/bybit-api)][1]
+[![CodeFactor](https://www.codefactor.io/repository/github/sieblyio/bybit-api/badge)](https://www.codefactor.io/repository/github/sieblyio/bybit-api)
 [![Telegram](https://img.shields.io/badge/chat-on%20telegram-blue.svg)](https://t.me/nodetraders)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/tiagosiebler/bybit-api)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/sieblyio/bybit-api)
 
 <p align="center">
   <a href="https://www.npmjs.com/package/bybit-api">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/tiagosiebler/bybit-api/blob/master/docs/images/logoDarkMode2.svg?raw=true#gh-dark-mode-only">
-      <img alt="SDK Logo" src="https://github.com/tiagosiebler/bybit-api/blob/master/docs/images/logoBrightMode2.svg?raw=true#gh-light-mode-only">
+      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/sieblyio/bybit-api/blob/master/docs/images/logoDarkMode2.svg?raw=true#gh-dark-mode-only">
+      <img alt="SDK Logo" src="https://github.com/sieblyio/bybit-api/blob/master/docs/images/logoBrightMode2.svg?raw=true#gh-light-mode-only">
     </picture>
   </a>
 </p>
@@ -21,7 +21,7 @@
 [1]: https://www.npmjs.com/package/bybit-api
 
 > [!TIP]
-> Upcoming change: As part of the [Siebly.io](https://siebly.io/) brand, this SDK will soon be hosted under the [Siebly.io GitHub organisation](https://github.com/sieblyio). The migration is seamless and requires no user changes.
+> Upcoming change: As part of the [Siebly.io](https://siebly.io/) brand, this SDK is now hosted under our [Siebly.io GitHub organisation](https://github.com/sieblyio). The migration is seamless and requires no user changes.
 
 Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSocket APIs & WebSocket Events:
 
@@ -32,7 +32,7 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSo
     - All qualified API requests made with this SDK are automatically subject to significantly higher rate limits.
     - Rate limits are raised to 400 requests per second, higher than the highest VIP tier.
     - No action required. This is automatic for any API calls made with this SDK, for any user.
-    - Read more in the announcement: [here](https://github.com/tiagosiebler/bybit-api/issues/458).
+    - Read more in the announcement: [here](https://github.com/sieblyio/bybit-api/issues/458).
   - Lower minimum order notional value with this SDK!\*
     - Place orders with a notional value as low as $1.
     - Lower than the default minimum notional order value $5.
@@ -113,7 +113,7 @@ Professional Node.js, JavaScript & TypeScript SDK for the Bybit REST APIs, WebSo
 
 ## Issues & Discussion
 
-- Issues? Check the [issues tab](https://github.com/tiagosiebler/bybit-api/issues).
+- Issues? Check the [issues tab](https://github.com/sieblyio/bybit-api/issues).
 - Discuss & collaborate with other node devs? Join our [Node.js Algo Traders](https://t.me/nodetraders) engineering community on telegram.
 - Follow our announcement channel for real-time updates on [X/Twitter](https://x.com/sieblyio)
 
@@ -138,7 +138,7 @@ Check out our JavaScript/TypeScript/Node.js SDKs & Projects:
   - [OrderBooks Node.js: orderbooks](https://www.npmjs.com/package/orderbooks)
   - [Crypto Exchange Account State Cache: accountstate](https://www.npmjs.com/package/accountstate)
 - Check out my examples:
-  - [awesome-crypto-examples Node.js](https://github.com/tiagosiebler/awesome-crypto-examples)
+  - [awesome-crypto-examples Node.js](https://github.com/sieblyio/awesome-crypto-examples)
   <!-- template_related_projects_end -->
 
 ## Documentation
@@ -165,7 +165,7 @@ The SDK is written in TypeScript, but fully compatible with both TypeScript and 
 Examples for using each client can be found in:
 
 - the [examples](./examples) folder.
-- the [awesome-crypto-examples](https://github.com/tiagosiebler/awesome-crypto-examples) repository.
+- the [awesome-crypto-examples](https://github.com/sieblyio/awesome-crypto-examples) repository.
 
 If you're missing an example, you're welcome to request one. Priority will be given to [github sponsors](https://github.com/sponsors/tiagosiebler).
 
@@ -224,7 +224,7 @@ const restClientOptions = {
 
   /**
    * Enable keep alive for REST API requests (via axios).
-   * See: https://github.com/tiagosiebler/bybit-api/issues/368
+   * See: https://github.com/sieblyio/bybit-api/issues/368
    */
   // keepAlive: true,
 
@@ -683,7 +683,7 @@ This file contains AI optimised structure of all the functions in this package, 
 
 ## Used By
 
-[![Repository Users Preview Image](https://dependents.info/tiagosiebler/bybit-api/image)](https://github.com/tiagosiebler/bybit-api/network/dependents)
+[![Repository Users Preview Image](https://dependents.info/sieblyio/bybit-api/image)](https://github.com/sieblyio/bybit-api/network/dependents)
 
 ---
 
@@ -723,6 +723,6 @@ Contributions are encouraged, I will review any incoming pull requests. See the 
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=tiagosiebler/bybit-api,tiagosiebler/okx-api,tiagosiebler/binance,tiagosiebler/bitget-api,tiagosiebler/bitmart-api,tiagosiebler/gateio-api,tiagosiebler/kucoin-api,tiagosiebler/coinbase-api,tiagosiebler/orderbooks,tiagosiebler/accountstate,tiagosiebler/awesome-crypto-examples&type=Date)](https://star-history.com/#tiagosiebler/bybit-api&tiagosiebler/okx-api&tiagosiebler/binance&tiagosiebler/bitget-api&tiagosiebler/bitmart-api&tiagosiebler/gateio-api&tiagosiebler/kucoin-api&tiagosiebler/coinbase-api&tiagosiebler/orderbooks&tiagosiebler/accountstate&tiagosiebler/awesome-crypto-examples&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=sieblyio/bybit-api,sieblyio/okx-api,sieblyio/binance,sieblyio/bitget-api,sieblyio/htx-api,sieblyio/gateio-api,sieblyio/kucoin-api,sieblyio/coinbase-api,sieblyio/orderbooks,sieblyio/accountstate,sieblyio/awesome-crypto-examples&type=Date)](https://star-history.com/#sieblyio/bybit-api&sieblyio/okx-api&sieblyio/binance&sieblyio/bitget-api&sieblyio/htx-api&sieblyio/gateio-api&sieblyio/kucoin-api&sieblyio/coinbase-api&sieblyio/orderbooks&sieblyio/accountstate&sieblyio/awesome-crypto-examples&Date)
 
 <!-- template_star_history_end -->
