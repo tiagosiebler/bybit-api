@@ -1,6 +1,6 @@
 {
   "name": "bybit-api",
-  "version": "4.7.2",
+  "version": "4.7.3",
   "description": "Complete & robust Node.js SDK for Bybit's REST APIs and WebSockets, with TypeScript & strong end to end tests.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -73,10 +73,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tiagosiebler/bybit-api"
+    "url": "git+https://github.com/sieblyio/bybit-api.git"
   },
   "bugs": {
-    "url": "https://github.com/tiagosiebler/bybit-api/issues"
+    "url": "https://github.com/bybit/bybit-api/issues"
   },
-  "homepage": "https://github.com/tiagosiebler/bybit-api#readme"
+  "homepage": "https://siebly.io/sdk/bybit/javascript/tutorial"
 }
