@@ -41,11 +41,13 @@ const PRIVATE_TOPICS = [
   'outboundAccountInfo',
   'executionReport',
   'ticketInfo',
+
   // copy trading apis
   'copyTradePosition',
   'copyTradeOrder',
   'copyTradeExecution',
   'copyTradeWallet',
+
   // usdc options
   'user.openapi.option.position',
   'user.openapi.option.trade',
@@ -54,34 +56,61 @@ const PRIVATE_TOPICS = [
   'user.service',
   'user.openapi.greeks',
   'user.mmp.event',
+
   // usdc perps
   'user.openapi.perp.position',
   'user.openapi.perp.trade',
   'user.openapi.perp.order',
   'user.service',
+
   // unified margin
   'user.position.unifiedAccount',
   'user.execution.unifiedAccount',
   'user.order.unifiedAccount',
   'user.wallet.unifiedAccount',
   'user.greeks.unifiedAccount',
+
   // contract v3
   'user.position.contractAccount',
   'user.execution.contractAccount',
   'user.order.contractAccount',
   'user.wallet.contractAccount',
+
   // v5
   'position',
+  'position.linear',
+  'position.inverse',
+  'position.option',
+
   'execution',
-  'order',
-  'wallet',
-  'greeks',
+  'execution.spot',
+  'execution.linear',
+  'execution.inverse',
+  'execution.option',
+
   // v5 fast execution topics are private
   'execution.fast',
   'execution.fast.linear',
   'execution.fast.inverse',
   'execution.fast.spot',
   'execution.fast.option',
+
+  'order',
+  'order.spot',
+  'order.linear',
+  'order.inverse',
+  'order.option',
+
+  'wallet',
+  'greeks',
+
+  // v5 DCP topics
+  'dcp.future',
+  'dcp.spot',
+  'dcp.option',
+
+  // Strategy
+  'strategy',
 ];
 
 /**
