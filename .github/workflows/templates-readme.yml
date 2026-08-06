@@ -53,19 +53,19 @@ jobs:
       - name: Fetch and update RELATED PROJECTS template
         run: ./update-template.sh
         env:
-          TEMPLATE_URL: https://raw.githubusercontent.com/wiki/tiagosiebler/awesome-crypto-examples/Related-projects.md
+          TEMPLATE_URL: https://raw.githubusercontent.com/wiki/sieblyio/awesome-crypto-examples/Related-projects.md
           TEMPLATE_TAG: related_projects
 
       - name: Fetch and update CONTRIBUTIONS template
         run: ./update-template.sh
         env:
-          TEMPLATE_URL: https://raw.githubusercontent.com/wiki/tiagosiebler/awesome-crypto-examples/Contributions-%26-Thanks.md
+          TEMPLATE_URL: https://raw.githubusercontent.com/wiki/sieblyio/awesome-crypto-examples/Contributions-%26-Thanks.md
           TEMPLATE_TAG: contributions
 
       - name: Fetch and update STAR HISTORY template
         run: ./update-template.sh
         env:
-          TEMPLATE_URL: https://raw.githubusercontent.com/wiki/tiagosiebler/awesome-crypto-examples/Star-History.md
+          TEMPLATE_URL: https://raw.githubusercontent.com/wiki/sieblyio/awesome-crypto-examples/Star-History.md
           TEMPLATE_TAG: star_history
 
       - name: Check for changes before running linter
